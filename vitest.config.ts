@@ -22,7 +22,11 @@ export default defineConfig({
       // A extensão é obrigatória no padrão: `src/lib/engine/**` sozinho
       // arrasta o README.md do diretório, que o provedor tenta analisar como
       // JavaScript e falha — ruidosamente, e sem que a suíte fique vermelha.
-      include: ['src/lib/engine/**/*.{ts,tsx}'],
+      include: ['src/lib/engine/**/*.{ts,tsx}', 'src/lib/params/**/*.{ts,tsx}'],
+      // `data/` é tabela legal transcrita: sem ramificação a cobrir, e incluí-la
+      // diluiria o percentual que protege o código que decide. A correção dos
+      // valores ali é auditoria humana, não cobertura (`12-test-plan` §11).
+      exclude: ['src/lib/params/data/**'],
       reporter: ['text', 'lcov'],
       thresholds: {
         branches: 90,
