@@ -16,6 +16,14 @@ export function formatarReal(valorEmCentavos: number): string {
   return FORMATO.format(valorEmCentavos / 100)
 }
 
+/** Basis points para "7,50", sem o símbolo. Para dentro de campo de entrada. */
+export function formatarTaxa(bp: number): string {
+  return (bp / 100).toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}
+
 /** Basis points para "7,50%". */
 export function formatarPercentual(bp: number): string {
   return `${(bp / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`

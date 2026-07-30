@@ -19,7 +19,7 @@ import type { Registro } from '../params/registry'
 // Campos
 // ---------------------------------------------------------------------------
 
-export type TipoCampo = 'monetario' | 'inteiro' | 'selecao'
+export type TipoCampo = 'monetario' | 'inteiro' | 'selecao' | 'percentual'
 
 export interface OpcaoSelecao {
   readonly valor: string
@@ -66,9 +66,31 @@ export interface LinhaDetalhamento {
   readonly sinal: Sinal
 }
 
+/**
+ * Saída secundária não monetária. Ex.: "Alíquota efetiva: 11,62%" em CALC-016,
+ * que `03-functional-spec` §3.9 destaca por ser *"a informação que mais
+ * surpreende o usuário e a que mais gera desconfiança quando não explicada"*.
+ *
+ * Já formatada: o motor devolve basis points e quem converte para texto é a
+ * definição da calculadora, que já vive na camada de apresentação.
+ */
+export interface Destaque {
+  readonly rotulo: string
+  readonly valor: string
+}
+
+/** Tabela auxiliar. Ex.: a evolução ano a ano em CALC-022. */
+export interface TabelaResultado {
+  readonly titulo: string
+  readonly colunas: readonly string[]
+  readonly linhas: readonly { readonly rotulo: string; readonly valores: readonly Centavos[] }[]
+}
+
 export interface SaidaCalculadora {
   readonly principal: Centavos
   readonly detalhamento: readonly LinhaDetalhamento[]
+  readonly destaques?: readonly Destaque[]
+  readonly tabela?: TabelaResultado
   /** Notas fixas exibidas com o resultado. Ex.: a nota do 13º. */
   readonly notas?: readonly string[]
 }

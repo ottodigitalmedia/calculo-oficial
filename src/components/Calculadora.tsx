@@ -115,7 +115,9 @@ export function Calculadora({ slug }: { readonly slug: string }) {
     <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* ---------------------------------------------------------------- */}
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-        <div>
+        {/* Calculadora sem parâmetro legal não tem período a escolher — é o
+            caso de juros compostos, cuja taxa é digitada. */}
+        <div className={anos.length > 0 ? '' : 'hidden'}>
           <label htmlFor="ref" className="block text-sm font-medium">
             Período de referência
           </label>
@@ -253,12 +255,59 @@ function Resultado({
           {avisoAdicional ? ` ${avisoAdicional}` : ''}
         </p>
 
+        {r.valores.destaques && r.valores.destaques.length > 0 ? (
+          <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-[var(--color-border)] pt-4">
+            {r.valores.destaques.map((d) => (
+              <div key={d.rotulo} className="text-sm">
+                <dt className="inline text-[var(--color-text-muted)]">{d.rotulo}: </dt>
+                <dd className="tabular inline font-semibold">{d.valor}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+
         {r.valores.notas?.map((nota) => (
           <p key={nota} className="mt-2 text-sm text-[var(--color-text-secondary)]">
             {nota}
           </p>
         ))}
       </div>
+
+      {r.valores.tabela ? (
+        <section className="mt-6 overflow-x-auto rounded border border-[var(--color-border)]">
+          <table className="w-full text-sm">
+            <caption className="border-b border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-4 py-3 text-left font-semibold">
+              {r.valores.tabela.titulo}
+            </caption>
+            <thead>
+              <tr className="border-b border-[var(--color-border)]">
+                <th scope="col" className="px-4 py-2 text-left font-medium">
+                  Período
+                </th>
+                {r.valores.tabela.colunas.map((c) => (
+                  <th key={c} scope="col" className="px-4 py-2 text-right font-medium">
+                    {c}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {r.valores.tabela.linhas.map((linha) => (
+                <tr key={linha.rotulo} className="border-b border-[var(--color-border)] last:border-0">
+                  <th scope="row" className="px-4 py-2 text-left font-normal">
+                    {linha.rotulo}
+                  </th>
+                  {linha.valores.map((v, i) => (
+                    <td key={i} className="tabular px-4 py-2 text-right">
+                      {formatarReal(v)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ) : null}
 
       <MemoriaCalculo traco={r.traco} />
     </div>

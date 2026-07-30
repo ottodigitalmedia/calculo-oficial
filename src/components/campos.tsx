@@ -2,7 +2,7 @@
 
 import { useId } from 'react'
 
-import { formatarReal } from '@/lib/format/moeda'
+import { formatarReal, formatarTaxa } from '@/lib/format/moeda'
 import type { Campo } from '@/lib/calculadoras/tipos'
 
 /**
@@ -103,6 +103,40 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
     )
   }
 
+  if (campo.tipo === 'percentual') {
+    // Valor interno em BASIS POINTS inteiros (`ADR-004` A-2), pela mesma razão
+    // do monetário: nunca existe um momento em que a taxa vive como decimal.
+    const bp = typeof valor === 'number' ? valor : 0
+    return (
+      <div>
+        <Rotulo id={id} campo={campo} />
+        <div className="relative">
+          <input
+            id={id}
+            type="text"
+            inputMode="decimal"
+            value={bp === 0 ? '' : formatarTaxa(bp)}
+            placeholder="0,00"
+            aria-describedby={idMensagem}
+            aria-invalid={erro ? true : undefined}
+            onChange={(e) => {
+              const digitos = e.target.value.replace(/\D/g, '')
+              onChange(digitos === '' ? 0 : Number(digitos))
+            }}
+            className={`${CLASSE_ENTRADA} tabular pr-9 text-right`}
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
+          >
+            %
+          </span>
+        </div>
+        <Mensagem id={idMensagem} {...(erro ? { erro } : {})} {...(campo.ajuda ? { ajuda: campo.ajuda } : {})} />
+      </div>
+    )
+  }
+
   // Monetário. O valor interno é sempre CENTAVOS inteiros (`RN-005`): o que o
   // usuário digita é interpretado como centavos e formatado de volta, então
   // não existe momento em que o valor vive como decimal.
@@ -137,9 +171,9 @@ export function validar(campo: Campo, valor: number | string): string | undefine
   if (campo.obrigatorio && n === 0) return 'Preencha este campo para ver o resultado.'
   if (n < 0) return 'Informe um valor igual ou maior que zero.'
   if (campo.maximo !== undefined && n > campo.maximo) {
-    return campo.tipo === 'monetario'
-      ? `Informe um valor de até ${formatarReal(campo.maximo)}.`
-      : `Informe um número entre ${campo.minimo ?? 0} e ${campo.maximo}.`
+    if (campo.tipo === 'monetario') return `Informe um valor de até ${formatarReal(campo.maximo)}.`
+    if (campo.tipo === 'percentual') return `Informe uma taxa de até ${formatarTaxa(campo.maximo)}%.`
+    return `Informe um número entre ${campo.minimo ?? 0} e ${campo.maximo}.`
   }
   return undefined
 }

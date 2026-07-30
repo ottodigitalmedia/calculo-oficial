@@ -6,10 +6,18 @@
  * (`ADR-008` E-1).
  */
 
+import { INSS_MENSAL } from './inss'
+import { IRRF_MENSAL } from './irrf'
+import { JUROS_COMPOSTOS } from './juros-compostos'
 import { SALARIO_LIQUIDO } from './salario-liquido'
 import type { DefinicaoCalculadora } from './tipos'
 
-export const CALCULADORAS: readonly DefinicaoCalculadora[] = [SALARIO_LIQUIDO]
+export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
+  SALARIO_LIQUIDO,
+  INSS_MENSAL,
+  IRRF_MENSAL,
+  JUROS_COMPOSTOS,
+]
 
 export function porSlug(slug: string): DefinicaoCalculadora | undefined {
   return CALCULADORAS.find((c) => c.slug === slug)
