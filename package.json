@@ -1,0 +1,51 @@
+{
+  "name": "calculo-aberto",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Calculadoras trabalhistas, tributárias e financeiras com memória de cálculo auditável",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "validate:params": "tsx scripts/validate-params.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "test:golden": "vitest run tests/golden --passWithNoTests",
+    "test:e2e": "playwright test --config=playwright.config.ts --pass-with-no-tests",
+    "test:leak": "playwright test --config=playwright.leak.config.ts --pass-with-no-tests",
+    "audit:deps": "npm audit --audit-level=high",
+    "check": "npm run validate:params && npm run typecheck && npm run lint && npm run test && npm run audit:deps && npm run build && npm run test:e2e && npm run test:leak"
+  },
+  "//overrides": "Versões transitivas fixadas para eliminar vulnerabilidade conhecida sem downgrade de framework (07-security §8). Cada entrada é uma correção publicada dentro da mesma major — não é supressão de alerta. Reavaliar a cada `npm run audit:deps`: quando o pacote pai passar a resolver a versão corrigida sozinho, a entrada sai daqui.",
+  "overrides": {
+    "postcss": "^8.5.25",
+    "sharp": "^0.35.0"
+  },
+  "dependencies": {
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@next/eslint-plugin-next": "^15.5.4",
+    "@playwright/test": "^1.55.1",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@vitest/coverage-v8": "^4.1.10",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "tailwindcss": "^4.1.13",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.65.0",
+    "vitest": "^4.1.10"
+  }
+}

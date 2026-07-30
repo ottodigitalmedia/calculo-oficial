@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+
+/*
+ * Tokens de design (10-ux-ui-spec §2) entram em T-031. Aqui ficam apenas as
+ * duas garantias que precisam valer desde o primeiro pixel:
+ *
+ *  - corpo com no mínimo 16px, para não disparar zoom automático em campo no
+ *    iOS (§2.2);
+ *  - respeito à preferência de movimento reduzido (§6).
+ */
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  font-size: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

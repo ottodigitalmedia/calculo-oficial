@@ -1,0 +1,18 @@
+# Fim de linha normalizado em LF no repositório e na cópia de trabalho.
+#
+# Não é preferência de estilo: o build roda em contêiner Linux, e arquivo com
+# CRLF quebra shebang de script e comando de Dockerfile de forma que o erro
+# aparece longe da causa. O mantenedor trabalha em Windows; o alvo é Linux.
+* text=auto eol=lf
+
+# Binários — nunca normalizar.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.zip binary
