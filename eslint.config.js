@@ -17,30 +17,31 @@ import tseslint from 'typescript-eslint'
  *   Regra 4 / C-M2   — o motor não lê relógio, rede nem ambiente
  */
 
-/** Regra 3 — fronteira de módulo do motor (ADR-003, 13-deployment §2). */
+/**
+ * Regra 3 — fronteira de módulo do motor (ADR-003, 13-deployment §2).
+ *
+ * Só é permitido import RELATIVO, e só sem escapar para as camadas de cima.
+ *
+ * A expressão regular substitui um `group: ['*', ...]` que parecia certo e
+ * estava errado: os padrões de `no-restricted-imports` usam semântica de
+ * gitignore, na qual `*` casa em qualquer nível do caminho — então `./types`,
+ * um import interno legítimo, era barrado junto com os pacotes de terceiro.
+ * O defeito ficou invisível enquanto o motor tinha um arquivo só.
+ */
 const FRONTEIRA_DO_MOTOR = {
   patterns: [
     {
-      group: [
-        '@/app',
-        '@/app/*',
-        '@/components',
-        '@/components/*',
-        '@/lib/format',
-        '@/lib/format/*',
-      ],
+      // Tudo que não começa com ponto: pacote de npm, builtin do Node e
+      // apelido `@/`. O motor não importa nada disso.
+      regex: '^[^.]',
       message:
-        'ADR-003: src/lib/engine/ não importa de app/, components/ nem format/. O motor é puro e portável; a formatação pertence à apresentação (C-M4).',
+        'ADR-003: o motor só admite import relativo dentro de src/lib/engine/. ZERO dependência de runtime é decisão de segurança, não de portabilidade: a parte que toca o dado do usuário não pode ter cadeia de dependências a comprometer (AM-01). Para consumir parâmetros, use caminho relativo.',
     },
     {
-      group: ['../app/*', '../../app/*', '../components/*', '../../components/*', '../format/*', '../../format/*'],
+      // Caminho relativo que sobe até as camadas proibidas.
+      regex: '^\\.\\.?/(\\.\\./)*(app|components)/|(^|/)lib/format/|^\\.\\./format/',
       message:
-        'ADR-003: fronteira do motor. Caminho relativo não contorna a regra — ele apenas a esconde.',
-    },
-    {
-      group: ['*', '@*/*', 'node:*'],
-      message:
-        'ADR-003: o motor tem ZERO dependência de runtime. É decisão de segurança, não de portabilidade: a parte que toca o dado do usuário não pode ter cadeia de dependências a comprometer (AM-01).',
+        'ADR-003: src/lib/engine/ não importa de app/, components/ nem format/. Caminho relativo não contorna a regra — apenas a esconde. A formatação pertence à apresentação (C-M4).',
     },
   ],
 }
