@@ -23,7 +23,16 @@ function Rotulo({ id, campo }: { id: string; campo: Campo }) {
   return (
     <label htmlFor={id} className="block text-sm font-medium text-[var(--color-text-primary)]">
       {campo.rotulo}
-      {campo.obrigatorio ? <span className="text-[var(--color-negative)]"> *</span> : null}
+      {/* O asterisco é MARCA VISUAL, não informação: `aria-hidden` impede que
+          o leitor de tela anuncie "Prazo asterisco". A obrigatoriedade é
+          transmitida por `aria-required` no próprio campo — que é o que os
+          leitores anunciam como "obrigatório". */}
+      {campo.obrigatorio ? (
+        <span aria-hidden className="text-[var(--color-negative)]">
+          {' '}
+          *
+        </span>
+      ) : null}
     </label>
   )
 }
@@ -64,6 +73,7 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
           value={String(valor)}
           aria-describedby={idMensagem}
           aria-invalid={erro ? true : undefined}
+          aria-required={campo.obrigatorio ? true : undefined}
           onChange={(e) => onChange(e.target.value)}
           className={CLASSE_ENTRADA}
         >
@@ -92,6 +102,7 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
           value={valor === 0 ? '0' : String(valor)}
           aria-describedby={idMensagem}
           aria-invalid={erro ? true : undefined}
+          aria-required={campo.obrigatorio ? true : undefined}
           onChange={(e) => {
             const so = e.target.value.replace(/\D/g, '')
             onChange(so === '' ? 0 : Number(so))
@@ -119,6 +130,7 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
             placeholder="0,00"
             aria-describedby={idMensagem}
             aria-invalid={erro ? true : undefined}
+            aria-required={campo.obrigatorio ? true : undefined}
             onChange={(e) => {
               const digitos = e.target.value.replace(/\D/g, '')
               onChange(digitos === '' ? 0 : Number(digitos))
@@ -152,6 +164,7 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
         placeholder="R$ 0,00"
         aria-describedby={idMensagem}
         aria-invalid={erro ? true : undefined}
+        aria-required={campo.obrigatorio ? true : undefined}
         onChange={(e) => {
           const digitos = e.target.value.replace(/\D/g, '')
           onChange(digitos === '' ? 0 : Number(digitos))

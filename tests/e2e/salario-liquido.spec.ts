@@ -83,3 +83,15 @@ test('§1.5 · campo obrigatório vazio mantém estado pendente, sem número par
   await expect(page.getByText(/Falta preencher/)).toBeVisible()
   await expect(page.getByText('Salário líquido estimado')).toHaveCount(0)
 })
+
+test('§6 · o asterisco de obrigatório não é anunciado pelo leitor de tela', async ({ page }) => {
+  // O nome acessível precisa ser "Salário bruto mensal", não "... *".
+  // A obrigatoriedade vai por aria-required, que os leitores anunciam como
+  // "obrigatório" — o asterisco é marca visual.
+  // getByRole usa o NOME ACESSÍVEL; getByLabel usa o texto do rótulo, que
+  // ainda contém o asterisco marcado como aria-hidden. Quem importa aqui é o
+  // nome acessível, porque é ele que o leitor de tela anuncia.
+  const campo = page.getByRole('textbox', { name: 'Salário bruto mensal', exact: true })
+  await expect(campo).toBeVisible()
+  await expect(campo).toHaveAttribute('aria-required', 'true')
+})
