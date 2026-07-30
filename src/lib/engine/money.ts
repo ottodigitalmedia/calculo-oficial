@@ -169,6 +169,35 @@ export function aplicarAliquota(
 }
 
 /**
+ * Soma contribuições de uma tabela progressiva, arredondando **uma única vez**
+ * no total (`RN-008`).
+ *
+ * Arredondar faixa a faixa e somar dá resultado diferente de somar e arredondar
+ * — a diferença é de um centavo e aparece com frequência. Para um salário de
+ * R$ 5.000,00 na tabela de 2025, faixa a faixa dá R$ 509,59 e o total
+ * arredondado dá R$ 509,60.
+ *
+ * **A Receita Federal publica R$ 509,60**, nos exemplos de aplicação da Lei
+ * nº 15.270/2025. É evidência oficial de qual das duas formas vale, e é o
+ * motivo de esta função existir em vez de um laço com `aplicarAliquota`.
+ *
+ * A precisão é preservada acumulando o produto `base × alíquota` em inteiros,
+ * sem dividir por 10.000 no caminho.
+ */
+export function somarAliquotasPorFaixa(
+  parcelas: readonly { readonly base: Centavos; readonly aliquota: BasisPoints }[],
+  politica: PoliticaArredondamento,
+): Centavos {
+  let acumulado = 0
+  for (const { base, aliquota } of parcelas) {
+    exigirProdutoSeguro(base, aliquota, 'somarAliquotasPorFaixa')
+    acumulado += base * aliquota
+  }
+  const { quociente, resto, negativo } = dividirEmMagnitude(acumulado, BP_POR_INTEIRO)
+  return centavos(arredondarMagnitude(quociente, resto, BP_POR_INTEIRO, negativo, politica))
+}
+
+/**
  * Aplica uma proporção `numerador/denominador` — a forma dos avos (`RN-016`).
  *
  * `proporcao(base, 7, 12, ...)` são sete avos. Existe separada de

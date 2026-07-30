@@ -149,7 +149,7 @@ Formuladas como condição → ação, para virarem teste sem reinterpretação.
 
 Quatro consequências que a redação genérica de `RN-013` não capturava:
 
-1. **A faixa de até R$ 5.000 usa teto fixo, não a fórmula.** Aplicar a fórmula ali produziria R$ 446,04 num rendimento de R$ 4.000, contra os R$ 312,89 de teto — divergência material, não de centavos.
+1. **A faixa de até R$ 5.000 usa teto fixo, não a fórmula.** Aplicar a fórmula ali produziria uma redução bruta de R$ 446,04 num rendimento de R$ 4.000, contra o teto de R$ 312,89. O **imposto final é o mesmo**: o §1º limita a redução ao imposto apurado, e quem ganha até R$ 5.000 nunca deve mais que R$ 312,89, porque a base pelo simplificado é `rendimento − 607,20` e o teto foi calibrado para zerar exatamente ali. A divergência é na **explicação exibida**, não no valor — o que, num produto cuja tese é a memória de cálculo, continua sendo defeito.
 2. **A redução é limitada ao imposto devido** (§1º). Nunca gera crédito, o que é coerente com `RN-014`.
 3. **O parâmetro de comparação é o rendimento tributável bruto**, não a base após deduções. Confirmado pelo exemplo oficial de R$ 6.000: `978,62 − 0,133145 × 6000 = 179,75`, valor publicado.
 4. **A redução também se aplica ao décimo terceiro salário** (§3º), o que alcança CALC-005 e interage com `RN-010`.
