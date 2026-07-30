@@ -1,6 +1,6 @@
 ---
 doc: 10-ux-ui-spec
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [03-functional-spec]

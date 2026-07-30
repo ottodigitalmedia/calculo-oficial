@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # =============================================================================
-# Cálculo Aberto — imagem de produção
+# Cálculo Oficial — imagem de produção
 #
 # Build em múltiplos estágios (13-deployment §3). Cada princípio D-* está
 # amarrado a uma linha concreta abaixo:
@@ -102,6 +102,6 @@ CMD ["node", "server.js"]
 # durante um incidente, `docker inspect` responde qual commit está no ar sem
 # depender do painel de deploy (15-runbook RB-01).
 ARG VCS_REF="desconhecido"
-LABEL org.opencontainers.image.title="Cálculo Aberto" \
+LABEL org.opencontainers.image.title="Cálculo Oficial" \
       org.opencontainers.image.revision="${VCS_REF}" \
       org.opencontainers.image.licenses="UNLICENSED"

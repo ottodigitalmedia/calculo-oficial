@@ -1,6 +1,6 @@
 ---
 doc: ADR-006
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: aprovado
 depende_de: [06-api-spec]

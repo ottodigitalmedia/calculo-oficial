@@ -1,6 +1,6 @@
 ---
 doc: ADR-003
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: aprovado
 depende_de: [04-architecture]

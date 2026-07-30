@@ -1,6 +1,6 @@
 ---
 doc: 06-api-spec
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [04-architecture, 05-data-model]

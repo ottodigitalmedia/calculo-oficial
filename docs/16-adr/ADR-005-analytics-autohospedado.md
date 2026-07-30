@@ -1,6 +1,6 @@
 ---
 doc: ADR-005
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: aprovado
 depende_de: [07-security, 14-observability]

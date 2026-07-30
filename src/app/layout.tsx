@@ -4,8 +4,8 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Cálculo Aberto',
-    template: '%s · Cálculo Aberto',
+    default: 'Cálculo Oficial',
+    template: '%s · Cálculo Oficial',
   },
   description:
     'Calculadoras trabalhistas, tributárias e financeiras com memória de cálculo auditável: cada resultado mostra a conta, o parâmetro legal, a vigência e a fonte.',

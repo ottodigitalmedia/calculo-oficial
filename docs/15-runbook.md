@@ -1,6 +1,6 @@
 ---
 doc: 15-runbook
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [13-deployment, 14-observability]

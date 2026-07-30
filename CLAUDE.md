@@ -4,7 +4,7 @@ Contexto permanente do projeto. Leia antes de qualquer alteração.
 
 ## O que é
 
-**Cálculo Aberto** — webapp público de calculadoras trabalhistas, tributárias e financeiras para o Brasil.
+**Cálculo Oficial** — webapp público de calculadoras trabalhistas, tributárias e financeiras para o Brasil.
 
 Diferencial único: **memória de cálculo auditável**. Cada resultado mostra o passo a passo, o parâmetro legal usado, a vigência dele e o link para a norma. É a razão de o produto existir; qualquer decisão que a enfraqueça está errada.
 

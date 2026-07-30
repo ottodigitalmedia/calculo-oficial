@@ -1,6 +1,6 @@
 ---
 doc: 01-prd
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [00-product-brief, 00-catalogo-calculadoras]

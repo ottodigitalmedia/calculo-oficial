@@ -1,6 +1,6 @@
 ---
 doc: 04-architecture
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [01-prd]
@@ -21,7 +21,7 @@ graph TB
     U["Pessoa física<br/>navegador, anônima"]
     M["Mantenedor<br/>dev solo"]
 
-    subgraph SIS["Cálculo Aberto"]
+    subgraph SIS["Cálculo Oficial"]
         APP["Site estático<br/>Next.js exportado"]
     end
 

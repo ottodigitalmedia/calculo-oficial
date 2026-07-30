@@ -1,6 +1,6 @@
 ---
 doc: 03-functional-spec
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [01-prd, 02-user-stories]
@@ -350,4 +350,4 @@ Cada calculadora do v1 tem no mínimo 4 perguntas de FAQ, respondidas em até 3 
 
 **Texto do aviso legal (final):**
 
-> "O Cálculo Aberto é uma ferramenta informativa e educacional. Os resultados são estimativas produzidas a partir dos dados que você informa e dos parâmetros legais vigentes no período selecionado. Não constituem aconselhamento jurídico, contábil ou financeiro, nem substituem a orientação de um profissional habilitado. Para decisões que envolvam direitos, contratos ou dinheiro, procure um profissional."
+> "O Cálculo Oficial é uma ferramenta informativa e educacional. Os resultados são estimativas produzidas a partir dos dados que você informa e dos parâmetros legais vigentes no período selecionado. Não constituem aconselhamento jurídico, contábil ou financeiro, nem substituem a orientação de um profissional habilitado. Para decisões que envolvam direitos, contratos ou dinheiro, procure um profissional."

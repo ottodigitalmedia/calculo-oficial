@@ -1,6 +1,6 @@
 ---
 doc: 13-deployment
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [04-architecture, 12-test-plan]
@@ -145,11 +145,17 @@ A ausência de banco transforma migração em refatoração — reversível por 
 
 | Item | Definição |
 |---|---|
-| Domínio | `.com.br`, definido na aprovação do nome |
+| Domínio | **`calculoficial.com.br`** |
 | DNS | Registro apontando para a VPS |
 | TLS | Certificado automático via EasyPanel, com renovação automática |
 | Redirecionamentos | Sem `www` para com `www`, ou o inverso — escolher um e manter; HTTP para HTTPS sempre |
 | HSTS | Ativo após confirmar que o TLS está estável |
+
+**Canônica.** `NEXT_PUBLIC_SITE_URL=https://calculoficial.com.br` em produção. O valor entra no build, não em runtime — o prefixo `NEXT_PUBLIC_` é substituído no bundle. Consequência prática: mudar o domínio exige rebuild, não apenas reconfigurar o painel.
+
+> ⚠️ VERIFICAR: registrar o domínio e confirmar a titularidade **antes** de T-004. O nome do produto e o domínio foram definidos depois da fundação documental; nada no repositório prova que o registro existe.
+
+> ⚠️ VERIFICAR: o nome "Cálculo Oficial" convive com o aviso de `03-functional-spec` §5, que declara que os resultados **não** constituem aconselhamento e não substituem profissional habilitado. Conferir com orientação jurídica se a marca exige reforço do aviso — por exemplo, torná-lo mais proeminente na home e no rodapé do que o previsto em `RF-010`. Registrado aqui para ser decisão, não descuido.
 
 > ⚠️ VERIFICAR: confirmar a renovação automática do certificado **antes** do lançamento. Certificado expirado derruba o site inteiro e é uma das falhas mais comuns em VPS autogerida.
 

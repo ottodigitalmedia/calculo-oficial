@@ -1,6 +1,6 @@
 ---
 doc: 11-roadmap
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [00-product-brief, 01-prd]

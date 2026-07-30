@@ -1,12 +1,12 @@
 ---
 doc: README
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: aprovado
 depende_de: []
 ---
 
-# Documentação — Cálculo Aberto
+# Documentação — Cálculo Oficial
 
 Fundação documental do projeto. **A documentação é o artefato; o código deriva dela.**
 Nenhuma linha de código de aplicação é escrita antes da auditoria de consistência (GATE 2).

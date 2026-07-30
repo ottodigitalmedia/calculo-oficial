@@ -1,6 +1,6 @@
 ---
 doc: 12-test-plan
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [01-prd, 05-data-model, 07-security]

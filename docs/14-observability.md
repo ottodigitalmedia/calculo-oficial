@@ -1,6 +1,6 @@
 ---
 doc: 14-observability
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [07-security, 13-deployment]

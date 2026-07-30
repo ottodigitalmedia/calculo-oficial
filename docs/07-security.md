@@ -1,6 +1,6 @@
 ---
 doc: 07-security
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [04-architecture, 06-api-spec]

@@ -1,6 +1,6 @@
 ---
 doc: 00-product-brief
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: aprovado
 depende_de: [00-catalogo-calculadoras]

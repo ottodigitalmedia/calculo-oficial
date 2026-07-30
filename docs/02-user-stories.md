@@ -1,6 +1,6 @@
 ---
 doc: 02-user-stories
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [01-prd]

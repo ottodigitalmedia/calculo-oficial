@@ -1,4 +1,4 @@
-# Cálculo Aberto
+# Cálculo Oficial
 
 Calculadoras trabalhistas, tributárias e financeiras para o Brasil, com um diferencial: **cada resultado mostra a conta**.
 
@@ -25,7 +25,7 @@ Node 20 ou superior · npm · Docker (apenas para build de imagem)
 
 ```bash
 git clone <url-do-repositorio>
-cd calculo-aberto
+cd calculo-oficial
 npm install
 cp .env.example .env.local
 npm run dev

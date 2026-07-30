@@ -30,7 +30,7 @@ services:
         VCS_REF: ${VCS_REF:-desconhecido}
     # D-5: no ambiente real a etiqueta é o hash do commit, aplicada pelo
     # pipeline (T-003). `latest` sozinho torna rollback impossível.
-    image: calculo-aberto:${VCS_REF:-latest}
+    image: calculo-oficial:${VCS_REF:-latest}
     restart: unless-stopped
     ports:
       - '3000:3000'

@@ -1,6 +1,6 @@
 ---
 doc: 00-catalogo-calculadoras
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: []

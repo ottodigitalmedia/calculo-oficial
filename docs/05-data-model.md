@@ -1,6 +1,6 @@
 ---
 doc: 05-data-model
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [01-prd, 04-architecture]

@@ -1,6 +1,6 @@
 ---
 doc: 17-changelog
-projeto: Cálculo Aberto
+projeto: Cálculo Oficial
 versao: 1.0
 status: draft
 depende_de: [05-data-model]
