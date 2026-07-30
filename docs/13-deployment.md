@@ -115,7 +115,7 @@ flowchart TD
 | `BCB_SERIES_ID` | build | não | Identificador da série econômica |
 | `BCB_TIMEOUT_MS` | build | não | Tempo limite da coleta; 3000 por padrão (`06-api-spec` §4.2) |
 | `DEPLOY_WEBHOOK_URL` | CI | **sim** | Disparo do deploy |
-| `REGISTRY_TOKEN` | CI | **sim** | Publicação da imagem |
+| `REGISTRY_TOKEN` | CI | **sim** | Publicação da imagem — **só se o registro for externo ao GitHub**. Com o registro de contêineres do próprio GitHub, o token efêmero do workflow basta e não há segredo a guardar nem a rotacionar (`07-security` §6) |
 | `UMAMI_DATABASE_URL` | prod | **sim** | Banco da ferramenta de análise |
 | `UMAMI_APP_SECRET` | prod | **sim** | Sessão da ferramenta de análise |
 | `UMAMI_DB_USER` | prod | **sim** | Usuário do Postgres da análise |

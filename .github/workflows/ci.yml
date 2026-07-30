@@ -1,0 +1,260 @@
+# =============================================================================
+# Integração e entrega — 13-deployment §4.
+#
+# A ORDEM DOS PASSOS É A ESPECIFICAÇÃO, não uma escolha de conveniência. As
+# verificações mais baratas e mais críticas vêm primeiro: um parâmetro legal
+# inválido interrompe em segundos, antes de qualquer build.
+#
+# Uma assimetria deliberada atravessa este arquivo (regra R-3 de 06-api-spec):
+# parâmetro legal errado DEVE quebrar o pipeline; indicador econômico
+# indisponível NÃO deve. A diferença é de dano — um produz número errado, o
+# outro produz campo sem sugestão.
+# =============================================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Um commit novo cancela a verificação do anterior no mesmo ref. Exceto em
+# main: lá cada commit precisa da própria verificação completa, porque cada um
+# pode ir a produção.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # verificar — tudo que bloqueia. Sequencial e falha-rápido por construção.
+  # ---------------------------------------------------------------------------
+  verificar:
+    name: Verificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Obter o código
+        uses: actions/checkout@v4
+        with:
+          # Histórico necessário para BV-12 comparar o intervalo empurrado.
+          fetch-depth: 0
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      # --- 1. Instalar dependências -----------------------------------------
+      # `npm ci` e não `npm install`: instala exatamente o arquivo de trava.
+      # Fixação de versão é controle de AM-01 (07-security §8).
+      - name: Instalar dependências
+        run: npm ci
+
+      # --- 2. Verificações estruturais BV-01 a BV-12 ------------------------
+      # Bloqueiam o pipeline INTEIRO (12-test-plan §10). Vêm antes de tudo.
+      - name: 'BV-01 a BV-09 · parâmetros legais'
+        run: npm run validate:params
+
+      - name: 'BV-12 · formato da mensagem de commit'
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          TOPO: ${{ github.sha }}
+        run: |
+          # Primeiro push de um ref traz BASE zerado; não há intervalo a checar.
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            echo "Sem commit anterior conhecido — verificando apenas o topo."
+            npm run validate:commits -- "HEAD~1..HEAD" || npm run validate:commits -- "$TOPO~0..$TOPO"
+          else
+            npm run validate:commits -- "$BASE..$TOPO"
+          fi
+
+      # --- 3. Tipos + análise estática --------------------------------------
+      # `lint` carrega BV-10 e BV-11: constante legal fora de params/ e conta
+      # em ponto flutuante sobre dinheiro.
+      - name: Tipos
+        run: npm run typecheck
+
+      - name: 'Análise estática · inclui BV-10 e BV-11'
+        run: npm run lint
+
+      # --- 4. Casos-ouro + cobertura ≥ 90% ----------------------------------
+      # RNF-011. Bloqueia deploy. A cobertura mede o motor, não a interface:
+      # cobrir componente não protege o número.
+      - name: 'Casos-ouro e cobertura do motor'
+        run: npm run test:coverage
+
+      # --- 5. Auditoria de dependências -------------------------------------
+      - name: Auditoria de dependências
+        run: npm run audit:deps
+
+      # --- 6. Coleta da série econômica externa ------------------------------
+      # ASSIMETRIA DELIBERADA (regra R-3 / ADR-006 S-3): esta falha NÃO
+      # interrompe. Prossegue com o valor em cache e registra aviso. Script em
+      # T-023; `--if-present` mantém o passo honesto até lá.
+      - name: 'Coleta da série econômica (não bloqueante)'
+        id: serie
+        continue-on-error: true
+        run: npm run fetch:serie --if-present
+
+      - name: Avisar se a coleta falhou
+        if: steps.serie.outcome == 'failure'
+        run: |
+          echo "::warning title=Série econômica::Coleta falhou; build prossegue com o valor em cache (RN-032). Alerta AL-05 cobre falha persistente."
+
+      # --- 7. Build ----------------------------------------------------------
+      - name: Build
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://calculoficial.com.br' }}
+        run: npm run build
+
+      # --- 8. Orçamento de performance (TC-051) ------------------------------
+      # ≤ 120 KB comprimidos por rota de calculadora (RNF-004). Implementação
+      # em T-033, junto das primeiras rotas de calculadora — hoje não há rota
+      # a medir, e um verificador que sempre passa por falta de objeto é pior
+      # que a ausência dele.
+      - name: 'TC-051 · orçamento de performance'
+        run: echo "::notice title=TC-051::Sem rota de calculadora para medir. Implementação em T-033."
+
+      # --- 9. E2E + vazamento ------------------------------------------------
+      # TC-040 a TC-043 são o controle C-07 (07-security §4.2): o único que
+      # transforma a promessa de RN-030 em verificação executável.
+      - name: Instalar navegadores
+        run: npx playwright install --with-deps chromium
+
+      - name: 'TC-037 a TC-039 · ponta a ponta'
+        run: npm run test:e2e
+
+      - name: 'TC-040 a TC-043 · não vazamento de dado'
+        run: npm run test:leak
+
+      - name: Guardar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-playwright
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # ---------------------------------------------------------------------------
+  # publicar — imagem etiquetada com o hash do commit (regra D-5).
+  # ---------------------------------------------------------------------------
+  publicar:
+    name: Publicar imagem
+    needs: verificar
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Obter o código
+        uses: actions/checkout@v4
+
+      - name: Preparar Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Autenticar no registro
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Definir etiquetas
+        id: meta
+        run: |
+          # D-5: a etiqueta é o hash do commit. `latest` sozinho torna o
+          # rollback impossível — não há a que voltar.
+          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Construir e publicar
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          # `latest` acompanha, mas nunca sozinho: o rollback usa a etiqueta
+          # de commit, e é ela que 15-runbook RB-01 passo 8 manda reimplantar.
+          tags: |
+            ghcr.io/${{ steps.meta.outputs.repo }}:${{ steps.meta.outputs.sha }}
+            ghcr.io/${{ steps.meta.outputs.repo }}:latest
+          build-args: |
+            VCS_REF=${{ steps.meta.outputs.sha }}
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://calculoficial.com.br' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ---------------------------------------------------------------------------
+  # implantar — deploy, verificação de saúde e rollback (13-deployment §9).
+  # ---------------------------------------------------------------------------
+  implantar:
+    name: Implantar
+    needs: publicar
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # `secrets` não é acessível em `if:` de job nem de passo; por isso a
+      # presença do segredo vira saída de um passo.
+      - name: Conferir configuração de deploy
+        id: cfg
+        env:
+          TEM_WEBHOOK: ${{ secrets.DEPLOY_WEBHOOK_URL != '' }}
+          TEM_URL: ${{ vars.NEXT_PUBLIC_SITE_URL != '' }}
+        run: |
+          echo "pronto=$([ "$TEM_WEBHOOK" = "true" ] && [ "$TEM_URL" = "true" ] && echo sim || echo nao)" >> "$GITHUB_OUTPUT"
+
+      - name: Avisar que o deploy não está configurado
+        if: steps.cfg.outputs.pronto != 'sim'
+        run: |
+          echo "::warning title=Deploy não configurado::Faltam o segredo DEPLOY_WEBHOOK_URL e/ou a variável SITE_URL. A imagem foi publicada e pode ser implantada manualmente. Configuração em T-004."
+
+      - name: Disparar deploy
+        if: steps.cfg.outputs.pronto == 'sim'
+        run: curl --fail --silent --show-error -X POST "${{ secrets.DEPLOY_WEBHOOK_URL }}"
+
+      # D-4 / 13-deployment §4: falha aqui dispara rollback automático.
+      - name: 'Verificação de saúde (EP-016)'
+        if: steps.cfg.outputs.pronto == 'sim'
+        id: saude
+        run: |
+          alvo="${{ vars.NEXT_PUBLIC_SITE_URL }}/api/health"
+          for i in $(seq 1 20); do
+            if curl --fail --silent --max-time 5 "$alvo" | grep -q '"status":"ok"'; then
+              echo "Saudável na tentativa $i."
+              exit 0
+            fi
+            echo "tentativa $i: ainda não saudável"
+            sleep 6
+          done
+          echo "::error title=Verificação de saúde::EP-016 não respondeu em ~2 min."
+          exit 1
+
+      - name: Rollback automático
+        if: failure() && steps.saude.outcome == 'failure'
+        run: |
+          echo "::error title=Rollback::Reimplantando a etiqueta anterior (13-deployment §9)."
+          echo "::warning::Procedimento manual em 15-runbook RB-01, passo 8, enquanto o webhook de rollback não existir (T-004)."
+          exit 1
+
+      # Regressão de métrica ALERTA, não reverte (13-deployment §4). Deploy
+      # revertido por causa de LCP derruba correção de parâmetro legal junto.
+      - name: 'TC-049 e TC-050 · métricas de produção'
+        if: steps.cfg.outputs.pronto == 'sim'
+        run: echo "::notice title=Métricas::Web Vitals reais são medidos em produção (14-observability §3). Regressão gera AL-07, nunca rollback automático."

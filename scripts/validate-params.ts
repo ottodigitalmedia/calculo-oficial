@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url'
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIR_PARAMS = path.join(RAIZ, 'src', 'lib', 'params')
 
-type Responsavel = 'validate:params' | 'lint' | 'ci'
+type Responsavel = 'validate:params' | 'lint' | 'validate:commits'
 
 interface Verificacao {
   readonly id: string
@@ -43,7 +43,7 @@ const VERIFICACOES: readonly Verificacao[] = [
   { id: 'BV-09', descricao: 'Todo caso-ouro declara `fonte_verificacao` não vazia', regra: 'CO-1', onde: 'validate:params' },
   { id: 'BV-10', descricao: 'Nenhum literal monetário fora do motor de parâmetros', regra: 'RN-001', onde: 'lint' },
   { id: 'BV-11', descricao: 'Nenhuma operação de ponto flutuante sobre valor monetário', regra: 'RN-005', onde: 'lint' },
-  { id: 'BV-12', descricao: 'Mensagem de commit de parâmetro no formato exigido', regra: '05-data-model §5', onde: 'ci' },
+  { id: 'BV-12', descricao: 'Mensagem de commit de parâmetro no formato exigido', regra: '05-data-model §5', onde: 'validate:commits' },
 ]
 
 /**
