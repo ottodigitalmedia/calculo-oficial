@@ -40,6 +40,16 @@ export interface Registro {
    * não existe ou quando as coberturas não se sobrepõem.
    */
   coberturaCombinada(parametrosIds: readonly string[]): IntervaloCobertura | null
+  /**
+   * Anos que o seletor de vigência pode oferecer, do mais recente ao mais
+   * antigo.
+   *
+   * Derivado das vigências reais, não do intervalo de cobertura. A cobertura
+   * termina em `null` quando a vigência mais recente está aberta, e `null` não
+   * diz qual é o ano mais recente — usá-lo como limite fazia o seletor exibir
+   * um ano e o cálculo usar outro.
+   */
+  anosDisponiveis(parametrosIds: readonly string[]): readonly number[]
   readonly parametros: readonly Parametro[]
 }
 
@@ -163,6 +173,28 @@ export function construirRegistro(...conjuntos: readonly ConjuntoDeParametros[])
       }
 
       return { ok: true, resolvida: { parametro: indice.parametro, vigencia, fonte } }
+    },
+
+    anosDisponiveis(parametrosIds) {
+      const combinada = this.coberturaCombinada(parametrosIds)
+      if (!combinada) return []
+
+      const ano = (d: DataISO) => Number(d.slice(0, 4))
+      let ultimo = ano(combinada.inicio)
+
+      // O ano mais recente vem das vigências, não da cobertura: se a mais nova
+      // está aberta, `fim` é nulo e não informa ano algum.
+      for (const id of parametrosIds) {
+        for (const v of indices.get(id)?.vigencias ?? []) {
+          ultimo = Math.max(ultimo, ano(v.inicio))
+          if (v.fim !== null) ultimo = Math.max(ultimo, ano(v.fim))
+        }
+      }
+      if (combinada.fim !== null) ultimo = Math.min(ultimo, ano(combinada.fim))
+
+      const anos: number[] = []
+      for (let a = ultimo; a >= ano(combinada.inicio); a--) anos.push(a)
+      return anos
     },
 
     coberturaCombinada(parametrosIds) {

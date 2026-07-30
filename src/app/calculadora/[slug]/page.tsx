@@ -45,9 +45,11 @@ export default async function PaginaCalculadora({
   if (!definicao) notFound()
 
   return (
-    <main className="mx-auto max-w-5xl px-5 py-10">
+    <main id="conteudo" className="mx-auto max-w-5xl px-5 py-10">
       <header>
-        <h1 className="text-3xl font-semibold tracking-tight">{definicao.nome}</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-[var(--color-navy)] md:text-4xl">
+          {definicao.nome}
+        </h1>
         <p className="mt-2 text-lg text-[var(--color-text-secondary)]">
           {definicao.linhaDeContexto}
         </p>
@@ -62,7 +64,7 @@ export default async function PaginaCalculadora({
           Não entra no lançamento — `ADR-008`. */}
 
       <section className="mt-12">
-        <h2 className="text-xl font-semibold">Perguntas frequentes</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-[var(--color-navy)]">Perguntas frequentes</h2>
         <dl className="mt-4 space-y-5">
           {definicao.faq.map((item) => (
             <div key={item.pergunta}>
@@ -73,14 +75,6 @@ export default async function PaginaCalculadora({
         </dl>
       </section>
 
-      <footer className="mt-12 border-t border-[var(--color-border)] pt-6 text-sm text-[var(--color-text-secondary)]">
-        <p>
-          O Cálculo Oficial é uma ferramenta informativa e educacional. Os resultados são
-          estimativas e não constituem aconselhamento jurídico, contábil ou financeiro. Para
-          decisões que envolvam direitos, contratos ou dinheiro, procure um profissional
-          habilitado.
-        </p>
-      </footer>
     </main>
   )
 }

@@ -36,10 +36,23 @@ export function Calculadora({ slug }: { readonly slug: string }) {
     [definicao],
   )
 
-  // A data de referência começa no fim da cobertura — o período mais recente
-  // que sabemos calcular. Nunca `hoje`: se hoje estiver fora da cobertura, a
-  // calculadora abriria bloqueada, o que seria correto mas inútil.
-  const dataInicial = cobertura?.fim ?? '2026-01-01'
+  const anos = useMemo(
+    () => (definicao ? registro.anosDisponiveis(definicao.parametrosRequeridos) : []),
+    [definicao],
+  )
+
+  /**
+   * Abre no ano mais recente que sabemos calcular.
+   *
+   * Nunca `hoje`: o motor não lê relógio (`C-M2`), e se hoje estivesse fora da
+   * cobertura a calculadora abriria bloqueada — correto, porém inútil.
+   *
+   * Derivado de `anosDisponiveis`, e não do fim da cobertura. Usar o fim da
+   * cobertura era um DEFEITO: com a vigência mais recente aberta, `fim` é nulo,
+   * o seletor listava só o primeiro ano e a data efetiva era outra — a tela
+   * dizia 2025 e a memória citava parâmetros de 2026.
+   */
+  const dataInicial = anos.length > 0 ? `${anos[0]}-06-15` : '2026-01-01'
 
   const [dataReferencia, setDataReferencia] = useState(dataInicial)
   const [valores, setValores] = useState<ValoresFormulario>(() =>
@@ -98,8 +111,6 @@ export function Calculadora({ slug }: { readonly slug: string }) {
 
   if (!definicao) return null
 
-  const anos = anosDisponiveis(cobertura)
-
   return (
     <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* ---------------------------------------------------------------- */}
@@ -115,8 +126,8 @@ export function Calculadora({ slug }: { readonly slug: string }) {
             className="mt-1 block w-full rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-base"
           >
             {anos.map((a) => (
-              <option key={a.valor} value={a.valor}>
-                {a.rotulo}
+              <option key={a} value={`${a}-06-15`}>
+                {a}
               </option>
             ))}
           </select>
@@ -252,21 +263,4 @@ function Resultado({
       <MemoriaCalculo traco={r.traco} />
     </div>
   )
-}
-
-/** Opções do seletor de vigência, a partir da cobertura real dos parâmetros. */
-function anosDisponiveis(
-  cobertura: { readonly inicio: string; readonly fim: string | null } | null,
-): readonly { valor: string; rotulo: string }[] {
-  if (!cobertura) return []
-  const primeiro = Number(cobertura.inicio.slice(0, 4))
-  const ultimo = Number((cobertura.fim ?? cobertura.inicio).slice(0, 4))
-  const opcoes: { valor: string; rotulo: string }[] = []
-  for (let ano = ultimo; ano >= primeiro; ano--) {
-    // Meio do ano evita pegar a fronteira de uma vigência que muda em janeiro.
-    const meio = `${ano}-06-15`
-    const valor = meio < cobertura.inicio ? cobertura.inicio : meio
-    opcoes.push({ valor, rotulo: String(ano) })
-  }
-  return opcoes
 }

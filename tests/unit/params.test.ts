@@ -525,3 +525,55 @@ describe('validações restantes do esquema', () => {
     expect(regras(c)).toContain('BV-05')
   })
 })
+
+describe('anos disponíveis para o seletor de vigência', () => {
+  /**
+   * Regressão de um defeito real, visto numa captura de tela: o seletor exibia
+   * "2025" enquanto a memória de cálculo citava parâmetros de 2026.
+   *
+   * A causa era derivar o último ano de `cobertura.fim`. Quando a vigência
+   * mais recente está aberta, `fim` é nulo — e nulo não informa ano nenhum. O
+   * seletor listava só o ano inicial, a data efetiva era outra, e a interface
+   * afirmava uma vigência enquanto calculava outra.
+   */
+  const registro = construirRegistro(
+    conjunto({
+      vigencias: [
+        vigenciaTabela({ id: 'v-2025', inicio: '2025-01-01', fim: '2025-12-31' }),
+        vigenciaTabela({ id: 'v-2026', inicio: '2026-01-01', fim: null }),
+      ],
+    }),
+  )
+
+  it('inclui o ano da vigência ABERTA, que a cobertura não revela', () => {
+    expect(registro.coberturaCombinada(['tabela-exemplo'])?.fim).toBeNull()
+    expect(registro.anosDisponiveis(['tabela-exemplo'])).toEqual([2026, 2025])
+  })
+
+  it('vem do mais recente para o mais antigo', () => {
+    const anos = registro.anosDisponiveis(['tabela-exemplo'])
+    expect(anos[0]).toBe(2026)
+  })
+
+  it('respeita o limite quando a cobertura combinada é fechada', () => {
+    const r = construirRegistro({
+      fontes: [fonte],
+      parametros: [parametroTabela, { ...parametroTabela, id: 'segundo' }],
+      vigencias: [
+        vigenciaTabela({ id: 'a', inicio: '2024-01-01', fim: null }),
+        vigenciaTabela({
+          id: 'b',
+          parametroId: 'segundo',
+          inicio: '2024-01-01',
+          fim: '2025-12-31',
+        }),
+      ],
+    })
+    // O segundo parâmetro termina em 2025, então 2026 não é oferecido.
+    expect(r.anosDisponiveis(['tabela-exemplo', 'segundo'])).toEqual([2025, 2024])
+  })
+
+  it('parâmetro inexistente não oferece ano algum', () => {
+    expect(registro.anosDisponiveis(['fantasma'])).toEqual([])
+  })
+})
