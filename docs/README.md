@@ -34,8 +34,14 @@ Nenhuma linha de código de aplicação é escrita antes da auditoria de consist
 | 13 | [13-deployment](13-deployment.md) | ✅ gerado | Docker, EasyPanel, CI/CD, rollback |
 | 14 | [14-observability](14-observability.md) | ✅ gerado | Erros, Web Vitals, falha externa, KPIs |
 | 15 | [15-runbook](15-runbook.md) | ✅ gerado | Procedimento por incidente provável |
-| 16 | [16-adr/](16-adr/) | ✅ gerado | ADR-001 a ADR-007 |
+| 16 | [16-adr/](16-adr/) | ✅ gerado | ADR-001 a ADR-008 |
 | 17 | [17-changelog](17-changelog.md) | ✅ gerado | Inclui histórico de mudança de parâmetro legal |
+
+> **Escopo enxuto (`ADR-008`).** O lançamento leva 4 calculadoras e ~12 dias-dev.
+> Os documentos abaixo continuam válidos e **suspensos até depois do lançamento**,
+> porque especificam o que foi adiado: `14-observability` (análise de uso),
+> `15-runbook` (só `RB-06` vale antes), e as seções de anúncio de `10-ux-ui-spec`
+> §9. `11-roadmap` e `BACKLOG` estão na versão 2.0.
 
 **Não gerados neste projeto:**
 `08`, `09`, `22` — não há IA no produto.

@@ -1,225 +1,182 @@
 ---
 doc: 11-roadmap
 projeto: Cálculo Oficial
-versao: 1.0
-status: draft
-depende_de: [00-product-brief, 01-prd]
+versao: 2.0
+status: aprovado
+depende_de: [00-product-brief, 01-prd, 16-adr/ADR-008-escopo-enxuto-para-lancamento]
+substitui: 11-roadmap v1.0
 ---
 
 # Roadmap
 
+> **Versão 2.0.** Reescrito por `ADR-008`. A v1.0 previa 10 calculadoras e
+> 36,75 dias-dev até o lançamento. Esta prevê **4 calculadoras e ~12 dias-dev**,
+> adiando o que não prova a tese. Nada foi removido do projeto — foi reordenado.
+
 ## 1. Princípio
 
-Fatias verticais, não camadas horizontais. Cada fatia coloca algo em produção e é utilizável por um usuário real. Não existe "sprint de backend" nem "sprint de design" — existe "a primeira calculadora está no ar e funciona".
+Fatias verticais. Cada uma coloca algo no ar e é utilizável por uma pessoa real.
 
-Sem datas absolutas. As fatias são numeradas e a unidade é dia-dev.
+E uma regra que a v1.0 não tinha: **nada entra antes do lançamento se puder
+entrar depois sem prejuízo.** O custo de adiar é quase sempre zero; o custo de
+antecipar é o relógio de HIP-01 parado.
 
-## 2. Fatias
+## 2. O que já está pronto
 
-### F-0 — Esqueleto em produção · 2 dias
-
-**Entrega.** Uma página no ar, no domínio definitivo, com TLS, servida pelo contêiner, publicada por commit.
-
-| Inclui | Não inclui |
+| | Entrega |
 |---|---|
-| Repositório, TypeScript, estilo, contêiner | Qualquer cálculo |
-| Publicação automatizada por commit | Conteúdo |
-| Domínio, DNS, TLS | Design final |
-| Página inicial provisória | Anúncio |
-
-**Pronto quando:** um commit na branch principal aparece no ar sem intervenção manual.
-
-**Por que primeiro.** Publicação quebrada descoberta na semana sete custa uma semana. Descoberta no dia dois custa duas horas.
+| ✅ | Repositório, ferramental e regras de qualidade ativas por lint |
+| ✅ | Imagem de contêiner sem código-fonte, com processo sem privilégio |
+| ✅ | Publicação automatizada por commit, verificada em produção |
+| ✅ | Aritmética monetária em centavos, com política de arredondamento explícita |
+| ✅ | Modelo de parâmetros por vigência, com BV-01 a BV-07 valendo |
+| ✅ | Pesquisa normativa de INSS e IRRF, 2025 e 2026, em fonte oficial |
+| ✅ | Domínio registrado e DNS apontando para a VPS |
 
 ---
 
-### F-1 — A primeira calculadora completa · 8 dias
+## 3. Fatias até o lançamento
 
-**Entrega.** `/calculadora/salario-liquido` no ar, com memória de cálculo, seletor de vigência e FAQ.
+### F-B · A primeira calculadora e o molde de todas · 6 dias
 
-Esta é a fatia mais importante do projeto. Ela constrói, de uma vez, o motor de parâmetros, o motor de cálculo, o componente de memória e o modelo de página — tudo validado por um caso real de ponta a ponta.
+**Entrega.** `/salario-liquido` no ar, com memória de cálculo e seletor de
+vigência.
 
-| Inclui | Não inclui |
-|---|---|
-| Motor de parâmetros com vigência (`RF-001`) | Outras calculadoras |
-| Motor de cálculo: INSS e IRRF (`RF-002`) | Anúncio |
-| Memória de cálculo (`RF-003`) | Busca |
-| Seletor de vigência com dois exercícios (`RF-004`) | Permalink |
-| Página completa com todos os estados (`RF-005`) | Guias longos |
-| Casos-ouro de INSS e IRRF, bloqueadores no CI | |
-| FAQ com 4 perguntas | |
-
-**Pronto quando:** o resultado bate com os casos-ouro conferidos contra fonte oficial, a memória permite reproduzir a conta à mão, e alterar a vigência muda o resultado corretamente.
-
-**Marco MR-1.** Ao fim de F-1, a tese do produto está demonstrável para uma pessoa real. Se ela não convencer aqui, mais calculadoras não vão resolver.
-
----
-
-### F-2 — O bloco trabalhista · 7 dias
-
-**Entrega.** Rescisão sem justa causa, pedido de demissão, férias, 13º, horas extras e FGTS no ar.
+É a fatia que mais importa, e por uma razão que a v1.0 não explicitava: ela não
+constrói **uma** calculadora, constrói **o molde**. A página é genérica desde o
+primeiro dia (`ADR-008` E-1), então as seguintes custam horas.
 
 | Inclui | Não inclui |
 |---|---|
-| CALC-002 a CALC-007 | Anúncio |
-| Regras de proporcionalidade e verbas (`RN-015` a `RN-026`) | Conteúdo longo |
-| Casos-ouro de cada uma | |
-| Navegação entre calculadoras relacionadas | |
+| Tabelas de INSS e IRRF cadastradas, 2025 e 2026 | Outras calculadoras |
+| Motores de INSS e IRRF, com traço | Anúncio |
+| Definição declarativa de calculadora + página genérica | Guias longos |
+| Memória de cálculo | Análise de uso |
+| Tokens de design, aplicados desde o início (E-2) | |
+| Casos-ouro dos exemplos oficiais da Receita | |
 
-**Pronto quando:** as seis passam nos casos-ouro e a navegação entre elas funciona.
+**Pronto quando:** o resultado bate com os casos-ouro conferidos contra fonte
+oficial, a memória permite refazer a conta à mão, e mudar a vigência muda o
+resultado corretamente.
 
-**Nota de sequência.** Rescisão sem justa causa é a mais complexa do catálogo e vem antes das mais simples de propósito: se o motor não a comporta, é melhor descobrir com quatro calculadoras pela frente do que com uma.
-
----
-
-### F-3 — Fechar o catálogo do v1 · 4 dias
-
-**Entrega.** IRRF isolado, INSS isolado e juros compostos. Catálogo do v1 completo.
-
-| Inclui | Não inclui |
-|---|---|
-| CALC-015, CALC-016, CALC-022 | Anúncio |
-| Integração com a série econômica e seu fallback (`RF-012`) | |
-| Busca local no catálogo (`RF-007`) | |
-| Permalink de cálculo (`RF-006`) | |
-| Páginas de categoria | |
-
-**Pronto quando:** as dez calculadoras estão no ar, a busca funciona sem rede e um link compartilhado reproduz o cenário.
+**Marco MR-1 · a tese é demonstrável.** Se ela não convencer aqui, mais
+calculadoras não resolvem — e desta vez o plano age de acordo.
 
 ---
 
-### F-4 — Conteúdo e descoberta · 6 dias
+### F-C · Mais três, quase de graça · 2 dias
 
-**Entrega.** Guias, FAQ completo e SEO técnico. O produto passa a ser encontrável.
+**Entrega.** INSS, IRRF e juros compostos no ar.
 
-| Inclui | Não inclui |
-|---|---|
-| 10 guias em MDX, ligados às calculadoras (`RF-008`) | Anúncio |
-| FAQ completo em todas as dez páginas | |
-| Metadata, sitemap, dados estruturados (`RF-011`) | |
-| Home definitiva | |
+As duas primeiras reaproveitam motores já construídos em F-B; a página é a
+mesma. Juros compostos é matemática pura, sem parâmetro legal — e é a única do
+lançamento na vertical de maior valor publicitário.
 
-**Pronto quando:** o sitemap está submetido e todas as rotas do v1 estão indexáveis.
-
-**Marco MR-3.** Início da contagem de 90 dias para medir HIP-01.
-
-**Definição de M-1 (sessões orgânicas), pendente em `00-product-brief`:** a meta é fixada na conclusão de F-4, quando o volume real de conteúdo publicado é conhecido. Fórmula: `número de guias publicados × 40 sessões/mês por guia`, medida ao fim de 90 dias.
-> 📌 PREMISSA: 40 sessões mensais por guia após indexação é hipótese de mercado para conteúdo de cauda longa em domínio novo, sem autoridade acumulada. É o número mais frágil do roadmap e existe para haver um alvo falseável, não para ser preciso. Dono: mantenedor. Prazo: fim de F-4.
+**Pronto quando:** as quatro passam nos casos-ouro e a navegação entre elas
+funciona.
 
 ---
 
-### F-5 — Acabamento e acessibilidade · 5 dias
+### F-D · Encontrável, acessível e no ar · 4 dias
 
-**Entrega.** O produto passa a ser bom, não apenas correto.
+**Entrega.** O produto público.
 
 | Inclui |
 |---|
-| Design definitivo aplicado às dez páginas |
-| Auditoria de acessibilidade e correções (`RNF-008`) |
-| Orçamento de performance no CI (`RNF-001` a `RNF-004`) |
-| Teste de ponta a ponta dos três fluxos críticos |
-| Teste C-07 — verificação de não vazamento de dado (`07-security` §4.2) |
-| Observabilidade: erros e uso |
+| Home, busca local no catálogo e páginas legais |
+| 3 guias em MDX, ligados às calculadoras |
+| Metadata, sitemap, canônicas e dados estruturados |
+| Permalink de cálculo pela query string |
+| Serviço no EasyPanel, TLS e renovação automática confirmada |
+| Verificação de acessibilidade e correções |
+| **Teste de não vazamento de dado** |
+| **Auditoria dos parâmetros contra fonte oficial** |
 
-**Pronto quando:** as metas de `RNF-001` a `RNF-004` e `RNF-008` são atingidas em produção e C-07 passa.
+**Pronto quando:** a auditoria retorna zero divergência, o teste de vazamento
+passa, e o sitemap está submetido.
 
-**Nota.** C-07 fica aqui e não em F-6 de propósito: a linha de base do teste precisa existir **antes** de o primeiro script de terceiro entrar.
-
----
-
-### F-6 — Monetização · 3 dias
-
-**Entrega.** Anúncio no ar, com consentimento, sem degradar as métricas.
-
-| Inclui |
-|---|
-| Plataforma de consentimento (`INT-002`) |
-| Slot único com altura reservada (`RF-009`) |
-| Páginas legais definitivas (`RF-010`) |
-| Reexecução de C-07 **com o anúncio ativo** |
-| Reverificação de CLS e LCP com o anúncio ativo |
-
-**Pronto quando:** `RNF-002` continua atingido com o anúncio carregado e C-07 continua passando.
-
-**Critério de reversão.** Se o anúncio degradar `RNF-001` ou `RNF-002` além da meta e não houver ajuste que resolva, o anúncio sai. A métrica de produto tem precedência sobre a receita nesta fase, porque sem tráfego não há receita a proteger.
+**Marco MR-2 · lançado.** Começa a contagem de 90 dias de HIP-01 e HIP-02.
 
 ---
 
-### F-7 — Lançamento e observação · 2 dias
+## 4. Resumo
 
-| Inclui |
-|---|
-| Lista de verificação pré-lançamento de `12-test-plan` |
-| Primeira auditoria completa de parâmetros contra fonte oficial |
-| Painéis de acompanhamento configurados |
-| `15-runbook` revisado com o ambiente real |
-
-**Pronto quando:** a auditoria retorna zero divergência (`M-3`).
-
----
-
-## 3. Resumo
-
-| Fatia | Dias | Acumulado | Entrega ao usuário |
+| Fatia | Dias | Acumulado | Entrega |
 |---|---|---|---|
-| F-0 | 2 | 2 | — |
-| F-1 | 8 | 10 | **Primeira calculadora utilizável** |
-| F-2 | 7 | 17 | Bloco trabalhista completo |
-| F-3 | 4 | 21 | Catálogo do v1 completo |
-| F-4 | 6 | 27 | **Produto encontrável** |
-| F-5 | 5 | 32 | Produto acessível e rápido |
-| F-6 | 3 | 35 | Receita ativa |
-| F-7 | 2 | **37** | **Lançamento** |
+| F-B | 6 | 6 | **Primeira calculadora utilizável** |
+| F-C | 2 | 8 | Quatro calculadoras |
+| F-D | 4 | **12** | **Produto público** |
 
-> 📌 PREMISSA: 37 dias-dev é hipótese, não medição. F-1 e F-2 concentram o risco de estouro, porque envolvem leitura de norma — trabalho que não acelera com assistência de IA na mesma proporção que código.
+> 📌 PREMISSA: 12 dias-dev é hipótese. O risco de estouro está concentrado em
+> F-B, e não pelo motivo da v1.0 — a pesquisa normativa já está feita. O risco
+> agora é a página genérica não se provar genérica de verdade, obrigando a
+> refazer o molde ao construir a segunda calculadora.
 
-**Se o prazo apertar,** nesta ordem: reduzir os guias de F-4 de 10 para 5 (−2,5 dias) · adiar CALC-022 e a integração externa para depois do lançamento (−2 dias) · adiar o permalink (−1 dia).
-**Nunca cortar:** os casos-ouro de F-1 a F-3, a auditoria de F-7, ou o teste C-07 de F-5. São o que separa este produto do que ele critica.
+**Se o prazo apertar,** nesta ordem: reduzir os guias de 3 para 1 · adiar o
+permalink · adiar a busca local.
 
-## 4. Marcos
+**Nunca cortar:** os casos-ouro, a auditoria de F-D, o teste de vazamento e a
+memória de cálculo. São o que separa este produto do que ele critica.
 
-> **Nota de nomenclatura.** Marcos usam o prefixo `MR-`. O prefixo `M-` é reservado às métricas de sucesso definidas em `00-product-brief` §6 (`M-1` sessões orgânicas, `M-2` LCP, `M-3` divergências de auditoria). Os dois conjuntos são distintos.
+---
 
-| Marco | Fatia | Significa |
+## 5. Depois do lançamento
+
+Sem estimativa, porque dependem da medição. Ordem sugerida:
+
+| # | O quê | Gatilho |
 |---|---|---|
-| MR-1 · Tese demonstrável | F-1 | Uma pessoa real consegue conferir a própria conta |
-| MR-2 · MVP funcional | F-3 | As dez calculadoras funcionam |
-| MR-3 · Encontrável | F-4 | Começa a contagem de HIP-01 |
-| MR-4 · Lançado | F-7 | Produto público, monetizado, auditado |
-| MR-5 · Decisão | F-7 + 90 dias | Avaliação de HIP-01 a HIP-03 |
+| 1 | Rescisão sem justa causa | maior valor percebido do catálogo |
+| 2 | Férias, 13º, horas extras, FGTS | compartilham o motor de proporcionalidade |
+| 3 | Guias restantes | conforme `busca_sem_resultado` indicar demanda |
+| 4 | Análise de uso | quando houver tráfego que justifique medir |
+| 5 | Anúncio e consentimento | quando o tráfego der sinal sobre HIP-03 |
+| 6 | Catálogo v2 em diante | conforme §6 |
 
-## 5. MR-5 — critério de decisão
+A ordem de 1 e 2 é deliberada: rescisão é a mais complexa do catálogo e vem
+primeiro de propósito. Se o motor não a comportar, é melhor descobrir com
+quatro calculadoras no ar do que com dez pela frente.
 
-Noventa dias após MR-3, com dados reais:
+---
+
+## 6. MR-3 — critério de decisão, 90 dias após o lançamento
 
 | Cenário | Decisão |
 |---|---|
-| HIP-01 e HIP-02 confirmadas | Avançar para o catálogo v2, priorizando as verticais de maior valor publicitário |
-| HIP-01 confirmada, HIP-02 refutada | Há tráfego, mas o diferencial não é percebido. Investigar antes de expandir — pode ser problema de apresentação, não de tese |
-| HIP-01 refutada, HIP-02 confirmada | O produto é bom e ninguém chega nele. Problema de canal, não de produto. Reavaliar aquisição; **não** adicionar calculadoras |
-| Ambas refutadas | Descontinuar ou reposicionar. Adicionar cobertura é a resposta instintiva e é a que produziu o mercado atual (`00-product-brief` §8) |
+| HIP-01 e HIP-02 confirmadas | Avançar no catálogo, priorizando as verticais de maior valor publicitário |
+| HIP-01 confirmada, HIP-02 refutada | Há tráfego e o diferencial não é percebido. Investigar apresentação antes de expandir |
+| HIP-01 refutada, HIP-02 confirmada | O produto é bom e ninguém chega nele. Problema de canal. Reavaliar aquisição; **não** adicionar calculadoras |
+| Ambas refutadas | Descontinuar ou reposicionar. Adicionar cobertura é a resposta instintiva e é a que produziu o mercado atual |
 
-## 6. Depois do v1
+**Ressalva de `ADR-008`.** Se o tráfego crescer mas ficar concentrado, e
+`busca_sem_resultado` apontar calculadoras ausentes, HIP-01 está limitada por
+**cobertura**, não por canal — e aí ampliar o catálogo é a resposta certa, não a
+instintiva. A distinção depende de instrumentar aquele evento, o que entra junto
+da análise de uso.
 
-Sem estimativa, porque dependem de MR-5.
-
-**v2 — 16 calculadoras.** Abre crédito, imóveis, investimentos, MEI, veículos e utilitários. Introduz dependência de série econômica em mais calculadoras, o que torna o cache um componente de primeira classe.
-
-**v3 — 25 calculadoras.** Profundidade nos clusters e a categoria de correção monetária — o diferencial técnico mais defensável do catálogo, e o que mais se aproxima do que hoje só existe em produto pago.
-
-**v4 — 24 calculadoras.** Cauda longa.
-
-**Fora do roadmap até que uma hipótese o justifique:** conta de usuário, assinatura, exportação em PDF, aplicativo. Cada um exige reverter uma decisão arquitetural registrada, e reverter por hipótese não testada é como se constrói produto que ninguém pediu.
+---
 
 ## 7. Manutenção recorrente
 
-Não é fatia; é rotina permanente, e é o custo real do produto.
+Não é fatia; é o custo real do produto.
 
 | Tarefa | Frequência | Esforço |
 |---|---|---|
-| Auditoria de parâmetros contra fonte oficial | Trimestral | 0,5 dia |
-| Atualização de parâmetros na virada de exercício | Anual | 1 a 2 dias |
-| Revisão de dependências e vulnerabilidades | Mensal | 0,25 dia |
-| Revisão de conteúdo desatualizado | Semestral | 0,5 dia |
+| Auditoria de parâmetros contra fonte oficial | Trimestral | 0,25 dia |
+| Atualização de parâmetros na virada de exercício | Anual | 0,5 dia |
+| Revisão de dependências | Mensal | 0,25 dia |
 
-Total estimado: **4 a 6 dias-dev por ano** para manter dez calculadoras. Esse número é o que limita o crescimento do catálogo e deve ser medido na primeira virada de exercício para validar HIP-04.
+Com quatro calculadoras a manutenção anual fica em torno de **2 dias-dev**,
+contra 4 a 6 estimados para dez. É o outro ganho do escopo enxuto, e é o que
+`HIP-04` testa na primeira virada de exercício.
+
+---
+
+## 8. Relação com o catálogo
+
+`00-catalogo-calculadoras` mantém as 75 calculadoras e a divisão em v1 a v4 como
+**documento de escopo de longo prazo**. Este roadmap define apenas o que vai ao
+ar no lançamento.
+
+Correspondência: o lançamento leva CALC-001, CALC-015, CALC-016 e CALC-022. As
+outras seis do v1 do catálogo passam a ser as primeiras do pós-lançamento.

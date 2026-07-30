@@ -39,10 +39,12 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 - Ferramental (T-001) e empacotamento em contêiner (T-002): as regras invioláveis de `CLAUDE.md` passam a ser verificadas mecanicamente por lint, e a imagem de produção é construída em múltiplos estágios, sem código-fonte nem dependência de desenvolvimento, com processo sem privilégio.
 - Pipeline de integração e entrega (T-003), na ordem de `13-deployment` §4, com a assimetria de R-3 preservada: parâmetro legal inválido interrompe antes do build; falha da série econômica prossegue com aviso.
 - `ADR-007` — unidade `fracao` para coeficiente legal que não cabe em basis points. O redutor do Art. 3º-A da Lei nº 9.250/1995 usa `0,133145`, que em basis points seria `1331,45` — não inteiro. Emenda a `ADR-004`, que permanece válido em tudo o mais.
+- `ADR-008` — escopo enxuto para o lançamento. O plano anterior contradizia o próprio marco MR-1: declarava a tese demonstrável ao fim da primeira calculadora e construía mais nove antes de lançar.
 - `RN-013.1` — forma exata do redutor do imposto mensal, conferida contra o texto do art. 3º-A. A redação genérica anterior não capturava que a faixa de até R$ 5.000 usa teto fixo e não a fórmula, divergência de R$ 133 num rendimento de R$ 4.000.
 - **BV-12 implementado** (`npm run validate:commits`): formato convencional com escopo obrigatório para todo commit, e os quatro campos de fonte exigidos em commit de parâmetro legal. Era a única verificação estrutural declarada e sem execução.
 
 ### Alterado
+- **`11-roadmap` e `BACKLOG` reescritos na versão 2.0** por `ADR-008`: lançamento com 4 calculadoras em ~12 dias-dev, contra 10 calculadoras em 36,75 dias. 40 tickets viraram 8. Nada removido do projeto — reordenado, com o que foi adiado declarado no ADR.
 - Estrutura de arquivos restaurada para a forma que `CLAUDE.md` e `docs/README.md` assumem: documentos em `docs/`, ADRs em `docs/16-adr/`. Estavam achatados na raiz, o que quebrava todos os links relativos entre documentos.
 - `README.md` da raiz passa a ser o README do produto; o índice da documentação volta para `docs/README.md`. Os dois estavam trocados.
 - `00-catalogo-calculadoras` §15 — quebra por fase corrigida de 10/16/25/24 para **10/17/28/20**, conferida contra a coluna `Fase` das tabelas §4 a §13. O total (75) já estava correto.
