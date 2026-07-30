@@ -109,8 +109,10 @@ Definição do que é uma constante legal, independentemente do valor.
 |---|---|---|---|
 | `id` | string | sim | Único; nunca reciclado |
 | `nome` | string | sim | Nome exibível ao usuário na memória de cálculo |
-| `tipo` | enum | sim | `tabela_faixas` · `valor_monetario` · `percentual` · `inteiro` · `mapa` |
-| `unidade` | enum | sim | `centavos` · `basis_points` · `dias` · `horas` · `adimensional` |
+| `tipo` | enum | sim | `tabela_faixas` · `valor_monetario` · `percentual` · `inteiro` · `mapa` · `fracao` |
+| `unidade` | enum | sim | `centavos` · `basis_points` · `fracao_exata` · `dias` · `horas` · `adimensional` |
+
+**Sobre `fracao`.** Constante legal multiplicativa que não cabe em basis points é registrada como `{ numerador, denominador }`, ambos inteiros, **sem simplificar** — a forma da norma, não a reduzida (`ADR-007`, regra F-2). Basis points continua sendo o padrão; `fracao` é exceção, e usá-la onde `bp` serve é ruído.
 | `descricao` | string | sim | Uma linha explicando o que representa |
 
 ### ENT-003 — `Vigencia`
@@ -225,8 +227,8 @@ Cada `Etapa` contém: rótulo, expressão da fórmula, valores de entrada, parâ
 
 | Enum | Valores |
 |---|---|
-| `TipoParametro` | `tabela_faixas` · `valor_monetario` · `percentual` · `inteiro` · `mapa` |
-| `Unidade` | `centavos` · `basis_points` · `dias` · `horas` · `adimensional` |
+| `TipoParametro` | `tabela_faixas` · `valor_monetario` · `percentual` · `inteiro` · `mapa` · `fracao` |
+| `Unidade` | `centavos` · `basis_points` · `fracao_exata` · `dias` · `horas` · `adimensional` |
 | `Categoria` | `TRB` · `TRI` · `CRD` · `IMV` · `INV` · `AUT` · `VEI` · `IDX` · `CSM` · `UTI` |
 | `Fase` | `v1` · `v2` · `v3` · `v4` |
 | `TipoConteudo` | `guia` · `faq` |

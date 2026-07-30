@@ -34,7 +34,7 @@ Nenhuma linha de código de aplicação é escrita antes da auditoria de consist
 | 13 | [13-deployment](13-deployment.md) | ✅ gerado | Docker, EasyPanel, CI/CD, rollback |
 | 14 | [14-observability](14-observability.md) | ✅ gerado | Erros, Web Vitals, falha externa, KPIs |
 | 15 | [15-runbook](15-runbook.md) | ✅ gerado | Procedimento por incidente provável |
-| 16 | [16-adr/](16-adr/) | ✅ gerado | ADR-001 a ADR-006 |
+| 16 | [16-adr/](16-adr/) | ✅ gerado | ADR-001 a ADR-007 |
 | 17 | [17-changelog](17-changelog.md) | ✅ gerado | Inclui histórico de mudança de parâmetro legal |
 
 **Não gerados neste projeto:**

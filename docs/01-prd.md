@@ -139,6 +139,25 @@ Formuladas como condição → ação, para virarem teste sem reinterpretação.
 
 **RN-013** — Se a legislação vigente na data de referência prevê mecanismo de redução do imposto apurado para determinadas faixas de rendimento, então esse redutor é aplicado após a apuração pela tabela progressiva, e a memória de cálculo exibe as duas etapas separadamente.
 
+**RN-013.1 — Forma do redutor vigente a partir de 2026.** Conferido contra o **Art. 3º-A da Lei nº 9.250/1995**, inserido pela Lei nº 15.270/2025:
+
+| Rendimentos tributáveis sujeitos à incidência mensal | Redução |
+|---|---|
+| até R$ 5.000,00 | **até R$ 312,89** — valor fixo, não fórmula |
+| de R$ 5.000,01 até R$ 7.350,00 | `978,62 − (0,133145 × rendimentos tributáveis)` |
+| acima de R$ 7.350,00 | nenhuma |
+
+Quatro consequências que a redação genérica de `RN-013` não capturava:
+
+1. **A faixa de até R$ 5.000 usa teto fixo, não a fórmula.** Aplicar a fórmula ali produziria R$ 446,04 num rendimento de R$ 4.000, contra os R$ 312,89 de teto — divergência material, não de centavos.
+2. **A redução é limitada ao imposto devido** (§1º). Nunca gera crédito, o que é coerente com `RN-014`.
+3. **O parâmetro de comparação é o rendimento tributável bruto**, não a base após deduções. Confirmado pelo exemplo oficial de R$ 6.000: `978,62 − 0,133145 × 6000 = 179,75`, valor publicado.
+4. **A redução também se aplica ao décimo terceiro salário** (§3º), o que alcança CALC-005 e interage com `RN-010`.
+
+O coeficiente `0,133145` não cabe em basis points e é registrado como fração exata `133145/1000000`, conforme `ADR-007`.
+
+`> ⚠️ VERIFICAR: a lei não declara regra de arredondamento da redução na faixa intermediária. Os cinco exemplos oficiais publicados não desempatam — no de R$ 5.000 a fórmula daria 312,895 e o publicado é 312,89, mas ali o teto do §1º também produziria esse valor. Localizar a Instrução Normativa da Receita Federal que regulamenta o art. 3º-A. Impacto: um centavo, apenas na faixa de R$ 5.000,01 a R$ 7.350,00.`
+
 **RN-014** — Se o imposto apurado após todas as reduções é negativo, então o valor devido é zero. Nunca resultado negativo.
 
 `> ⚠️ VERIFICAR: tabela progressiva, dedução por dependente, limite do desconto simplificado, existência e fórmula do redutor por faixa, e sua aplicação ao 13º salário. Este é o conjunto de parâmetros de maior risco do projeto.`
