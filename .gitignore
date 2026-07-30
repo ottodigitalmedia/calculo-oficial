@@ -1,0 +1,36 @@
+# dependências
+node_modules/
+.pnp
+.pnp.*
+
+# build
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# testes
+coverage/
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# ambiente — segredo nunca entra no repositório (07-security §6).
+# .env.example é versionado e contém apenas nomes e comentários.
+.env
+.env.local
+.env.*.local
+
+# sistema operacional e editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# registros
+*.log
+npm-debug.log*
