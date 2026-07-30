@@ -180,7 +180,23 @@ export default tseslint.config(
   // explícitas; scripts leem ambiente e rede por definição.
   // ------------------------------------------------------------------------
   {
-    files: ['tests/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}', '*.config.{ts,js,mjs}'],
+    files: [
+      'tests/**/*.{ts,tsx,mjs}',
+      'scripts/**/*.{ts,tsx,mjs}',
+      '*.config.{ts,js,mjs}',
+      'eslint.config.js',
+    ],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        Buffer: 'readonly',
+        URL: 'readonly',
+        fetch: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+      },
+    },
     rules: {
       'no-restricted-syntax': 'off',
       'no-restricted-imports': 'off',

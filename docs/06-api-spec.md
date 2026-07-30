@@ -52,6 +52,13 @@ Este documento especifica o que de fato existe:
 | EP-013 | `/sitemap.xml` | Gerada no build | — |
 | EP-014 | `/robots.txt` | Estática | — |
 | EP-015 | `/404` | Estática | Não |
+| EP-016 | `/api/health` | Dinâmica | **Não** |
+
+**EP-016 — verificação de saúde.** Única rota não estática do sistema. Existe para a regra D-4 de `13-deployment` §3 e é consumida pelo orquestrador a cada 30s e pelo passo pós-deploy que dispara o rollback automático (§4 e §9).
+
+Responde `{"status":"ok"}` com 200 se o processo está de pé. **Não** consulta parâmetro, não calcula e não toca dependência externa: verificação de saúde que falha por causa de terceiro derruba um site que estava funcionando, e nenhum terceiro participa do caminho crítico (regra R-4). Não devolve versão, ambiente nem configuração — a rota é pública, e enumerar o que roda aqui só orienta quem procura o que atacar.
+
+Fora do sitemap e com `x-robots-tag: noindex`.
 
 **Autorização.** Todas as rotas são públicas e anônimas. Não existe rota autenticada, administrativa ou restrita. A matriz de autorização em `07-security` registra isso formalmente para cada rota, de modo que a introdução futura de qualquer rota não pública seja uma alteração visível na documentação, e não um acréscimo silencioso.
 

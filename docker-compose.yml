@@ -1,0 +1,96 @@
+# =============================================================================
+# Composição de produção — 04-architecture §3, 13-deployment §3.
+#
+# DOIS SERVIÇOS INDEPENDENTES, e a independência é o ponto:
+#
+#   web        a aplicação. Não conhece banco algum.
+#   analytics  a ferramenta de análise, com Postgres próprio (ADR-005).
+#
+# `web` NÃO declara depends_on de `analytics`, e isso não é esquecimento.
+# ADR-002 diz que não há banco na aplicação; o Postgres daqui pertence
+# exclusivamente à análise de uso. Se `analytics` cair, o site continua
+# funcionando integralmente — regra AN-5 de ADR-005, e é o que impede esta
+# composição de contradizer ADR-002 na prática enquanto a respeita no papel.
+#
+# Ligar os dois com depends_on seria a forma mais silenciosa de reverter
+# ADR-002: um dia o site pararia de subir porque um banco de métrica não subiu.
+# =============================================================================
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_AD_CLIENT_ID: ${NEXT_PUBLIC_AD_CLIENT_ID:-}
+        NEXT_PUBLIC_AD_SLOT_ID: ${NEXT_PUBLIC_AD_SLOT_ID:-}
+        NEXT_PUBLIC_CMP_ID: ${NEXT_PUBLIC_CMP_ID:-}
+        NEXT_PUBLIC_ANALYTICS_URL: ${NEXT_PUBLIC_ANALYTICS_URL:-}
+        NEXT_PUBLIC_ANALYTICS_SITE_ID: ${NEXT_PUBLIC_ANALYTICS_SITE_ID:-}
+        VCS_REF: ${VCS_REF:-desconhecido}
+    # D-5: no ambiente real a etiqueta é o hash do commit, aplicada pelo
+    # pipeline (T-003). `latest` sozinho torna rollback impossível.
+    image: calculo-aberto:${VCS_REF:-latest}
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    # Sem privilégio elevado e sem escrita na raiz: a aplicação serve conteúdo
+    # estático e não grava nada (ADR-002).
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+
+  analytics:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    restart: unless-stopped
+    depends_on:
+      analytics-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${UMAMI_DATABASE_URL}
+      APP_SECRET: ${UMAMI_APP_SECRET}
+      # Sem cookie e sem identificador persistente (ADR-005 AN-3). É o que
+      # dispensa consentimento para a medição — o banner existe por causa do
+      # anúncio, não dela.
+      DISABLE_TELEMETRY: '1'
+    ports:
+      - '3001:3000'
+    security_opt:
+      - no-new-privileges:true
+
+  analytics-db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: ${UMAMI_DB_USER}
+      POSTGRES_PASSWORD: ${UMAMI_DB_PASSWORD}
+    volumes:
+      - analytics-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${UMAMI_DB_USER} -d umami']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    security_opt:
+      - no-new-privileges:true
+    # Sem `ports`: o banco só é alcançável pela rede interna da composição.
+    # É o único dado persistido da infraestrutura inteira e não tem motivo
+    # para estar exposto (07-security §10).
+
+volumes:
+  analytics-db:

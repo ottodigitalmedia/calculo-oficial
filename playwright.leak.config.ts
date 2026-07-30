@@ -43,7 +43,10 @@ export default defineConfig({
   projects: [{ name: 'vazamento', use: { ...devices['Desktop Chrome'] } }],
 
   webServer: {
-    command: `npm run build && npx next start -p ${PORTA}`,
+    command: 'npm run build && npm run start',
+    // A porta vai por ambiente porque `VAR=x cmd` não funciona no shell do
+    // Windows, e o mantenedor trabalha em Windows.
+    env: { PORT: PORTA },
     url: BASE_URL,
     // Nunca reaproveitar servidor de fora: a linha de base precisa ser um
     // processo cuja origem esta suíte conhece.

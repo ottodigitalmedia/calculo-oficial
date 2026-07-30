@@ -1,0 +1,56 @@
+# Contexto de build. Reduz o que é enviado ao daemon e é a segunda linha de
+# defesa da regra D-1 — a primeira é o estágio `runner` copiar só a saída
+# autônoma.
+#
+# Também é controle de D-3: segredo que nunca entra no contexto não pode
+# vazar para uma camada intermediária, mesmo que a imagem final não o carregue.
+# Camada intermediária fica no cache e no registro.
+
+# dependências e artefatos — reconstruídos dentro da imagem
+node_modules
+.next
+out
+build
+coverage
+playwright-report
+test-results
+blob-report
+
+# histórico e metadados do repositório
+.git
+.gitignore
+.gitattributes
+.github
+
+# segredos — nunca no contexto
+.env
+.env.local
+.env.*.local
+
+# documentação: 300 KB que não mudam o binário e invalidam o cache a cada
+# correção de texto
+docs
+*.md
+!README.md
+
+# testes e configuração de ferramenta: não participam do build de produção
+tests
+playwright.config.ts
+playwright.leak.config.ts
+vitest.config.ts
+
+# eslint.config.js NÃO entra aqui: next.config.ts mantém
+# `eslint: { ignoreDuringBuilds: false }`, então `next build` precisa dele.
+# O pipeline já roda lint antes do build (13-deployment §4) e a verificação
+# dentro da imagem é redundante — mas a redundância é barata e a alternativa
+# seria tornar o build complacente, que é o oposto do que §4 pede.
+
+# ambiente local
+Dockerfile
+.dockerignore
+docker-compose.yml
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+*.log

@@ -39,6 +39,7 @@ A superfície de ataque deste produto é atipicamente pequena, e isso é resulta
 | Recurso | Anônimo | Mantenedor |
 |---|---|---|
 | Todas as rotas EP-001 a EP-015 | Leitura | Leitura |
+| EP-016 `/api/health` | Leitura | Leitura |
 | Executar cálculo | Sim | Sim |
 | Alterar parâmetro legal | **Não** | Via commit revisado no repositório |
 | Publicar deploy | **Não** | Via automação, disparada por commit na branch principal |

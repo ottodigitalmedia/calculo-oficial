@@ -34,7 +34,10 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: `npm run build && npx next start -p ${PORTA}`,
+    command: 'npm run build && npm run start',
+    // A porta vai por ambiente porque `VAR=x cmd` não funciona no shell do
+    // Windows, e o mantenedor trabalha em Windows.
+    env: { PORT: PORTA },
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,

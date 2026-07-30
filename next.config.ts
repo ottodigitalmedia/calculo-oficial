@@ -1,14 +1,27 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // `output: 'standalone'` pertence a T-002, não a este ticket, e não é uma
-  // linha solta: `next start` NÃO serve a saída autônoma — é preciso
-  // `node .next/standalone/server.js`, com `.next/static` e `public` copiados
-  // para dentro dela. Como o `webServer` do Playwright usa `next start`,
-  // ativar standalone aqui deixaria a suíte e2e subindo um servidor quebrado
-  // desde já, e o sintoma só apareceria em T-033, longe da causa.
+  // Saída autônoma: a imagem final não carrega código-fonte nem dependências
+  // de desenvolvimento (13-deployment §3, regra D-1).
   //
-  // T-002 ativa os dois lados no mesmo commit: a opção e o comando de serviço.
+  // `next start` NÃO serve esta saída. O caminho correto é
+  // `node .next/standalone/server.js`, e o Next não copia `.next/static` nem
+  // `public` para dentro dela — quem faz isso é `scripts/serve-standalone.mjs`
+  // localmente e o Dockerfile em produção. Os dois lados andam juntos: mudar
+  // um sem o outro produz um servidor que sobe e serve página sem estilo.
+  output: 'standalone',
+
+  // O rastreador de arquivos do Next inclui `typescript` na saída autônoma
+  // porque este próprio arquivo é .ts. São 8,7 MB de dependência de
+  // DESENVOLVIMENTO dentro da imagem de produção — violação direta de D-1,
+  // verificada inspecionando a imagem construída.
+  //
+  // TypeScript é ferramenta de build e não participa de servir requisição.
+  // A exclusão é conferida em T-002 subindo o contêiner e batendo em
+  // /api/health e em /: se fosse necessário em runtime, o servidor não subiria.
+  outputFileTracingExcludes: {
+    '*': ['node_modules/typescript/**'],
+  },
 
   // Barra final ausente; redirecionamento permanente quando presente
   // (06-api-spec §2.1).

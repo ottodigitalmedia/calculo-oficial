@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/serve-standalone.mjs",
     "validate:params": "tsx scripts/validate-params.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

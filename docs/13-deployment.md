@@ -118,6 +118,9 @@ flowchart TD
 | `REGISTRY_TOKEN` | CI | **sim** | Publicação da imagem |
 | `UMAMI_DATABASE_URL` | prod | **sim** | Banco da ferramenta de análise |
 | `UMAMI_APP_SECRET` | prod | **sim** | Sessão da ferramenta de análise |
+| `UMAMI_DB_USER` | prod | **sim** | Usuário do Postgres da análise |
+| `UMAMI_DB_PASSWORD` | prod | **sim** | Senha do Postgres da análise |
+| `VCS_REF` | CI | não | Hash do commit; vira etiqueta da imagem (D-5) |
 
 **Regras.** Segredos vivem apenas no cofre do repositório e no painel do EasyPanel. `.env.example` contém nomes e comentários, nunca valores. Nenhuma variável prefixada como pública contém segredo — o prefixo torna o valor visível no navegador.
 
