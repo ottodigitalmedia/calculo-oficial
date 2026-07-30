@@ -1,6 +1,6 @@
 'use client'
 
-import { useDeferredValue, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 
 import { CampoFormulario, validar } from '@/components/campos'
 import { MemoriaCalculo } from '@/components/MemoriaCalculo'
@@ -11,6 +11,7 @@ import { formatarData, formatarReal } from '@/lib/format/moeda'
 import { INSS } from '@/lib/params/data/inss'
 import { IRRF } from '@/lib/params/data/irrf'
 import { construirRegistro } from '@/lib/params/registry'
+import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
 
 /**
  * A página genérica de calculadora — `ADR-008` E-1.
@@ -58,6 +59,38 @@ export function Calculadora({ slug }: { readonly slug: string }) {
   const [valores, setValores] = useState<ValoresFormulario>(() =>
     Object.fromEntries((definicao?.campos ?? []).map((c) => [c.id, c.padrao ?? (c.tipo === 'selecao' ? '' : 0)])),
   )
+
+  /**
+   * Hidrata o formulário a partir da URL, uma única vez (`RF-006`).
+   *
+   * Em efeito, e não na inicialização do estado: a página é gerada
+   * estaticamente, então o HTML do servidor não conhece a query, e ler a URL
+   * durante a renderização produziria divergência de hidratação.
+   */
+  useEffect(() => {
+    if (!definicao) return
+    const { valores: daUrl, referencia } = lerDaUrl(definicao.campos, window.location.search)
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincronização única com a URL, que é sistema externo
+    if (Object.keys(daUrl).length > 0) setValores((atual) => ({ ...atual, ...daUrl }))
+    if (referencia !== null) setDataReferencia(referencia)
+  }, [definicao])
+
+  /**
+   * Reflete o estado de volta na URL, sem navegar.
+   *
+   * `replaceState` e não `pushState`: cada tecla digitada viraria uma entrada
+   * no histórico, e o botão "voltar" deixaria de voltar para a página anterior.
+   */
+  useEffect(() => {
+    if (!definicao) return
+    const query = escreverNaUrl(definicao.campos, valores, dataReferencia, dataInicial)
+    const alvo = `${window.location.pathname}${query}`
+    if (alvo !== `${window.location.pathname}${window.location.search}`) {
+      window.history.replaceState(null, '', alvo)
+    }
+    // 07-security §4.3: a query carrega salário e dados de contrato.
+    ajustarIndexacao(query !== '')
+  }, [definicao, valores, dataReferencia, dataInicial])
 
   const camposVisiveis = useMemo(
     () => (definicao?.campos ?? []).filter((c) => c.visivelSe?.(valores) ?? true),

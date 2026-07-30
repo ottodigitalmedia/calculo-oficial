@@ -8,7 +8,7 @@ import {
   IconePrivacidade,
   IconeSeta,
 } from '@/components/Marca'
-import { CALCULADORAS } from '@/lib/calculadoras'
+import { BuscaCatalogo } from '@/components/BuscaCatalogo'
 
 /**
  * Página inicial — `03-functional-spec` §2.1, com a estrutura da referência de
@@ -62,10 +62,20 @@ const PASSOS = [
   { n: 4, titulo: 'Confira na norma', texto: 'Siga o link e leia a fonte oficial.' },
 ]
 
+/**
+ * As próximas, na ordem de `11-roadmap` §5.
+ *
+ * Declaradas em vez de omitidas: dizer o que ainda não existe é mais honesto
+ * que sugerir cobertura que não temos. Esta lista precisa encolher conforme
+ * elas entram — uma calculadora publicada que continua marcada "em breve"
+ * seria a mesma desonestia ao contrário.
+ */
 const EM_BREVE = [
-  { nome: 'INSS', texto: 'Contribuição mensal, faixa a faixa, com a alíquota efetiva.' },
-  { nome: 'Imposto de Renda', texto: 'IRRF na fonte, com desconto simplificado e redutor.' },
-  { nome: 'Juros compostos', texto: 'Evolução mês a mês, com aportes.' },
+  { nome: 'Rescisão sem justa causa', texto: 'Verbas rescisórias, com as incidências separadas.' },
+  { nome: 'Férias', texto: 'Integrais, proporcionais, abono e o terço constitucional.' },
+  { nome: '13º salário', texto: 'As duas parcelas e onde os descontos incidem.' },
+  { nome: 'Horas extras', texto: 'Adicionais, hora noturna e reflexo no descanso.' },
+  { nome: 'FGTS', texto: 'Depósitos estimados e multa rescisória.' },
 ]
 
 const PROMESSAS = [
@@ -173,27 +183,11 @@ export default function Home() {
           Poucas e auditadas, em vez de muitas e abandonadas.
         </p>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {CALCULADORAS.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/calculadora/${c.slug}`}
-              className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 hover:border-[var(--color-brand)]"
-            >
-              <span
-                className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-[var(--color-navy)]"
-                style={{ background: 'var(--color-tile-blue)' }}
-              >
-                <IconePassos />
-              </span>
-              <h3 className="mt-4 font-semibold">{c.nome}</h3>
-              <p className="mt-1 text-sm text-[var(--color-text-muted)]">{c.linhaDeContexto}</p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-brand)]">
-                Usar calculadora <IconeSeta />
-              </span>
-            </Link>
-          ))}
+        <div className="mt-8">
+          <BuscaCatalogo />
+        </div>
 
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {/* Declarado como "em breve" em vez de omitido: dizer o que ainda
               não existe é mais honesto que sugerir cobertura que não temos. */}
           {EM_BREVE.map((c) => (
@@ -201,10 +195,7 @@ export default function Home() {
               key={c.nome}
               className="rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-6"
             >
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white text-[var(--color-border-strong)]">
-                <IconePassos />
-              </span>
-              <h3 className="mt-4 font-semibold text-[var(--color-text-muted)]">{c.nome}</h3>
+              <h3 className="font-semibold text-[var(--color-text-muted)]">{c.nome}</h3>
               <p className="mt-1 text-sm text-[var(--color-text-muted)]">{c.texto}</p>
               <span className="mt-4 inline-block text-sm font-medium text-[var(--color-text-muted)]">
                 Em breve
