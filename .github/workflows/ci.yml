@@ -18,6 +18,10 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Disparo manual pelo GitHub. Serve para reimplantar sem commit — útil
+  # quando o serviço cai e a última imagem publicada já está correta
+  # (15-runbook RB-01, passo 7).
+  workflow_dispatch:
 
 # Um commit novo cancela a verificação do anterior no mesmo ref. Exceto em
 # main: lá cada commit precisa da própria verificação completa, porque cada um
