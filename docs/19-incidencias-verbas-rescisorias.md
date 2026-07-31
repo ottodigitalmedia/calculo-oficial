@@ -1,7 +1,7 @@
 ---
 doc: 19-incidencias-verbas-rescisorias
 projeto: Cálculo Oficial
-versao: 1.0
+versao: 1.1
 status: parcial
 depende_de: [01-prd, 03-functional-spec, 18-levantamento-calculadoras]
 ---
@@ -14,6 +14,11 @@ depende_de: [01-prd, 03-functional-spec, 18-levantamento-calculadoras]
 > **Método.** Todo item abaixo foi lido no **texto da norma**, no Planalto, não
 > em resumo de terceiro (`CLAUDE.md`, regra 10 / `CO-1`). Cada linha traz a
 > transcrição literal e o dispositivo.
+>
+> **Atualizado em 31/07/2026, mesma data:** a Súmula 386 do STJ foi localizada
+> no compêndio oficial do tribunal e **resolveu a maior pendência** — o IRRF
+> sobre férias indenizadas e o respectivo terço. Restam três, todas sobre a
+> mesma verba ou sobre férias gozadas. Ver §9.
 >
 > **Este documento é PARCIAL, de propósito.** O que não foi confirmado em fonte
 > oficial está marcado como ⏳ **pendente** e **não deve ser implementado** até
@@ -144,37 +149,59 @@ inciso III, alínea "c", com base na Lei nº 7.713/1988, art. 6º, V, e na Lei n
 | **13º salário** | ✅ Tributável | **Exclusivamente na fonte**, em separado dos demais rendimentos. Ver §7.1 |
 | Férias gozadas + terço | ✅ Tributável | |
 
-### 5.1 ⏳ PENDENTE — férias indenizadas e o terço, no IRRF
+### 5.1 ✅ RESOLVIDO — férias indenizadas e o terço, no IRRF
 
-**Não foi possível confirmar em fonte oficial acessível.** O RIR/2018 não trata
-das férias indenizadas de forma expressa; a isenção decorre de jurisprudência
-consolidada e de ato administrativo que a acolheu.
+**Fonte.** Súmula 386 do Superior Tribunal de Justiça, conferida no compêndio
+oficial de súmulas publicado pelo próprio tribunal.
+`https://www.stj.jus.br/docs_internet/SumulasSTJ.pdf`
 
-Ponteiros a abrir na próxima sessão, **nesta ordem**:
-
-1. **Súmula 386 do STJ** — *"São isentas de imposto de renda as indenizações de
-   férias proporcionais e o respectivo adicional."* Confirmar o enunciado no
-   sítio do STJ.
-2. **Instrução Normativa RFB nº 1.500/2014, art. 6º** — a norma administrativa
-   que lista os rendimentos isentos. O sítio `normas.receita.fazenda.gov.br`
-   não respondeu em 31/07/2026; tentar de novo ou pelo Diário Oficial.
-3. **Ato Declaratório PGFN** que dispensou a contestação judicial da matéria.
-
-> **Enquanto isso não for confirmado, CALC-002 e CALC-004 não podem ser
-> publicadas.** Férias indenizadas + terço é uma das maiores parcelas da
-> rescisão; errar a incidência muda o resultado em centenas de reais.
+> **Súmula 386** — DIREITO TRIBUTÁRIO · IMPOSTO DE RENDA
 >
-> Note a assimetria já provada: para o **INSS**, a exclusão é expressa em lei
-> (§3, alínea "d"). Para o **IRRF**, não é. Não presuma que uma implica a outra.
+> *"São isentas de imposto de renda as indenizações de férias proporcionais e o
+> respectivo adicional."*
+>
+> Órgão julgador: **Primeira Seção** · Data da decisão: **26/08/2009** ·
+> DJe de 01/09/2009 · RSTJ vol. 216, p. 741.
 
-### 5.2 ⚠️ A divergência do terço constitucional
+**A cadeia normativa fecha.** A súmula não cria isenção — ela **interpreta** a
+que já existe: a isenção da *"indenização paga por despedida ou rescisão de
+contrato de trabalho"* do **art. 6º, V, da Lei nº 7.713/1988**, que é
+exatamente o dispositivo em que se apoia o art. 35, III, "c", do RIR/2018
+transcrito acima. Os precedentes da súmula citam esse artigo nominalmente.
 
-Há divergência entre STJ e STF sobre a natureza do terço constitucional. Ela
-vale para as férias **gozadas**, não para as **indenizadas** da rescisão — e
-por isso não bloqueia CALC-002, mas **bloqueia CALC-004**, que trata das férias
-usufruídas.
+**Os precedentes vão além do enunciado**, e é deles que sai a regra que a
+calculadora precisa:
 
-⏳ Pendente de leitura direta dos acórdãos antes de CALC-004.
+| Situação | IRRF | Fundamento no precedente |
+|---|---|---|
+| Férias **vencidas não gozadas**, pagas na rescisão | ❌ Isento | *"está abrangido na regra de isenção referente à indenização paga por despedida ou rescisão de contrato de trabalho, prevista no art. 6º, V, da Lei 7.713/88"* |
+| Férias **proporcionais** indenizadas | ❌ Isento | *"igualmente, não está abrangido pela cobrança do imposto de renda, em razão da aludida regra de isenção"* |
+| Férias vencidas não gozadas, pagas **no curso** do contrato | ❌ Isento | mesma razão |
+| **Abono pecuniário** de férias | ❌ Isento | listado expressamente entre as verbas sobre as quais *"o imposto de renda não incide"* |
+
+### 5.2 ✅ O terço constitucional segue a natureza do principal
+
+Este é o ponto mais delicado, e o precedente da Súmula 386 o resolve de forma
+explícita:
+
+> *"o pagamento relativo a adicional de 1/3 sobre férias, **quando essas são
+> gozadas**, sujeita-se à incidência do referido imposto, não apresentando
+> caráter indenizatório, mas tipicamente salarial [...]. Todavia, é diferente a
+> situação quando tal adicional integra o valor pago a título de conversão em
+> pecúnia de férias não gozadas [...] ou de férias proporcionais. **Nesse caso,
+> o adicional assume a mesma natureza do pagamento principal.**"*
+
+**Regra para implementar:**
+
+| | Férias | Terço |
+|---|---|---|
+| **Gozadas** (durante o contrato) | tributável | **tributável** — natureza salarial |
+| **Indenizadas** (rescisão ou conversão) | isento | **isento** — acompanha o principal |
+
+> ⚠️ **A divergência STJ × STF que `18-levantamento` menciona é de matéria
+> diferente** — trata da **contribuição previdenciária** sobre o terço de
+> férias **gozadas**, não do imposto de renda. Ela não é resolvida por esta
+> súmula e continua pendente para CALC-004. Não confundir as duas.
 
 ---
 
@@ -197,17 +224,39 @@ usufruídas.
 | Teto do **acréscimo** | **60 dias** | ✅ parágrafo único |
 | Teto **total** | **90 dias** | ✅ parágrafo único |
 
-### 6.1 ⏳ PENDENTE — a partir de qual ano o acréscimo começa
+### 6.1 ⚠️ A lei é silente sobre quando o acréscimo começa
 
 O texto diz "3 dias por ano de serviço prestado", e o *caput* fixa 30 dias para
-quem tem "até 1 ano". **A lei não diz explicitamente** se o primeiro acréscimo
-ocorre ao completar o primeiro ano ou o segundo.
+quem tem "até 1 ano". **A lei não diz** se o primeiro acréscimo ocorre ao
+completar o primeiro ano ou o segundo. A diferença é de 3 dias de salário em
+toda rescisão — não é detalhe.
 
-A diferença é de 3 dias de salário em toda rescisão — não é detalhe.
+**O que foi possível apurar em 31/07/2026:**
 
-⏳ **Confirmar na Nota Técnica nº 184/2012/CGRT/SRT do então Ministério do
-Trabalho**, que publicou a tabela oficial de correspondência. Não implementar
-antes disso.
+- A **Nota Técnica nº 184/2012/CGRT/SRT/MTE** publicou a tabela oficial de
+  correspondência, e é a referência universalmente citada. **Não foi
+  localizada** em acervo acessível: o antigo `mte.gov.br` foi reorganizado e o
+  documento não está no repositório atual de notas técnicas do ministério.
+- A **jurisprudência do TST e dos TRTs é convergente**: o acréscimo é devido
+  **a partir do primeiro ano completo** — 1 ano de serviço → 33 dias, 2 anos →
+  36 dias, e assim por diante até 90.
+
+**Encaminhamento.** Diferente das pendências do §9, esta **não bloqueia** a
+construção: os três parâmetros que vão para `lib/params/` — 30, 3 e 90 — estão
+todos no texto da lei, com URL oficial. O que não está na lei é a regra de
+contagem, e por isso ela **não é parâmetro legal**: é decisão de implementação,
+e a memória de cálculo deve declará-la como tal.
+
+O texto sugerido para a etapa da memória, na linha do que o produto já faz com
+a escolha entre deduções legais e desconto simplificado:
+
+> *"A Lei nº 12.506/2011 fixa 30 dias e acrescenta 3 dias por ano de serviço,
+> até 90. A lei não diz a partir de qual ano o acréscimo começa; adotamos o
+> primeiro ano completo, conforme entendimento consolidado da Justiça do
+> Trabalho."*
+
+⏳ Continua valendo localizar a Nota Técnica, ou o precedente do TST que a
+confirme, para citar fonte nominal em vez de "entendimento consolidado".
 
 ---
 
@@ -246,8 +295,10 @@ fonte. Entra em CALC-005.
 | 13º proporcional | ✅ integra | ✅ tributável (na fonte, em separado) | ✅ integra |
 | Aviso prévio **trabalhado** | ✅ integra | ✅ tributável | ✅ integra |
 | Aviso prévio **indenizado** | ⚠️ **divergência** (§3.1) | ❌ isento | ⏳ pendente |
-| Férias **vencidas/proporcionais indenizadas** + ⅓ | ❌ não integra | ⏳ **pendente** (§5.1) | ⏳ pendente |
+| Férias **vencidas indenizadas** + ⅓ | ❌ não integra | ❌ **isento** | ⏳ pendente |
+| Férias **proporcionais indenizadas** + ⅓ | ❌ não integra | ❌ **isento** | ⏳ pendente |
 | Férias **gozadas** + ⅓ | ✅ integra | ✅ tributável | ✅ integra |
+| Abono pecuniário de férias | ❌ não integra | ❌ isento | ❌ não integra |
 | Multa de 40% do FGTS | ❌ não integra | ❌ isento | — |
 | Vale-transporte | ❌ não integra | — | ❌ não integra |
 
@@ -255,22 +306,37 @@ fonte. Entra em CALC-005.
 acima. ⚠️ = confirmado, mas com divergência que a memória de cálculo deve
 declarar. ⏳ = **não confirmado — não implementar.**
 
+**A assimetria que quase induziu ao erro.** Para o **INSS**, a exclusão das
+férias indenizadas é expressa em lei (art. 28, §9º, "d"). Para o **IRRF**, não
+é: decorre da interpretação sumulada de uma isenção redigida em termos gerais.
+Chegaram à mesma resposta por caminhos diferentes — e por isso **uma não pode
+ser presumida a partir da outra** em nenhuma verba nova.
+
 ---
 
 ## 9. O que falta, em ordem
 
-| # | Pendência | Bloqueia | Onde procurar |
-|---|---|---|---|
-| 1 | IRRF sobre férias indenizadas + terço | **CALC-002, CALC-003, CALC-004** | Súmula 386 STJ · IN RFB 1500/2014 art. 6º |
-| 2 | Ponto de partida do acréscimo do aviso prévio | **CALC-002, CALC-003, CALC-010** | Nota Técnica 184/2012 CGRT/SRT/MTE |
-| 3 | Aviso prévio indenizado × INSS | **CALC-002** | STJ Tema 478 · ato da RFB/PGFN |
-| 4 | Aviso prévio indenizado × base do FGTS | CALC-002, CALC-007 | Lei 8.036 · Súmula 305 do TST |
-| 5 | Terço de férias **gozadas** × INSS | **CALC-004** | Acórdãos STJ e STF |
+| # | Pendência | Bloqueia | Onde procurar | Estado |
+|---|---|---|---|---|
+| ~~1~~ | ~~IRRF sobre férias indenizadas + terço~~ | — | Súmula 386 STJ | ✅ **Resolvido** em 31/07/2026 (§5.1 e §5.2) |
+| ~~2~~ | ~~Ponto de partida do acréscimo do aviso prévio~~ | — | — | ⚠️ **Deixou de bloquear** (§6.1). A lei é silente; vira decisão declarada na memória, não parâmetro legal |
+| 3 | **Aviso prévio indenizado × INSS** | **CALC-002, CALC-003** | STJ Tema 478 (REsp 1.230.957/RS) · ato da RFB ou da PGFN | ⏳ Aberto |
+| 4 | **Aviso prévio indenizado × base do FGTS** | **CALC-002, CALC-007** | Lei 8.036 · Súmula 305 do TST | ⏳ Aberto |
+| 5 | Terço de férias **gozadas** × contribuição previdenciária | **CALC-004** | Acórdãos STJ e STF | ⏳ Aberto |
 
-**Três das cinco bloqueiam CALC-002**, que é a de maior busca do catálogo.
-Nenhuma delas é trabalho de programação — é leitura de norma. É por isso que
-`18-levantamento` §6 recomenda começar por aqui e construir, em paralelo,
-CALC-024 e CALC-025, que não dependem de nada.
+**Restam três, e as duas primeiras são a mesma verba.** O aviso prévio
+indenizado é o último nó de CALC-002: já se sabe que é **isento de IRRF** (§5),
+falta fechar INSS e base do FGTS.
+
+Nenhuma é trabalho de programação — é leitura de norma e de acórdão. É por isso
+que `18-levantamento` §6 recomenda construir, em paralelo, CALC-024 e CALC-025,
+que não dependem de nada.
+
+> **O que já dá para começar em CALC-002, hoje.** Tempo de serviço, avos de 13º
+> e de férias, saldo de salário, terço, dias de aviso prévio e a multa de FGTS
+> estão todos confirmados. O que fica em aberto é **a incidência sobre uma
+> única verba** — e ela pode ser isolada atrás de um parâmetro, para que a
+> calculadora seja concluída quando a pesquisa fechar, sem refazer o motor.
 
 ---
 
