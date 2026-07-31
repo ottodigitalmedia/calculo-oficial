@@ -231,7 +231,12 @@ jobs:
 
       - name: Disparar deploy
         if: steps.cfg.outputs.pronto == 'sim'
-        run: curl --fail --silent --show-error -X POST "${{ secrets.DEPLOY_WEBHOOK_URL }}"
+        # Tempo limite curto: sem ele o curl espera mais de dois minutos por um
+        # endereço inalcançável, e o pipeline fica pendurado num erro que já
+        # está claro no primeiro segundo.
+        run: |
+          curl --fail --silent --show-error                --connect-timeout 10 --max-time 30                -X POST "${{ secrets.DEPLOY_WEBHOOK_URL }}"
+
 
       # D-4 / 13-deployment §4: falha aqui dispara rollback automático.
       - name: 'Verificação de saúde (EP-016)'
