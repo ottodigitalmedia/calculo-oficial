@@ -36,6 +36,7 @@ Nenhuma linha de código de aplicação é escrita antes da auditoria de consist
 | 15 | [15-runbook](15-runbook.md) | ✅ gerado | Procedimento por incidente provável |
 | 16 | [16-adr/](16-adr/) | ✅ gerado | ADR-001 a ADR-008 |
 | 17 | [17-changelog](17-changelog.md) | ✅ gerado | Inclui histórico de mudança de parâmetro legal |
+| 18 | [18-levantamento-calculadoras](18-levantamento-calculadoras.md) | ✅ gerado | As 71 restantes por **dependência**: o que já dá para construir hoje e o que está bloqueado |
 
 > **Escopo enxuto (`ADR-008`).** O lançamento leva 4 calculadoras e ~12 dias-dev.
 > Os documentos abaixo continuam válidos e **suspensos até depois do lançamento**,
