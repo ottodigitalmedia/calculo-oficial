@@ -10,9 +10,58 @@
 import { calcularJurosCompostos } from '../engine/calculadoras/juros-compostos'
 import { basisPoints, centavos } from '../engine/types'
 import { formatarPercentual } from '../format/moeda'
-import { numero, texto, type DefinicaoCalculadora } from './tipos'
+import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
 const MESES_NO_ANO = 12
+
+/**
+ * Exportação de topo — ver a nota em `salario-liquido.ts`.
+ *
+ * Não usa `registro`: esta é a única calculadora sem parâmetro legal.
+ */
+export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
+  const emAnos = texto(valores, 'periodoPrazo') === 'anos'
+  const prazo = numero(valores, 'prazo')
+  const meses = emAnos ? prazo * MESES_NO_ANO : prazo
+
+  const r = calcularJurosCompostos(
+    {
+      valorInicial: centavos(numero(valores, 'valorInicial')),
+      aporteMensal: centavos(numero(valores, 'aporteMensal')),
+      taxa: basisPoints(numero(valores, 'taxa')),
+      taxaAoAno: texto(valores, 'periodoTaxa') === 'ano',
+      meses,
+    },
+    dataReferencia,
+  )
+  if (!r.ok) return r
+
+  return {
+    ok: true,
+    traco: r.traco,
+    valores: {
+      principal: r.valores.montante,
+      detalhamento: [
+        { rotulo: 'Total investido', valor: r.valores.totalInvestido, sinal: 'neutro' },
+        { rotulo: 'Total em juros', valor: r.valores.totalJuros, sinal: 'credito' },
+        { rotulo: 'Montante final', valor: r.valores.montante, sinal: 'neutro' },
+      ],
+      destaques: [
+        { rotulo: 'Taxa mensal aplicada', valor: formatarPercentual(r.valores.taxaMensalBp) },
+        { rotulo: 'Prazo', valor: `${meses} ${meses === 1 ? 'mês' : 'meses'}` },
+      ],
+      tabela: {
+        titulo: 'Evolução ano a ano',
+        colunas: ['Investido', 'Juros', 'Saldo'],
+        linhas: r.valores.evolucao.map((l) => ({
+          rotulo: `Ano ${l.ano}`,
+          valores: [l.investido, l.juros, l.saldo],
+        })),
+      },
+      notas: ['Este cálculo não considera imposto de renda, taxas de administração nem inflação.'],
+    },
+  }
+}
 
 export const JUROS_COMPOSTOS: DefinicaoCalculadora = {
   id: 'CALC-022',
@@ -83,49 +132,7 @@ export const JUROS_COMPOSTOS: DefinicaoCalculadora = {
 
   rotuloResultado: 'Montante final',
 
-  calcular(valores, dataReferencia) {
-    const emAnos = texto(valores, 'periodoPrazo') === 'anos'
-    const prazo = numero(valores, 'prazo')
-    const meses = emAnos ? prazo * MESES_NO_ANO : prazo
-
-    const r = calcularJurosCompostos(
-      {
-        valorInicial: centavos(numero(valores, 'valorInicial')),
-        aporteMensal: centavos(numero(valores, 'aporteMensal')),
-        taxa: basisPoints(numero(valores, 'taxa')),
-        taxaAoAno: texto(valores, 'periodoTaxa') === 'ano',
-        meses,
-      },
-      dataReferencia,
-    )
-    if (!r.ok) return r
-
-    return {
-      ok: true,
-      traco: r.traco,
-      valores: {
-        principal: r.valores.montante,
-        detalhamento: [
-          { rotulo: 'Total investido', valor: r.valores.totalInvestido, sinal: 'neutro' },
-          { rotulo: 'Total em juros', valor: r.valores.totalJuros, sinal: 'credito' },
-          { rotulo: 'Montante final', valor: r.valores.montante, sinal: 'neutro' },
-        ],
-        destaques: [
-          { rotulo: 'Taxa mensal aplicada', valor: formatarPercentual(r.valores.taxaMensalBp) },
-          { rotulo: 'Prazo', valor: `${meses} ${meses === 1 ? 'mês' : 'meses'}` },
-        ],
-        tabela: {
-          titulo: 'Evolução ano a ano',
-          colunas: ['Investido', 'Juros', 'Saldo'],
-          linhas: r.valores.evolucao.map((l) => ({
-            rotulo: `Ano ${l.ano}`,
-            valores: [l.investido, l.juros, l.saldo],
-          })),
-        },
-        notas: ['Este cálculo não considera imposto de renda, taxas de administração nem inflação.'],
-      },
-    }
-  },
+  calcular,
 
   faq: [
     {

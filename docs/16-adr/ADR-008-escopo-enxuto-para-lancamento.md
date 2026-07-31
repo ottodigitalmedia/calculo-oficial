@@ -64,6 +64,29 @@ reaproveitam o motor e a página da primeira.
 | # | Regra |
 |---|---|
 | E-1 | **Uma definição declarativa por calculadora** — campos, cálculo e FAQ num objeto — e **uma página genérica** que renderiza qualquer uma. Calculadora nova deixa de ser "construir página" e passa a ser "declarar campos e escrever a função" |
+
+> **E-1 em 31/07/2026 — o contrato cresceu, o molde não foi contornado.**
+>
+> A definição continua sendo **um objeto por calculadora** e a página continua
+> sendo **uma só**. O que mudou é que o objeto passou a ser lido em dois
+> recortes, porque servidor e navegador precisam de coisas diferentes dele:
+>
+> - o **servidor** usa a definição inteira — nome, FAQ, texto de SEO, relacionadas;
+> - o **navegador** recebe `FormularioCalculadora`, que é campos e rótulos, e
+>   busca `calcular` num pedaço adiado, por calculadora.
+>
+> O motivo é `RNF-004`: cada calculadora acrescentava ~1,1 kB ao pacote de
+> **todas** as rotas, e com 75 no catálogo o limite de 120 kB seria alcançado
+> por acúmulo, não por peso próprio de nenhuma.
+>
+> Duas consequências para quem declara uma calculadora nova:
+> `calcular` é **exportação de topo** do módulo, não método do literal; e a
+> `visivelSe` de um campo é **dado** (`CondicaoVisibilidade`), não função —
+> função não atravessa a fronteira servidor→cliente.
+>
+> A alternativa era um arquivo-atalho por calculadora, o que teria contrariado
+> "adicionar uma calculadora é acrescentar uma definição". Ver
+> `ESTADO-DO-PROJETO` §7.4 e §7.6.
 | E-2 | Tokens de design definidos **antes** da primeira página, não aplicados a dez páginas prontas depois. Aplicar design a página pronta é refazer |
 | E-3 | Acessibilidade embutida no componente, não auditada no fim |
 | E-4 | Uma configuração de Playwright, não duas |

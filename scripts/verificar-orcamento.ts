@@ -8,18 +8,29 @@
  * ausência dele"*.
  *
  * Mede o que o navegador de fato baixa: a soma **comprimida** de todos os
- * pedaços de JavaScript que a rota carrega no primeiro acesso. Comprimida
- * porque é assim que o arquivo trafega, e `RNF-004` fala em KB comprimidos.
+ * pedaços de JavaScript que a rota carrega. Comprimida porque é assim que o
+ * arquivo trafega, e `RNF-004` fala em KB comprimidos.
+ *
+ * **Uma linha por calculadora publicada, não uma pelo molde.** Ninguém abre
+ * `/calculadora/[slug]`; abre-se `/calculadora/inss`. Desde 31/07/2026 cada
+ * calculadora tem o cálculo em pedaço próprio, adiado — e pedaço adiado não
+ * consta do manifesto da rota. Somar só o manifesto mostraria a rota
+ * emagrecendo e deixaria de contar justamente a parte que cresce com o
+ * catálogo. `pedacoDaCalculadora` fecha esse buraco, e **reprova** se o pedaço
+ * de uma calculadora publicada não for encontrado.
  *
  * Uso: `npm run check:orcamento` depois de `npm run build`.
  */
 
 import { gzipSync } from 'node:zlib'
-import { readFileSync, existsSync } from 'node:fs'
+import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
+
+import { SLUGS } from '../src/lib/calculadoras'
 
 const DIRETORIO_BUILD = '.next'
 const MANIFESTO = join(DIRETORIO_BUILD, 'app-build-manifest.json')
+const PEDACOS = join(DIRETORIO_BUILD, 'static', 'chunks')
 
 /** `RNF-004`. Em bytes, sobre o conteúdo comprimido. */
 const ORCAMENTO_CALCULADORA = 120 * 1024
@@ -37,6 +48,48 @@ interface Medida {
   readonly bytes: number
   readonly arquivos: number
   readonly bloqueante: boolean
+}
+
+function gzip(caminho: string): number {
+  // Nível 9: o que o servidor entrega com compressão ligada. Medir o arquivo
+  // cru superestimaria em mais de três vezes e tornaria o orçamento impossível
+  // de cumprir por um motivo falso.
+  return gzipSync(readFileSync(caminho), { level: 9 }).byteLength
+}
+
+/**
+ * O pedaço adiado de cada calculadora — `lib/calculadoras/calculo.ts`.
+ *
+ * **Por que o script precisa disto.** A partir de 31/07/2026 a função de
+ * cálculo de cada calculadora viaja em pedaço próprio, carregado sob demanda.
+ * Pedaço adiado **não aparece** no manifesto da rota. Medir só o manifesto
+ * mostraria a rota emagrecendo de 117,6 para 110,9 kB e não contaria os 3,5 kB
+ * que o navegador baixa em seguida para que a calculadora funcione.
+ *
+ * Isso seria um orçamento que passa por deixar de olhar — a mesma falha do
+ * `echo` que fingiu ser este verificador do T-003 ao T-105, e do
+ * `--passWithNoTests`. O nome fixo do pedaço (`webpackChunkName`) existe para
+ * tornar esta medição possível.
+ *
+ * **Slug publicado sem pedaço é erro, não zero.** Se o `webpackChunkName` for
+ * removido ou renomeado, o padrão deixa de casar; sem esta checagem o script
+ * relataria a rota mais leve e continuaria verde.
+ */
+function pedacoDaCalculadora(slug: string): number {
+  if (!existsSync(PEDACOS)) return 0
+  const alvo = readdirSync(PEDACOS).filter((f) => f.startsWith(`calc-${slug}.`) && f.endsWith('.js'))
+
+  if (alvo.length === 0) {
+    console.error(
+      `Nenhum pedaço "calc-${slug}.*.js" em ${PEDACOS}.\n` +
+        `A calculadora "${slug}" está publicada, então o cálculo dela é baixado\n` +
+        `por alguém — e este script precisa somá-lo à rota. Confira o\n` +
+        `webpackChunkName em src/lib/calculadoras/calculo.ts.`,
+    )
+    process.exit(1)
+  }
+
+  return alvo.reduce((soma, f) => soma + gzip(join(PEDACOS, f)), 0)
 }
 
 function medir(): readonly Medida[] {
@@ -64,19 +117,36 @@ function medir(): readonly Medida[] {
       if (!arquivo.endsWith('.js')) continue
       const caminho = join(DIRETORIO_BUILD, arquivo)
       if (!existsSync(caminho)) continue
-      // Nível 9: o que o servidor entrega com compressão ligada. Medir o
-      // arquivo cru superestimaria em mais de três vezes e tornaria o
-      // orçamento impossível de cumprir por um motivo falso.
-      bytes += gzipSync(readFileSync(caminho), { level: 9 }).byteLength
+      bytes += gzip(caminho)
       contados += 1
     }
 
-    medidas.push({
-      rota,
-      bytes,
-      arquivos: contados,
-      bloqueante: BLOQUEANTES.some((padrao) => padrao.test(rota)),
-    })
+    const bloqueante = BLOQUEANTES.some((padrao) => padrao.test(rota))
+
+    /**
+     * `/calculadora/[slug]` é um molde, não uma rota que alguém abre. Quem
+     * abre abre `/calculadora/salario-liquido` — e baixa o que está no
+     * manifesto MAIS o pedaço daquela calculadora.
+     *
+     * Medir cada slug separadamente é o que dá sentido ao limite: ele passa a
+     * valer sobre o que uma pessoa de fato baixa, e para de crescer a cada
+     * calculadora nova. Era o motivo de a folga estar em 2,4 kB com quatro
+     * publicadas e 71 por publicar.
+     */
+    if (rota === '/calculadora/[slug]') {
+      for (const slug of SLUGS) {
+        const proprio = pedacoDaCalculadora(slug)
+        medidas.push({
+          rota: `/calculadora/${slug}`,
+          bytes: bytes + proprio,
+          arquivos: contados + 1,
+          bloqueante,
+        })
+      }
+      continue
+    }
+
+    medidas.push({ rota, bytes, arquivos: contados, bloqueante })
   }
 
   return medidas.sort((a, b) => b.bytes - a.bytes)

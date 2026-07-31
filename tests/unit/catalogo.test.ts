@@ -12,7 +12,9 @@
 import { describe, expect, it } from 'vitest'
 
 import { CALCULADORAS } from '../../src/lib/calculadoras'
+import { carregarCalculo, SLUGS_COM_CALCULO } from '../../src/lib/calculadoras/calculo'
 import { CATALOGO } from '../../src/lib/calculadoras/indice'
+import { formularioDe } from '../../src/lib/calculadoras/tipos'
 
 describe('índice do catálogo', () => {
   it('tem exatamente as mesmas calculadoras, na mesma ordem', () => {
@@ -32,6 +34,65 @@ describe('índice do catálogo', () => {
     const publicados = new Set(CALCULADORAS.map((c) => c.slug))
     for (const item of CATALOGO) {
       expect(publicados.has(item.slug), `índice cita "${item.slug}", que não existe`).toBe(true)
+    }
+  })
+})
+
+/**
+ * O mapa de carga adiada é a **terceira** lista do mesmo conjunto, e a mais
+ * perigosa das três: as outras duas erram na vitrine, esta erra no produto.
+ * Calculadora publicada sem entrada em `calculo.ts` renderiza o formulário
+ * inteiro e nunca sai de "Calculando…", porque `carregarCalculo` devolve
+ * `null` — falha silenciosa, e só na rota daquela calculadora.
+ */
+describe('carga adiada do cálculo', () => {
+  it('cobre exatamente as calculadoras publicadas', () => {
+    expect([...SLUGS_COM_CALCULO].sort()).toEqual(CALCULADORAS.map((c) => c.slug).sort())
+  })
+
+  it('entrega a mesma função que a definição declara', async () => {
+    for (const definicao of CALCULADORAS) {
+      const promessa = carregarCalculo(definicao.slug)
+      expect(promessa, `"${definicao.slug}" não tem cálculo registrado`).not.toBeNull()
+      // Identidade, não equivalência: garante que o mapa aponta para a
+      // definição certa. Trocar duas entradas de lugar passaria em qualquer
+      // verificação mais frouxa, e produziria a calculadora errada na rota
+      // certa — o defeito mais caro que este projeto pode publicar.
+      await expect(promessa).resolves.toBe(definicao.calcular)
+    }
+  })
+
+  it('devolve nulo para slug inexistente, em vez de lançar', () => {
+    expect(carregarCalculo('nao-existe')).toBeNull()
+  })
+})
+
+/**
+ * O recorte que vai para o navegador precisa ser serializável de verdade: é
+ * propriedade de componente de cliente, e o Next recusa função na fronteira.
+ * O erro aparece só em tempo de renderização, numa rota específica — barato de
+ * pegar aqui, caro de descobrir em produção.
+ */
+describe('formulário entregue ao navegador', () => {
+  it('não leva função nenhuma', () => {
+    for (const definicao of CALCULADORAS) {
+      const formulario = formularioDe(definicao)
+      expect(
+        JSON.parse(JSON.stringify(formulario)),
+        `o formulário de "${definicao.slug}" não sobrevive a uma ida e volta em JSON`,
+      ).toEqual(formulario)
+    }
+  })
+
+  it('não leva FAQ, texto de SEO nem relacionadas — só o servidor os renderiza', () => {
+    for (const definicao of CALCULADORAS) {
+      const chaves = Object.keys(formularioDe(definicao))
+      for (const proibida of ['faq', 'descricaoSeo', 'relacionadas', 'nome', 'linhaDeContexto']) {
+        expect(
+          chaves,
+          `"${proibida}" voltou ao pacote do navegador em "${definicao.slug}" (RNF-004)`,
+        ).not.toContain(proibida)
+      }
     }
   })
 })

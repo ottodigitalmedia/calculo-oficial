@@ -199,6 +199,10 @@ No lugar deles há um teste de **linha de base**: zero requisição a terceiro e
 
 **TC-051 passou a medir no T-106.** Do T-003 até o T-105 o passo era um `echo` justificado por "ainda não há rota de calculadora" — havia desde o T-103, e o `echo` continuou passando. `scripts/verificar-orcamento.ts` soma o JavaScript comprimido de cada rota a partir do manifesto do build e falha se uma rota de calculadora ultrapassar o teto. Avisa, sem falhar, quando a folga cai abaixo de 8 kB.
 
+**TC-051 passou a enxergar o adiado em 31/07/2026.** Desde então cada calculadora carrega o cálculo em pedaço próprio, sob demanda — e **pedaço adiado não consta do manifesto da rota**. Medir só o manifesto mostraria a rota emagrecendo de 117,6 para 110,9 kB sem contar os 2 a 3,5 kB que o navegador baixa em seguida para a calculadora funcionar: um orçamento que passa por deixar de olhar, que é a mesma falha do `echo` acima.
+
+O script passou a emitir **uma linha por calculadora publicada** — `/calculadora/inss`, não `/calculadora/[slug]`, porque ninguém abre o molde — somando o pedaço próprio de cada uma, e a **reprovar quando uma calculadora publicada não tem pedaço correspondente**. Provado por mutação: apagando `calc-inss.*.js` do build, o script sai com código 1 e nomeia a calculadora que ficou sem medição.
+
 | TC-052 | Cálculo ≤ 50ms | `RNF-005` | Alerta |
 | TC-053 | Funciona integralmente com terceiros bloqueados | `RNF-007` | Bloqueia deploy |
 

@@ -13,7 +13,66 @@ import { calcularInss } from '../engine/inss'
 import { calcularIrrf } from '../engine/irrf'
 import { centavos } from '../engine/types'
 import { formatarPercentual } from '../format/moeda'
-import { numero, type DefinicaoCalculadora } from './tipos'
+import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
+
+/** Exportação de topo — ver a nota em `salario-liquido.ts`. */
+export const calcular: FuncaoCalculo = (valores, dataReferencia, registro) => {
+  const bruto = centavos(numero(valores, 'rendimentoBruto'))
+  const informado = centavos(numero(valores, 'inss'))
+
+  // INSS zerado significa "calcule para mim". Ainda assim é o motor de
+  // T-102 que calcula — não há segunda implementação.
+  let inss = informado
+  if (informado === 0) {
+    const prev = calcularInss({ salarioContribuicao: bruto }, dataReferencia, registro)
+    if (!prev.ok) return prev
+    inss = prev.valores.contribuicao
+  }
+
+  const r = calcularIrrf(
+    {
+      rendimentoBruto: bruto,
+      inss,
+      dependentes: numero(valores, 'dependentes'),
+      pensao: centavos(numero(valores, 'pensao')),
+    },
+    dataReferencia,
+    registro,
+  )
+  if (!r.ok) return r
+
+  const notas = [
+    informado > 0
+      ? 'Usando o valor de contribuição previdenciária que você informou.'
+      : 'A contribuição previdenciária foi calculada pela tabela do período. Informe o valor do seu holerite se ele for diferente.',
+    r.valores.baseEscolhida === 'desconto_simplificado'
+      ? 'O desconto simplificado produziu base menor e foi aplicado por ser mais favorável.'
+      : 'As deduções legais produziram base menor e foram aplicadas por serem mais favoráveis.',
+  ]
+
+  return {
+    ok: true,
+    traco: r.traco,
+    valores: {
+      principal: r.valores.imposto,
+      detalhamento: [
+        { rotulo: 'Rendimento bruto', valor: bruto, sinal: 'credito' },
+        { rotulo: 'Contribuição previdenciária', valor: inss, sinal: 'debito' },
+        { rotulo: 'Base de cálculo', valor: r.valores.baseCalculo, sinal: 'neutro' },
+        ...(r.valores.reducaoAplicada > 0
+          ? ([
+              { rotulo: 'Redução do imposto', valor: r.valores.reducaoAplicada, sinal: 'credito' },
+            ] as const)
+          : []),
+        { rotulo: 'Imposto devido', valor: r.valores.imposto, sinal: 'debito' },
+      ],
+      destaques: [
+        { rotulo: 'Faixa da tabela', valor: formatarPercentual(r.valores.aliquotaFaixa) },
+      ],
+      notas,
+    },
+  }
+}
 
 export const IRRF_MENSAL: DefinicaoCalculadora = {
   id: 'CALC-015',
@@ -69,63 +128,7 @@ export const IRRF_MENSAL: DefinicaoCalculadora = {
 
   rotuloResultado: 'Imposto retido na fonte',
 
-  calcular(valores, dataReferencia, registro) {
-    const bruto = centavos(numero(valores, 'rendimentoBruto'))
-    const informado = centavos(numero(valores, 'inss'))
-
-    // INSS zerado significa "calcule para mim". Ainda assim é o motor de
-    // T-102 que calcula — não há segunda implementação.
-    let inss = informado
-    if (informado === 0) {
-      const prev = calcularInss({ salarioContribuicao: bruto }, dataReferencia, registro)
-      if (!prev.ok) return prev
-      inss = prev.valores.contribuicao
-    }
-
-    const r = calcularIrrf(
-      {
-        rendimentoBruto: bruto,
-        inss,
-        dependentes: numero(valores, 'dependentes'),
-        pensao: centavos(numero(valores, 'pensao')),
-      },
-      dataReferencia,
-      registro,
-    )
-    if (!r.ok) return r
-
-    const notas = [
-      informado > 0
-        ? 'Usando o valor de contribuição previdenciária que você informou.'
-        : 'A contribuição previdenciária foi calculada pela tabela do período. Informe o valor do seu holerite se ele for diferente.',
-      r.valores.baseEscolhida === 'desconto_simplificado'
-        ? 'O desconto simplificado produziu base menor e foi aplicado por ser mais favorável.'
-        : 'As deduções legais produziram base menor e foram aplicadas por serem mais favoráveis.',
-    ]
-
-    return {
-      ok: true,
-      traco: r.traco,
-      valores: {
-        principal: r.valores.imposto,
-        detalhamento: [
-          { rotulo: 'Rendimento bruto', valor: bruto, sinal: 'credito' },
-          { rotulo: 'Contribuição previdenciária', valor: inss, sinal: 'debito' },
-          { rotulo: 'Base de cálculo', valor: r.valores.baseCalculo, sinal: 'neutro' },
-          ...(r.valores.reducaoAplicada > 0
-            ? ([
-                { rotulo: 'Redução do imposto', valor: r.valores.reducaoAplicada, sinal: 'credito' },
-              ] as const)
-            : []),
-          { rotulo: 'Imposto devido', valor: r.valores.imposto, sinal: 'debito' },
-        ],
-        destaques: [
-          { rotulo: 'Faixa da tabela', valor: formatarPercentual(r.valores.aliquotaFaixa) },
-        ],
-        notas,
-      },
-    }
-  },
+  calcular,
 
   faq: [
     {

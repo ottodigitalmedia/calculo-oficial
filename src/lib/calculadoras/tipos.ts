@@ -28,6 +28,31 @@ export interface OpcaoSelecao {
   readonly indisponivel?: boolean
 }
 
+/**
+ * Habilitação condicional — `03-functional-spec` §3.
+ *
+ * **Dado, não função.** Era `(valores) => boolean`, e uma função não atravessa
+ * a fronteira servidor→cliente: ela não é serializável. Enquanto a definição
+ * inteira vivia no pacote do navegador isso não incomodava; a partir do momento
+ * em que o servidor passa a entregar o formulário pronto (ver
+ * `FormularioCalculadora`), incomoda.
+ *
+ * A troca não perdeu capacidade em uso: `visivelSe` estava declarado desde o
+ * T-103 e **nenhuma das quatro calculadoras publicadas o usava**. Era contrato
+ * especulativo. O formato declarativo cobre o caso real que vem a seguir —
+ * campo que aparece conforme uma seleção, como o tipo de aviso prévio em
+ * CALC-002.
+ *
+ * Se algum dia um caso não couber aqui, o certo é ampliar esta forma — não
+ * voltar à função. Ver `ESTADO-DO-PROJETO` §7.4.
+ */
+export interface CondicaoVisibilidade {
+  /** `id` do campo observado. */
+  readonly campo: string
+  /** Visível quando o valor daquele campo está nesta lista. */
+  readonly em: readonly (string | number)[]
+}
+
 export interface Campo {
   readonly id: string
   readonly rotulo: string
@@ -41,7 +66,14 @@ export interface Campo {
   /** Texto curto abaixo do campo. */
   readonly ajuda?: string
   /** Habilitação condicional. Ver `03-functional-spec` §3. */
-  readonly visivelSe?: (valores: ValoresFormulario) => boolean
+  readonly visivelSe?: CondicaoVisibilidade
+}
+
+/** Avalia `visivelSe`. Campo sem condição é sempre visível. */
+export function campoVisivel(campo: Campo, valores: ValoresFormulario): boolean {
+  if (!campo.visivelSe) return true
+  const valor = valores[campo.visivelSe.campo]
+  return valor !== undefined && campo.visivelSe.em.includes(valor)
 }
 
 /** Valores crus do formulário. Monetário em CENTAVOS; seleção em texto. */
@@ -104,6 +136,41 @@ export interface PerguntaFaq {
   readonly resposta: string
 }
 
+/** A função de cálculo, isolada do resto da definição para poder ser adiada. */
+export type FuncaoCalculo = (
+  valores: ValoresFormulario,
+  dataReferencia: DataISO,
+  registro: Registro,
+) => Resultado<SaidaCalculadora>
+
+/**
+ * O recorte da definição que o **navegador** precisa para desenhar e operar o
+ * formulário — e nada além disso.
+ *
+ * **Por que existe.** O componente de calculadora é de cliente, e importava a
+ * definição inteira do registro. Com isso o navegador baixava, em toda rota de
+ * calculadora: as quatro definições, os textos de FAQ e de SEO das quatro (que
+ * só o servidor renderiza) e os motores de todas — para operar **uma**.
+ * `RNF-004` mede 120 kB comprimidos por rota e a folga estava em 2,4 kB, com
+ * 71 calculadoras no catálogo a construir.
+ *
+ * Este objeto é **inteiramente serializável**, de propósito: é o servidor que o
+ * entrega, como propriedade, já resolvido para o slug da rota. O formulário
+ * continua saindo pronto no HTML estático — nenhuma etapa de hidratação
+ * precisa acontecer para ele aparecer.
+ *
+ * `calcular` **não** está aqui: chega depois, por `lib/calculadoras/calculo`,
+ * e traz o motor junto. O usuário precisa digitar antes de haver o que
+ * calcular, e é nessa folga que o pedaço chega.
+ */
+export interface FormularioCalculadora {
+  readonly slug: string
+  readonly campos: readonly Campo[]
+  readonly parametrosRequeridos: readonly string[]
+  readonly rotuloResultado: string
+  readonly avisoAdicional?: string
+}
+
 export interface DefinicaoCalculadora {
   /** `CALC-NNN`, conforme o catálogo. Nenhuma calculadora existe sem ID. */
   readonly id: string
@@ -124,17 +191,30 @@ export interface DefinicaoCalculadora {
 
   readonly rotuloResultado: string
 
-  readonly calcular: (
-    valores: ValoresFormulario,
-    dataReferencia: DataISO,
-    registro: Registro,
-  ) => Resultado<SaidaCalculadora>
+  readonly calcular: FuncaoCalculo
 
   readonly faq: readonly PerguntaFaq[]
   /** Slugs de 2 a 4 calculadoras relacionadas. */
   readonly relacionadas: readonly string[]
   /** Aviso adicional ao de estimativa. Ex.: o de FGTS (`RN-023`). */
   readonly avisoAdicional?: string
+}
+
+/**
+ * Extrai o recorte que vai para o navegador.
+ *
+ * Derivado, nunca escrito à mão: duas listas do mesmo conjunto divergem, e este
+ * projeto já pagou por isso uma vez — o rodapé que anunciava como "em breve"
+ * três calculadoras publicadas (T-106).
+ */
+export function formularioDe(definicao: DefinicaoCalculadora): FormularioCalculadora {
+  return {
+    slug: definicao.slug,
+    campos: definicao.campos,
+    parametrosRequeridos: definicao.parametrosRequeridos,
+    rotuloResultado: definicao.rotuloResultado,
+    ...(definicao.avisoAdicional ? { avisoAdicional: definicao.avisoAdicional } : {}),
+  }
 }
 
 // ---------------------------------------------------------------------------

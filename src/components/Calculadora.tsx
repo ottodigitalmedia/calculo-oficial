@@ -4,8 +4,14 @@ import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 
 import { CampoFormulario, validar } from '@/components/campos'
 import { MemoriaCalculo } from '@/components/MemoriaCalculo'
-import { porSlug } from '@/lib/calculadoras'
-import type { SaidaCalculadora, ValoresFormulario } from '@/lib/calculadoras/tipos'
+import { carregarCalculo } from '@/lib/calculadoras/calculo'
+import {
+  campoVisivel,
+  type FormularioCalculadora,
+  type FuncaoCalculo,
+  type SaidaCalculadora,
+  type ValoresFormulario,
+} from '@/lib/calculadoras/tipos'
 import type { Resultado } from '@/lib/engine/traco'
 import { formatarData, formatarReal } from '@/lib/format/moeda'
 import { INSS } from '@/lib/params/data/inss'
@@ -16,10 +22,20 @@ import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
 /**
  * A página genérica de calculadora — `ADR-008` E-1.
  *
- * Renderiza **qualquer** definição que satisfaça o contrato de
+ * Renderiza **qualquer** formulário que satisfaça o contrato de
  * `calculadoras/tipos.ts`. Adicionar uma calculadora não passa por aqui.
  *
  * Estados de `03-functional-spec` §1.5, com os textos literais do documento.
+ *
+ * **O formulário chega por propriedade, do servidor.** Antes, este componente
+ * resolvia o slug no registro — e, sendo componente de cliente, isso arrastava
+ * as quatro definições, com FAQ, texto de SEO e motores de todas, para dentro
+ * do pacote de toda rota de calculadora. Ver `calculadoras/tipos.ts`,
+ * `FormularioCalculadora`.
+ *
+ * O que **não** mudou: o formulário continua saindo pronto no HTML estático. O
+ * servidor renderiza este componente com os campos já resolvidos, então o
+ * primeiro quadro que o visitante vê não depende de hidratação nem de rede.
  */
 
 const registro = construirRegistro(INSS, IRRF)
@@ -27,19 +43,43 @@ const registro = construirRegistro(INSS, IRRF)
 type Estado =
   | { readonly tipo: 'vazio' }
   | { readonly tipo: 'pendente'; readonly faltando: readonly string[] }
+  | { readonly tipo: 'carregando' }
   | { readonly tipo: 'calculado'; readonly resultado: Resultado<SaidaCalculadora> }
 
-export function Calculadora({ slug }: { readonly slug: string }) {
-  const definicao = porSlug(slug)
+export function Calculadora({ formulario }: { readonly formulario: FormularioCalculadora }) {
+  /**
+   * A função de cálculo chega depois do primeiro quadro, em pedaço próprio.
+   *
+   * O pedido sai na montagem, não na primeira tecla: o usuário ainda vai
+   * digitar, e é nessa folga que o pedaço viaja. Na prática o estado
+   * `carregando` só aparece em permalink — onde os valores já vêm prontos e não
+   * há digitação para esconder a espera.
+   */
+  const [calcular, setCalcular] = useState<FuncaoCalculo | null>(null)
+
+  useEffect(() => {
+    let vivo = true
+    const promessa = carregarCalculo(formulario.slug)
+    if (!promessa) return
+    // O embrulho `() => fn` não é estilo: `setState` interpreta função como
+    // ATUALIZADOR e a chamaria com o estado anterior, guardando o retorno.
+    // Passar `fn` direto executaria o cálculo com `null` no lugar dos valores.
+    void promessa.then((fn) => {
+      if (vivo) setCalcular(() => fn)
+    })
+    return () => {
+      vivo = false
+    }
+  }, [formulario.slug])
 
   const cobertura = useMemo(
-    () => (definicao ? registro.coberturaCombinada(definicao.parametrosRequeridos) : null),
-    [definicao],
+    () => registro.coberturaCombinada(formulario.parametrosRequeridos),
+    [formulario],
   )
 
   const anos = useMemo(
-    () => (definicao ? registro.anosDisponiveis(definicao.parametrosRequeridos) : []),
-    [definicao],
+    () => registro.anosDisponiveis(formulario.parametrosRequeridos),
+    [formulario],
   )
 
   /**
@@ -57,7 +97,7 @@ export function Calculadora({ slug }: { readonly slug: string }) {
 
   const [dataReferencia, setDataReferencia] = useState(dataInicial)
   const [valores, setValores] = useState<ValoresFormulario>(() =>
-    Object.fromEntries((definicao?.campos ?? []).map((c) => [c.id, c.padrao ?? (c.tipo === 'selecao' ? '' : 0)])),
+    Object.fromEntries(formulario.campos.map((c) => [c.id, c.padrao ?? (c.tipo === 'selecao' ? '' : 0)])),
   )
 
   /**
@@ -68,12 +108,11 @@ export function Calculadora({ slug }: { readonly slug: string }) {
    * durante a renderização produziria divergência de hidratação.
    */
   useEffect(() => {
-    if (!definicao) return
-    const { valores: daUrl, referencia } = lerDaUrl(definicao.campos, window.location.search)
+    const { valores: daUrl, referencia } = lerDaUrl(formulario.campos, window.location.search)
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sincronização única com a URL, que é sistema externo
     if (Object.keys(daUrl).length > 0) setValores((atual) => ({ ...atual, ...daUrl }))
     if (referencia !== null) setDataReferencia(referencia)
-  }, [definicao])
+  }, [formulario])
 
   /**
    * Reflete o estado de volta na URL, sem navegar.
@@ -82,19 +121,18 @@ export function Calculadora({ slug }: { readonly slug: string }) {
    * no histórico, e o botão "voltar" deixaria de voltar para a página anterior.
    */
   useEffect(() => {
-    if (!definicao) return
-    const query = escreverNaUrl(definicao.campos, valores, dataReferencia, dataInicial)
+    const query = escreverNaUrl(formulario.campos, valores, dataReferencia, dataInicial)
     const alvo = `${window.location.pathname}${query}`
     if (alvo !== `${window.location.pathname}${window.location.search}`) {
       window.history.replaceState(null, '', alvo)
     }
     // 07-security §4.3: a query carrega salário e dados de contrato.
     ajustarIndexacao(query !== '')
-  }, [definicao, valores, dataReferencia, dataInicial])
+  }, [formulario, valores, dataReferencia, dataInicial])
 
   const camposVisiveis = useMemo(
-    () => (definicao?.campos ?? []).filter((c) => c.visivelSe?.(valores) ?? true),
-    [definicao, valores],
+    () => formulario.campos.filter((c) => campoVisivel(c, valores)),
+    [formulario, valores],
   )
 
   const erros = useMemo(() => {
@@ -125,8 +163,6 @@ export function Calculadora({ slug }: { readonly slug: string }) {
   const dataAdiada = useDeferredValue(dataReferencia)
 
   const estado: Estado = useMemo(() => {
-    if (!definicao) return { tipo: 'vazio' }
-
     const faltando = camposVisiveis
       .filter((c) => c.obrigatorio && (valoresAdiados[c.id] ?? 0) === 0)
       .map((c) => c.rotulo)
@@ -139,10 +175,13 @@ export function Calculadora({ slug }: { readonly slug: string }) {
     // derivado, isso acontece por construção — não há resultado velho a limpar.
     if (erros.size > 0) return { tipo: 'pendente', faltando: [] }
 
-    return { tipo: 'calculado', resultado: definicao.calcular(valoresAdiados, dataAdiada, registro) }
-  }, [definicao, valoresAdiados, dataAdiada, camposVisiveis, erros])
+    // Há o que calcular, mas o pedaço com o motor ainda não chegou. Só acontece
+    // quando os valores vieram prontos da URL — digitar leva mais tempo que a
+    // carga. Nunca acontece na renderização do servidor, que para em `vazio`.
+    if (!calcular) return { tipo: 'carregando' }
 
-  if (!definicao) return null
+    return { tipo: 'calculado', resultado: calcular(valoresAdiados, dataAdiada, registro) }
+  }, [calcular, valoresAdiados, dataAdiada, camposVisiveis, erros])
 
   return (
     <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -191,9 +230,9 @@ export function Calculadora({ slug }: { readonly slug: string }) {
       <div aria-live="polite" aria-atomic="false">
         <Resultado
           estado={estado}
-          rotulo={definicao.rotuloResultado}
+          rotulo={formulario.rotuloResultado}
           dataReferencia={dataReferencia}
-          {...(definicao.avisoAdicional ? { avisoAdicional: definicao.avisoAdicional } : {})}
+          {...(formulario.avisoAdicional ? { avisoAdicional: formulario.avisoAdicional } : {})}
         />
       </div>
     </div>
@@ -234,6 +273,17 @@ function Resultado({
             ? `Falta preencher: ${estado.faltando.join(', ')}.`
             : 'Corrija os campos destacados para ver o resultado.'}
         </p>
+      </div>
+    )
+  }
+
+  // Estado de transição, medido em dezenas de milissegundos. Existe para não
+  // deixar a caixa dizendo "preencha os campos" com os campos preenchidos —
+  // que seria pior que uma espera declarada.
+  if (estado.tipo === 'carregando') {
+    return (
+      <div className={caixa}>
+        <p className="text-[var(--color-text-secondary)]">Calculando…</p>
       </div>
     )
   }

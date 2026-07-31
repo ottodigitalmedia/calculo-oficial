@@ -46,6 +46,34 @@ const FRONTEIRA_DO_MOTOR = {
   ],
 }
 
+/**
+ * `RNF-004` — o componente de calculadora não resolve slug no registro.
+ *
+ * `Calculadora.tsx` é componente de CLIENTE. Enquanto ele importava
+ * `@/lib/calculadoras` para achar a definição pelo slug, o pacote de toda rota
+ * de calculadora levava junto as quatro definições, os FAQ e os textos de SEO
+ * de todas, e os motores de todas — para operar uma. Cada calculadora nova
+ * acrescentava ~1,1 kB a TODAS as rotas, e o catálogo tem 75.
+ *
+ * O formulário passa a chegar do servidor, já resolvido, e o cálculo por carga
+ * adiada. Esta regra existe porque a volta é um import de uma linha, e a
+ * consequência dela não aparece em nenhum teste funcional: tudo continua
+ * funcionando, só mais pesado — até o orçamento estourar, meses depois, sem
+ * culpado óbvio.
+ *
+ * Componente de servidor pode importar o registro à vontade; a restrição vale
+ * para os quatro arquivos marcados com `'use client'`.
+ */
+const REGISTRO_FORA_DO_CLIENTE = {
+  patterns: [
+    {
+      regex: '^@/lib/calculadoras$|^\\.\\./lib/calculadoras$|(^|/)calculadoras/index$',
+      message:
+        'RNF-004: componente de cliente não importa o registro de calculadoras — ele arrasta as definições, os FAQ e os motores de TODAS para o pacote da rota. O formulário chega por propriedade, do servidor (`formularioDe`), e o cálculo por `lib/calculadoras/calculo`. Ver ESTADO-DO-PROJETO §7.6.',
+    },
+  ],
+}
+
 /** Regra 4 — o motor não lê relógio, rede nem ambiente (ADR-003 C-M2). */
 const MOTOR_DETERMINISTICO = [
   {
@@ -173,6 +201,26 @@ export default tseslint.config(
     files: ['src/components/**/*.{ts,tsx}', 'src/app/**/*.{ts,tsx}', 'src/lib/format/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-syntax': ['error', ...ARITMETICA_EM_CENTAVOS],
+    },
+  },
+
+  // ------------------------------------------------------------------------
+  // Componentes de cliente — o pacote que o navegador baixa (`RNF-004`).
+  //
+  // A lista é explícita, e não um padrão: `'use client'` é diretiva de
+  // conteúdo, e o ESLint seleciona por caminho. Componente de cliente novo
+  // entra aqui — se não entrar, a regra não o alcança, e é por isso que
+  // `ESTADO-DO-PROJETO` §7.6 nomeia este arquivo.
+  // ------------------------------------------------------------------------
+  {
+    files: [
+      'src/components/Calculadora.tsx',
+      'src/components/campos.tsx',
+      'src/components/MemoriaCalculo.tsx',
+      'src/components/BuscaCatalogo.tsx',
+    ],
+    rules: {
+      'no-restricted-imports': ['error', REGISTRO_FORA_DO_CLIENTE],
     },
   },
 

@@ -8,7 +8,44 @@
 import { calcularInss } from '../engine/inss'
 import { centavos } from '../engine/types'
 import { formatarPercentual } from '../format/moeda'
-import { numero, type DefinicaoCalculadora } from './tipos'
+import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
+
+/** Exportação de topo — ver a nota em `salario-liquido.ts`. */
+export const calcular: FuncaoCalculo = (valores, dataReferencia, registro) => {
+  const salario = centavos(numero(valores, 'salarioContribuicao'))
+  const r = calcularInss({ salarioContribuicao: salario }, dataReferencia, registro)
+  if (!r.ok) return r
+
+  return {
+    ok: true,
+    traco: r.traco,
+    valores: {
+      principal: r.valores.contribuicao,
+      detalhamento: [
+        { rotulo: 'Salário de contribuição', valor: salario, sinal: 'credito' },
+        ...(r.valores.limitadaPeloTeto
+          ? ([
+              {
+                rotulo: 'Base limitada ao teto previdenciário',
+                valor: r.valores.baseAplicada,
+                sinal: 'neutro',
+              },
+            ] as const)
+          : []),
+        { rotulo: 'Contribuição', valor: r.valores.contribuicao, sinal: 'debito' },
+      ],
+      destaques: [
+        {
+          rotulo: 'Alíquota efetiva',
+          valor: formatarPercentual(r.valores.aliquotaEfetiva),
+        },
+      ],
+      notas: r.valores.limitadaPeloTeto
+        ? ['A contribuição não incide sobre a parcela do salário que excede o teto.']
+        : [],
+    },
+  }
+}
 
 export const INSS_MENSAL: DefinicaoCalculadora = {
   id: 'CALC-016',
@@ -48,41 +85,7 @@ export const INSS_MENSAL: DefinicaoCalculadora = {
 
   rotuloResultado: 'Contribuição previdenciária',
 
-  calcular(valores, dataReferencia, registro) {
-    const salario = centavos(numero(valores, 'salarioContribuicao'))
-    const r = calcularInss({ salarioContribuicao: salario }, dataReferencia, registro)
-    if (!r.ok) return r
-
-    return {
-      ok: true,
-      traco: r.traco,
-      valores: {
-        principal: r.valores.contribuicao,
-        detalhamento: [
-          { rotulo: 'Salário de contribuição', valor: salario, sinal: 'credito' },
-          ...(r.valores.limitadaPeloTeto
-            ? ([
-                {
-                  rotulo: 'Base limitada ao teto previdenciário',
-                  valor: r.valores.baseAplicada,
-                  sinal: 'neutro',
-                },
-              ] as const)
-            : []),
-          { rotulo: 'Contribuição', valor: r.valores.contribuicao, sinal: 'debito' },
-        ],
-        destaques: [
-          {
-            rotulo: 'Alíquota efetiva',
-            valor: formatarPercentual(r.valores.aliquotaEfetiva),
-          },
-        ],
-        notas: r.valores.limitadaPeloTeto
-          ? ['A contribuição não incide sobre a parcela do salário que excede o teto.']
-          : [],
-      },
-    }
-  },
+  calcular,
 
   faq: [
     {

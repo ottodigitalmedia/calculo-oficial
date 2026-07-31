@@ -7,7 +7,57 @@
 
 import { calcularSalarioLiquido } from '../engine/calculadoras/salario-liquido'
 import { centavos } from '../engine/types'
-import { numero, type DefinicaoCalculadora } from './tipos'
+import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
+
+/**
+ * Exportação de topo, e não método do literal abaixo — de propósito.
+ *
+ * `calculo.ts` importa **só isto** no pedaço adiado. Sendo exportação nomeada,
+ * o empacotador descarta o resto do módulo do pacote do navegador: FAQ, texto
+ * de SEO e nome, que só o servidor renderiza. Como método, o objeto inteiro
+ * viajaria junto — foram ~0,6 kB comprimidos por calculadora, de texto que o
+ * navegador baixava para nunca exibir.
+ *
+ * O literal continua sendo a definição completa e continua sendo a fonte única:
+ * ele referencia esta função, não uma cópia.
+ */
+export const calcular: FuncaoCalculo = (valores, dataReferencia, registro) => {
+  const r = calcularSalarioLiquido(
+    {
+      salarioBruto: centavos(numero(valores, 'salarioBruto')),
+      dependentes: numero(valores, 'dependentes'),
+      pensao: centavos(numero(valores, 'pensao')),
+      outrosDescontos: centavos(numero(valores, 'outrosDescontos')),
+    },
+    dataReferencia,
+    registro,
+  )
+  if (!r.ok) return r
+
+  const bruto = centavos(numero(valores, 'salarioBruto'))
+  const pensao = centavos(numero(valores, 'pensao'))
+  const outros = centavos(numero(valores, 'outrosDescontos'))
+
+  return {
+    ok: true,
+    traco: r.traco,
+    valores: {
+      principal: r.valores.liquido,
+      detalhamento: [
+        { rotulo: 'Salário bruto', valor: bruto, sinal: 'credito' },
+        { rotulo: 'Contribuição previdenciária (INSS)', valor: r.valores.inss, sinal: 'debito' },
+        { rotulo: 'Imposto de Renda retido na fonte', valor: r.valores.irrf, sinal: 'debito' },
+        ...(pensao > 0
+          ? ([{ rotulo: 'Pensão alimentícia', valor: pensao, sinal: 'debito' }] as const)
+          : []),
+        ...(outros > 0
+          ? ([{ rotulo: 'Outros descontos', valor: outros, sinal: 'debito' }] as const)
+          : []),
+        { rotulo: 'Salário líquido', valor: r.valores.liquido, sinal: 'neutro' },
+      ],
+    },
+  }
+}
 
 export const SALARIO_LIQUIDO: DefinicaoCalculadora = {
   id: 'CALC-001',
@@ -62,43 +112,7 @@ export const SALARIO_LIQUIDO: DefinicaoCalculadora = {
 
   rotuloResultado: 'Salário líquido estimado',
 
-  calcular(valores, dataReferencia, registro) {
-    const r = calcularSalarioLiquido(
-      {
-        salarioBruto: centavos(numero(valores, 'salarioBruto')),
-        dependentes: numero(valores, 'dependentes'),
-        pensao: centavos(numero(valores, 'pensao')),
-        outrosDescontos: centavos(numero(valores, 'outrosDescontos')),
-      },
-      dataReferencia,
-      registro,
-    )
-    if (!r.ok) return r
-
-    const bruto = centavos(numero(valores, 'salarioBruto'))
-    const pensao = centavos(numero(valores, 'pensao'))
-    const outros = centavos(numero(valores, 'outrosDescontos'))
-
-    return {
-      ok: true,
-      traco: r.traco,
-      valores: {
-        principal: r.valores.liquido,
-        detalhamento: [
-          { rotulo: 'Salário bruto', valor: bruto, sinal: 'credito' },
-          { rotulo: 'Contribuição previdenciária (INSS)', valor: r.valores.inss, sinal: 'debito' },
-          { rotulo: 'Imposto de Renda retido na fonte', valor: r.valores.irrf, sinal: 'debito' },
-          ...(pensao > 0
-            ? ([{ rotulo: 'Pensão alimentícia', valor: pensao, sinal: 'debito' }] as const)
-            : []),
-          ...(outros > 0
-            ? ([{ rotulo: 'Outros descontos', valor: outros, sinal: 'debito' }] as const)
-            : []),
-          { rotulo: 'Salário líquido', valor: r.valores.liquido, sinal: 'neutro' },
-        ],
-      },
-    }
-  },
+  calcular,
 
   faq: [
     {

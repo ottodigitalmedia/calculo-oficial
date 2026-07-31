@@ -11,6 +11,7 @@ import {
 } from '@/components/DadosEstruturados'
 import { IconeSeta } from '@/components/Marca'
 import { CALCULADORAS, porSlug } from '@/lib/calculadoras'
+import { formularioDe } from '@/lib/calculadoras/tipos'
 import { guiasDaCalculadora } from '@/lib/guias'
 
 /**
@@ -104,8 +105,12 @@ export default async function PaginaCalculadora({
         </p>
       </header>
 
+      {/* O formulário vai resolvido daqui, e não pelo slug: assim o pacote do
+          navegador não precisa do registro — e, com ele, das definições, dos
+          FAQ e dos motores de todas as calculadoras. Ver
+          `calculadoras/tipos.ts`, `FormularioCalculadora`. */}
       <section className="mt-8">
-        <Calculadora slug={definicao.slug} />
+        <Calculadora formulario={formularioDe(definicao)} />
       </section>
 
       {/* O slot de anúncio ficaria AQUI: abaixo do resultado e da memória,
