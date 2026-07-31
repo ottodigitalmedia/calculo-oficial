@@ -12,13 +12,28 @@ import { calcularRescisao } from '../engine/calculadoras/rescisao'
 import { centavos } from '../engine/types'
 import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
+import { INSS } from '../params/data/inss'
+import { IRRF } from '../params/data/irrf'
+import { TRABALHISTA } from '../params/data/trabalhista'
+import { construirRegistro } from '../params/registry'
+
+/**
+ * Registro montado aqui, e não recebido de fora.
+ *
+ * Vive no módulo ADIADO: as tabelas legais só entram no navegador junto com o
+ * cálculo que as usa, e não no pacote estático de toda rota. Ver
+ * `tipos.ts`, `FuncaoCalculo`.
+ */
+const registro = construirRegistro(INSS, IRRF, TRABALHISTA)
+
 /** Exportação de topo — ver a nota em `salario-liquido.ts`. */
-export const calcular: FuncaoCalculo = (valores, dataReferencia, registro) => {
+export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   const r = calcularRescisao(
     {
       admissao: texto(valores, 'admissao') as never,
       desligamento: texto(valores, 'desligamento') as never,
       salario: centavos(numero(valores, 'salario')),
+      modalidade: 'sem-justa-causa',
       avisoPrevio: texto(valores, 'avisoPrevio') === 'trabalhado' ? 'trabalhado' : 'indenizado',
       temFeriasVencidas: texto(valores, 'feriasVencidas') === 'sim',
       saldoFgtsInformado: centavos(numero(valores, 'saldoFgts')),

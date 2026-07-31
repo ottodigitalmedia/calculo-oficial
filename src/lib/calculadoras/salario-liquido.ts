@@ -9,6 +9,19 @@ import { calcularSalarioLiquido } from '../engine/calculadoras/salario-liquido'
 import { centavos } from '../engine/types'
 import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
+import { INSS } from '../params/data/inss'
+import { IRRF } from '../params/data/irrf'
+import { construirRegistro } from '../params/registry'
+
+/**
+ * Registro montado aqui, e não recebido de fora.
+ *
+ * Vive no módulo ADIADO: as tabelas legais só entram no navegador junto com o
+ * cálculo que as usa, e não no pacote estático de toda rota. Ver `tipos.ts`,
+ * `FuncaoCalculo`.
+ */
+const registro = construirRegistro(INSS, IRRF)
+
 /**
  * Exportação de topo, e não método do literal abaixo — de propósito.
  *
@@ -21,7 +34,7 @@ import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
  * O literal continua sendo a definição completa e continua sendo a fonte única:
  * ele referencia esta função, não uma cópia.
  */
-export const calcular: FuncaoCalculo = (valores, dataReferencia, registro) => {
+export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   const r = calcularSalarioLiquido(
     {
       salarioBruto: centavos(numero(valores, 'salarioBruto')),

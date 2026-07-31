@@ -10,8 +10,20 @@ import { centavos } from '../engine/types'
 import { formatarPercentual } from '../format/moeda'
 import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
+import { INSS } from '../params/data/inss'
+import { construirRegistro } from '../params/registry'
+
+/**
+ * Registro montado aqui, e não recebido de fora.
+ *
+ * Vive no módulo ADIADO: as tabelas legais só entram no navegador junto com o
+ * cálculo que as usa, e não no pacote estático de toda rota. Ver
+ * `tipos.ts`, `FuncaoCalculo`.
+ */
+const registro = construirRegistro(INSS)
+
 /** Exportação de topo — ver a nota em `salario-liquido.ts`. */
-export const calcular: FuncaoCalculo = (valores, dataReferencia, registro) => {
+export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   const salario = centavos(numero(valores, 'salarioContribuicao'))
   const r = calcularInss({ salarioContribuicao: salario }, dataReferencia, registro)
   if (!r.ok) return r

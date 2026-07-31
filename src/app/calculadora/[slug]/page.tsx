@@ -12,6 +12,10 @@ import {
 import { IconeSeta } from '@/components/Marca'
 import { CALCULADORAS, porSlug } from '@/lib/calculadoras'
 import { formularioDe } from '@/lib/calculadoras/tipos'
+import { INSS } from '@/lib/params/data/inss'
+import { IRRF } from '@/lib/params/data/irrf'
+import { TRABALHISTA } from '@/lib/params/data/trabalhista'
+import { construirRegistro } from '@/lib/params/registry'
 import { guiasDaCalculadora } from '@/lib/guias'
 
 /**
@@ -25,6 +29,16 @@ import { guiasDaCalculadora } from '@/lib/guias'
  * página precisa funcionar como página de chegada, com contexto suficiente
  * para quem nunca viu o site (`10-ux-ui-spec` §8).
  */
+
+/**
+ * O registro vive aqui, no SERVIDOR.
+ *
+ * É ele que resolve os anos disponíveis e o intervalo de cobertura que o
+ * formulário exibe. Antes o componente de cliente o construía, e com isso as
+ * tabelas de INSS, IRRF e trabalhistas entravam no pacote estático de toda
+ * rota de calculadora — para produzir dois dados serializáveis.
+ */
+const registro = construirRegistro(INSS, IRRF, TRABALHISTA)
 
 export function generateStaticParams() {
   return CALCULADORAS.map((c) => ({ slug: c.slug }))
@@ -110,7 +124,7 @@ export default async function PaginaCalculadora({
           FAQ e dos motores de todas as calculadoras. Ver
           `calculadoras/tipos.ts`, `FormularioCalculadora`. */}
       <section className="mt-8">
-        <Calculadora formulario={formularioDe(definicao)} />
+        <Calculadora formulario={formularioDe(definicao, registro)} />
       </section>
 
       {/* O slot de anúncio ficaria AQUI: abaixo do resultado e da memória,

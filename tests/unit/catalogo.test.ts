@@ -15,6 +15,12 @@ import { CALCULADORAS } from '../../src/lib/calculadoras'
 import { carregarCalculo, SLUGS_COM_CALCULO } from '../../src/lib/calculadoras/calculo'
 import { CATALOGO } from '../../src/lib/calculadoras/indice'
 import { formularioDe } from '../../src/lib/calculadoras/tipos'
+import { INSS } from '../../src/lib/params/data/inss'
+import { IRRF } from '../../src/lib/params/data/irrf'
+import { TRABALHISTA } from '../../src/lib/params/data/trabalhista'
+import { construirRegistro } from '../../src/lib/params/registry'
+
+const registro = construirRegistro(INSS, IRRF, TRABALHISTA)
 
 describe('índice do catálogo', () => {
   it('tem exatamente as mesmas calculadoras, na mesma ordem', () => {
@@ -76,7 +82,7 @@ describe('carga adiada do cálculo', () => {
 describe('formulário entregue ao navegador', () => {
   it('não leva função nenhuma', () => {
     for (const definicao of CALCULADORAS) {
-      const formulario = formularioDe(definicao)
+      const formulario = formularioDe(definicao, registro)
       expect(
         JSON.parse(JSON.stringify(formulario)),
         `o formulário de "${definicao.slug}" não sobrevive a uma ida e volta em JSON`,
@@ -86,7 +92,7 @@ describe('formulário entregue ao navegador', () => {
 
   it('não leva FAQ, texto de SEO nem relacionadas — só o servidor os renderiza', () => {
     for (const definicao of CALCULADORAS) {
-      const chaves = Object.keys(formularioDe(definicao))
+      const chaves = Object.keys(formularioDe(definicao, registro))
       for (const proibida of ['faq', 'descricaoSeo', 'relacionadas', 'nome', 'linhaDeContexto']) {
         expect(
           chaves,

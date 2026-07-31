@@ -34,6 +34,7 @@ const BASE = {
   admissao: '2020-03-10' as DataISO,
   desligamento: '2026-07-15' as DataISO,
   salario: centavos(300_000),
+  modalidade: 'sem-justa-causa' as const,
   avisoPrevio: 'indenizado' as const,
   temFeriasVencidas: false,
   saldoFgtsInformado: centavos(2_000_000),
@@ -348,5 +349,111 @@ describe('CALC-002 · caminhos de erro que ninguém exercita à mão', () => {
     if (!r.ok) throw new Error('esperado sucesso')
     expect(r.valores.fgtsEstimado).toBe(true)
     expect(r.valores.multaFgts).toBe(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// CALC-003 — pedido de demissão
+//
+// Mesmo motor, três diferenças (`03-functional-spec` §3.3). Os testes abaixo
+// existem porque compartilhar motor é o que impede os dois cálculos de
+// divergirem — mas só se as diferenças estiverem cobertas.
+// ---------------------------------------------------------------------------
+
+const PEDIDO = { ...BASE, modalidade: 'pedido-demissao' as const, avisoPrevio: 'cumprido' as const }
+
+describe('CALC-003 · pedido de demissão — as três diferenças', () => {
+  it('NÃO há multa de FGTS, e o traço explica a ausência em vez de zerar em silêncio', () => {
+    const r = calcularRescisao(PEDIDO, REF_2026, registro)
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    expect(r.valores.multaFgts).toBe(0)
+    const etapa = r.traco.etapas.find((e) => e.rotulo === 'Sem multa de FGTS')
+    expect(etapa).toBeDefined()
+    expect(etapa?.justificativa).toContain('não há multa de FGTS nem direito ao saque')
+  })
+
+  it('cumprindo o aviso, não há verba nem desconto', () => {
+    const r = calcularRescisao(PEDIDO, REF_2026, registro)
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    expect(r.valores.avisoPrevioValor).toBe(0)
+    expect(r.valores.descontoAvisoPrevio).toBe(0)
+  })
+
+  it('não cumprindo, o aviso é DESCONTADO — CLT art. 487, § 2º', () => {
+    const r = calcularRescisao({ ...PEDIDO, avisoPrevio: 'nao-cumprido' }, REF_2026, registro)
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    // 30 dias de salário: R$ 3.000,00 ÷ 30 × 30 = R$ 3.000,00
+    expect(r.valores.descontoAvisoPrevio).toBe(300_000)
+    expect(r.valores.avisoPrevioValor).toBe(0)
+
+    const etapa = r.traco.etapas.find((e) => e.rotulo === 'Desconto de aviso prévio não cumprido')
+    expect(etapa?.fundamento?.dispositivo).toContain('487')
+  })
+
+  it('o desconto reduz o total líquido, não o bruto', () => {
+    const cumprindo = calcularRescisao(PEDIDO, REF_2026, registro)
+    const naoCumprindo = calcularRescisao(
+      { ...PEDIDO, avisoPrevio: 'nao-cumprido' },
+      REF_2026,
+      registro,
+    )
+    if (!cumprindo.ok || !naoCumprindo.ok) throw new Error('esperado sucesso')
+
+    expect(naoCumprindo.valores.totalBruto).toBe(cumprindo.valores.totalBruto)
+    expect(naoCumprindo.valores.totalLiquido).toBe(cumprindo.valores.totalLiquido - 300_000)
+  })
+
+  /**
+   * O ponto interpretativo desta calculadora. A Lei 12.506/2011 concede o
+   * acréscimo AO empregado; aqui o aviso é devido POR ele.
+   */
+  it('o desconto é de 30 dias, não do aviso proporcional — mesmo com 6 anos de casa', () => {
+    const r = calcularRescisao({ ...PEDIDO, avisoPrevio: 'nao-cumprido' }, REF_2026, registro)
+    const dispensa = calcularRescisao(BASE, REF_2026, registro)
+    if (!r.ok || !dispensa.ok) throw new Error('esperado sucesso')
+
+    expect(r.valores.diasAviso).toBe(30)
+    expect(dispensa.valores.diasAviso).toBe(48)
+  })
+
+  it('não projeta o tempo de serviço — a integração do art. 487, § 1º é do aviso do empregador', () => {
+    const r = calcularRescisao({ ...PEDIDO, avisoPrevio: 'nao-cumprido' }, REF_2026, registro)
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    expect(r.valores.dataProjetada).toBe('2026-07-15')
+  })
+})
+
+describe('CALC-003 · o que continua devido — Súmulas 157 e 261 do TST', () => {
+  it('13º proporcional é devido na resilição por iniciativa do empregado', () => {
+    const r = calcularRescisao(PEDIDO, REF_2026, registro)
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    // Janeiro a julho de 2026, sem projeção: 7 avos. R$ 3.000,00 × 7/12
+    expect(r.valores.decimoTerceiro).toBe(175_000)
+  })
+
+  it('férias proporcionais são devidas mesmo com menos de doze meses de casa', () => {
+    const r = calcularRescisao(
+      { ...PEDIDO, admissao: '2026-01-10' as DataISO },
+      REF_2026,
+      registro,
+    )
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    expect(r.valores.feriasProporcionais).toBeGreaterThan(0)
+  })
+
+  it('férias vencidas continuam devidas e isentas', () => {
+    const r = calcularRescisao({ ...PEDIDO, temFeriasVencidas: true }, REF_2026, registro)
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    expect(r.valores.feriasVencidas).toBe(400_000)
+    expect(r.traco.etapas.map((e) => e.rotulo)).toContain(
+      'Aviso indenizado, férias indenizadas e FGTS — isentos de imposto de renda',
+    )
   })
 })

@@ -40,6 +40,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto você tem a receber na demissão sem justa causa — verba a verba, com as incidências à mostra.',
   },
   {
+    slug: 'rescisao-pedido-demissao',
+    nome: 'Rescisão — pedido de demissão',
+    linhaDeContexto:
+      'Quanto você recebe ao pedir demissão — e o que é descontado se não cumprir o aviso.',
+  },
+  {
     slug: 'inss',
     nome: 'INSS mensal',
     linhaDeContexto:

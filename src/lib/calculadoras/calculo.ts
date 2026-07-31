@@ -54,6 +54,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './rescisao-sem-justa-causa'
     ).then((m) => m.calcular),
+  'rescisao-pedido-demissao': () =>
+    import(
+      /* webpackChunkName: "calc-rescisao-pedido-demissao" */
+      /* webpackExports: ["calcular"] */
+      './rescisao-pedido-demissao'
+    ).then((m) => m.calcular),
   inss: () =>
     import(
       /* webpackChunkName: "calc-inss" */

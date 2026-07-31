@@ -37,6 +37,7 @@ import type { DataISO } from '../../params/tipos'
 import type { Registro } from '../../params/registry'
 import {
   CLT_ART_487,
+  LEI_8036_ART_18,
   LEI_8212_ART_28,
   RIR_ART_35,
   RPS_ART_216,
@@ -59,12 +60,30 @@ const DIAS_DO_MES_COMERCIAL = 30
 /** Avos de um ano. Unidade, não parâmetro legal. */
 const AVOS_NO_ANO = 12
 
-export type ModalidadeAviso = 'indenizado' | 'trabalhado'
+/**
+ * Quem rompeu o contrato. Muda três coisas, e só três — por isso os dois casos
+ * dividem o mesmo motor em vez de existirem duas implementações que divergem
+ * na primeira manutenção.
+ *
+ *   sem-justa-causa   aviso indenizado é RECEBIDO e projeta o tempo de serviço
+ *   pedido-demissao   aviso não cumprido é DESCONTADO e não projeta; não há
+ *                     multa de FGTS
+ */
+export type Modalidade = 'sem-justa-causa' | 'pedido-demissao'
+
+/**
+ * `indenizado` e `trabalhado` valem para a dispensa; `cumprido` e
+ * `nao-cumprido`, para o pedido de demissão. A combinação inválida não é
+ * possível na tela, e o motor trata qualquer valor inesperado como o caso mais
+ * conservador — sem verba e sem desconto.
+ */
+export type ModalidadeAviso = 'indenizado' | 'trabalhado' | 'cumprido' | 'nao-cumprido'
 
 export interface EntradaRescisao {
   readonly admissao: DataISO
   readonly desligamento: DataISO
   readonly salario: Centavos
+  readonly modalidade: Modalidade
   readonly avisoPrevio: ModalidadeAviso
   readonly temFeriasVencidas: boolean
   /** Saldo real da conta vinculada. Zero significa "estimar" (`RN-023`). */
@@ -76,6 +95,8 @@ export interface SaidaRescisao {
   readonly totalLiquido: Centavos
   readonly saldoSalario: Centavos
   readonly avisoPrevioValor: Centavos
+  /** `RN-018` — desconto do aviso não cumprido pelo empregado. Nunca negativo. */
+  readonly descontoAvisoPrevio: Centavos
   readonly decimoTerceiro: Centavos
   readonly feriasVencidas: Centavos
   readonly feriasProporcionais: Centavos
@@ -148,7 +169,20 @@ export function calcularRescisao(
   // 1. Tempo de serviço e aviso prévio — Lei nº 12.506/2011
   // -------------------------------------------------------------------------
   const anos = anosCompletos(admissao, desligamento)
-  const diasAviso = Math.min(base + porAno * anos, maximo)
+
+  /**
+   * O acréscimo proporcional vale para o aviso **concedido ao empregado**.
+   *
+   * A Lei nº 12.506/2011, art. 1º, diz que o aviso "será concedido na proporção
+   * de 30 dias AOS EMPREGADOS que contem até 1 ano", e o parágrafo único
+   * acrescenta 3 dias por ano a esse aviso. No pedido de demissão quem deve o
+   * aviso é o trabalhador, e o prazo que a CLT lhe impõe é o do art. 487, II —
+   * trinta dias. Aplicar o acréscimo contra ele inverteria o sentido da lei.
+   *
+   * A leitura está declarada na memória, não escondida no código.
+   */
+  const proporcional = entrada.modalidade === 'sem-justa-causa'
+  const diasAviso = proporcional ? Math.min(base + porAno * anos, maximo) : base
 
   const resolvidaBase = registro.resolver('aviso-previo-dias-base', dataReferencia)
   if (resolvidaBase.ok) traco.vigencias.add(resolvidaBase.resolvida.vigencia.id)
@@ -161,7 +195,9 @@ export function calcularRescisao(
 
   registrar({
     rotulo: 'Dias de aviso prévio',
-    formula: `${base} dias + ${porAno} × ${anos} ano(s) = ${Math.min(base + porAno * anos, maximo)} dias (limite de ${maximo})`,
+    formula: proporcional
+      ? `${base} dias + ${porAno} × ${anos} ano(s) = ${diasAviso} dias (limite de ${maximo})`
+      : `${base} dias — CLT, art. 487, II`,
     resultado: ZERO,
     ...(resolvidaBase.ok
       ? {
@@ -178,17 +214,23 @@ export function calcularRescisao(
           },
         }
       : {}),
-    justificativa:
-      'A lei fixa 30 dias e acrescenta 3 por ano de serviço, até 90. Ela não diz a partir ' +
-      'de qual ano o acréscimo começa; adotamos o primeiro ano completo, conforme ' +
-      'entendimento consolidado da Justiça do Trabalho.',
+    justificativa: proporcional
+      ? 'A lei fixa 30 dias e acrescenta 3 por ano de serviço, até 90. Ela não diz a partir ' +
+        'de qual ano o acréscimo começa; adotamos o primeiro ano completo, conforme ' +
+        'entendimento consolidado da Justiça do Trabalho.'
+      : 'O acréscimo de 3 dias por ano é concedido AO EMPREGADO. No pedido de demissão o ' +
+        'aviso é devido POR ele, e o prazo é o de 30 dias do art. 487, II, da CLT.',
   })
 
   // `RN-019` — a projeção do aviso indenizado integra o tempo de serviço.
-  const projetada: DataCivil =
-    entrada.avisoPrevio === 'indenizado' ? somarDias(desligamento, diasAviso) : desligamento
+  const avisoIndenizado =
+    entrada.modalidade === 'sem-justa-causa' && entrada.avisoPrevio === 'indenizado'
+  const avisoNaoCumprido =
+    entrada.modalidade === 'pedido-demissao' && entrada.avisoPrevio === 'nao-cumprido'
 
-  if (entrada.avisoPrevio === 'indenizado') {
+  const projetada: DataCivil = avisoIndenizado ? somarDias(desligamento, diasAviso) : desligamento
+
+  if (avisoIndenizado) {
     registrar({
       rotulo: 'Projeção do aviso prévio indenizado',
       formula: `${escreverData(desligamento)} + ${diasAviso} dias = ${escreverData(projetada)}`,
@@ -210,16 +252,26 @@ export function calcularRescisao(
     resultado: saldoSalario,
   })
 
-  const avisoPrevioValor =
-    entrada.avisoPrevio === 'indenizado'
-      ? proporcao(entrada.salario, diasAviso, DIAS_DO_MES_COMERCIAL, POLITICA)
-      : ZERO
+  const valorDoAviso = proporcao(entrada.salario, diasAviso, DIAS_DO_MES_COMERCIAL, POLITICA)
+  const avisoPrevioValor = avisoIndenizado ? valorDoAviso : ZERO
+  // `RN-018` — guardado POSITIVO; quem lhe dá sinal é a apresentação.
+  const descontoAvisoPrevio = avisoNaoCumprido ? valorDoAviso : ZERO
 
-  if (entrada.avisoPrevio === 'indenizado') {
+  if (avisoIndenizado) {
     registrar({
       rotulo: 'Aviso prévio indenizado',
       formula: `${reais(entrada.salario)} ÷ ${DIAS_DO_MES_COMERCIAL} × ${diasAviso} dias`,
       resultado: avisoPrevioValor,
+    })
+  } else if (avisoNaoCumprido) {
+    registrar({
+      rotulo: 'Desconto de aviso prévio não cumprido',
+      formula: `${reais(entrada.salario)} ÷ ${DIAS_DO_MES_COMERCIAL} × ${diasAviso} dias`,
+      resultado: descontoAvisoPrevio,
+      fundamento: fundamentar(CLT_ART_487),
+      justificativa:
+        'A falta de aviso prévio por parte do empregado dá ao empregador o direito de ' +
+        'descontar os salários correspondentes ao prazo respectivo.',
     })
   } else {
     registrar({
@@ -327,8 +379,29 @@ export function calcularRescisao(
     })
   }
 
-  const multa = aplicarAliquota(baseFgts, aliquotaMulta, POLITICA)
-  registrar({
+  /**
+   * `RN-018` — no pedido de demissão não há multa.
+   *
+   * O bloco não é exibido **nem zerado**: multa de R$ 0,00 ao lado das demais
+   * verbas lê-se como defeito de cálculo, não como ausência de direito
+   * (`03-functional-spec` §3.3). A nota fixa explica a ausência.
+   */
+  const temMulta = entrada.modalidade === 'sem-justa-causa'
+  const multa = temMulta ? aplicarAliquota(baseFgts, aliquotaMulta, POLITICA) : ZERO
+
+  if (!temMulta) {
+    registrar({
+      rotulo: 'Sem multa de FGTS',
+      formula: 'A multa de 40% é devida na despedida pelo empregador sem justa causa',
+      resultado: ZERO,
+      fundamento: fundamentar(LEI_8036_ART_18),
+      justificativa:
+        'No pedido de demissão não há multa de FGTS nem direito ao saque, salvo nas ' +
+        'hipóteses previstas em lei.',
+    })
+  }
+
+  if (temMulta) registrar({
     rotulo: 'Multa rescisória do FGTS',
     formula: `${reais(baseFgts)} × 40,00%`,
     resultado: multa,
@@ -345,7 +418,7 @@ export function calcularRescisao(
     },
   })
 
-  if (entrada.avisoPrevio === 'indenizado') {
+  if (avisoIndenizado) {
     registrar({
       rotulo: 'A projeção do aviso não entra na base da multa',
       formula: 'Base da multa = saldo na data do pagamento das verbas',
@@ -478,11 +551,15 @@ export function calcularRescisao(
     feriasProporcionais,
     multa,
   )
-  const totalLiquido = naoNegativo(subtrair(totalBruto, somar(inssTotal, irrfTotal)))
+  const totalLiquido = naoNegativo(
+    subtrair(totalBruto, somar(inssTotal, irrfTotal, descontoAvisoPrevio)),
+  )
 
   registrar({
     rotulo: 'Total líquido estimado da rescisão',
-    formula: `${reais(totalBruto)} − ${reais(inssTotal)} (INSS) − ${reais(irrfTotal)} (IRRF)`,
+    formula:
+      `${reais(totalBruto)} − ${reais(inssTotal)} (INSS) − ${reais(irrfTotal)} (IRRF)` +
+      (descontoAvisoPrevio > 0 ? ` − ${reais(descontoAvisoPrevio)} (aviso não cumprido)` : ''),
     resultado: totalLiquido,
   })
 
@@ -498,6 +575,7 @@ export function calcularRescisao(
       totalLiquido,
       saldoSalario,
       avisoPrevioValor,
+      descontoAvisoPrevio,
       decimoTerceiro,
       feriasVencidas,
       feriasProporcionais,

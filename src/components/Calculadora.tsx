@@ -16,10 +16,6 @@ import {
 } from '@/lib/calculadoras/tipos'
 import type { Resultado } from '@/lib/engine/traco'
 import { formatarData, formatarReal } from '@/lib/format/moeda'
-import { INSS } from '@/lib/params/data/inss'
-import { IRRF } from '@/lib/params/data/irrf'
-import { TRABALHISTA } from '@/lib/params/data/trabalhista'
-import { construirRegistro } from '@/lib/params/registry'
 import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
 
 /**
@@ -40,8 +36,6 @@ import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
  * servidor renderiza este componente com os campos já resolvidos, então o
  * primeiro quadro que o visitante vê não depende de hidratação nem de rede.
  */
-
-const registro = construirRegistro(INSS, IRRF, TRABALHISTA)
 
 /**
  * "Este campo obrigatório está vazio?"
@@ -88,15 +82,9 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
     }
   }, [formulario.slug])
 
-  const cobertura = useMemo(
-    () => registro.coberturaCombinada(formulario.parametrosRequeridos),
-    [formulario],
-  )
-
-  const anos = useMemo(
-    () => registro.anosDisponiveis(formulario.parametrosRequeridos),
-    [formulario],
-  )
+  // Resolvidos no servidor e entregues prontos — ver `formularioDe`.
+  const cobertura = formulario.cobertura
+  const anos = formulario.anosDisponiveis
 
   /**
    * Abre no ano mais recente que sabemos calcular.
@@ -198,7 +186,7 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
     // carga. Nunca acontece na renderização do servidor, que para em `vazio`.
     if (!calcular) return { tipo: 'carregando' }
 
-    return { tipo: 'calculado', resultado: calcular(valoresAdiados, dataAdiada, registro) }
+    return { tipo: 'calculado', resultado: calcular(valoresAdiados, dataAdiada) }
   }, [calcular, valoresAdiados, dataAdiada, camposVisiveis, erros])
 
   return (

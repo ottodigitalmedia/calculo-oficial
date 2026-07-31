@@ -58,38 +58,159 @@ function gzip(caminho: string): number {
 }
 
 /**
- * O pedaço adiado de cada calculadora — `lib/calculadoras/calculo.ts`.
+ * Os pedaços adiados de cada calculadora — `lib/calculadoras/calculo.ts`.
  *
- * **Por que o script precisa disto.** A partir de 31/07/2026 a função de
- * cálculo de cada calculadora viaja em pedaço próprio, carregado sob demanda.
- * Pedaço adiado **não aparece** no manifesto da rota. Medir só o manifesto
- * mostraria a rota emagrecendo de 117,6 para 110,9 kB e não contaria os 3,5 kB
- * que o navegador baixa em seguida para que a calculadora funcione.
+ * **Este trecho já esteve errado, e o erro era do tipo que este arquivo existe
+ * para impedir.** A primeira versão procurava o arquivo pelo nome
+ * (`calc-<slug>.*.js`) e somava só ele. Funcionou enquanto cada calculadora
+ * tinha um pedaço só. Quando a SEGUNDA calculadora de rescisão entrou, o
+ * empacotador extraiu o motor compartilhado para um pedaço anônimo — e a rota
+ * de rescisão *caiu* de 118,2 para 113,7 kB no relatório, enquanto o navegador
+ * continuava baixando a mesma coisa. Melhora aparente por deixar de olhar.
  *
- * Isso seria um orçamento que passa por deixar de olhar — a mesma falha do
- * `echo` que fingiu ser este verificador do T-003 ao T-105, e do
- * `--passWithNoTests`. O nome fixo do pedaço (`webpackChunkName`) existe para
- * tornar esta medição possível.
+ * Agora a medição segue o **grafo real**: o pedaço da rota declara, para cada
+ * slug, exatamente quais pedaços o navegador busca —
  *
- * **Slug publicado sem pedaço é erro, não zero.** Se o `webpackChunkName` for
- * removido ou renomeado, o padrão deixa de casar; sem esta checagem o script
- * relataria a rota mais leve e continuaria verde.
+ *     "rescisao-sem-justa-causa": () => Promise.all([e(138), e(57), e(624)])
+ *
+ * e é essa lista que é somada. Pedaço compartilhado entra na conta de todas as
+ * rotas que o carregam, porque todas de fato o baixam.
+ *
+ * **Falha alto de propósito.** Se o formato da saída do empacotador mudar, a
+ * extração devolve vazio e o script encerra com erro em vez de relatar rotas
+ * mais leves. Um orçamento que se cala é pior que um orçamento ausente.
  */
-function pedacoDaCalculadora(slug: string): number {
-  if (!existsSync(PEDACOS)) return 0
-  const alvo = readdirSync(PEDACOS).filter((f) => f.startsWith(`calc-${slug}.`) && f.endsWith('.js'))
+interface MapaDeSlugs {
+  readonly [slug: string]: readonly string[]
+}
 
-  if (alvo.length === 0) {
+function lerPedacoDaRota(): string {
+  const dir = join(DIRETORIO_BUILD, 'static', 'chunks', 'app', 'calculadora', '[slug]')
+  if (!existsSync(dir)) {
     console.error(
-      `Nenhum pedaço "calc-${slug}.*.js" em ${PEDACOS}.\n` +
-        `A calculadora "${slug}" está publicada, então o cálculo dela é baixado\n` +
-        `por alguém — e este script precisa somá-lo à rota. Confira o\n` +
-        `webpackChunkName em src/lib/calculadoras/calculo.ts.`,
+      `Diretório do pedaço da rota não encontrado: ${dir}.` +
+        `\nRode "npm run build" antes — não há o que medir sem build.`,
+    )
+    process.exit(1)
+  }
+  const arquivo = readdirSync(dir).find((f) => f.startsWith('page') && f.endsWith('.js'))
+  if (!arquivo) {
+    console.error(`Nenhum arquivo "page*.js" em ${dir}.`)
+    process.exit(1)
+  }
+  return readFileSync(join(dir, arquivo), 'utf8')
+}
+
+/** Extrai, do pedaço da rota, o slug e os ids que ele manda buscar. */
+function mapearSlugs(): MapaDeSlugs {
+  const fonte = lerPedacoDaRota()
+  const mapa: Record<string, string[]> = {}
+
+  // A chave sai com aspas quando o slug tem hífen e sem aspas quando é
+  // identificador válido — `inss` e `irrf` caem no segundo caso.
+  const padrao = /["']?([a-z][a-z0-9-]{2,40})["']?:\s*\(\)\s*=>\s*(Promise\.all\(\[[^\]]*\]\)|[A-Za-z_$][\w$]*\.e\(\d+\))/g
+
+  for (const achado of fonte.matchAll(padrao)) {
+    const slug = achado[1]
+    const expressao = achado[2]
+    if (slug === undefined || expressao === undefined) continue
+    const ids = [...expressao.matchAll(/\.e\((\d+)\)/g)].map((m) => m[1] as string)
+    if (ids.length > 0) mapa[slug] = ids
+  }
+
+  if (Object.keys(mapa).length === 0) {
+    console.error(
+      'Não foi possível extrair o mapa de pedaços adiados do pedaço da rota.' +
+        '\nO formato da saída do empacotador provavelmente mudou. NÃO ignore isto:' +
+        '\nsem o mapa, o orçamento mediria menos do que o navegador baixa e passaria' +
+        '\npor deixar de olhar. Ajuste `mapearSlugs` em scripts/verificar-orcamento.ts.',
     )
     process.exit(1)
   }
 
-  return alvo.reduce((soma, f) => soma + gzip(join(PEDACOS, f)), 0)
+  return mapa
+}
+
+/**
+ * Resolve id de pedaço → nome de arquivo, lendo o **runtime do empacotador**.
+ *
+ * O runtime carrega a função que o próprio navegador usa para montar a URL:
+ *
+ *     u = (e) => "static/chunks/" + ({106:"calc-salario-liquido", …}[e] || e)
+ *                                 + "." + ({57:"590ef…", 106:"33a9…"}[e]) + ".js"
+ *
+ * Nem todo id vira nome: só os que receberam `webpackChunkName`. Os pedaços
+ * extraídos por serem compartilhados ficam com o número. Deduzir o arquivo pelo
+ * padrão do nome erraria justamente nesses — que são os que passaram
+ * despercebidos antes.
+ */
+function resolvedorDeArquivo(): (id: string) => string | undefined {
+  const runtime = readdirSync(PEDACOS).find((f) => f.startsWith('webpack-') && f.endsWith('.js'))
+  if (runtime === undefined) {
+    console.error(`Runtime do empacotador não encontrado em ${PEDACOS}.`)
+    process.exit(1)
+  }
+
+  const fonte = readFileSync(join(PEDACOS, runtime), 'utf8')
+  const trecho = fonte.slice(fonte.indexOf('.u='), fonte.indexOf('.u=') + 2_000)
+
+  const objetos = [...trecho.matchAll(/\{((?:\s*\d+:\s*"[^"]*",?)+)\}/g)].map((m) => {
+    const dicionario: Record<string, string> = {}
+    for (const par of (m[1] ?? '').matchAll(/(\d+):\s*"([^"]*)"/g)) {
+      const chave = par[1]
+      const valor = par[2]
+      if (chave !== undefined && valor !== undefined) dicionario[chave] = valor
+    }
+    return dicionario
+  })
+
+  const nomes = objetos[0] ?? {}
+  const hashes = objetos[1] ?? {}
+
+  if (Object.keys(hashes).length === 0) {
+    console.error(
+      'Não foi possível ler o mapa de hashes do runtime do empacotador.' +
+        '\nSem ele não há como saber o nome do arquivo de cada pedaço adiado, e o' +
+        '\norçamento mediria menos do que o navegador baixa.',
+    )
+    process.exit(1)
+  }
+
+  return (id) => {
+    const hash = hashes[id]
+    if (hash === undefined) return undefined
+    return `${nomes[id] ?? id}.${hash}.js`
+  }
+}
+
+/** Soma os pedaços adiados de um slug, pelo id declarado no grafo. */
+function pedacosDaCalculadora(
+  slug: string,
+  mapa: MapaDeSlugs,
+  resolver: (id: string) => string | undefined,
+): number {
+  const ids = mapa[slug]
+  if (ids === undefined) {
+    console.error(
+      `A calculadora "${slug}" está publicada e não aparece no mapa de carga adiada.` +
+        `\nOu falta a entrada em src/lib/calculadoras/calculo.ts, ou a extração parou` +
+        `\nde reconhecê-la. Nos dois casos o cálculo dela não chegaria ao navegador.`,
+    )
+    process.exit(1)
+  }
+
+  let bytes = 0
+
+  for (const id of ids) {
+    const arquivo = resolver(id)
+    if (arquivo === undefined || !existsSync(join(PEDACOS, arquivo))) {
+      console.error(`Pedaço ${id}, exigido por "${slug}", não existe em ${PEDACOS}.`)
+      process.exit(1)
+    }
+    bytes += gzip(join(PEDACOS, arquivo))
+  }
+
+  return bytes
 }
 
 function medir(): readonly Medida[] {
@@ -134,12 +255,14 @@ function medir(): readonly Medida[] {
      * publicadas e 71 por publicar.
      */
     if (rota === '/calculadora/[slug]') {
+      const mapa = mapearSlugs()
+      const resolver = resolvedorDeArquivo()
       for (const slug of SLUGS) {
-        const proprio = pedacoDaCalculadora(slug)
+        const proprio = pedacosDaCalculadora(slug, mapa, resolver)
         medidas.push({
           rota: `/calculadora/${slug}`,
           bytes: bytes + proprio,
-          arquivos: contados + 1,
+          arquivos: contados + (mapa[slug]?.length ?? 0),
           bloqueante,
         })
       }

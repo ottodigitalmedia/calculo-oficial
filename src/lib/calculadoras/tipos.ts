@@ -149,11 +149,23 @@ export interface PerguntaFaq {
   readonly resposta: string
 }
 
-/** A função de cálculo, isolada do resto da definição para poder ser adiada. */
+/**
+ * A função de cálculo, isolada do resto da definição para poder ser adiada.
+ *
+ * **Não recebe o registro de parâmetros.** Recebia, e isso obrigava o
+ * componente de cliente a construí-lo — arrastando para o pacote ESTÁTICO de
+ * toda rota as tabelas de INSS, de IRRF e as trabalhistas, que só são usadas
+ * no momento do cálculo. Agora cada definição monta o próprio registro, dentro
+ * do módulo adiado, com os conjuntos que ela de fato consome.
+ *
+ * O que o formulário ainda precisa saber sobre vigências — os anos disponíveis
+ * e o intervalo coberto — chega pronto do servidor, em
+ * `FormularioCalculadora`. São dois dados serializáveis; as tabelas inteiras
+ * não precisavam atravessar.
+ */
 export type FuncaoCalculo = (
   valores: ValoresFormulario,
   dataReferencia: DataISO,
-  registro: Registro,
 ) => Resultado<SaidaCalculadora>
 
 /**
@@ -179,9 +191,12 @@ export type FuncaoCalculo = (
 export interface FormularioCalculadora {
   readonly slug: string
   readonly campos: readonly Campo[]
-  readonly parametrosRequeridos: readonly string[]
   readonly rotuloResultado: string
   readonly avisoAdicional?: string
+  /** Anos que a interseção das vigências admite. Vazio quando não há parâmetro legal. */
+  readonly anosDisponiveis: readonly number[]
+  /** Intervalo coberto, para a frase sob o seletor de período. */
+  readonly cobertura: { readonly inicio: DataISO; readonly fim: DataISO | null } | null
 }
 
 export interface DefinicaoCalculadora {
@@ -220,13 +235,18 @@ export interface DefinicaoCalculadora {
  * projeto já pagou por isso uma vez — o rodapé que anunciava como "em breve"
  * três calculadoras publicadas (T-106).
  */
-export function formularioDe(definicao: DefinicaoCalculadora): FormularioCalculadora {
+export function formularioDe(
+  definicao: DefinicaoCalculadora,
+  registro: Registro,
+): FormularioCalculadora {
+  const cobertura = registro.coberturaCombinada(definicao.parametrosRequeridos)
   return {
     slug: definicao.slug,
     campos: definicao.campos,
-    parametrosRequeridos: definicao.parametrosRequeridos,
     rotuloResultado: definicao.rotuloResultado,
     ...(definicao.avisoAdicional ? { avisoAdicional: definicao.avisoAdicional } : {}),
+    anosDisponiveis: registro.anosDisponiveis(definicao.parametrosRequeridos),
+    cobertura: cobertura ? { inicio: cobertura.inicio, fim: cobertura.fim } : null,
   }
 }
 
