@@ -158,7 +158,12 @@ jobs:
   publicar:
     name: Publicar imagem
     needs: verificar
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Aceita disparo manual além do push. Sem isso o `workflow_dispatch` seria
+    # inútil para o caso que o motivou: reimplantar sem commit quando o
+    # serviço cai e a imagem publicada já está correta (15-runbook RB-01).
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -209,7 +214,12 @@ jobs:
   implantar:
     name: Implantar
     needs: publicar
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Aceita disparo manual além do push. Sem isso o `workflow_dispatch` seria
+    # inútil para o caso que o motivou: reimplantar sem commit quando o
+    # serviço cai e a imagem publicada já está correta (15-runbook RB-01).
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
