@@ -23,16 +23,16 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **6** de 75 do catálogo |
+| Calculadoras no ar | **8** de 75 do catálogo |
 | Guias no ar | 3 de 10 |
-| Testes | 313 de unidade · 167 ponta a ponta · 3 de vazamento |
+| Testes | 342 de unidade · 167 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
-| Orçamento de JavaScript | 121,8 kB de **135** na pior rota — folga de 13,2 kB. Limite revisado com medição, ver §7.7 |
+| Orçamento de JavaScript | 122,1 kB de **135** na pior rota — folga de 12,9 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
-- `/calculadora/salario-liquido` · `/calculadora/rescisao-sem-justa-causa` · `/calculadora/rescisao-pedido-demissao` · `/calculadora/inss` · `/calculadora/irrf` · `/calculadora/juros-compostos`
+- `/calculadora/salario-liquido` · `/calculadora/rescisao-sem-justa-causa` · `/calculadora/rescisao-pedido-demissao` · `/calculadora/ferias` · `/calculadora/decimo-terceiro` · `/calculadora/inss` · `/calculadora/irrf` · `/calculadora/juros-compostos`
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -127,19 +127,17 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 69 de 75
+## 4. Calculadoras pendentes — 67 de 75
 
-Publicadas: **CALC-001, CALC-002, CALC-003, CALC-015, CALC-016, CALC-022**.
+Publicadas: **CALC-001 a CALC-005, CALC-015, CALC-016, CALC-022**.
 
-### 4.1 O resto do v1 — 4 calculadoras, e são as mais valiosas
+### 4.1 O resto do v1 — 2 calculadoras
 
 Todas trabalhistas, todas reaproveitando os motores de INSS e IRRF que já
 existem. É o menor esforço marginal do catálogo inteiro.
 
 | ID | Calculadora | Nota |
 |---|---|---|
-| CALC-004 | Férias (integrais, proporcionais, abono, ⅓) | |
-| CALC-005 | 13º salário (1ª e 2ª parcelas, proporcional) | **Ver §7.1: o §3º do Art. 3º-A** |
 | CALC-006 | Horas extras (50%, 100%, adicional noturno, DSR) | |
 | CALC-007 | FGTS — saldo acumulado e multa rescisória | `RN-023` exige aviso próprio |
 
@@ -556,11 +554,16 @@ fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
 
 O que sobrou, em ordem:
 
-1. **CALC-004 e CALC-005** — férias e 13º. Mesmo motor de rescisão, mesma
-   pesquisa de incidências. **Ver §7.1: o §3º do Art. 3º-A alcança o 13º.**
-2. **CALC-006 e CALC-007** — horas extras e FGTS, fechando o v1.
-3. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
-4. **Os 7 guias restantes** (§4.6).
+1. **CALC-006 · horas extras.** É a única do v1 com aritmética de tempo — hora
+   reduzida de 52min30s no adicional noturno, e o DSR sobre as extras, que é
+   onde os concorrentes mais erram.
+2. **CALC-007 · FGTS.** `RN-023` exige aviso próprio; a estimativa de saldo já
+   existe em `rescisao.ts` e pode ser reaproveitada.
+3. **`− R$ 0,00` no detalhamento.** Quando não há imposto, a linha aparece com
+   sinal de menos e zero. Não está errado, mas polui — vale decidir se linha
+   zerada some. Afeta CALC-002 a CALC-005 juntas.
+4. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
+5. **Os 7 guias restantes** (§4.6).
 
 > **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
 > variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o

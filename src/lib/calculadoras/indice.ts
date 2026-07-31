@@ -46,6 +46,18 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto você recebe ao pedir demissão — e o que é descontado se não cumprir o aviso.',
   },
   {
+    slug: 'ferias',
+    nome: 'Férias',
+    linhaDeContexto:
+      'Quanto você recebe nas férias — com o terço, o abono e os descontos separados.',
+  },
+  {
+    slug: 'decimo-terceiro',
+    nome: '13º salário',
+    linhaDeContexto:
+      'Quanto você recebe de 13º, por parcela — com os descontos no lugar em que a lei os cobra.',
+  },
+  {
     slug: 'inss',
     nome: 'INSS mensal',
     linhaDeContexto:

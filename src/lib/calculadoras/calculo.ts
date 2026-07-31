@@ -60,6 +60,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './rescisao-pedido-demissao'
     ).then((m) => m.calcular),
+  ferias: () =>
+    import(
+      /* webpackChunkName: "calc-ferias" */
+      /* webpackExports: ["calcular"] */
+      './ferias'
+    ).then((m) => m.calcular),
+  'decimo-terceiro': () =>
+    import(
+      /* webpackChunkName: "calc-decimo-terceiro" */
+      /* webpackExports: ["calcular"] */
+      './decimo-terceiro'
+    ).then((m) => m.calcular),
   inss: () =>
     import(
       /* webpackChunkName: "calc-inss" */

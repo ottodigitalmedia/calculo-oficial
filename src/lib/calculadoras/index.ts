@@ -6,6 +6,8 @@
  * (`ADR-008` E-1).
  */
 
+import { DECIMO_TERCEIRO } from './decimo-terceiro'
+import { FERIAS } from './ferias'
 import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
@@ -18,6 +20,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   SALARIO_LIQUIDO,
   RESCISAO_SEM_JUSTA_CAUSA,
   RESCISAO_PEDIDO_DEMISSAO,
+  FERIAS,
+  DECIMO_TERCEIRO,
   INSS_MENSAL,
   IRRF_MENSAL,
   JUROS_COMPOSTOS,

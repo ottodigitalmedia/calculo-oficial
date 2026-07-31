@@ -88,6 +88,44 @@ camada de texto e o Anexo II confere com as quatro faixas cadastradas.
 > link que use `HEAD` cru vai reportar as duas fontes como quebradas, e elas não
 > estão.
 
+### Adicionado · CALC-004 · férias · e CALC-005 · 13º salário
+
+Ficam no mesmo motor porque **o 13º aparece dentro das férias**: a Lei nº
+4.749/1965, art. 2º, § 2º, permite receber o adiantamento ao ensejo das férias,
+e `03-functional-spec` §3.4 tem o campo para isso.
+
+**A diferença de incidência é o que mais engana**, e é oposta à da rescisão:
+
+| Verba | INSS | IRRF | Norma |
+|---|---|---|---|
+| Férias **gozadas** + terço | **incide** | tributável | RPS, art. 214, § 4º |
+| Férias **indenizadas** + terço | não incide | isento | Lei 8.212, art. 28, § 9º "d" |
+| Abono pecuniário + terço | não incide | isento | CLT, art. 143 e 144 |
+| 1ª parcela do 13º | não incide agora | — | RPS, art. 216, § 1º |
+
+Há um caso-ouro dedicado a essa oposição: gozadas e indenizadas lado a lado, no
+mesmo arquivo, porque trocá-las produz um número plausível e errado.
+
+**Dois achados no texto da lei:**
+
+1. **A 1ª parcela é metade do SALÁRIO, não metade do 13º proporcional.** A Lei
+   nº 4.749/1965, art. 2º, diz "metade do salário recebido no mês anterior".
+   Com poucos avos isso ultrapassaria o devido — o cálculo limita ao 13º
+   apurado e a memória mostra o limite aplicado.
+2. **A média de variáveis integra a base do 13º** (Súmula 45 do TST: "a
+   remuneração do serviço suplementar, habitualmente prestado, integra o
+   cálculo da gratificação natalina").
+
+**O §3º do Art. 3º-A entrou em produção.** Descoberto na auditoria de T-108 e
+registrado desde então: a redução do imposto alcança também o 13º, cobrado
+exclusivamente na fonte. O motor de IRRF já a implementava, então ela vale aqui
+sem tratamento especial — e há caso-ouro exigindo que a memória **mostre a
+redução**, não apenas o imposto zerado.
+
+**Primeiro uso real de `visivelSe`.** O campo de meses do período aquisitivo só
+aparece com "Proporcionais". O contrato tinha o campo desde o T-103 e nenhuma
+calculadora o usava; ele virou dado em 31/07/2026 e agora tem consumidor.
+
 ### Adicionado · CALC-003 · pedido de demissão
 
 Compartilha o motor de CALC-002 atrás de `modalidade`. Duas implementações do

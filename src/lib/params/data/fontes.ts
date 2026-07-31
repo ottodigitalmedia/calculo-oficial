@@ -201,6 +201,50 @@ export const TST_OJ_SDI1_42: Fonte = {
   orgao: 'Tribunal Superior do Trabalho',
 }
 
+// ---------------------------------------------------------------------------
+// Férias e 13º — CALC-004 e CALC-005
+// ---------------------------------------------------------------------------
+
+export const CF_ART_7_XVII: Fonte = {
+  id: 'cf-1988-art-7-xvii',
+  norma: 'Constituição da República Federativa do Brasil de 1988',
+  dispositivo: 'Art. 7º, XVII',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const CLT_ART_143: Fonte = {
+  id: 'clt-art-143',
+  norma: 'Consolidação das Leis do Trabalho, com a redação do Decreto-lei nº 1.535, de 1977',
+  dispositivo: 'Art. 143 e art. 144',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_4749_ART_2: Fonte = {
+  id: 'lei-4749-1965-art-2',
+  norma: 'Lei nº 4.749, de 12 de agosto de 1965',
+  dispositivo: 'Art. 1º e art. 2º, § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l4749.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const RPS_ART_214: Fonte = {
+  id: 'decreto-3048-1999-art-214',
+  norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',
+  dispositivo: 'Art. 214, § 4º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto/d3048compilado.htm',
+  orgao: 'Presidência da República',
+}
+
+export const TST_SUMULA_45: Fonte = {
+  id: 'tst-sumula-45',
+  norma: 'Súmula 45 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 121/2003, DJ 19, 20 e 21.11.2003',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -221,4 +265,9 @@ export const FONTES: readonly Fonte[] = [
   STJ_TEMA_478,
   TST_SUMULA_305,
   TST_OJ_SDI1_42,
+  CF_ART_7_XVII,
+  CLT_ART_143,
+  LEI_4749_ART_2,
+  RPS_ART_214,
+  TST_SUMULA_45,
 ]
