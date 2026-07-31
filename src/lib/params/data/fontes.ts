@@ -245,6 +245,66 @@ export const TST_SUMULA_45: Fonte = {
   orgao: 'Tribunal Superior do Trabalho',
 }
 
+// ---------------------------------------------------------------------------
+// Jornada e FGTS — CALC-006 e CALC-007
+// ---------------------------------------------------------------------------
+
+export const CF_ART_7_XVI: Fonte = {
+  id: 'cf-1988-art-7-xvi',
+  norma: 'Constituição da República Federativa do Brasil de 1988',
+  dispositivo: 'Art. 7º, XVI',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const CLT_ART_73: Fonte = {
+  id: 'clt-art-73',
+  norma: 'Consolidação das Leis do Trabalho, com a redação do Decreto-lei nº 9.666, de 1946',
+  dispositivo: 'Art. 73, caput e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const CLT_ART_484A: Fonte = {
+  id: 'clt-art-484a',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 13.467, de 2017',
+  dispositivo: 'Art. 484-A, I, "b"',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const CLT_ART_64: Fonte = {
+  id: 'clt-art-64',
+  norma: 'Consolidação das Leis do Trabalho',
+  dispositivo: 'Art. 64',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_605_ART_7: Fonte = {
+  id: 'lei-605-1949-art-7',
+  norma: 'Lei nº 605, de 5 de janeiro de 1949, com a redação da Lei nº 7.415, de 1985',
+  dispositivo: 'Art. 7º, "a"',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l0605.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const TST_SUMULA_431: Fonte = {
+  id: 'tst-sumula-431',
+  norma: 'Súmula 431 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 185/2012, DEJT de 25, 26 e 27.09.2012',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+export const TST_SUMULA_172: Fonte = {
+  id: 'tst-sumula-172',
+  norma: 'Súmula 172 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 121/2003, DJ 19, 20 e 21.11.2003',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -270,4 +330,11 @@ export const FONTES: readonly Fonte[] = [
   LEI_4749_ART_2,
   RPS_ART_214,
   TST_SUMULA_45,
+  CF_ART_7_XVI,
+  CLT_ART_73,
+  CLT_ART_484A,
+  CLT_ART_64,
+  LEI_605_ART_7,
+  TST_SUMULA_431,
+  TST_SUMULA_172,
 ]

@@ -72,6 +72,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './decimo-terceiro'
     ).then((m) => m.calcular),
+  'horas-extras': () =>
+    import(
+      /* webpackChunkName: "calc-horas-extras" */
+      /* webpackExports: ["calcular"] */
+      './horas-extras'
+    ).then((m) => m.calcular),
+  fgts: () =>
+    import(
+      /* webpackChunkName: "calc-fgts" */
+      /* webpackExports: ["calcular"] */
+      './fgts'
+    ).then((m) => m.calcular),
   inss: () =>
     import(
       /* webpackChunkName: "calc-inss" */

@@ -146,6 +146,38 @@ Verificado no CI. Sem isso, o commit é rejeitado.
 6. Registrar em `docs/17-changelog.md`.
 7. Após o deploy, executar um cálculo de conferência em produção.
 
+## Autorização permanente do mantenedor
+
+Registrada em **31/07/2026**, para que a construção das calculadoras restantes
+não pare a cada passo. Vale para toda sessão, sem precisar ser repetida.
+
+**Pode seguir sem perguntar:**
+
+- Construir qualquer calculadora **que esteja no catálogo com ID atribuído**,
+  seguindo o roteiro de "Ao adicionar uma calculadora".
+- Cadastrar parâmetro legal novo, desde que conferido em fonte oficial.
+- Commitar e **empurrar** para `main` com `npm run check` verde — o que dispara
+  o pipeline e, com ele, o deploy automático.
+- Executar tarefas longas em segundo plano dentro do turno (build, `check`,
+  acompanhar o CI) em vez de esperar ociosamente.
+- Corrigir defeito próprio encontrado no caminho, inclusive em verificador.
+
+**Continua exigindo decisão do mantenedor:**
+
+| O quê | Por quê |
+|---|---|
+| **Publicar valor legal não confirmado em fonte oficial** | Regra 10 / `CO-1`. Não é permissão, é correção — na dúvida, o campo não existe, como o vale-transporte de `RN-027` |
+| Revisar `RNF-*`, `ADR-*` ou regra inviolável | É decisão de produto. O precedente é a revisão de `RNF-004` em 31/07/2026, que foi medida antes de proposta |
+| Calculadora fora do catálogo, ou nas categorias excluídas | `§14` do catálogo é definitivo |
+| Reescrever histórico (`push --force`), apagar dado | Destrutivo. `RB-06`: corrija para a frente |
+| Gastar dinheiro, contratar serviço, mexer em domínio ou DNS de terceiro | Fora do escopo de código |
+
+> **Um limite factual, não de permissão.** Esta autorização evita a pausa para
+> perguntar **dentro** de um turno. Ela não faz o assistente trabalhar enquanto
+> o mantenedor está ausente: o trabalho só acontece enquanto um turno está em
+> execução. Para execução realmente autônoma e agendada, o caminho é uma tarefa
+> agendada (cron), que é outro mecanismo e precisa ser configurado à parte.
+
 ## Contexto de decisão
 
 Quando estiver em dúvida entre duas opções, o critério é este, nesta ordem:

@@ -58,6 +58,18 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto você recebe de 13º, por parcela — com os descontos no lugar em que a lei os cobra.',
   },
   {
+    slug: 'horas-extras',
+    nome: 'Horas extras',
+    linhaDeContexto:
+      'Quanto valem suas horas extras, o adicional noturno e o reflexo no descanso semanal.',
+  },
+  {
+    slug: 'fgts',
+    nome: 'FGTS — saldo e multa',
+    linhaDeContexto:
+      'Quanto deve ter na sua conta do FGTS e quanto é a multa, conforme o motivo da saída.',
+  },
+  {
     slug: 'inss',
     nome: 'INSS mensal',
     linhaDeContexto:

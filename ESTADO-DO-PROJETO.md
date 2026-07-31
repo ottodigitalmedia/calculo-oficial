@@ -23,16 +23,16 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **8** de 75 do catálogo |
+| Calculadoras no ar | **10** de 75 — **o v1 está completo** |
 | Guias no ar | 3 de 10 |
-| Testes | 342 de unidade · 167 ponta a ponta · 3 de vazamento |
+| Testes | 369 de unidade · 168 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
-| Orçamento de JavaScript | 122,1 kB de **135** na pior rota — folga de 12,9 kB. Limite revisado com medição, ver §7.7 |
+| Orçamento de JavaScript | 122,8 kB de **135** na pior rota — folga de 12,2 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
-- `/calculadora/salario-liquido` · `/calculadora/rescisao-sem-justa-causa` · `/calculadora/rescisao-pedido-demissao` · `/calculadora/ferias` · `/calculadora/decimo-terceiro` · `/calculadora/inss` · `/calculadora/irrf` · `/calculadora/juros-compostos`
+- As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -127,24 +127,20 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 67 de 75
+## 4. Calculadoras pendentes — 65 de 75
 
-Publicadas: **CALC-001 a CALC-005, CALC-015, CALC-016, CALC-022**.
+Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022** — todo o v1.
 
-### 4.1 O resto do v1 — 2 calculadoras
+### 4.1 O v1 fechou em 31/07/2026
 
-Todas trabalhistas, todas reaproveitando os motores de INSS e IRRF que já
-existem. É o menor esforço marginal do catálogo inteiro.
+As dez calculadoras do v1 estão no ar. A pesquisa de incidências que as
+sustenta está em `docs/19-incidencias-verbas-rescisorias.md`, em fonte
+primária, e continua servindo a toda trabalhista que vier.
 
-| ID | Calculadora | Nota |
-|---|---|---|
-| CALC-006 | Horas extras (50%, 100%, adicional noturno, DSR) | |
-| CALC-007 | FGTS — saldo acumulado e multa rescisória | `RN-023` exige aviso próprio |
-
-> **A pesquisa de incidências está feita**, em fonte primária, e vale para
-> todas as cinco: `docs/19-incidencias-verbas-rescisorias.md`. Cada verba tem
-> resposta para INSS, IRRF e base do FGTS, com a norma transcrita. CALC-002 já
-> a consome e cita o fundamento de cada decisão na memória de cálculo.
+**O próximo bloco é o v2** — §4.2. E `docs/18-levantamento-calculadoras.md`
+mostra que **33 das restantes não dependem de nada**: nem de pesquisa em norma,
+nem de série externa. Entre elas estão as de maior valor publicitário do
+catálogo.
 
 ### 4.2 v2 — 17 calculadoras
 

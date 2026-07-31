@@ -17,10 +17,17 @@
  */
 
 import type { ConjuntoDeParametros } from '../tipos'
-import { LEI_8036_ART_15, LEI_8036_ART_18, LEI_12506_2011 } from './fontes'
+import {
+  CF_ART_7_XVI,
+  CLT_ART_73,
+  CLT_ART_484A,
+  LEI_8036_ART_15,
+  LEI_8036_ART_18,
+  LEI_12506_2011,
+} from './fontes'
 
 export const TRABALHISTA: ConjuntoDeParametros = {
-  fontes: [LEI_8036_ART_15, LEI_8036_ART_18, LEI_12506_2011],
+  fontes: [LEI_8036_ART_15, LEI_8036_ART_18, LEI_12506_2011, CF_ART_7_XVI, CLT_ART_73, CLT_ART_484A],
 
   parametros: [
     {
@@ -35,6 +42,30 @@ export const TRABALHISTA: ConjuntoDeParametros = {
       nome: 'Multa rescisória do FGTS — dispensa sem justa causa',
       descricao:
         'Percentual sobre o montante de todos os depósitos do contrato, atualizados monetariamente e acrescidos de juros.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'hora-extra-adicional-minimo',
+      nome: 'Adicional mínimo da hora extraordinária',
+      descricao: 'Percentual mínimo sobre a hora normal, garantido pela Constituição.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'adicional-noturno',
+      nome: 'Adicional noturno',
+      descricao: 'Acréscimo sobre a hora diurna para o trabalho executado entre 22h e 5h.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'hora-noturna-segundos',
+      nome: 'Duração da hora noturna',
+      descricao: 'A hora do trabalho noturno é computada como período reduzido.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'fgts-multa-acordo-mutuo',
+      nome: 'Multa do FGTS — extinção por acordo',
+      descricao: 'Metade da indenização do art. 18, § 1º, da Lei nº 8.036/1990.',
       tipo: 'percentual',
     },
     {
@@ -107,6 +138,54 @@ export const TRABALHISTA: ConjuntoDeParametros = {
     // O teto de 60 dias é o do ACRÉSCIMO; 90 é o total. Cadastramos o total,
     // que é o que o cálculo aplica — e são equivalentes, porque 30 + 60 = 90.
     // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    // Jornada
+    //
+    //   CF, art. 7º, XVI: "remuneração do serviço extraordinário superior, no
+    //     mínimo, em cinquenta por cento à do normal"
+    //   CLT, art. 73: "acréscimo de 20% (vinte por cento), pelo menos, sobre a
+    //     hora diurna"; § 1º: "A hora do trabalho noturno será computada como
+    //     de 52 minutos e 30 segundos" — 3.150 segundos
+    // -----------------------------------------------------------------------
+    {
+      id: 'hora-extra-2088',
+      parametroId: 'hora-extra-adicional-minimo',
+      fonteId: 'cf-1988-art-7-xvi',
+      inicio: '1988-10-05',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 5_000 },
+      observacao:
+        'É o mínimo constitucional. Convenção coletiva pode elevá-lo, e o trabalho em domingo ou feriado costuma ser remunerado a 100% — por isso a calculadora aceita os dois adicionais em campos separados.',
+    },
+    {
+      id: 'adicional-noturno-1946',
+      parametroId: 'adicional-noturno',
+      fonteId: 'clt-art-73',
+      inicio: '1943-05-01',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 2_000 },
+    },
+    {
+      id: 'hora-noturna-1946',
+      parametroId: 'hora-noturna-segundos',
+      fonteId: 'clt-art-73',
+      inicio: '1943-05-01',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 3_150 },
+      observacao:
+        '52 minutos e 30 segundos. A razão 3.600/3.150 faz 7 horas de relógio valerem 8 horas noturnas.',
+    },
+    {
+      id: 'fgts-multa-acordo-2017',
+      parametroId: 'fgts-multa-acordo-mutuo',
+      fonteId: 'clt-art-484a',
+      inicio: '2017-11-11',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 2_000 },
+      observacao:
+        'Metade dos 40% do art. 18, § 1º, da Lei nº 8.036/1990, conforme o art. 484-A, I, "b", da CLT. A movimentação da conta fica limitada a 80% dos depósitos (§ 1º).',
+    },
+
     {
       id: 'aviso-previo-base-2011',
       parametroId: 'aviso-previo-dias-base',
