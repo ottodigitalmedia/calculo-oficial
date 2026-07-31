@@ -1,17 +1,24 @@
 import { expect, test } from '@playwright/test'
 
+import { CATALOGO } from '../../src/lib/calculadoras/indice'
+
 /**
- * As quatro calculadoras do lançamento, sobre a mesma página genérica
+ * Todas as calculadoras publicadas, sobre a mesma página genérica
  * (`ADR-008` E-1). Se o molde não fosse genérico de verdade, estes testes
  * exigiriam tratamento distinto por calculadora — e não exigem.
+ *
+ * **A lista É DERIVADA do registro, e isso não é conveniência.** Ela era fixa,
+ * escrita no T-104 com as quatro do lançamento. As seis calculadoras
+ * publicadas em 31/07/2026 nunca foram exercitadas de ponta a ponta — e foi
+ * assim que CALC-006 foi ao ar sem calcular: a data de referência padrão caía
+ * fora da vigência dos parâmetros de jornada, e nenhum teste abria a página.
+ *
+ * `indice.ts` é a lista leve, mantida em sincronia com as definições por
+ * `catalogo.test.ts`. Derivar dela mantém este arquivo fora do pacote do
+ * navegador e ainda assim completo.
  */
 
-const CALCULADORAS = [
-  { slug: 'salario-liquido', titulo: 'Salário líquido' },
-  { slug: 'inss', titulo: 'INSS mensal' },
-  { slug: 'irrf', titulo: 'Imposto de Renda na fonte' },
-  { slug: 'juros-compostos', titulo: 'Juros compostos' },
-]
+const CALCULADORAS = CATALOGO.map((c) => ({ slug: c.slug, titulo: c.nome }))
 
 for (const c of CALCULADORAS) {
   test(`${c.slug} · abre, tem título único e aviso legal`, async ({ page }) => {
@@ -59,6 +66,59 @@ test('juros compostos · não tem seletor de período, por não ter parâmetro l
   // R$ 1.000,00 a 1% ao mês por 12 meses, capitalizando mês a mês.
   await expect(page.getByText('R$ 1.126,84').first()).toBeVisible()
 })
+
+/**
+ * O teste que teria pego CALC-006 quebrada.
+ *
+ * Abrir a página não basta: uma calculadora pode renderizar o formulário
+ * inteiro e falhar no primeiro cálculo, que é exatamente o que aconteceu
+ * quando a data de referência padrão caiu fora da vigência dos parâmetros.
+ * Aqui todo campo obrigatório é preenchido e o resultado tem de aparecer.
+ */
+for (const c of CALCULADORAS) {
+  test(`${c.slug} · calcula de verdade, não só renderiza`, async ({ page }) => {
+    await page.goto(`/calculadora/${c.slug}`)
+
+    /**
+     * O valor precisa respeitar o tipo do campo. Campo inteiro tem máximo
+     * pequeno — 12 meses, 20 dependentes, 27 dias úteis —, e enchê-lo com o
+     * mesmo número do campo monetário deixa o formulário em erro de validação,
+     * não em resultado. `inputMode` distingue os dois: `numeric` é inteiro,
+     * `decimal` é monetário ou percentual.
+     */
+    const entradas = page.locator('main form input')
+    for (let i = 0; i < (await entradas.count()); i += 1) {
+      const campo = entradas.nth(i)
+      if (!(await campo.isVisible())) continue
+
+      const tipo = await campo.getAttribute('type')
+      if (tipo === 'date') {
+        await campo.fill(i === 0 ? '2020-03-10' : '2026-07-15')
+        continue
+      }
+
+      const modo = await campo.getAttribute('inputMode')
+      if (modo === 'numeric') {
+        // 5 cabe em todo mínimo e em todo máximo inteiro do catálogo.
+        await campo.fill('5')
+        continue
+      }
+
+      // Monetário e percentual dividem `inputMode="decimal"`; o placeholder os
+      // separa. A taxa tem máximo de 100%, e enchê-la com o valor do campo
+      // monetário deixa o formulário em erro de validação.
+      const marcador = await campo.getAttribute('placeholder')
+      await campo.fill(marcador === 'R$ 0,00' ? '300000' : '100')
+    }
+
+    const resultado = page.locator('main [aria-live]')
+    await expect(resultado).toContainText('R$')
+    await expect(
+      resultado,
+      'a calculadora renderizou mas não calculou — parâmetro sem cobertura na data padrão?',
+    ).not.toContainText('Não foi possível calcular')
+  })
+}
 
 /**
  * "− R$ 0,00" anuncia um desconto que não existe. Em CALC-005 ele aparecia ao

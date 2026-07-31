@@ -97,7 +97,20 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
    * o seletor listava só o primeiro ano e a data efetiva era outra — a tela
    * dizia 2025 e a memória citava parâmetros de 2026.
    */
-  const dataInicial = anos.length > 0 ? `${anos[0]}-06-15` : '2026-01-01'
+  /**
+   * E **dentro da cobertura**, sempre.
+   *
+   * O 15 de junho é arbitrário — serve para cair no meio de um exercício
+   * quando as vigências começam em 1º de janeiro, que é o caso das tabelas de
+   * INSS e de IRRF. Não é o caso de todo parâmetro: os de jornada vigem desde
+   * **05/10/1988**, e `1988-06-15` cai QUATRO MESES antes do início da
+   * vigência. A calculadora abria bloqueada com "não há parâmetros para a data
+   * informada", e o defeito só aparece em calculadora cujo parâmetro não muda
+   * por exercício — foi assim que CALC-006 foi ao ar sem calcular.
+   */
+  const candidata = anos.length > 0 ? `${anos[0]}-06-15` : '2026-01-01'
+  const dataInicial =
+    cobertura && candidata < cobertura.inicio ? cobertura.inicio : candidata
 
   const [dataReferencia, setDataReferencia] = useState(dataInicial)
   const [valores, setValores] = useState<ValoresFormulario>(() =>
@@ -195,7 +208,10 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
         {/* Calculadora sem parâmetro legal não tem período a escolher — é o
             caso de juros compostos, cuja taxa é digitada. */}
-        <div className={anos.length > 0 ? '' : 'hidden'}>
+        {/* Um seletor com uma opção só não é escolha. Aparece quando há mais de
+            um exercício a comparar; do contrário, fica só a frase de cobertura —
+            que continua sendo informação. */}
+        <div className={anos.length > 1 ? '' : 'hidden'}>
           <label htmlFor="ref" className="block text-sm font-medium">
             Período de referência
           </label>
@@ -211,13 +227,13 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
               </option>
             ))}
           </select>
-          {cobertura ? (
-            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-              Temos os parâmetros legais de {formatarData(cobertura.inicio)}
-              {cobertura.fim ? ` a ${formatarData(cobertura.fim)}` : ' em diante'}.
-            </p>
-          ) : null}
         </div>
+        {cobertura ? (
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            Temos os parâmetros legais de {formatarData(cobertura.inicio)}
+            {cobertura.fim ? ` a ${formatarData(cobertura.fim)}` : ' em diante'}.
+          </p>
+        ) : null}
 
         {camposVisiveis.map((campo) => (
           <CampoFormulario

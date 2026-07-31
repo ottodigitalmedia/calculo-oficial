@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import { CATALOGO } from '../../src/lib/calculadoras/indice'
+
 /**
  * SEO técnico e guias — T-106.
  *
@@ -8,7 +10,9 @@ import { expect, test } from '@playwright/test'
  * que se verifica o que o buscador vai de fato receber.
  */
 
-const CALCULADORAS = ['salario-liquido', 'inss', 'irrf', 'juros-compostos']
+// Derivada do registro: lista fixa aqui deixou seis calculadoras sem cobertura
+// de sitemap e de canônica entre o T-104 e 31/07/2026.
+const CALCULADORAS = CATALOGO.map((c) => c.slug)
 const GUIAS = ['salario-bruto-e-liquido', 'como-o-inss-e-calculado', 'imposto-de-renda-na-folha']
 
 // ---------------------------------------------------------------------------
