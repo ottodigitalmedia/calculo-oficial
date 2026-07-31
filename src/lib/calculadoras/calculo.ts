@@ -96,6 +96,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './irrf'
     ).then((m) => m.calcular),
+  'cet-custo-efetivo-total': () =>
+    import(
+      /* webpackChunkName: "calc-cet" */
+      /* webpackExports: ["calcular"] */
+      './cet'
+    ).then((m) => m.calcular),
+  'amortizacao-sac-price': () =>
+    import(
+      /* webpackChunkName: "calc-amortizacao" */
+      /* webpackExports: ["calcular"] */
+      './amortizacao'
+    ).then((m) => m.calcular),
   'juros-compostos': () =>
     import(
       /* webpackChunkName: "calc-juros-compostos" */

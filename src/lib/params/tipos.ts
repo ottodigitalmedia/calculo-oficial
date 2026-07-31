@@ -58,6 +58,7 @@ export type OrgaoEmissor =
   // oficial justamente por isso; faltava o órgão no tipo.
   | 'Superior Tribunal de Justiça'
   | 'Tribunal Superior do Trabalho'
+  | 'Banco Central do Brasil'
 
 /**
  * Origem normativa de um parâmetro. Nenhum parâmetro existe sem fonte

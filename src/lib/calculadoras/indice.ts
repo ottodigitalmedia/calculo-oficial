@@ -86,4 +86,16 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     nome: 'Juros compostos',
     linhaDeContexto: 'Quanto um valor rende ao longo do tempo, com aportes mensais.',
   },
+  {
+    slug: 'cet-custo-efetivo-total',
+    nome: 'CET — custo efetivo total',
+    linhaDeContexto:
+      'Quanto o empréstimo custa de verdade — com tarifas e seguros dentro da conta.',
+  },
+  {
+    slug: 'amortizacao-sac-price',
+    nome: 'Amortização — SAC vs. Price',
+    linhaDeContexto:
+      'Quanto muda entre parcela fixa e parcela decrescente — no bolso e no total.',
+  },
 ]

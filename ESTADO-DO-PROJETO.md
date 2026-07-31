@@ -23,11 +23,11 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **10** de 75 — **o v1 está completo** |
+| Calculadoras no ar | **12** de 75 — v1 completo, e as duas primeiras do bloco de crédito |
 | Guias no ar | 3 de 10 |
-| Testes | 369 de unidade · 168 ponta a ponta · 3 de vazamento |
+| Testes | 416 de unidade · 225 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
-| Orçamento de JavaScript | 122,8 kB de **135** na pior rota — folga de 12,2 kB. Limite revisado com medição, ver §7.7 |
+| Orçamento de JavaScript | 123,0 kB de **135** na pior rota — folga de 12,0 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -127,9 +127,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 65 de 75
+## 4. Calculadoras pendentes — 63 de 75
 
-Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022** — todo o v1.
+Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022, CALC-024 e CALC-025**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 

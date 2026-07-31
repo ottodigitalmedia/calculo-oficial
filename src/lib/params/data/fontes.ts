@@ -305,6 +305,18 @@ export const TST_SUMULA_172: Fonte = {
   orgao: 'Tribunal Superior do Trabalho',
 }
 
+// ---------------------------------------------------------------------------
+// Crédito — CALC-024
+// ---------------------------------------------------------------------------
+
+export const RESOLUCAO_CMN_4881: Fonte = {
+  id: 'resolucao-cmn-4881-2020',
+  norma: 'Resolução CMN nº 4.881, de 23 de dezembro de 2020',
+  dispositivo: 'Art. 2º a 4º',
+  url: 'https://www.bcb.gov.br/content/estabilidadefinanceira/especialnor/Resolu%C3%A7%C3%A3o4881.pdf',
+  orgao: 'Banco Central do Brasil',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -337,4 +349,5 @@ export const FONTES: readonly Fonte[] = [
   LEI_605_ART_7,
   TST_SUMULA_431,
   TST_SUMULA_172,
+  RESOLUCAO_CMN_4881,
 ]

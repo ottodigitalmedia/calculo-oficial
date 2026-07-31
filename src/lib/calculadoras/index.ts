@@ -7,6 +7,8 @@
  */
 
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
+import { AMORTIZACAO } from './amortizacao'
+import { CET } from './cet'
 import { FERIAS } from './ferias'
 import { FGTS } from './fgts'
 import { HORAS_EXTRAS } from './horas-extras'
@@ -29,6 +31,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   INSS_MENSAL,
   IRRF_MENSAL,
   JUROS_COMPOSTOS,
+  CET,
+  AMORTIZACAO,
 ]
 
 export function porSlug(slug: string): DefinicaoCalculadora | undefined {

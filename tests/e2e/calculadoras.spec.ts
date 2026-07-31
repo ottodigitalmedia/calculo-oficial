@@ -91,6 +91,15 @@ for (const c of CALCULADORAS) {
       const campo = entradas.nth(i)
       if (!(await campo.isVisible())) continue
 
+      /**
+       * Só os obrigatórios. Encher todo campo com o mesmo valor produz cenário
+       * degenerado — no CET, tarifas iguais ao empréstimo inteiro, que a
+       * calculadora recusa com razão. O que este teste verifica é se a
+       * calculadora computa com a entrada MÍNIMA, que é o caminho por onde a
+       * maioria dos visitantes passa.
+       */
+      if ((await campo.getAttribute('aria-required')) !== 'true') continue
+
       const tipo = await campo.getAttribute('type')
       if (tipo === 'date') {
         await campo.fill(i === 0 ? '2020-03-10' : '2026-07-15')
