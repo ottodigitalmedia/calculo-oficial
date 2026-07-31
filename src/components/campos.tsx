@@ -58,7 +58,7 @@ function Mensagem({ id, erro, ajuda }: { id: string; erro?: string; ajuda?: stri
 
 const CLASSE_ENTRADA =
   'mt-1 block w-full rounded border px-3 py-2 text-base bg-[var(--color-surface)] ' +
-  'border-[var(--color-border)] focus:border-[var(--color-accent)]'
+  'border-[var(--color-border)] focus:border-[var(--color-brand)]'
 
 export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
   const id = useId()

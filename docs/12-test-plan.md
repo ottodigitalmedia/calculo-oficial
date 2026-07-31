@@ -173,6 +173,12 @@ Executados em um navegador desktop e um mobile, com e sem consentimento de anún
 
 **TC-043 executa a cada deploy e a cada mudança de configuração de anúncio.** É o único mecanismo que detecta a ameaça AM-02 antes do usuário.
 
+**Estado no T-107.** TC-040 e TC-041 estão implementados em `tests/leak/vazamento.spec.ts`. TC-042 e TC-043 **não têm objeto**: análise de uso e anúncio foram adiados por `ADR-008`, e escrevê-los agora produziria testes que passam por não haver o que verificar — o mesmo defeito do `echo` que fingia ser TC-051 do T-003 ao T-105.
+
+No lugar deles há um teste de **linha de base**: zero requisição a terceiro e zero cookie, em quatro rotas. Ele reprova no dia em que análise ou anúncio entrar, com a mensagem de falha instruindo a escrever TC-042 e TC-043 no mesmo commit. A ausência de objeto vira um bloqueio, não uma lacuna silenciosa.
+
+**TC-040 encontrou um vazamento real.** O `Referer` levava a URL completa — com o salário na query — em toda requisição de mesma origem. Ver `07-security` §5.
+
 ## 8. Acessibilidade
 
 | ID | Verificação | Como |

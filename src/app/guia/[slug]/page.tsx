@@ -70,10 +70,12 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
 
       {/* Migalhas visíveis, e não só marcadas: quem chega da busca direto aqui
           precisa entender onde está (`10-ux-ui-spec` §8). */}
+      {/* `py-1` não é estética: sem ele o alvo de toque fica com 19 px de
+          altura, abaixo dos 24 px de WCAG 2.2 (2.5.8). */}
       <nav aria-label="Trilha de navegação" className="text-sm text-[var(--color-text-muted)]">
-        <Link href="/" className="hover:underline">Início</Link>
+        <Link href="/" className="inline-block py-1 hover:underline">Início</Link>
         <span aria-hidden="true"> › </span>
-        <Link href="/guias" className="hover:underline">Guias</Link>
+        <Link href="/guias" className="inline-block py-1 hover:underline">Guias</Link>
       </nav>
 
       <header className="mt-4">

@@ -83,12 +83,14 @@ export default async function PaginaCalculadora({
         ])}
       />
 
+      {/* `py-1` não é estética: sem ele o alvo de toque fica com 19 px de
+          altura, abaixo dos 24 px de WCAG 2.2 (2.5.8). */}
       <nav aria-label="Trilha de navegação" className="text-sm text-[var(--color-text-muted)]">
-        <Link href="/" className="hover:underline">
+        <Link href="/" className="inline-block py-1 hover:underline">
           Início
         </Link>
         <span aria-hidden="true"> › </span>
-        <Link href="/#calculadoras" className="hover:underline">
+        <Link href="/#calculadoras" className="inline-block py-1 hover:underline">
           Calculadoras
         </Link>
       </nav>

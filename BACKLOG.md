@@ -26,6 +26,7 @@
 | ✅ | T-006 | Modelo e carregador de parâmetros por vigência |
 | ✅ | T-101 a T-105 | Parâmetros, motores, molde, quatro calculadoras, busca e permalink |
 | ✅ | T-106 | SEO técnico, três guias e orçamento de performance |
+| ✅ | T-107 | Acessibilidade, não vazamento e cabeçalhos de segurança |
 
 T-004 (VPS, TLS) foi absorvido por **T-108**. T-007 a T-040 foram substituídos
 pelos tickets abaixo.
@@ -157,17 +158,39 @@ diferença entre bruto e líquido surpreende.
 
 ---
 
-## T-107 · Acessibilidade, não vazamento e ponta a ponta · 1 dia
+## ✅ T-107 · Acessibilidade, não vazamento e ponta a ponta · 1 dia
 
-- **Dado** as rotas de calculadora, **quando** rodo o verificador, **então** não há violação de nível A nem AA
-- **Dado** só o teclado, **quando** percorro a página, **então** completo o fluxo sem armadilha de foco
-- **Dado** um leitor de tela, **quando** o resultado atualiza, **então** ele é anunciado sem interromper a digitação
-- **Dado** valores marcadores em todas as calculadoras, **quando** intercepto o tráfego, **então** nenhum marcador aparece
-- **Dado** um erro provocado, **quando** inspeciono o envio, **então** não há valor de campo nem query string
-- **Dado** os fluxos críticos, **quando** rodo, **então** passam em desktop e mobile
+- [x] **Dado** as rotas de calculadora, **quando** rodo o verificador, **então** não há violação de nível A nem AA
+- [x] **Dado** só o teclado, **quando** percorro a página, **então** completo o fluxo sem armadilha de foco
+- [x] **Dado** um leitor de tela, **quando** o resultado atualiza, **então** ele é anunciado sem interromper a digitação
+- [x] **Dado** valores marcadores em todas as calculadoras, **quando** intercepto o tráfego, **então** nenhum marcador aparece
+- [x] **Dado** um erro provocado, **quando** inspeciono o envio, **então** não há valor de campo nem query string
+- [x] **Dado** os fluxos críticos, **quando** rodo, **então** passam em desktop e mobile
 
 **O teste de vazamento precisa existir antes do primeiro script de terceiro.**
 Como o lançamento não tem anúncio, esta é a linha de base limpa.
+
+**Três defeitos reais encontrados pelos próprios testes:**
+
+1. **Contraste.** `--color-text-secondary` era `#55607190` — os dois dígitos
+   finais são 56% de transparência, e sobre branco isso dava **2,5:1** contra
+   os 4,5:1 exigidos. Reprovava em toda a prosa secundária do site.
+2. **`Referer` levava o salário.** Ao digitar, `replaceState` põe o valor na
+   query; a partir daí cada requisição saía com a URL completa no cabeçalho, e
+   o salário chegava ao registro de acesso do servidor. O valor que
+   `07-security` §5 pedia — `strict-origin-when-cross-origin` — **não** mitiga
+   a ameaça que ele mesmo declara: preserva a URL em requisição de mesma
+   origem, que aqui é o caso de todas. Corrigido para `strict-origin`.
+3. **Alvo de toque de 19 px** nas migalhas e no rodapé, abaixo dos 24 px de
+   WCAG 2.2 (2.5.8).
+
+**TC-042 e TC-043 não têm objeto** — análise de uso e anúncio foram adiados por
+`ADR-008`. Em vez de testes que passam por falta do que verificar, há um teste
+de linha de base que **reprova no dia em que o objeto surgir**, obrigando quem
+introduzir análise ou anúncio a escrevê-los no mesmo commit.
+
+**`--passWithNoTests` removido** de `test:golden`, `test:e2e` e `test:leak`.
+Era a máscara que permitiria a suíte inteira sumir sem o pipeline notar.
 
 ---
 

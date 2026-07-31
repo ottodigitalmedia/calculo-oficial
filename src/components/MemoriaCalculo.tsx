@@ -40,7 +40,7 @@ export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
         onClick={() => setAberta((a) => !a)}
         aria-expanded={aberta}
         aria-controls="memoria-de-calculo"
-        className="w-full rounded border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-4 py-3 text-left text-base font-medium hover:border-[var(--color-accent)]"
+        className="w-full rounded border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-4 py-3 text-left text-base font-medium hover:border-[var(--color-brand)]"
       >
         {aberta ? 'Recolher memória de cálculo' : 'Ver como este valor foi calculado'}
         <span aria-hidden className="float-right text-[var(--color-text-secondary)]">
@@ -88,7 +88,7 @@ export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
                       href={etapa.parametro.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[var(--color-accent)] underline"
+                      className="text-[var(--color-brand)] underline"
                     >
                       {etapa.parametro.norma}
                       {etapa.parametro.dispositivo ? `, ${etapa.parametro.dispositivo}` : ''}

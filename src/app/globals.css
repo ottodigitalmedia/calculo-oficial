@@ -32,7 +32,13 @@
 
   /* Texto */
   --color-text-primary: #10141c;
-  --color-text-secondary: #55607190;
+  /* Sem canal alfa. Estava `#55607190` — os dois dígitos finais são
+     transparência de 56%, e sobre branco isso derrubava o contraste para
+     2,5:1 contra os 4,5:1 que `RNF-006` e a regra E-2 de `ADR-008` exigem.
+     Reprovava em toda a prosa secundária do site: linha de contexto,
+     detalhamento, texto de ajuda de campo e todas as respostas do FAQ.
+     Sem alfa: 6,4:1. Verificado por `tests/e2e/acessibilidade.spec.ts`. */
+  --color-text-secondary: #556071;
   --color-text-muted: #5b6472;
   --color-text-inverse: #eef2fb;
 

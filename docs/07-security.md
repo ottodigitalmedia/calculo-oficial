@@ -87,8 +87,16 @@ A query string contém dados sensíveis (`RF-006`). Controles:
 | `Strict-Transport-Security` | Ativo, com subdomínios | Interceptação |
 | `X-Content-Type-Options` | `nosniff` | Confusão de tipo |
 | `X-Frame-Options` | `DENY` | Sobreposição de clique |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | Vazamento de query string |
+| `Referrer-Policy` | **`strict-origin`** | Vazamento de query string |
 | `Permissions-Policy` | Nega câmera, microfone, geolocalização, sensores | Excesso de permissão de terceiro |
+
+**Correção de `Referrer-Policy` no T-107.** A tabela pedia `strict-origin-when-cross-origin` e declarava como ameaça mitigada o vazamento de query string. **Esse valor não mitiga essa ameaça neste produto**: ele preserva a URL completa nas requisições de mesma origem, e aqui todas as requisições de recurso são de mesma origem.
+
+O efeito real, encontrado por TC-040: ao digitar o salário, `replaceState` o coloca na query (`RF-006`); a partir daí, cada prefetch e cada pedaço de JavaScript sai com `Referer: /calculadora/salario-liquido?salarioBruto=…`. O salário chegava ao registro de acesso do servidor — que §11 descreve como contendo apenas IP, página e horário.
+
+`strict-origin` envia só a origem, inclusive para nós mesmos. Nenhuma query viaja em cabeçalho, e os links para as normas oficiais continuam sabendo de onde vieram. Verificado por `referersComCaminho` em `tests/leak/vazamento.spec.ts`, com prova de mutação: revertendo o valor, o teste reprova.
+
+**Estado dos demais.** `X-Content-Type-Options`, `X-Frame-Options` e `Permissions-Policy` entraram junto, em `next.config.ts`. `Content-Security-Policy` continua adiada por depender das origens do provedor de anúncio. `Strict-Transport-Security` fica para o T-108: `13-deployment` §7 condiciona a ativação a confirmar que o TLS está estável, e HSTS mal configurado tira o site do ar por meses.
 
 > ⚠️ VERIFICAR: a rede de anúncio exigirá origens adicionais na política de conteúdo. Levantar a lista exata na documentação do provedor e **não** recorrer a curinga como atalho — curinga na política anula a proteção contra AM-02, que é a ameaça mais provável do sistema.
 

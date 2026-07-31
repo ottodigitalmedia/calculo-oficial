@@ -11,6 +11,11 @@ import { GUIAS } from '@/lib/guias'
  * escopo (`01-prd` §6) e coletar e-mail criaria tratamento de dado pessoal
  * onde hoje não existe nenhum.
  *
+ * Todo link daqui leva `inline-block py-1`: sem isso o alvo de toque fica com
+ * 19 px de altura, abaixo dos 24 px que WCAG 2.2 (2.5.8) exige. A exceção de
+ * "alvo em linha" não vale — estes links são itens de lista de navegação, não
+ * palavras dentro de uma frase.
+ *
  * **As listas vêm dos registros, não são escritas aqui.** Até o T-105 este
  * arquivo trazia INSS, Imposto de Renda e juros compostos marcados "em breve"
  * — as três já publicadas no T-104. É a desonestia que o comentário da home
@@ -35,7 +40,7 @@ export function Rodape() {
             sem cadastro.
           </p>
           <p className="mt-3 text-sm opacity-75">
-            <Link href="/#como-funciona" className="hover:underline">
+            <Link href="/#como-funciona" className="inline-block py-1 hover:underline">
               Como funciona
             </Link>
           </p>
@@ -46,7 +51,7 @@ export function Rodape() {
           <ul className="mt-3 space-y-2 text-sm opacity-75">
             {CALCULADORAS.map((c) => (
               <li key={c.slug}>
-                <Link href={`/calculadora/${c.slug}`} className="hover:underline">
+                <Link href={`/calculadora/${c.slug}`} className="inline-block py-1 hover:underline">
                   {c.nome}
                 </Link>
               </li>
@@ -59,7 +64,7 @@ export function Rodape() {
           <ul className="mt-3 space-y-2 text-sm opacity-75">
             {GUIAS.map((g) => (
               <li key={g.slug}>
-                <Link href={`/guia/${g.slug}`} className="hover:underline">
+                <Link href={`/guia/${g.slug}`} className="inline-block py-1 hover:underline">
                   {g.titulo}
                 </Link>
               </li>
@@ -72,7 +77,7 @@ export function Rodape() {
           <ul className="mt-3 space-y-2 text-sm opacity-75">
             {LEGAIS.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="hover:underline">
+                <Link href={l.href} className="inline-block py-1 hover:underline">
                   {l.rotulo}
                 </Link>
               </li>
