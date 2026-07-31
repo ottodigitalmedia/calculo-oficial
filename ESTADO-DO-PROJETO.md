@@ -1,7 +1,13 @@
 # Estado do projeto — Cálculo Oficial
 
-> Documento de continuidade. Escrito em **31/07/2026**, no dia do lançamento.
+> Documento de continuidade. Escrito em **31/07/2026**, no dia do lançamento, e
+> atualizado no mesmo dia após a primeira sessão pós-lançamento.
 > Serve para uma sessão nova começar sem reconstruir contexto.
+>
+> **O que mudou depois do lançamento:** HSTS ativo · fonte do INSS 2026 passou a
+> ser o texto da portaria · orçamento de JavaScript passou a ser por
+> calculadora · sobreposição com o projeto irmão decidida (§6.4). Nada disso
+> está em produção ainda — falta o clique em Implantar.
 >
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
@@ -18,9 +24,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras no ar | **4** de 75 do catálogo |
 | Guias no ar | 3 de 10 |
-| Testes | 205 de unidade · 155 ponta a ponta · 3 de vazamento |
+| Testes | 210 de unidade · 163 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
-| Orçamento de JavaScript | 117,6 kB de 120 — **folga de 2,4 kB** |
+| Orçamento de JavaScript | 113,4 kB de 120 na pior rota — **folga de 6,6 kB**, e agora **por calculadora** |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -43,14 +49,26 @@ performance → e2e → vazamento.
 
 ### Deploy
 
-**É manual, por decisão** — não por pendência. O webhook do EasyPanel só é
-alcançável pelo domínio do painel, que é configuração do servidor inteiro; a VPS
-hospeda outros projetos e o painel já tem domínio próprio.
+**Automático desde 31/07/2026.** O fluxo é: push em `main` → o pipeline roda as
+verificações → publica a imagem etiquetada com o hash → dispara o webhook do
+painel → confere `/api/health` por até 2 min → **reverte sozinho** se não
+responder.
 
-O fluxo: commit → CI testa e publica a imagem etiquetada com o hash → **o
-mantenedor clica em Implantar no EasyPanel**. O passo de disparo no pipeline
-tenta e, se não conseguir, **avisa em vez de falhar**. Motivo em
-`docs/13-deployment.md` §4.
+O que destravou: o segredo `DEPLOY_WEBHOOK_URL` e a variável
+`NEXT_PUBLIC_SITE_URL` no repositório. O passo `Implantar` já existia e estava
+inteiro — só ficava avisando que não estava configurado.
+
+> A nota antiga dizia que o deploy era manual "por decisão, não por pendência",
+> porque o webhook do EasyPanel só seria alcançável pelo domínio do painel. O
+> painel **tem** domínio próprio e público (`painel2.axonflow.com.br`), então
+> nada precisava mudar no servidor. A decisão continua válida para *clicar no
+> painel*; o caminho pelo pipeline é melhor, porque tem verificação de saúde e
+> rollback — que o clique não tem.
+
+**Se o pipeline ficar vermelho, nada vai ao ar.** `Publicar` e `Implantar`
+dependem de `Verificar`. Foi o que aconteceu com o commit `1f46ee4`: mensagem
+sem escopo reprovou em `BV-12`, e os dois commits seguintes ao lançamento nunca
+chegaram em produção.
 
 ---
 
@@ -85,13 +103,21 @@ arquivo de rota. O caminho é:
    no mínimo dois exercícios. Commit no formato `params(...)`.
 4. Implementar no motor (`src/lib/engine/`), devolvendo traço.
 5. Escrever os casos-ouro **antes** de considerar pronto.
-6. Acrescentar a definição em `src/lib/calculadoras/` e registrá-la no
-   `index.ts` **e** no `indice.ts` (o teste `catalogo.test.ts` cobra os dois).
-7. FAQ com no mínimo 4 perguntas e `relacionadas` preenchido.
-8. `npm run check`.
+6. Acrescentar a definição em `src/lib/calculadoras/`, com `calcular` como
+   **exportação de topo** — não como método do literal (§7.6 diz por quê).
+7. Registrá-la em **três** lugares: `index.ts`, `indice.ts` e `calculo.ts`. O
+   teste `catalogo.test.ts` cobra os três, e o de `calculo.ts` compara por
+   identidade de função.
+8. FAQ com no mínimo 4 perguntas e `relacionadas` preenchido.
+9. `npm run check`.
 
 **Nada além disso.** Sitemap, rodapé, busca e links internos são derivados do
-registro e se atualizam sozinhos.
+registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
+
+> **O orçamento não é mais problema de quem entra depois.** Cada calculadora
+> paga o próprio pacote: a sua rota nova nasce em ~111 kB e as quatro existentes
+> não se mexem. Se `check:orcamento` reclamar, é da **sua** calculadora — não do
+> acúmulo das anteriores.
 
 ---
 
@@ -250,30 +276,33 @@ esta lista é só o resumo.
 | **Incidência de INSS e IRRF sobre verbas rescisórias** | Pré-requisito de CALC-002 a CALC-005. Ver §6.2 |
 | **`RN-006`** — arredondamento da faixa intermediária do redutor | Indeterminado. Só afeta rendimentos entre R$ 5.000,01 e R$ 7.350,00 |
 
-### 5.2 Melhoria de citação de fonte
+### 5.2 Citação de fonte — ✅ resolvido em 31/07/2026
 
-O `inss-tabela-progressiva` de 2026 cita a **página institucional do INSS**, não
-a portaria. Os valores foram conferidos e estão corretos, mas `CLAUDE.md` diz:
-*"Abrir a fonte oficial. Não o site que diz o que a fonte oficial diz."*
+O `inss-tabela-progressiva` de 2026 citava a página institucional do INSS. Agora
+cita o PDF da portaria, e o Anexo II foi conferido **nele**, faixa a faixa.
 
-O PDF da portaria **existe e responde 200**:
+A justificativa antiga dizia que o PDF era inconferível por ser digitalizado.
+**Estava errada.** `pdftotext` devolve vazio, sim — mas rasterizar a página e
+ler a imagem funciona:
 
+```bash
+pdftoppm -png -r 130 -f 4 -l 4 portaria.pdf pag   # o Anexo II está na p. 4
 ```
-https://www.gov.br/previdencia/pt-br/assuntos/rpps/documentos/PortariaInterministerialMPSMF13de9dejaneirode2026.pdf
-```
 
-É digitalizado, sem camada de texto — por isso a conferência continua tendo de
-ser visual. Mas como **link exibido ao usuário**, ele é melhor que a página
-institucional. Trocar é uma edição de uma linha em `src/lib/params/data/inss.ts`.
+Vale para a próxima auditoria: **norma digitalizada não é norma inconferível.**
+
+> Os dois PDFs de portaria recusam requisição sem cabeçalho de navegador (403),
+> e o de 2026 recusa `HEAD`. Um verificador de link ingênuo reporta as duas
+> fontes como quebradas, e elas não estão.
 
 ### 5.3 Técnicas
 
 | O quê | Detalhe |
 |---|---|
-| **Orçamento em 2,4 kB de folga** | A rota de calculadora carrega as **quatro** definições e, com elas, todos os motores e tabelas. A próxima calculadora estoura. Solução: carregar só a definição da rota aberta |
+| ~~**Orçamento em 2,4 kB de folga**~~ | ✅ **Resolvido em 31/07/2026.** Cada rota carrega só o seu cálculo. Pior rota em 113,4 kB, folga de 6,6 kB — e **a próxima calculadora só afeta a própria rota**. Ver §7.6 |
 | `Content-Security-Policy` | Adiada — depende das origens exatas do provedor de anúncio. **Curinga anula a proteção contra AM-02**. Quando entrar, o `<script>` de JSON-LD precisa de hash `sha256`, nunca `'unsafe-inline'` |
-| `Strict-Transport-Security` | Adiada por `13-deployment` §7 até o TLS estar estável. Já está: a renovação automática foi confirmada por evidência em 30/07/2026. **Pode ativar** |
-| `www.calculoficial.com.br` | Não servido. Adicionar o domínio ao serviço no EasyPanel |
+| ~~`Strict-Transport-Security`~~ | ✅ **Ativado em 31/07/2026**, `max-age=31536000; includeSubDomains`. **Sem `preload`** — porta de mão única, e exige `www` servido. Coberto por `tests/e2e/cabecalhos.spec.ts` |
+| ~~`www.calculoficial.com.br`~~ | ✅ **Servido desde 31/07/2026.** O DNS já estava certo — só faltava o domínio no serviço do EasyPanel, que é o que faz o Traefik pedir o certificado. Responde 308 para o ápice, por `next.config.ts` |
 | MCP da Hostinger | A configuração foi corrigida em `~/.claude.json`, mas exige reinício do app para valer. Não verificado |
 
 ### 5.4 Adiado por `ADR-008`, com teste que cobra
@@ -374,19 +403,43 @@ sozinho.
 `docs/fontes/_TEMPLATE.md` — o modelo de ficha de fonte, com campos de medição
 real. Se formos consumir qualquer API, vale adotar o mesmo formato.
 
-### 6.4 Sobreposição de produto — decidir, não ignorar
+### 6.4 Sobreposição de produto — ✅ decidido em 31/07/2026
+
+**Decisão: construir CALC-002 assim mesmo.**
+
+O quadro é mais concreto do que "duas aplicações previstas": as três de lá
+**já estão no ar**, e antes do nosso lançamento — `reajuste-aluguel` em 26/07,
+`corrigir-divida` em 27/07, `calculadora-rescisao` em 28/07.
+
+O que sustenta a decisão: `calculadora-rescisao` vive em
+`calculadora-rescisao.appzila.net`, subdomínio de um domínio genérico e de
+propósito único. `calculoficial.com.br` é domínio de marca `.com.br`, com
+profundidade temática — catálogo, guias, links internos — e com a memória de
+cálculo auditável, que é o diferencial declarado em `CLAUDE.md`. Em busca
+orgânica, que é o único canal de aquisição, essa é a posição mais forte.
+
+O que isso obriga a acompanhar, já que o risco é real e não some por decisão:
+
+- Os 90 dias de medição do MR-2 devem olhar as **duas** propriedades na mesma
+  consulta. Se a canibalização aparecer, a resposta é consolidar — não insistir.
+- `calculadora-rescisao` monetiza por laudo pago; aqui a monetização é anúncio.
+  Não são o mesmo produto para o mesmo momento, e isso é argumento a favor de
+  manter as duas — desde que a diferença fique visível para quem chega.
+
+CALC-060 (`corrigir-divida`) e CALC-037 (`reajuste-aluguel`) estão no v2/v3 e
+não precisam de decisão agora — mas herdam esta, e devem ser reavaliadas com o
+que os 90 dias mostrarem.
 
 Três aplicações do projeto irmão fazem o que o nosso catálogo também prevê:
 
 | Lá | Aqui |
 |---|---|
-| `calculadora-rescisao` | CALC-002, CALC-003 |
-| `corrigir-divida` | CALC-060 |
-| `reajuste-aluguel` | CALC-037 |
+| `calculadora-rescisao` | CALC-002, CALC-003 · no ar lá desde 28/07/2026 |
+| `corrigir-divida` | CALC-060 · no ar lá desde 27/07/2026 |
+| `reajuste-aluguel` | CALC-037 · no ar lá desde 26/07/2026 |
 
-Não é problema técnico, é decisão de produto: dois sites seus competindo pela
-mesma busca. **Vale decidir antes de construir CALC-002**, que é a de maior
-volume de busca do catálogo inteiro.
+Nunca foi problema técnico — é decisão de produto: dois sites seus competindo
+pela mesma busca. Tomada acima.
 
 ### 6.5 Fontes de lá sem uso aqui
 
@@ -443,15 +496,50 @@ quando o objeto surgir** — como o de linha de base em `vazamento.spec.ts`.
 
 ---
 
+### 7.6 A rota carrega o que a rota usa
+
+Desde 31/07/2026, adicionar uma calculadora **não engorda as outras rotas**.
+Três peças sustentam isso, e quebrar qualquer uma devolve o problema:
+
+1. `src/app/calculadora/[slug]/page.tsx` entrega `formularioDe(definicao)` como
+   propriedade. O componente de calculadora **não pode** voltar a importar o
+   registro — se importar, as definições de todas voltam ao pacote. **Verificado
+   por lint**, não por lembrança: `REGISTRO_FORA_DO_CLIENTE` em
+   `eslint.config.js`. A volta seria um import de uma linha, e nenhum teste
+   funcional a pegaria — tudo continuaria funcionando, só mais pesado.
+   Componente de cliente novo precisa entrar naquela lista de arquivos.
+2. `src/lib/calculadoras/calculo.ts` adia a função de cálculo, uma por
+   calculadora. Toda calculadora nova precisa de uma linha ali; o teste cobra.
+3. `calcular` é **exportação de topo** em cada definição, e o import adiado usa
+   `webpackExports`. Como método do literal, o objeto inteiro — FAQ e textos de
+   SEO junto — volta para o pedaço.
+
+O formulário continua saindo pronto no HTML estático, e isso é a condição de
+tudo: se um dia a medição melhorar às custas disso, a troca é ruim.
+
+`verificar-orcamento.ts` mede o pedaço adiado junto, e **reprova** se uma
+calculadora publicada não tiver pedaço. Sem isso, o orçamento passaria a mentir
+para melhor — ver §7.5, é o mesmo erro de novo.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
-1. **Ativar HSTS** — a condição de `13-deployment` §7 já foi satisfeita. Uma linha.
-2. **Trocar a fonte do INSS 2026** pelo PDF da portaria (§5.2). Uma linha.
-3. **Servir `www`** no EasyPanel.
-4. **Decidir a sobreposição com o projeto irmão** (§6.4) antes de construir
-   CALC-002.
-5. **Reduzir o pacote da rota de calculadora** (§5.3) — a próxima calculadora
-   estoura o orçamento, e é melhor resolver antes do que sob pressão.
-6. **Pesquisar a incidência sobre verbas rescisórias** em fonte oficial (§6.2).
-7. **CALC-002 · rescisão sem justa causa** — a de maior busca do catálogo, e a
-   que mais reaproveita o que já existe.
+Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
+fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
+~~decidir a sobreposição com o projeto irmão~~ ✅ (§6.4) · ~~servir `www`~~ ✅.
+
+O que sobrou, em ordem:
+
+1. **Pesquisar a incidência de INSS e IRRF sobre verbas rescisórias** em fonte
+   oficial (§6.2). É o pré-requisito de CALC-002 a CALC-005, e é onde as
+   calculadoras concorrentes mais divergem entre si.
+2. **CALC-002 · rescisão sem justa causa.** Decidido construir apesar da
+   sobreposição — ver §6.4.
+3. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
+4. **Os 7 guias restantes** (§4.6).
+
+> **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
+> variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o
+> passo `Implantar` do pipeline dispara sozinho a cada push em `main` — com
+> verificação de saúde e rollback automático, que o clique manual não tinha.
+> `13-deployment` §4 descrevia o deploy manual como decisão; a decisão continua
+> válida para o **painel**, mas o caminho pelo pipeline é melhor e já existia.

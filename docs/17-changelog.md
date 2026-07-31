@@ -29,6 +29,171 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Pós-lançamento — 31/07/2026
+
+Primeiro ciclo depois do MR-2. Duas pendências que o lançamento deixou
+registradas, ambas fechadas.
+
+### Segurança · `Strict-Transport-Security` ativado
+
+`13-deployment` §7 condicionava a ativação à estabilidade do TLS, e a condição
+foi satisfeita **por evidência**: o certificado foi substituído sozinho em
+30/07/2026, sem intervenção.
+
+Valor: `max-age=31536000; includeSubDomains`.
+
+**`preload` fica de fora, deliberadamente.** A entrada na lista de pré-carga é
+praticamente irreversível — a remoção leva meses e depende do navegador, não de
+nós — e exige que `www` responda em HTTPS, o que ainda não acontece. Enquanto o
+domínio não estiver completo, `preload` compraria risco permanente por uma
+proteção que só vale para a primeira visita de quem nunca esteve no site.
+
+Os cabeçalhos passaram a ter verificação própria, em
+`tests/e2e/cabecalhos.spec.ts`. Até aqui só o `Referrer-Policy` era coberto, e
+por via indireta. A asserção é de **valor exato**: `max-age` zerado ou
+`includeSubDomains` perdido numa edição deixa o cabeçalho presente e a proteção
+ausente. Há também um teste que reprova se `preload` aparecer sem que a
+condição do `www` tenha sido revista.
+
+### Alterado · a fonte do INSS 2026 passou a ser o texto da portaria
+
+`inss-tabela-progressiva` de 2026 citava a **página institucional do INSS**. A
+justificativa registrada era que o PDF da portaria é digitalizado e não tem
+camada de texto — `pdftotext` sobre ele devolve vazio, o que levou à conclusão
+de que ele era inconferível.
+
+**A conclusão estava errada.** Rasterizar a página e ler a imagem funciona. O
+Anexo II foi conferido assim, faixa a faixa:
+
+| Cadastrado | Anexo II da portaria | |
+|---|---|---|
+| até 1.621,00 · 7,50% | até 1.621,00 · 7,5% | ✅ |
+| 1.621,01 a 2.902,84 · 9,00% | de 1.621,01 até 2.902,84 · 9% | ✅ |
+| 2.902,85 a 4.354,27 · 12,00% | de 2.902,85 até 4.354,27 · 12 % | ✅ |
+| 4.354,28 a 8.475,55 · 14,00% | de 4.354,28 até 8.475,55 · 14% | ✅ |
+
+Salário mínimo de R$ 1.621,00 confirmado no Art. 2º e no Art. 3º, I.
+
+**Nenhum valor mudou** — não é correção de parâmetro. O que mudou é a URL que o
+usuário abre ao auditar: agora o texto com força normativa, publicado no DOU de
+12/01/2026, edição 7, seção 1, página 58, em vez da transcrição institucional.
+`CLAUDE.md`: *"Abrir a fonte oficial. Não o site que diz o que a fonte oficial
+diz."*
+
+O link da Portaria nº 6/2025 foi reverificado no mesmo passo: responde 200, tem
+camada de texto e o Anexo II confere com as quatro faixas cadastradas.
+
+> **Nota de método, para a próxima auditoria.** Os dois PDFs recusam requisição
+> sem cabeçalho de navegador (403) e o de 2026 recusa `HEAD`. Um verificador de
+> link que use `HEAD` cru vai reportar as duas fontes como quebradas, e elas não
+> estão.
+
+### Adicionado · `www` passou a ser servido, e redireciona para o ápice
+
+`13-deployment` §7 pedia "escolher um e manter", e `www.calculoficial.com.br`
+não era servido — quem digitasse chegava a erro de certificado.
+
+**O DNS nunca foi o problema:** o `CNAME` de `www` para o ápice já existia. O
+que faltava era o domínio na lista do serviço no EasyPanel, que é o que faz o
+Traefik pedir o certificado ao Let's Encrypt. Cadastrado por API; certificado
+emitido em menos de dois minutos, porque o nome já resolvia.
+
+Escolhido o **ápice** como endereço canônico. `www` responde **308**,
+preservando caminho e query. A regra vive em `next.config.ts`, por condição de
+`host`, e não no painel — assim é versionada, revisável e testável. As
+canônicas já apontavam para o ápice e sozinhas resolveriam a indexação; o
+redirecionamento é melhor porque canônica é dica e redirecionamento é
+instrução, e porque consolida num só endereço os links que outros sites fizerem
+para `www`. Com busca orgânica como único canal de aquisição, essa consolidação
+é o ativo.
+
+Dois testes em `tests/e2e/cabecalhos.spec.ts`, com `Host` forjado: `www`
+redireciona preservando o caminho, e o ápice **não** redireciona — a segunda
+asserção existe porque a regra escrita errada vira laço infinito, que derruba o
+site inteiro.
+
+### Alterado · o orçamento de JavaScript deixou de crescer com o catálogo
+
+`RNF-004` limita cada rota de calculadora a 120 kB comprimidos, e a folga estava
+em 2,4 kB. A medição explicou por quê:
+
+| Cenário medido | Pedaço da rota | Total |
+|---|---|---|
+| Só juros compostos — o "casco" | 9,7 kB | 113,1 kB |
+| Só salário líquido | 11,0 kB | 114,4 kB |
+| As quatro, como estava | 14,1 kB | **117,6 kB** |
+
+O casco custa 9,7 kB e **cada calculadora acrescentava ~1,1 kB ao pacote de
+todas as rotas**. CALC-002 levaria a ~118,7 kB e CALC-003 estouraria — com 71
+calculadoras por publicar. O limite não é decorativo: o produto é consumido
+majoritariamente em rede móvel.
+
+Três mudanças, todas na mesma direção — a rota carrega o que aquela rota usa:
+
+1. **O formulário chega resolvido do servidor.** O componente de calculadora é
+   de cliente e resolvia o slug no registro, arrastando as quatro definições
+   para o pacote. Agora recebe `FormularioCalculadora` — campos, rótulos e
+   parâmetros requeridos, nada mais. FAQ, descrição de SEO e relacionadas
+   deixaram de ser baixadas: só o servidor as renderiza.
+2. **A função de cálculo é adiada, uma por calculadora** (`lib/calculadoras/calculo.ts`).
+   O pedido sai na montagem, não na primeira tecla — o usuário ainda vai
+   digitar, e é nessa folga que o pedaço viaja.
+3. **`calcular` virou exportação de topo** em cada definição, com
+   `webpackExports` no import adiado. Sem isso o pedaço carregava o objeto
+   inteiro: o do salário líquido caiu de 3,3 para 2,3 kB só com a diretiva.
+
+| Rota | Antes | Depois | Folga |
+|---|---|---|---|
+| `/calculadora/juros-compostos` | 117,6 kB | **113,4 kB** | 6,6 kB |
+| `/calculadora/salario-liquido` | 117,6 kB | **113,1 kB** | 6,9 kB |
+| `/calculadora/irrf` | 117,6 kB | **112,9 kB** | 7,1 kB |
+| `/calculadora/inss` | 117,6 kB | **111,3 kB** | 8,7 kB |
+
+O ganho que interessa não é o de hoje: é que **a próxima calculadora só afeta a
+própria rota**. O total passou a ser casco + uma calculadora, e para de crescer
+com o catálogo.
+
+**`visivelSe` deixou de ser função e virou dado** (`CondicaoVisibilidade`).
+Função não atravessa a fronteira servidor→cliente. Não houve perda de
+capacidade em uso: o campo estava declarado desde o T-103 e nenhuma das quatro
+calculadoras publicadas o usava. Era contrato especulativo, e o formato
+declarativo cobre o caso real que vem a seguir — campo que aparece conforme uma
+seleção, como o tipo de aviso prévio em CALC-002.
+
+**O que NÃO mudou, e era a condição para mexer nisso:** o formulário continua
+saindo pronto no HTML estático. Quatro `<input>` no HTML gerado de
+`/calculadora/salario-liquido`, antes e depois. Nenhuma etapa de hidratação
+precisa acontecer para ele aparecer.
+
+#### O verificador teve de aprender a enxergar o que foi adiado
+
+Pedaço adiado **não consta do manifesto da rota**. Medido do jeito antigo,
+`TC-051` mostraria a rota caindo de 117,6 para 110,9 kB e não contaria os 2 a
+3,5 kB que o navegador baixa em seguida para a calculadora funcionar. Seria um
+orçamento que passa por deixar de olhar — a mesma falha do `echo` do T-003 e do
+`--passWithNoTests` do T-107.
+
+`verificar-orcamento.ts` passou a emitir **uma linha por calculadora publicada**,
+somando o pedaço próprio, e a **reprovar** quando uma calculadora publicada não
+tem pedaço correspondente — o que acontece se alguém remover ou renomear o
+`webpackChunkName`. Provado por mutação: apagando `calc-inss.*.js` do build, o
+script sai com código 1 e diz qual calculadora ficou sem medição.
+
+A regra virou **lint**, não recomendação: `REGISTRO_FORA_DO_CLIENTE` impede que
+componente de cliente importe o registro de calculadoras. A volta é um import de
+uma linha e nenhum teste funcional a pegaria — tudo continuaria funcionando, só
+mais pesado, até o orçamento estourar meses depois sem culpado óbvio. Provado
+por mutação: reintroduzindo o import em `Calculadora.tsx`, o lint reprova
+citando `RNF-004`.
+
+`catalogo.test.ts` ganhou a terceira lista a conferir: o mapa de carga adiada.
+Calculadora publicada sem entrada nele renderizaria o formulário inteiro e nunca
+sairia de "Calculando…". A asserção é de **identidade** de função, não de
+existência — trocar duas entradas de lugar produziria a calculadora errada na
+rota certa, que é o defeito mais caro que este projeto pode publicar.
+
+---
+
 ## Lançamento — 31/07/2026
 
 **MR-2 alcançado.** Produto público em `https://calculoficial.com.br`. Começa a
@@ -97,6 +262,11 @@ Fonte: Portaria Interministerial MPS/MF nº 13, de 09/01/2026, Anexo II.
 Conferido na página institucional do INSS, que atribui os valores expressamente
 a essa portaria e informa aplicação a partir da competência janeiro/2026 — o
 PDF da portaria é digitalizado, sem camada de texto.
+
+> Ainda no mesmo dia, o Anexo II foi conferido **no próprio PDF**, rasterizando
+> a página. Mesmos quatro valores, agora contra o texto com força normativa.
+> Ver "Pós-lançamento — 31/07/2026". Este registro fica como está: descreve o
+> que a auditoria de T-108 de fato fez.
 
 | Cadastrado | Fonte oficial | |
 |---|---|---|
