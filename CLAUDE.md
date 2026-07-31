@@ -23,6 +23,7 @@ Tudo em `docs/`. Comece por `docs/README.md`.
 | Como modelar parâmetro | `docs/05-data-model.md` |
 | O que testar | `docs/12-test-plan.md` |
 | Algo quebrou | `docs/15-runbook.md` |
+| **Retomar o projeto do zero** | **`ESTADO-DO-PROJETO.md`** (raiz) |
 
 **Ao implementar, cite a regra.** Um `RN-*` implementado sem referência no código é um `RN-*` que ninguém consegue auditar depois.
 
