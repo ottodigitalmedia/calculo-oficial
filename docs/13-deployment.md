@@ -149,7 +149,7 @@ A ausência de banco transforma migração em refatoração — reversível por 
 |---|---|
 | Domínio | **`calculoficial.com.br`** |
 | DNS | Registro apontando para a VPS |
-| TLS | Certificado automático via EasyPanel, com renovação automática |
+| TLS | Certificado automático via EasyPanel. **Renovação automática confirmada em 31/07/2026 por evidência:** o certificado foi substituído sozinho em 30/07/2026, sem intervenção. Emissor Let's Encrypt |
 | Redirecionamentos | Sem `www` para com `www`, ou o inverso — escolher um e manter; HTTP para HTTPS sempre |
 | HSTS | Ativo após confirmar que o TLS está estável |
 

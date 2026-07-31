@@ -29,6 +29,87 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Auditoria de parâmetros — 31/07/2026
+
+- **Ciclo:** pré-lançamento (T-108)
+- **Escopo:** os 9 parâmetros com vigência aberta
+- **Divergências encontradas:** 0
+- **Links de fonte verificados:** 5 · quebrados e corrigidos: 0
+- **Tempo gasto:** ~0,4 h — insumo para `HIP-04`
+
+Conferência dígito a dígito contra a fonte oficial, não contra o que outra
+página diz que a fonte oficial contém.
+
+### `inss-tabela-progressiva` · a partir de 2026-01-01
+
+Fonte: Portaria Interministerial MPS/MF nº 13, de 09/01/2026, Anexo II.
+Conferido na página institucional do INSS, que atribui os valores expressamente
+a essa portaria e informa aplicação a partir da competência janeiro/2026 — o
+PDF da portaria é digitalizado, sem camada de texto.
+
+| Cadastrado | Fonte oficial | |
+|---|---|---|
+| até 1.621,00 · 7,50% | Até R$ 1.621,00 · 7,5% | ✅ |
+| 1.621,01 a 2.902,84 · 9,00% | De R$ 1.621,01 a R$ 2.902,84 · 9% | ✅ |
+| 2.902,85 a 4.354,27 · 12,00% | De R$ 2.902,85 até R$ 4.354,27 · 12% | ✅ |
+| 4.354,28 a 8.475,55 · 14,00% | De R$ 4.354,28 até R$ 8.475,55 · 14% | ✅ |
+
+### `salario-minimo` · a partir de 2026-01-01
+
+Cadastrado R$ 1.621,00. A mesma página o usa como salário de contribuição do
+contribuinte individual, facultativo e MEI. ✅
+
+### `irrf-tabela-progressiva` · a partir de 2025-05-01
+
+Fonte: Lei nº 15.191, de 11/08/2025. Conferido na tabela publicada pela Receita
+Federal para 2026, que cita essa lei.
+
+| Cadastrado | Fonte oficial | |
+|---|---|---|
+| até 2.428,80 · isento | Até R$ 2.428,80 · — | ✅ |
+| 2.428,81 a 2.826,65 · 7,50% · deduzir 182,16 | idem | ✅ |
+| 2.826,66 a 3.751,05 · 15,00% · deduzir 394,16 | idem | ✅ |
+| 3.751,06 a 4.664,68 · 22,50% · deduzir 675,49 | idem | ✅ |
+| acima de 4.664,68 · 27,50% · deduzir 908,73 | idem | ✅ |
+
+### `irrf-deducao-dependente` e `irrf-desconto-simplificado` · a partir de 2025-05-01
+
+R$ 189,59 e R$ 607,20. Ambos conferem com a mesma página da Receita. ✅
+
+### Redutor do Art. 3º-A · a partir de 2026-01-01
+
+Fonte: Lei nº 9.250/1995 com a redação da Lei nº 15.270, de 26/11/2025.
+Conferido contra o texto publicado no Legin da Câmara.
+
+| Parâmetro | Cadastrado | Texto da norma | |
+|---|---|---|---|
+| `irrf-reducao-limite-integral` | R$ 5.000,00 | "até R$ 5.000,00" | ✅ |
+| `irrf-reducao-valor-maximo` | R$ 312,89 | "até R$ 312,89 (de modo que o imposto devido seja zero)" | ✅ |
+| `irrf-reducao-constante` | R$ 978,62 | "R$ 978,62 − (0,133145 × rendimentos…)" | ✅ |
+| `irrf-reducao-coeficiente` | 133145/1000000 | "0,133145" | ✅ |
+| `irrf-reducao-limite-aplicacao` | R$ 7.350,00 | §2º "superior a R$ 7.350,00 … não terão redução" | ✅ |
+
+O §1º — redução limitada ao imposto determinado pela tabela — confere com
+`RN-013.1` e com o comportamento verificado por mutação no T-102.
+
+**Achado sem divergência, para o backlog.** O §3º estende a redução ao imposto
+do décimo terceiro salário. Não afeta nenhuma calculadora publicada; precisa
+ser considerado quando CALC-005 for construída.
+
+### Links de fonte
+
+As 5 URLs distintas respondem 200 e carregam a norma correta. Todas em domínio
+oficial, conforme `BV-07`.
+
+### TLS
+
+Certificado de `calculoficial.com.br` emitido por Let's Encrypt em 30/07/2026,
+válido até 28/10/2026. **A renovação automática está confirmada por evidência**,
+não por configuração: o certificado anterior foi substituído sozinho, sem
+intervenção.
+
+---
+
 ## [Não lançado]
 
 ### Adicionado

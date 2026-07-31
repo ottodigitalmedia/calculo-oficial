@@ -198,13 +198,23 @@ Era a máscara que permitiria a suíte inteira sumir sem o pipeline notar.
 
 Absorve o antigo T-004.
 
-- **Dado** o EasyPanel, **quando** crio o serviço, **então** ele serve a imagem publicada pelo pipeline
-- **Dado** o domínio, **quando** acesso por HTTPS, **então** responde com certificado válido
-- **Dado** o painel, **quando** verifico, **então** a renovação automática está confirmada
-- **Dado** o segredo de deploy configurado, **quando** faço um commit, **então** ele chega ao ar sem intervenção
-- **Dado** cada parâmetro com vigência aberta, **quando** confiro contra a fonte oficial, **então** não há divergência
-- **Dado** cada link de fonte, **quando** abro, **então** carrega a norma correta
-- **Dado** a auditoria, **quando** concluo, **então** registro em `17-changelog` com o tempo gasto (insumo de `HIP-04`)
+- [x] **Dado** o EasyPanel, **quando** crio o serviço, **então** ele serve a imagem publicada pelo pipeline
+- [x] **Dado** o domínio, **quando** acesso por HTTPS, **então** responde com certificado válido
+- [x] **Dado** o painel, **quando** verifico, **então** a renovação automática está confirmada
+- [ ] ~~**Dado** o segredo de deploy configurado, **quando** faço um commit, **então** ele chega ao ar sem intervenção~~ — **retirado por decisão.** O webhook do EasyPanel só é alcançável pelo domínio do painel, que é configuração do servidor inteiro; a VPS hospeda outros projetos e o painel já tem domínio próprio. O pipeline publica a imagem e avisa; a implantação é um clique. Registrado em `13-deployment` §4
+- [x] **Dado** cada parâmetro com vigência aberta, **quando** confiro contra a fonte oficial, **então** não há divergência
+- [x] **Dado** cada link de fonte, **quando** abro, **então** carrega a norma correta
+- [x] **Dado** a auditoria, **quando** concluo, **então** registro em `17-changelog` com o tempo gasto (insumo de `HIP-04`)
+
+**Auditoria de 31/07/2026:** 9 parâmetros com vigência aberta, **0 divergências**;
+5 links de fonte, 0 quebrados; ~0,4 h. Tabela comparativa completa em
+`17-changelog`.
+
+**Renovação automática do TLS confirmada por evidência, não por configuração:**
+o certificado foi substituído sozinho em 30/07/2026, sem intervenção.
+
+**Falta apenas o clique em Implantar.** A imagem com T-105, T-106 e T-107 está
+publicada e etiquetada com o hash do commit; produção ainda serve o T-104.
 
 **DoD.** Produto público. **MR-2** — começa a contagem de 90 dias.
 
