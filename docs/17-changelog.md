@@ -29,6 +29,57 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Lançamento — 31/07/2026
+
+**MR-2 alcançado.** Produto público em `https://calculoficial.com.br`. Começa a
+contagem dos 90 dias de medição.
+
+**No ar:** 4 calculadoras · 3 guias · busca · permalink · memória de cálculo
+auditável · 4 páginas legais · sitemap e robots.
+
+### Conferência pós-deploy em produção
+
+Passo 7 de "Ao atualizar um parâmetro legal" (`CLAUDE.md`). Salário bruto de
+R$ 5.000,00, refeito à mão a partir dos números da **fonte**, não do código:
+
+| Etapa | À mão | Produção |
+|---|---|---|
+| INSS faixa 1 · 1.621,00 × 7,5% | 121,58 | |
+| INSS faixa 2 · 1.281,84 × 9% | 115,37 | |
+| INSS faixa 3 · 1.451,43 × 12% | 174,17 | |
+| INSS faixa 4 · 645,73 × 14% | 90,40 | |
+| **INSS total** | **501,51** | **R$ 501,51** ✅ |
+| IRRF · desconto simplificado, base 3.891,29 | 200,05 | |
+| IRRF · deduções legais, base 4.498,49 | 336,67 — descartado, pior | |
+| Redutor, §1º: min(312,89 ; 200,05) | 200,05 | |
+| **IRRF devido** | **0,00** | **R$ 0,00** ✅ |
+| **Líquido** | **4.498,49** | **R$ 4.498,49** ✅ |
+
+A memória de cálculo em produção cita as três normas corretas: Portaria MPS/MF
+13/2026, Lei 15.191/2025 e o Art. 3º-A na redação da Lei 15.270/2025.
+
+A tabela do guia de INSS é renderizada a partir de `lib/params/` e traz o link
+oficial ao lado (`ADR-009` G-2), confirmando que o conteúdo não tem valor legal
+digitado à mão.
+
+### Cabeçalhos verificados no ar
+
+`Referrer-Policy: strict-origin` · `X-Content-Type-Options: nosniff` ·
+`X-Frame-Options: DENY` · `Permissions-Policy`. As 16 rotas respondem 200.
+
+### O que ficou de fora, com o motivo
+
+| O quê | Por quê |
+|---|---|
+| `Content-Security-Policy` | Depende das origens exatas do provedor de anúncio; curinga anularia a proteção contra AM-02 |
+| `Strict-Transport-Security` | `13-deployment` §7 condiciona à estabilidade do TLS. Ativar no próximo ciclo — HSTS mal configurado tira o site do ar por meses |
+| Deploy automático | Decisão registrada em `13-deployment` §4 |
+| `www.calculoficial.com.br` | Não servido pelo EasyPanel |
+| Vale-transporte (`RN-027`) | Percentual legal não localizado em fonte oficial |
+| Anúncio, análise de uso, série do Banco Central | `ADR-008` |
+
+---
+
 ## Auditoria de parâmetros — 31/07/2026
 
 - **Ciclo:** pré-lançamento (T-108)
