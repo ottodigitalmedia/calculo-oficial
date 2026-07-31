@@ -239,18 +239,32 @@ jobs:
         run: |
           echo "::warning title=Deploy não configurado::Faltam o segredo DEPLOY_WEBHOOK_URL e/ou a variável NEXT_PUBLIC_SITE_URL. A imagem foi publicada e pode ser implantada manualmente. Configuração em T-004."
 
+      # DEPLOY É MANUAL POR DECISÃO, não por pendência.
+      #
+      # O webhook do EasyPanel só é alcançável pelo domínio do painel, que é
+      # configuração do SERVIDOR inteiro — e este servidor hospeda outros
+      # projetos, com o painel já em domínio próprio. Amarrar o painel ao
+      # domínio deste projeto estaria errado.
+      #
+      # Então o passo tenta, e se não conseguir apenas avisa. Falhar aqui
+      # deixaria o pipeline permanentemente vermelho por uma condição
+      # esperada — e vermelho permanente é como se aprende a ignorar vermelho.
       - name: Disparar deploy
         if: steps.cfg.outputs.pronto == 'sim'
-        # Tempo limite curto: sem ele o curl espera mais de dois minutos por um
-        # endereço inalcançável, e o pipeline fica pendurado num erro que já
-        # está claro no primeiro segundo.
+        id: disparo
+        continue-on-error: true
         run: |
           curl --fail --silent --show-error                --connect-timeout 10 --max-time 30                -X POST "${{ secrets.DEPLOY_WEBHOOK_URL }}"
+
+      - name: Avisar que o deploy precisa ser manual
+        if: steps.disparo.outcome != 'success'
+        run: |
+          echo "::warning title=Deploy manual::A imagem foi publicada, mas o webhook não respondeu. Implante pelo painel do EasyPanel. Ver 13-deployment §4."
 
 
       # D-4 / 13-deployment §4: falha aqui dispara rollback automático.
       - name: 'Verificação de saúde (EP-016)'
-        if: steps.cfg.outputs.pronto == 'sim'
+        if: steps.disparo.outcome == 'success'
         id: saude
         run: |
           alvo="${{ vars.NEXT_PUBLIC_SITE_URL }}/api/health"
@@ -275,5 +289,5 @@ jobs:
       # Regressão de métrica ALERTA, não reverte (13-deployment §4). Deploy
       # revertido por causa de LCP derruba correção de parâmetro legal junto.
       - name: 'TC-049 e TC-050 · métricas de produção'
-        if: steps.cfg.outputs.pronto == 'sim'
+        if: steps.disparo.outcome == 'success'
         run: echo "::notice title=Métricas::Web Vitals reais são medidos em produção (14-observability §3). Regressão gera AL-07, nunca rollback automático."

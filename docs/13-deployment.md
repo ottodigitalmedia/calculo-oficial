@@ -97,6 +97,8 @@ flowchart TD
 
 **Ordem deliberada.** As verificações mais baratas e mais críticas vêm primeiro. Um parâmetro legal inválido interrompe o pipeline em segundos, antes de qualquer build.
 
+**Deploy é manual, por decisão.** O webhook do EasyPanel só é alcançável pelo domínio do painel, que é configuração do servidor inteiro — e a VPS hospeda outros projetos, com o painel já em domínio próprio. Amarrar o painel ao domínio deste projeto seria errado. O pipeline tenta disparar e, se não conseguir, **avisa em vez de falhar**: falhar deixaria o vermelho permanente por uma condição esperada, e vermelho permanente ensina a ignorar vermelho. A imagem continua sendo publicada com a etiqueta do commit, e a implantação é um clique no painel.
+
 **Assimetria de falha (regra R-3 de `06-api-spec`).** Falha da coleta da série externa **não** interrompe: prossegue com o valor em cache e registra aviso. Um parâmetro legal errado deve quebrar o build; um indicador econômico indisponível, não.
 
 ## 5. Variáveis de ambiente
