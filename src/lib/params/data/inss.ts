@@ -87,7 +87,7 @@ export const INSS: ConjuntoDeParametros = {
         ],
       },
       observacao:
-        'Teto do salário de contribuição: R$ 8.475,55. O PDF da portaria é digitalizado, sem camada de texto; valores conferidos na página institucional do INSS, que os atribui expressamente a esta portaria.',
+        'Teto do salário de contribuição: R$ 8.475,55, limite superior da última faixa. Conferido faixa a faixa no Anexo II da portaria (DOU de 12/01/2026, edição 7, seção 1, página 58).',
     },
 
     // -----------------------------------------------------------------------

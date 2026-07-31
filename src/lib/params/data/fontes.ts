@@ -36,10 +36,20 @@ export const PORTARIA_MPS_MF_13_2026: Fonte = {
   id: 'portaria-mps-mf-13-2026',
   norma: 'Portaria Interministerial MPS/MF nº 13, de 9 de janeiro de 2026',
   dispositivo: 'Anexo II',
-  // O PDF desta portaria é digitalizado, sem camada de texto. Os valores
-  // foram conferidos na página institucional do INSS, que os publica
-  // atribuindo expressamente a esta portaria.
-  url: 'https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal',
+  // Texto da própria portaria, como publicado no DOU de 12/01/2026, edição 7,
+  // seção 1, página 58.
+  //
+  // Até 31/07/2026 esta URL apontava para a página institucional do INSS,
+  // porque o PDF é digitalizado e não tem camada de texto — `pdftotext` sobre
+  // ele devolve vazio. A conclusão de que ele era inconferível estava errada:
+  // rasterizar a página e ler a imagem funciona, e o Anexo II foi conferido
+  // assim, faixa a faixa, em 31/07/2026.
+  //
+  // A troca importa por CLAUDE.md, regra de atualização de parâmetro: "abrir a
+  // fonte oficial, não o site que diz o que a fonte oficial diz". A página do
+  // INSS transcreve a portaria corretamente, mas é transcrição — e o leitor
+  // que clica no link para auditar merece o texto que tem força normativa.
+  url: 'https://www.gov.br/previdencia/pt-br/assuntos/rpps/documentos/PortariaInterministerialMPSMF13de9dejaneirode2026.pdf',
   orgao: 'Ministério da Previdência Social',
 }
 
