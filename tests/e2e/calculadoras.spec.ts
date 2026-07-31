@@ -59,3 +59,16 @@ test('juros compostos · não tem seletor de período, por não ter parâmetro l
   // R$ 1.000,00 a 1% ao mês por 12 meses, capitalizando mês a mês.
   await expect(page.getByText('R$ 1.126,84').first()).toBeVisible()
 })
+
+/**
+ * "− R$ 0,00" anuncia um desconto que não existe. Em CALC-005 ele aparecia ao
+ * lado de verbas reais, e nesse contexto lê-se como defeito de cálculo — não
+ * como ausência de imposto.
+ */
+test('valor zerado no detalhamento não leva sinal de menos', async ({ page }) => {
+  await page.goto('/calculadora/decimo-terceiro?salario=300000&mesesTrabalhados=3')
+  const detalhamento = page.locator('main [aria-live]')
+  await expect(detalhamento).toContainText('R$')
+  await expect(detalhamento).not.toContainText('− R$ 0,00')
+  await expect(detalhamento).not.toContainText('+ R$ 0,00')
+})

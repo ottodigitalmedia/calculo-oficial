@@ -329,7 +329,17 @@ function Resultado({
                       : 'font-semibold'
                 }`}
               >
-                {linha.sinal === 'debito' ? '− ' : linha.sinal === 'credito' ? '+ ' : ''}
+                {/* Sinal só em valor diferente de zero. "− R$ 0,00" anuncia um
+                    desconto que não existe, e em CALC-005 aparecia ao lado de
+                    verbas reais — lê-se como defeito de cálculo. Zero continua
+                    visível, porque "não há imposto" é informação. */}
+                {linha.valor === 0
+                  ? ''
+                  : linha.sinal === 'debito'
+                    ? '− '
+                    : linha.sinal === 'credito'
+                      ? '+ '
+                      : ''}
                 {formatarReal(linha.valor)}
               </dd>
             </div>
