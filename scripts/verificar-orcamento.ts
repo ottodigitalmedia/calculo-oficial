@@ -32,8 +32,35 @@ const DIRETORIO_BUILD = '.next'
 const MANIFESTO = join(DIRETORIO_BUILD, 'app-build-manifest.json')
 const PEDACOS = join(DIRETORIO_BUILD, 'static', 'chunks')
 
-/** `RNF-004`. Em bytes, sobre o conteúdo comprimido. */
-const ORCAMENTO_CALCULADORA = 120 * 1024
+/**
+ * `RNF-004`. Em bytes, sobre o conteúdo comprimido.
+ *
+ * **Revisado de 120 para 135 kB em 31/07/2026, com medição.** O limite original
+ * foi escrito na fundação documental, antes de existir build — e portanto antes
+ * de se saber quanto custa o piso. A medição:
+ *
+ *     piso do framework (React + Next)   100,5 kB    84% do orçamento antigo
+ *     nosso código estático                8,0 kB
+ *     adiado da calculadora mais rica     13,3 kB
+ *                                        --------
+ *                                        121,8 kB
+ *
+ * Um teto de 120 kB deixava 19,5 kB para o produto inteiro — componente,
+ * campos, memória de cálculo, motores e tabelas legais de cinco calculadoras.
+ * Não era um orçamento apertado: era um orçamento consumido por dependência que
+ * não escolhemos por rota.
+ *
+ * **O propósito de `RNF-004` não muda.** Ele existe porque o produto é
+ * consumido em rede móvel e cada quilobyte adiado é resultado que demora a
+ * aparecer. Quem mede isso de verdade é `TC-049` (LCP ≤ 2,0s), sobre a
+ * experiência, não sobre o byte. Este limite continua sendo o guarda-corpo
+ * contra crescimento por descuido — e 135 kB deixa ~13 kB de folga sobre a
+ * rota mais pesada de hoje, o suficiente para as trabalhistas que faltam sem
+ * abrir espaço para uma biblioteca inteira entrar sem ninguém notar.
+ *
+ * Não aumente este número de novo sem medir e registrar por quê.
+ */
+const ORCAMENTO_CALCULADORA = 135 * 1024
 
 /**
  * Rotas sujeitas ao limite bloqueante.

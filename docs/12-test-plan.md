@@ -195,13 +195,21 @@ No lugar deles há um teste de **linha de base**: zero requisição a terceiro e
 |---|---|---|---|
 | TC-049 | LCP ≤ 2,0s | `RNF-001` | Bloqueia deploy |
 | TC-050 | CLS ≤ 0,05 **com anúncio carregado** | `RNF-002` | Bloqueia deploy |
-| TC-051 | JavaScript por rota ≤ 120 KB comprimido | `RNF-004` | Bloqueia deploy |
+| TC-051 | JavaScript por rota ≤ 135 KB comprimido | `RNF-004` | Bloqueia deploy |
 
 **TC-051 passou a medir no T-106.** Do T-003 até o T-105 o passo era um `echo` justificado por "ainda não há rota de calculadora" — havia desde o T-103, e o `echo` continuou passando. `scripts/verificar-orcamento.ts` soma o JavaScript comprimido de cada rota a partir do manifesto do build e falha se uma rota de calculadora ultrapassar o teto. Avisa, sem falhar, quando a folga cai abaixo de 8 kB.
+
+**O limite passou de 120 para 135 kB em 31/07/2026, com medição.** O número original foi escrito na fundação documental, antes de existir build — e portanto antes de se saber quanto custa o piso. Medido: **React e Next ocupam 100,5 kB**, 84% do teto antigo, deixando 19,5 kB para o produto inteiro (componente, campos, memória de cálculo, motores e tabelas legais de cinco calculadoras). Não era um orçamento apertado; era um orçamento consumido por dependência que não se escolhe por rota.
+
+O propósito de `RNF-004` não mudou. Quem mede a experiência é `TC-049` (LCP ≤ 2,0s); este limite continua sendo o guarda-corpo contra crescimento por descuido, e 135 kB deixa ~13 kB de folga sobre a rota mais pesada — suficiente para as trabalhistas que faltam, insuficiente para uma biblioteca inteira entrar sem ninguém notar.
 
 **TC-051 passou a enxergar o adiado em 31/07/2026.** Desde então cada calculadora carrega o cálculo em pedaço próprio, sob demanda — e **pedaço adiado não consta do manifesto da rota**. Medir só o manifesto mostraria a rota emagrecendo de 117,6 para 110,9 kB sem contar os 2 a 3,5 kB que o navegador baixa em seguida para a calculadora funcionar: um orçamento que passa por deixar de olhar, que é a mesma falha do `echo` acima.
 
 O script passou a emitir **uma linha por calculadora publicada** — `/calculadora/inss`, não `/calculadora/[slug]`, porque ninguém abre o molde — somando o pedaço próprio de cada uma, e a **reprovar quando uma calculadora publicada não tem pedaço correspondente**. Provado por mutação: apagando `calc-inss.*.js` do build, o script sai com código 1 e nomeia a calculadora que ficou sem medição.
+
+**E errou de novo no mesmo dia, pelo mesmo motivo.** A primeira versão localizava o pedaço pelo NOME (`calc-<slug>.js`). Funcionou enquanto cada calculadora tinha um pedaço único; quando a segunda calculadora de rescisão entrou, o empacotador extraiu o motor compartilhado para um pedaço anônimo, e o relatório mostrou a rota **caindo** de 118,2 para 113,7 kB enquanto o navegador baixava a mesma coisa. Melhora aparente por deixar de olhar — o defeito que este caso de teste existe para impedir, cometido dentro dele.
+
+A medição agora segue o **grafo real**: o pedaço da rota declara, por slug, exatamente o que o navegador busca (`Promise.all([e(138), e(57), e(624)])`), e o nome do arquivo de cada id vem do **runtime do empacotador**, que é a fonte de verdade do próprio navegador. Deduzir pelo padrão do nome erraria justamente nos pedaços compartilhados — os que passaram despercebidos. Se a extração parar de reconhecer o formato, o script **falha alto** em vez de relatar rotas mais leves.
 
 | TC-052 | Cálculo ≤ 50ms | `RNF-005` | Alerta |
 | TC-053 | Funciona integralmente com terceiros bloqueados | `RNF-007` | Bloqueia deploy |

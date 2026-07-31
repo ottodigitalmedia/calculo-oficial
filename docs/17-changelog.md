@@ -88,6 +88,78 @@ camada de texto e o Anexo II confere com as quatro faixas cadastradas.
 > link que use `HEAD` cru vai reportar as duas fontes como quebradas, e elas não
 > estão.
 
+### Adicionado · CALC-003 · pedido de demissão
+
+Compartilha o motor de CALC-002 atrás de `modalidade`. Duas implementações do
+mesmo cálculo divergem na primeira manutenção — e divergir aqui significa
+publicar dois números diferentes para a mesma verba.
+
+As três diferenças de `03-functional-spec` §3.3, com o texto final do documento:
+o aviso passa a "Vou cumprir" / "Não vou cumprir"; não cumprindo, é
+**descontado**; e **não há multa de FGTS** — com o bloco não exibido em vez de
+exibido zerado, porque R$ 0,00 ao lado das outras verbas lê-se como erro de
+cálculo e não como ausência de direito.
+
+O que continua devido, confirmado no compêndio oficial do TST:
+
+| | |
+|---|---|
+| **Súmula 157** | o 13º *"é devida na resilição contratual de iniciativa do empregado"* |
+| **Súmula 261** | quem se demite antes de 12 meses *"tem direito a férias proporcionais"* |
+| **CLT art. 487, § 2º** | fundamenta o desconto do aviso não cumprido |
+
+**Um ponto interpretativo, declarado na memória.** O desconto é de **30 dias**,
+não do aviso proporcional: a Lei nº 12.506/2011 concede o acréscimo *"aos
+empregados"*, e no pedido de demissão o aviso é devido **por** ele. Aplicar o
+proporcional contra o trabalhador inverteria o sentido da lei.
+
+### Corrigido · o orçamento de JavaScript estava medindo menos do que o navegador baixa
+
+**Duas vezes no mesmo dia, e a segunda foi introduzida ao corrigir a primeira.**
+
+A versão nova localizava o pedaço adiado pelo NOME (`calc-<slug>.js`). Quando a
+segunda calculadora de rescisão entrou, o empacotador extraiu o motor
+compartilhado para um pedaço anônimo — e o relatório mostrou a rota **caindo**
+de 118,2 para 113,7 kB enquanto o navegador continuava baixando a mesma coisa.
+Melhora aparente por deixar de olhar: o defeito que `TC-051` existe para
+impedir, cometido dentro dele.
+
+A medição agora segue o **grafo real** de dependências, e resolve o nome do
+arquivo de cada pedaço pelo **runtime do empacotador** — a fonte de verdade do
+próprio navegador. Falha alto se parar de reconhecer o formato.
+
+**O que a medição correta revelou:** a rota de rescisão pesa 121,8 kB, e
+CALC-002 foi para produção acima do orçamento de 120 kB. O portão aprovou sobre
+uma medição falsa.
+
+### Alterado · `RNF-004` revisado de 120 para 135 kB, com medição
+
+O limite foi escrito na fundação documental, antes de existir build — e
+portanto antes de se saber quanto custa o piso:
+
+    piso do framework (React + Next)   100,5 kB    84% do orçamento antigo
+    nosso código estático                8,0 kB
+    adiado da calculadora mais rica     13,3 kB
+                                       --------
+                                       121,8 kB
+
+Sobravam 19,5 kB para o produto inteiro — componente, campos, memória de
+cálculo, motores e tabelas legais de seis calculadoras. Não era um orçamento
+apertado: era um orçamento consumido por dependência que não se escolhe por
+rota.
+
+**O propósito não mudou.** Quem mede a experiência é `TC-049` (LCP ≤ 2,0s),
+sobre o que o usuário sente, não sobre o byte. Este limite continua sendo o
+guarda-corpo contra crescimento por descuido, e 135 kB deixa ~13 kB de folga —
+suficiente para as trabalhistas que faltam, insuficiente para uma biblioteca
+inteira entrar sem ninguém notar.
+
+Junto veio uma redução real: as tabelas legais e o registro saíram do pacote
+**estático**. `FuncaoCalculo` deixou de receber o registro e cada definição
+monta o seu, dentro do módulo adiado; o formulário recebe do servidor apenas os
+anos disponíveis e o intervalo de cobertura. Juros compostos caiu para 111,0 kB
+e INSS para 114,0.
+
 ### Adicionado · CALC-002 · rescisão sem justa causa
 
 **A de maior busca do catálogo**, e a quinta publicada. O risco dela nunca foi

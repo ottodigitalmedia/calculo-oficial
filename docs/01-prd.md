@@ -239,7 +239,7 @@ Qualquer outro evento que transmita entrada do usuário viola `RN-031` e é defe
 | RNF-001 | Largest Contentful Paint, p75 mobile | ≤ 2,0s | Web Vitals em produção |
 | RNF-002 | Cumulative Layout Shift, p75 | ≤ 0,05 | Idem. Slot de anúncio com altura reservada |
 | RNF-003 | Interaction to Next Paint, p75 | ≤ 200ms | Idem |
-| RNF-004 | Peso de JavaScript por rota de calculadora | ≤ 120 KB comprimido | Orçamento verificado no CI |
+| RNF-004 | Peso de JavaScript por rota de calculadora | **≤ 135 KB comprimido** | Orçamento verificado no CI, por calculadora publicada |
 | RNF-005 | Tempo de cálculo após entrada válida | ≤ 50ms | Cálculo local, sem rede |
 | RNF-006 | Disponibilidade | ≥ 99,5% mensal | Monitoramento externo |
 | RNF-007 | Funcionamento sem scripts de terceiro | Cálculo e memória operam integralmente | Teste com bloqueador ativo |

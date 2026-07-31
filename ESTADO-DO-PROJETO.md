@@ -23,16 +23,16 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **5** de 75 do catálogo |
+| Calculadoras no ar | **6** de 75 do catálogo |
 | Guias no ar | 3 de 10 |
-| Testes | 304 de unidade · 167 ponta a ponta · 3 de vazamento |
+| Testes | 313 de unidade · 167 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
-| Orçamento de JavaScript | 118,2 kB de 120 na pior rota (rescisão) — folga de 1,8 kB, **por calculadora** |
+| Orçamento de JavaScript | 121,8 kB de **135** na pior rota — folga de 13,2 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
-- `/calculadora/salario-liquido` · `/calculadora/rescisao-sem-justa-causa` · `/calculadora/inss` · `/calculadora/irrf` · `/calculadora/juros-compostos`
+- `/calculadora/salario-liquido` · `/calculadora/rescisao-sem-justa-causa` · `/calculadora/rescisao-pedido-demissao` · `/calculadora/inss` · `/calculadora/irrf` · `/calculadora/juros-compostos`
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -127,18 +127,17 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 70 de 75
+## 4. Calculadoras pendentes — 69 de 75
 
-Publicadas: **CALC-001, CALC-002, CALC-015, CALC-016, CALC-022**.
+Publicadas: **CALC-001, CALC-002, CALC-003, CALC-015, CALC-016, CALC-022**.
 
-### 4.1 O resto do v1 — 5 calculadoras, e são as mais valiosas
+### 4.1 O resto do v1 — 4 calculadoras, e são as mais valiosas
 
 Todas trabalhistas, todas reaproveitando os motores de INSS e IRRF que já
 existem. É o menor esforço marginal do catálogo inteiro.
 
 | ID | Calculadora | Nota |
 |---|---|---|
-| CALC-003 | Rescisão — pedido de demissão | |
 | CALC-004 | Férias (integrais, proporcionais, abono, ⅓) | |
 | CALC-005 | 13º salário (1ª e 2ª parcelas, proporcional) | **Ver §7.1: o §3º do Art. 3º-A** |
 | CALC-006 | Horas extras (50%, 100%, adicional noturno, DSR) | |
@@ -506,8 +505,10 @@ quando o objeto surgir** — como o de linha de base em `vazamento.spec.ts`.
 Desde 31/07/2026, adicionar uma calculadora **não engorda as outras rotas**.
 Três peças sustentam isso, e quebrar qualquer uma devolve o problema:
 
-1. `src/app/calculadora/[slug]/page.tsx` entrega `formularioDe(definicao)` como
-   propriedade. O componente de calculadora **não pode** voltar a importar o
+1. `src/app/calculadora/[slug]/page.tsx` entrega `formularioDe(definicao, registro)`
+   como propriedade — inclusive os anos disponíveis e a cobertura, já resolvidos.
+   **O registro de parâmetros vive no servidor e nos módulos adiados**, nunca no
+   pacote estático: cada definição monta o seu, com os conjuntos que consome. O componente de calculadora **não pode** voltar a importar o
    registro — se importar, as definições de todas voltam ao pacote. **Verificado
    por lint**, não por lembrança: `REGISTRO_FORA_DO_CLIENTE` em
    `eslint.config.js`. A volta seria um import de uma linha, e nenhum teste
@@ -526,6 +527,27 @@ tudo: se um dia a medição melhorar às custas disso, a troca é ruim.
 calculadora publicada não tiver pedaço. Sem isso, o orçamento passaria a mentir
 para melhor — ver §7.5, é o mesmo erro de novo.
 
+### 7.7 O orçamento mede o que o navegador baixa — e já mentiu duas vezes
+
+`RNF-004` foi revisado de 120 para **135 kB** em 31/07/2026, com medição: React
+e Next ocupam **100,5 kB**, 84% do teto antigo. Sobravam 19,5 kB para o produto
+inteiro. Não era orçamento apertado — era orçamento consumido por dependência
+que não se escolhe por rota. Quem mede a experiência é `TC-049` (LCP).
+
+**Duas vezes o verificador relatou menos do que o navegador baixa**, e as duas
+no mesmo dia:
+
+1. Media só o manifesto da rota, ignorando os pedaços adiados.
+2. Corrigido, passou a localizar o pedaço pelo NOME (`calc-<slug>.js`) — e
+   quando o empacotador extraiu o motor compartilhado das duas calculadoras de
+   rescisão para um pedaço anônimo, a rota **caiu** de 118,2 para 113,7 kB no
+   relatório sem mudar nada para o usuário.
+
+Hoje a medição segue o grafo real de dependências e resolve o nome do arquivo
+pelo **runtime do empacotador**. Se a extração parar de reconhecer o formato, o
+script falha alto. **Não confie em medição de pacote que melhora sozinha** —
+verifique o que ela deixou de contar.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -534,15 +556,11 @@ fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
 
 O que sobrou, em ordem:
 
-1. **CALC-003 · pedido de demissão.** É CALC-002 com três diferenças já
-   escritas em `03-functional-spec` §3.3, e a pesquisa de incidências já cobre.
-   Menor esforço marginal do catálogo inteiro.
-2. **CALC-004 e CALC-005** — férias e 13º. Mesmo motor, mesma pesquisa.
-3. **Reduzir o pacote da rota de rescisão**: 1,8 kB de folga. `datas.ts` já vai
-   no pedaço adiado; o que cresceu foi o casco, com o campo de data e os
-   parâmetros trabalhistas. Ver §7.6.
-4. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
-5. **Os 7 guias restantes** (§4.6).
+1. **CALC-004 e CALC-005** — férias e 13º. Mesmo motor de rescisão, mesma
+   pesquisa de incidências. **Ver §7.1: o §3º do Art. 3º-A alcança o 13º.**
+2. **CALC-006 e CALC-007** — horas extras e FGTS, fechando o v1.
+3. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
+4. **Os 7 guias restantes** (§4.6).
 
 > **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
 > variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o
