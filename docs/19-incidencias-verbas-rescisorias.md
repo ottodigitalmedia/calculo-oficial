@@ -320,23 +320,23 @@ ser presumida a partir da outra** em nenhuma verba nova.
 |---|---|---|---|---|
 | ~~1~~ | ~~IRRF sobre férias indenizadas + terço~~ | — | Súmula 386 STJ | ✅ **Resolvido** em 31/07/2026 (§5.1 e §5.2) |
 | ~~2~~ | ~~Ponto de partida do acréscimo do aviso prévio~~ | — | — | ⚠️ **Deixou de bloquear** (§6.1). A lei é silente; vira decisão declarada na memória, não parâmetro legal |
-| 3 | **Aviso prévio indenizado × INSS** | **CALC-002, CALC-003** | STJ Tema 478 (REsp 1.230.957/RS) · ato da RFB ou da PGFN | ⏳ Aberto |
-| 4 | **Aviso prévio indenizado × base do FGTS** | **CALC-002, CALC-007** | Lei 8.036 · Súmula 305 do TST | ⏳ Aberto |
-| 5 | Terço de férias **gozadas** × contribuição previdenciária | **CALC-004** | Acórdãos STJ e STF | ⏳ Aberto |
+| ~~3~~ | ~~Aviso prévio indenizado × INSS~~ | — | STJ, Tema 478 | ✅ **Resolvido.** Ver §11 |
+| ~~4~~ | ~~Aviso prévio indenizado × base do FGTS~~ | — | Súmula 305 do TST | ✅ **Resolvido.** Ver §11 |
+| ~~5~~ | ~~Terço de férias gozadas × contribuição~~ | — | RPS, art. 214, § 4º | ✅ **Resolvido.** Ver §11 |
 
-**Restam três, e as duas primeiras são a mesma verba.** O aviso prévio
-indenizado é o último nó de CALC-002: já se sabe que é **isento de IRRF** (§5),
-falta fechar INSS e base do FGTS.
+**Nenhuma pendência bloqueia CALC-002.** A calculadora foi publicada em
+31/07/2026 com todas as incidências fundamentadas em fonte primária.
 
-Nenhuma é trabalho de programação — é leitura de norma e de acórdão. É por isso
-que `18-levantamento` §6 recomenda construir, em paralelo, CALC-024 e CALC-025,
-que não dependem de nada.
+Continua valendo, para a próxima sessão e sem bloquear nada:
 
-> **O que já dá para começar em CALC-002, hoje.** Tempo de serviço, avos de 13º
-> e de férias, saldo de salário, terço, dias de aviso prévio e a multa de FGTS
-> estão todos confirmados. O que fica em aberto é **a incidência sobre uma
-> única verba** — e ela pode ser isolada atrás de um parâmetro, para que a
-> calculadora seja concluída quando a pesquisa fechar, sem refazer o motor.
+- localizar a **Nota Técnica 184/2012** ou precedente do TST que confirme o
+  ponto de partida do acréscimo do aviso prévio, para citar fonte nominal em
+  vez de "entendimento consolidado" (§6.1);
+- verificar se houve **ato da RFB ou da PGFN** que uniformizou a cobrança
+  administrativa do INSS sobre o aviso prévio indenizado. A página de
+  jurisprudência vinculante da Receita, consultada em 31/07/2026, **não** o
+  lista entre as matérias dispensadas — por isso a memória de cálculo declara
+  a divergência em vez de escondê-la (§3.1).
 
 ---
 
@@ -352,3 +352,65 @@ que não dependem de nada.
 3. **Norma digitalizada não é norma inconferível.** Quando o PDF não tem camada
    de texto, `pdftoppm -png` e leitura da imagem resolvem. Foi assim que o
    Anexo II da portaria do INSS foi conferido em 31/07/2026.
+
+
+## 11. As três pendências que fecharam em 31/07/2026
+
+### 11.1 Aviso prévio indenizado × INSS — Tema 478 do STJ
+
+Tese firmada, conferida na base oficial de repetitivos do tribunal:
+
+> *"Não incide contribuição previdenciária sobre os valores pagos a título de
+> aviso prévio indenizado, por não se tratar de verba salarial."*
+>
+> REsp 1.230.957/RS · Primeira Seção · julgado em 26/02/2014 ·
+> **tese mantida após juízo de retratação em 13/05/2026**, publicado em
+> 09/06/2026.
+
+**A divergência é real e continua registrada.** A letra da Lei nº 8.212/1991
+não exclui o aviso prévio indenizado: a alínea que o fazia foi substituída pela
+Lei nº 9.528/1997, e a lista numerada que a sucedeu não o repete. O cálculo
+segue a tese vinculante, e a memória **declara** isso com link para o tema — é
+o mesmo tratamento dado à escolha entre deduções legais e desconto simplificado
+no IRRF.
+
+### 11.2 Aviso prévio indenizado × base do FGTS — Súmula 305 do TST
+
+> **SUM-305 · FUNDO DE GARANTIA DO TEMPO DE SERVIÇO. INCIDÊNCIA SOBRE O AVISO
+> PRÉVIO** (mantida) — Res. 121/2003
+>
+> *"O pagamento relativo ao período de aviso prévio, trabalhado ou não, está
+> sujeito a contribuição para o FGTS."*
+
+**E um achado que muda o número da multa.** A OJ-SDI1 nº 42, II, do TST:
+
+> *"O cálculo da multa de 40% do FGTS deverá ser feito com base no saldo da
+> conta vinculada na data do efetivo pagamento das verbas rescisórias,
+> **desconsiderada a projeção do aviso prévio indenizado**, por ausência de
+> previsão legal."*
+
+Os dois convivem: o depósito de 8% incide sobre o aviso, mas a multa é apurada
+sobre o saldo existente no pagamento. Quem somasse a projeção à base da multa
+pagaria a mais — e é um erro que passa despercebido.
+
+### 11.3 Terço de férias gozadas × contribuição — RPS, art. 214, § 4º
+
+Resolvido pelo **texto do regulamento**, sem precisar do acórdão:
+
+> *"A remuneração adicional de férias de que trata o inciso XVII do art. 7º da
+> Constituição Federal **integra o salário-de-contribuição**."*
+
+A divergência STJ × STF que `18-levantamento` mencionava dizia respeito à
+contribuição **patronal**; o STF a pacificou no Tema 985 (RE nº 1.072.485), e a
+Receita Federal a lista entre sua jurisprudência vinculante. Para o desconto do
+**empregado**, que é o que esta calculadora apura, o regulamento já bastava.
+
+### 11.4 Duas confirmações que vieram junto
+
+| O quê | Fonte | Para quê |
+|---|---|---|
+| **INSS do 13º é apurado em separado** | RPS, art. 216, § 1º e § 3º: *"deverá ser calculado em separado"* e, na rescisão, *"computando-se em separado a parcela referente à gratificação natalina"* | Muda o valor: somar o 13º ao saldo de salário empurraria a base para faixas superiores |
+| **Divisor 30 do salário-dia** | CLT, art. 64: *"dividindo-se o salário mensal [...] por 30 (trinta) vezes o número de horas"* | O 30 é da norma, não convenção de mercado |
+| **Projeção do aviso indenizado** | CLT, art. 487, § 1º: *"garantida sempre a integração desse período no seu tempo de serviço"* | É a base legal exata de `RN-019` |
+
+---

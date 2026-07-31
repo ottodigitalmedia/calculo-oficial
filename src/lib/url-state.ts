@@ -14,7 +14,7 @@
  *     de análise, nem ao registro de erro.
  */
 
-import type { Campo, ValoresFormulario } from './calculadoras/tipos'
+import { campoEhTexto, type Campo, type ValoresFormulario } from './calculadoras/tipos'
 
 /** Nome do parâmetro de data de referência. */
 export const PARAM_REFERENCIA = 'ref'
@@ -44,6 +44,14 @@ export function lerDaUrl(
       if (campo.opcoes?.some((o) => o.valor === bruto && !o.indisponivel)) {
         valores[campo.id] = bruto
       }
+      continue
+    }
+
+    if (campo.tipo === 'data') {
+      // Só a forma ISO. Data malformada cai no padrão em vez de chegar ao
+      // motor — `engine/datas.ts` também a recusaria, mas falhar aqui mantém a
+      // regra de que URL adulterada nunca derruba a página.
+      if (FORMATO_DATA.test(bruto)) valores[campo.id] = bruto
       continue
     }
 
@@ -80,7 +88,7 @@ export function escreverNaUrl(
   for (const campo of campos) {
     const v = valores[campo.id]
     if (v === undefined) continue
-    const padrao = campo.padrao ?? (campo.tipo === 'selecao' ? '' : 0)
+    const padrao = campo.padrao ?? (campoEhTexto(campo.tipo) ? '' : 0)
     if (v === padrao) continue
     if (v === 0 || v === '') continue
     params.set(campo.id, String(v))

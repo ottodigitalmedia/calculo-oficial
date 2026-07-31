@@ -34,6 +34,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto sobra do seu salário depois dos descontos legais — com a conta à mostra.',
   },
   {
+    slug: 'rescisao-sem-justa-causa',
+    nome: 'Rescisão — demissão sem justa causa',
+    linhaDeContexto:
+      'Quanto você tem a receber na demissão sem justa causa — verba a verba, com as incidências à mostra.',
+  },
+  {
     slug: 'inss',
     nome: 'INSS mensal',
     linhaDeContexto:

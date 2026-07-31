@@ -6,9 +6,11 @@ import { CampoFormulario, validar } from '@/components/campos'
 import { MemoriaCalculo } from '@/components/MemoriaCalculo'
 import { carregarCalculo } from '@/lib/calculadoras/calculo'
 import {
+  campoEhTexto,
   campoVisivel,
   type FormularioCalculadora,
   type FuncaoCalculo,
+  type Campo,
   type SaidaCalculadora,
   type ValoresFormulario,
 } from '@/lib/calculadoras/tipos'
@@ -16,6 +18,7 @@ import type { Resultado } from '@/lib/engine/traco'
 import { formatarData, formatarReal } from '@/lib/format/moeda'
 import { INSS } from '@/lib/params/data/inss'
 import { IRRF } from '@/lib/params/data/irrf'
+import { TRABALHISTA } from '@/lib/params/data/trabalhista'
 import { construirRegistro } from '@/lib/params/registry'
 import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
 
@@ -38,7 +41,20 @@ import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
  * primeiro quadro que o visitante vê não depende de hidratação nem de rede.
  */
 
-const registro = construirRegistro(INSS, IRRF)
+const registro = construirRegistro(INSS, IRRF, TRABALHISTA)
+
+/**
+ * "Este campo obrigatório está vazio?"
+ *
+ * Antes bastava comparar com zero, porque todo campo obrigatório era numérico.
+ * Com o campo de data — cujo vazio é a string vazia — o teste de zero passava a
+ * considerar preenchida uma data em branco, e a calculadora tentaria calcular
+ * com ela.
+ */
+function vazio(campo: Campo, valor: number | string | undefined): boolean {
+  if (campoEhTexto(campo.tipo)) return valor === undefined || valor === ''
+  return (valor ?? 0) === 0
+}
 
 type Estado =
   | { readonly tipo: 'vazio' }
@@ -97,7 +113,9 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
 
   const [dataReferencia, setDataReferencia] = useState(dataInicial)
   const [valores, setValores] = useState<ValoresFormulario>(() =>
-    Object.fromEntries(formulario.campos.map((c) => [c.id, c.padrao ?? (c.tipo === 'selecao' ? '' : 0)])),
+    Object.fromEntries(
+      formulario.campos.map((c) => [c.id, c.padrao ?? (campoEhTexto(c.tipo) ? '' : 0)]),
+    ),
   )
 
   /**
@@ -139,7 +157,7 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
     const m = new Map<string, string>()
     for (const campo of camposVisiveis) {
       // Campo obrigatório vazio não é "erro de digitação": é estado pendente.
-      if (campo.obrigatorio && (valores[campo.id] ?? 0) === 0) continue
+      if (campo.obrigatorio && vazio(campo, valores[campo.id])) continue
       const e = validar(campo, valores[campo.id] ?? 0)
       if (e) m.set(campo.id, e)
     }
@@ -164,7 +182,7 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
 
   const estado: Estado = useMemo(() => {
     const faltando = camposVisiveis
-      .filter((c) => c.obrigatorio && (valoresAdiados[c.id] ?? 0) === 0)
+      .filter((c) => c.obrigatorio && vazio(c, valoresAdiados[c.id]))
       .map((c) => c.rotulo)
 
     if (faltando.length > 0) {

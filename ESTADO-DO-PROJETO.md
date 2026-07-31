@@ -4,10 +4,11 @@
 > atualizado no mesmo dia após a primeira sessão pós-lançamento.
 > Serve para uma sessão nova começar sem reconstruir contexto.
 >
-> **O que mudou depois do lançamento:** HSTS ativo · fonte do INSS 2026 passou a
-> ser o texto da portaria · orçamento de JavaScript passou a ser por
-> calculadora · sobreposição com o projeto irmão decidida (§6.4). Nada disso
-> está em produção ainda — falta o clique em Implantar.
+> **O que mudou depois do lançamento:** HSTS ativo · `www` servido e
+> redirecionando · fonte do INSS 2026 passou a ser o texto da portaria ·
+> orçamento de JavaScript passou a ser por calculadora · deploy automático ·
+> sobreposição com o projeto irmão decidida (§6.4) · **CALC-002 publicada**,
+> com a pesquisa de incidências fechada em fonte primária (`docs/19`).
 >
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
@@ -22,16 +23,16 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **4** de 75 do catálogo |
+| Calculadoras no ar | **5** de 75 do catálogo |
 | Guias no ar | 3 de 10 |
-| Testes | 210 de unidade · 163 ponta a ponta · 3 de vazamento |
+| Testes | 304 de unidade · 167 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
-| Orçamento de JavaScript | 113,4 kB de 120 na pior rota — **folga de 6,6 kB**, e agora **por calculadora** |
+| Orçamento de JavaScript | 118,2 kB de 120 na pior rota (rescisão) — folga de 1,8 kB, **por calculadora** |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
-- `/calculadora/salario-liquido` · `/calculadora/inss` · `/calculadora/irrf` · `/calculadora/juros-compostos`
+- `/calculadora/salario-liquido` · `/calculadora/rescisao-sem-justa-causa` · `/calculadora/inss` · `/calculadora/irrf` · `/calculadora/juros-compostos`
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -115,34 +116,38 @@ arquivo de rota. O caminho é:
 registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 > **O orçamento não é mais problema de quem entra depois.** Cada calculadora
-> paga o próprio pacote: a sua rota nova nasce em ~111 kB e as quatro existentes
-> não se mexem. Se `check:orcamento` reclamar, é da **sua** calculadora — não do
+> paga o próprio pacote: a rota nova nasce em ~113 kB e as existentes não se
+> mexem. Se `check:orcamento` reclamar, é da **sua** calculadora — não do
 > acúmulo das anteriores.
+>
+> A exceção é quando a calculadora nova traz dependência **compartilhada**:
+> CALC-002 acrescentou o campo de data e os parâmetros trabalhistas ao casco, e
+> isso subiu ~1,9 kB em TODAS as rotas. Vale medir antes e depois quando o
+> contrato crescer.
 
 ---
 
-## 4. Calculadoras pendentes — 71 de 75
+## 4. Calculadoras pendentes — 70 de 75
 
-Publicadas: **CALC-001, CALC-015, CALC-016, CALC-022**.
+Publicadas: **CALC-001, CALC-002, CALC-015, CALC-016, CALC-022**.
 
-### 4.1 O resto do v1 — 6 calculadoras, e são as mais valiosas
+### 4.1 O resto do v1 — 5 calculadoras, e são as mais valiosas
 
 Todas trabalhistas, todas reaproveitando os motores de INSS e IRRF que já
 existem. É o menor esforço marginal do catálogo inteiro.
 
 | ID | Calculadora | Nota |
 |---|---|---|
-| CALC-002 | Rescisão — demissão sem justa causa | A de maior busca do catálogo |
 | CALC-003 | Rescisão — pedido de demissão | |
 | CALC-004 | Férias (integrais, proporcionais, abono, ⅓) | |
 | CALC-005 | 13º salário (1ª e 2ª parcelas, proporcional) | **Ver §7.1: o §3º do Art. 3º-A** |
 | CALC-006 | Horas extras (50%, 100%, adicional noturno, DSR) | |
 | CALC-007 | FGTS — saldo acumulado e multa rescisória | `RN-023` exige aviso próprio |
 
-> **O que falta pesquisar em fonte oficial antes de começar:** as regras de
-> incidência de INSS e IRRF sobre cada verba rescisória. É onde as calculadoras
-> concorrentes mais divergem entre si. Ver §6.2 — o projeto irmão já levantou os
-> ponteiros, mas os valores têm de ser conferidos na fonte.
+> **A pesquisa de incidências está feita**, em fonte primária, e vale para
+> todas as cinco: `docs/19-incidencias-verbas-rescisorias.md`. Cada verba tem
+> resposta para INSS, IRRF e base do FGTS, com a norma transcrita. CALC-002 já
+> a consome e cita o fundamento de cada decisão na memória de cálculo.
 
 ### 4.2 v2 — 17 calculadoras
 
@@ -529,13 +534,15 @@ fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
 
 O que sobrou, em ordem:
 
-1. **Pesquisar a incidência de INSS e IRRF sobre verbas rescisórias** em fonte
-   oficial (§6.2). É o pré-requisito de CALC-002 a CALC-005, e é onde as
-   calculadoras concorrentes mais divergem entre si.
-2. **CALC-002 · rescisão sem justa causa.** Decidido construir apesar da
-   sobreposição — ver §6.4.
-3. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
-4. **Os 7 guias restantes** (§4.6).
+1. **CALC-003 · pedido de demissão.** É CALC-002 com três diferenças já
+   escritas em `03-functional-spec` §3.3, e a pesquisa de incidências já cobre.
+   Menor esforço marginal do catálogo inteiro.
+2. **CALC-004 e CALC-005** — férias e 13º. Mesmo motor, mesma pesquisa.
+3. **Reduzir o pacote da rota de rescisão**: 1,8 kB de folga. `datas.ts` já vai
+   no pedaço adiado; o que cresceu foi o casco, com o campo de data e os
+   parâmetros trabalhistas. Ver §7.6.
+4. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
+5. **Os 7 guias restantes** (§4.6).
 
 > **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
 > variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o

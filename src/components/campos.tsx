@@ -89,6 +89,29 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
     )
   }
 
+  if (campo.tipo === 'data') {
+    // `type="date"` e não campo mascarado: entrega o seletor nativo do sistema,
+    // que já é acessível por teclado e traduzido, e devolve sempre o formato
+    // ISO — o mesmo que `engine/datas.ts` lê e que viaja na URL. Máscara à mão
+    // significaria reimplementar calendário e ainda perder o leitor de tela.
+    return (
+      <div>
+        <Rotulo id={id} campo={campo} />
+        <input
+          id={id}
+          type="date"
+          value={typeof valor === 'string' ? valor : ''}
+          aria-describedby={idMensagem}
+          aria-invalid={erro ? true : undefined}
+          aria-required={campo.obrigatorio ? true : undefined}
+          onChange={(e) => onChange(e.target.value)}
+          className={CLASSE_ENTRADA}
+        />
+        <Mensagem id={idMensagem} {...(erro ? { erro } : {})} {...(campo.ajuda ? { ajuda: campo.ajuda } : {})} />
+      </div>
+    )
+  }
+
   if (campo.tipo === 'inteiro') {
     return (
       <div>
@@ -179,6 +202,16 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
 /** Mensagens de validação — texto final de `03-functional-spec` §1.4. */
 export function validar(campo: Campo, valor: number | string): string | undefined {
   if (campo.tipo === 'selecao') return undefined
+
+  if (campo.tipo === 'data') {
+    const texto = typeof valor === 'string' ? valor : ''
+    if (texto === '') {
+      return campo.obrigatorio ? 'Preencha este campo para ver o resultado.' : undefined
+    }
+    // O seletor nativo só produz forma ISO; texto fora dela chegou pela URL.
+    return /^\d{4}-\d{2}-\d{2}$/.test(texto) ? undefined : 'Informe uma data válida.'
+  }
+
   const n = typeof valor === 'number' ? valor : 0
 
   if (campo.obrigatorio && n === 0) return 'Preencha este campo para ver o resultado.'

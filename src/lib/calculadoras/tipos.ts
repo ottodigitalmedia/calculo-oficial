@@ -19,7 +19,20 @@ import type { Registro } from '../params/registry'
 // Campos
 // ---------------------------------------------------------------------------
 
-export type TipoCampo = 'monetario' | 'inteiro' | 'selecao' | 'percentual'
+/**
+ * `data` entrou em CALC-002, que é a primeira calculadora cuja entrada é um
+ * PERÍODO e não um valor. Como `selecao`, seu valor interno é texto — no
+ * formato ISO "AAAA-MM-DD", que é o que o motor lê em `engine/datas.ts` e o
+ * que o `<input type="date">` do navegador produz. Texto e não número porque
+ * data não tem unidade inteira natural, e inventar uma (dias desde uma época)
+ * tornaria a URL compartilhada ilegível.
+ */
+export type TipoCampo = 'monetario' | 'inteiro' | 'selecao' | 'percentual' | 'data'
+
+/** Campos cujo valor interno é texto, não número. */
+export function campoEhTexto(tipo: TipoCampo): boolean {
+  return tipo === 'selecao' || tipo === 'data'
+}
 
 export interface OpcaoSelecao {
   readonly valor: string

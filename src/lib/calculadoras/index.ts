@@ -9,11 +9,13 @@
 import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
+import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
 import { SALARIO_LIQUIDO } from './salario-liquido'
 import type { DefinicaoCalculadora } from './tipos'
 
 export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   SALARIO_LIQUIDO,
+  RESCISAO_SEM_JUSTA_CAUSA,
   INSS_MENSAL,
   IRRF_MENSAL,
   JUROS_COMPOSTOS,

@@ -48,6 +48,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './salario-liquido'
     ).then((m) => m.calcular),
+  'rescisao-sem-justa-causa': () =>
+    import(
+      /* webpackChunkName: "calc-rescisao-sem-justa-causa" */
+      /* webpackExports: ["calcular"] */
+      './rescisao-sem-justa-causa'
+    ).then((m) => m.calcular),
   inss: () =>
     import(
       /* webpackChunkName: "calc-inss" */

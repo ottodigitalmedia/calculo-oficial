@@ -41,6 +41,51 @@ export interface CitacaoParametro {
  * Os valores saem em centavos e basis points; a formatação em pt-BR é da
  * camada de apresentação (`C-M4`).
  */
+/**
+ * Fundamento normativo **sem valor numérico** — `MC-3`.
+ *
+ * Responde "esta verba sofre incidência?", não "quanto". A distinção não é
+ * acadêmica: `CitacaoParametro` exige vigência e id de parâmetro, e uma súmula
+ * não tem nem um nem outro. Forçá-la naquele formato produziria vigência
+ * inventada.
+ *
+ * Nasceu em CALC-002, onde metade das etapas é decisão de incidência: o aviso
+ * prévio indenizado não sofre contribuição previdenciária por força do Tema 478
+ * do STJ, e as férias indenizadas são isentas de imposto de renda por força da
+ * Súmula 386. Sem este campo, a memória diria "não incide" sem dizer por quê —
+ * e é exatamente isso que o produto existe para não fazer.
+ *
+ * Os objetos vêm de `lib/params/data/fontes.ts`, nunca escritos no motor:
+ * `CLAUDE.md` regra 1 exige que toda referência normativa tenha URL oficial e
+ * viva em `lib/params/`.
+ */
+export interface CitacaoFundamento {
+  readonly norma: string
+  readonly dispositivo?: string
+  readonly url: string
+}
+
+/**
+ * Constrói a citação a partir de uma `Fonte` de `lib/params/`.
+ *
+ * O tipo de entrada é estrutural de propósito: o motor não importa `Fonte`
+ * como tipo para não amarrar `engine/` ao formato de `params/` além do que
+ * `registry.ts` já exige. `exactOptionalPropertyTypes` está ligado neste
+ * projeto, então `dispositivo` precisa ser **omitido**, não posto como
+ * `undefined` — daí o espalhamento condicional em vez da atribuição direta.
+ */
+export function fundamentar(fonte: {
+  readonly norma: string
+  readonly dispositivo?: string | undefined
+  readonly url: string
+}): CitacaoFundamento {
+  return {
+    norma: fonte.norma,
+    ...(fonte.dispositivo === undefined ? {} : { dispositivo: fonte.dispositivo }),
+    url: fonte.url,
+  }
+}
+
 export interface Etapa {
   /** Nome em linguagem comum. Ex.: "Contribuição — 2ª faixa". */
   readonly rotulo: string
@@ -49,6 +94,8 @@ export interface Etapa {
   readonly resultado: Centavos
   /** Presente quando a etapa usa parâmetro legal. */
   readonly parametro?: CitacaoParametro
+  /** Presente quando a etapa aplica regra normativa sem valor próprio. */
+  readonly fundamento?: CitacaoFundamento
   /** Explica uma escolha do motor. Usado por `RN-012`. */
   readonly justificativa?: string
 }
@@ -100,6 +147,34 @@ export class ConstrutorDeTraco {
   /** Registra uma etapa simples, sem parâmetro legal. */
   passo(rotulo: string, formula: string, resultado: Centavos): Centavos {
     this.etapas.push({ rotulo, formula, resultado })
+    return resultado
+  }
+
+  /**
+   * Registra uma etapa cuja regra vem da norma, mas sem valor próprio.
+   *
+   * É o caso de toda decisão de incidência: "esta verba não sofre INSS porque
+   * o Tema 478 do STJ assim decidiu". A conta é trivial — o valor é zero ou é
+   * o próprio principal —, e o que precisa ficar visível é o fundamento.
+   */
+  passoComFundamento(
+    rotulo: string,
+    formula: string,
+    resultado: Centavos,
+    fundamento: CitacaoFundamento,
+    justificativa?: string,
+  ): Centavos {
+    this.etapas.push({
+      rotulo,
+      formula,
+      resultado,
+      fundamento: {
+        norma: fundamento.norma,
+        ...(fundamento.dispositivo === undefined ? {} : { dispositivo: fundamento.dispositivo }),
+        url: fundamento.url,
+      },
+      ...(justificativa === undefined ? {} : { justificativa }),
+    })
     return resultado
   }
 

@@ -88,6 +88,65 @@ camada de texto e o Anexo II confere com as quatro faixas cadastradas.
 > link que use `HEAD` cru vai reportar as duas fontes como quebradas, e elas não
 > estão.
 
+### Adicionado · CALC-002 · rescisão sem justa causa
+
+**A de maior busca do catálogo**, e a quinta publicada. O risco dela nunca foi
+a aritmética: é decidir, verba a verba, se incide contribuição previdenciária,
+imposto de renda e FGTS. É onde as calculadoras concorrentes mais divergem, e
+`CLAUDE.md` proíbe copiar de qualquer uma.
+
+Toda decisão de incidência foi lida no texto original e está transcrita em
+`docs/19-incidencias-verbas-rescisorias.md`. **A memória de cálculo cita o
+fundamento de cada uma, com link** — foi preciso um campo novo no traço,
+`fundamento`, porque súmula e tese não têm vigência nem valor numérico e não
+cabiam em `CitacaoParametro`.
+
+| Verba | INSS | IRRF | Fundamento |
+|---|---|---|---|
+| Saldo de salário, 13º | incide | tributável | regra geral |
+| Aviso prévio indenizado | **não incide** | isento | STJ, Tema 478 · RIR art. 35 |
+| Férias indenizadas + ⅓ | não incide | **isento** | Lei 8.212 art. 28 §9º "d" · Súmula 386 do STJ |
+| Multa de 40% | não incide | isento | Lei 8.212 art. 28 §9º "e.1" · RIR art. 35 |
+
+**Três achados que mudam o número:**
+
+1. **O INSS do 13º é apurado em separado** (RPS, art. 216, §1º e §3º). Somá-lo
+   ao saldo de salário empurraria a base para faixas superiores.
+2. **A projeção do aviso indenizado não entra na base da multa do FGTS**
+   (TST, OJ-SDI1 42, II), embora o depósito de 8% incida sobre ele
+   (Súmula 305 do TST). Quem soma a projeção paga a mais.
+3. **A divergência do aviso prévio é declarada, não escondida.** A letra da Lei
+   nº 8.212/1991 não o exclui — a alínea que fazia isso foi substituída em 1997.
+   O cálculo segue a tese vinculante do STJ e diz isso na memória.
+
+**O molde cresceu duas vezes, sem ser contornado** (`ESTADO` §7.4):
+
+- `TipoCampo` ganhou `data`. É a primeira calculadora cuja entrada é um
+  **período**, não um valor. Valor interno em texto ISO, `<input type="date">`
+  nativo — que já é acessível e traduzido.
+- `Etapa` ganhou `fundamento`, para regra normativa sem valor próprio.
+
+**`engine/datas.ts` não usa `Date`.** A forma "só data" é interpretada como UTC
+pela especificação, e qualquer método local desloca o dia em fuso negativo — o
+do Brasil inteiro. Um contrato encerrado em 1º de março viraria 28 de fevereiro
+e o mês sumiria da contagem de avos, sem erro visível e sem falhar em CI
+rodando em UTC.
+
+**Casos-ouro: origem declarada.** Não existe exemplo oficial resolvido de
+rescisão publicado por órgão público. Os 33 casos são **derivados da norma**,
+com o dispositivo citado ao lado de cada valor esperado — nenhum número veio de
+calculadora concorrente. Onde depende de INSS ou IRRF, quem calcula é o motor
+já conferido contra os exemplos da Receita.
+
+O portão de cobertura reprovou duas vezes antes de passar, e estava certo:
+`datas.ts` entrou com 67% de ramos, e é o módulo onde um defeito desloca um mês
+inteiro em silêncio. Foram 38 testes só de fronteira de data — 14 contra 15
+dias, véspera de aniversário, 29 de fevereiro, a regra secular do bissexto.
+
+Orçamento: a rota de rescisão fica em **118,2 kB de 120**. As demais subiram
+~1,9 kB porque o campo de data e os parâmetros trabalhistas entraram no casco
+compartilhado.
+
 ### Adicionado · `www` passou a ser servido, e redireciona para o ápice
 
 `13-deployment` §7 pedia "escolher um e manter", e `www.calculoficial.com.br`

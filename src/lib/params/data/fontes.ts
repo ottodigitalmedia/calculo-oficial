@@ -82,6 +82,125 @@ export const LEI_9250_ART_3A: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+// ---------------------------------------------------------------------------
+// Verbas rescisórias — pesquisa registrada em `docs/19-incidencias-verbas-rescisorias.md`
+// ---------------------------------------------------------------------------
+
+export const LEI_8036_ART_15: Fonte = {
+  id: 'lei-8036-1990-art-15',
+  norma: 'Lei nº 8.036, de 11 de maio de 1990, com a redação da Lei nº 14.438, de 2022',
+  dispositivo: 'Art. 15, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8036consol.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_8036_ART_18: Fonte = {
+  id: 'lei-8036-1990-art-18',
+  norma: 'Lei nº 8.036, de 11 de maio de 1990, com a redação da Lei nº 9.491, de 1997',
+  dispositivo: 'Art. 18, § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8036consol.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_12506_2011: Fonte = {
+  id: 'lei-12506-2011',
+  norma: 'Lei nº 12.506, de 11 de outubro de 2011',
+  dispositivo: 'Art. 1º e parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12506.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Fundamentos que **não são constante numérica** — respondem "esta verba sofre
+ * incidência?", não "quanto".
+ *
+ * Vivem aqui, e não no motor, porque `CLAUDE.md` regra 1 exige que toda
+ * referência normativa tenha URL oficial e fique em `lib/params/`. São citados
+ * pelo campo `fundamento` de uma etapa do traço, que a memória de cálculo
+ * renderiza como link — a alternativa seria o motor carregar nome de norma e
+ * URL escritos à mão, que é exatamente o que a regra 1 impede.
+ */
+
+export const CLT_ART_146: Fonte = {
+  id: 'clt-art-146',
+  norma: 'Consolidação das Leis do Trabalho, com a redação do Decreto-lei nº 1.535, de 1977',
+  dispositivo: 'Art. 146, parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const CLT_ART_487: Fonte = {
+  id: 'clt-art-487',
+  norma: 'Consolidação das Leis do Trabalho',
+  dispositivo: 'Art. 487, § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_4090_ART_1: Fonte = {
+  id: 'lei-4090-1962-art-1',
+  norma: 'Lei nº 4.090, de 13 de julho de 1962',
+  dispositivo: 'Art. 1º, § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l4090.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_8212_ART_28: Fonte = {
+  id: 'lei-8212-1991-art-28',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991, com a redação da Lei nº 9.528, de 1997',
+  dispositivo: 'Art. 28, § 9º, alíneas "d" e "e"',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const RPS_ART_216: Fonte = {
+  id: 'decreto-3048-1999-art-216',
+  norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',
+  dispositivo: 'Art. 216, § 1º e § 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto/d3048compilado.htm',
+  orgao: 'Presidência da República',
+}
+
+export const RIR_ART_35: Fonte = {
+  id: 'decreto-9580-2018-art-35',
+  norma: 'Decreto nº 9.580, de 22 de novembro de 2018 — Regulamento do Imposto sobre a Renda',
+  dispositivo: 'Art. 35, III, "c" (Lei nº 7.713/1988, art. 6º, V)',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/decreto/d9580.htm',
+  orgao: 'Presidência da República',
+}
+
+export const STJ_SUMULA_386: Fonte = {
+  id: 'stj-sumula-386',
+  norma: 'Súmula 386 do Superior Tribunal de Justiça',
+  dispositivo: 'Primeira Seção, 26/08/2009, DJe 01/09/2009',
+  url: 'https://www.stj.jus.br/docs_internet/SumulasSTJ.pdf',
+  orgao: 'Superior Tribunal de Justiça',
+}
+
+export const STJ_TEMA_478: Fonte = {
+  id: 'stj-tema-478',
+  norma: 'Tema Repetitivo 478 do Superior Tribunal de Justiça (REsp 1.230.957/RS)',
+  dispositivo: 'Primeira Seção, 26/02/2014; tese mantida em 13/05/2026',
+  url: 'https://processo.stj.jus.br/repetitivos/temas_repetitivos/pesquisa.jsp?novaConsulta=true&tipo_pesquisa=T&cod_tema_inicial=478&cod_tema_final=478',
+  orgao: 'Superior Tribunal de Justiça',
+}
+
+export const TST_SUMULA_305: Fonte = {
+  id: 'tst-sumula-305',
+  norma: 'Súmula 305 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 121/2003, DJ 19, 20 e 21.11.2003',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+export const TST_OJ_SDI1_42: Fonte = {
+  id: 'tst-oj-sdi1-42',
+  norma: 'Orientação Jurisprudencial nº 42, II, da SBDI-I do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 129/2005, DJ 20, 22 e 25.04.2005',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -89,4 +208,17 @@ export const FONTES: readonly Fonte[] = [
   LEI_14848_2024,
   LEI_15191_2025,
   LEI_9250_ART_3A,
+  LEI_8036_ART_15,
+  LEI_8036_ART_18,
+  LEI_12506_2011,
+  CLT_ART_146,
+  CLT_ART_487,
+  LEI_4090_ART_1,
+  LEI_8212_ART_28,
+  RPS_ART_216,
+  RIR_ART_35,
+  STJ_SUMULA_386,
+  STJ_TEMA_478,
+  TST_SUMULA_305,
+  TST_OJ_SDI1_42,
 ]

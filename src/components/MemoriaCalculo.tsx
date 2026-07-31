@@ -23,10 +23,13 @@ import type { Traco } from '@/lib/engine/traco'
 export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
   const [aberta, setAberta] = useState(false)
 
+  // Parâmetro E fundamento: numa rescisão, metade das normas aplicadas decide
+  // incidência e não tem valor numérico. Listar só as do parâmetro deixaria o
+  // rodapé omitindo justamente as que o leitor mais desconfia.
   const normas = [
     ...new Set(
       traco.etapas
-        .map((e) => e.parametro?.norma)
+        .flatMap((e) => [e.parametro?.norma, e.fundamento?.norma])
         .filter((n): n is string => typeof n === 'string'),
     ),
   ]
@@ -92,6 +95,25 @@ export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
                     >
                       {etapa.parametro.norma}
                       {etapa.parametro.dispositivo ? `, ${etapa.parametro.dispositivo}` : ''}
+                    </a>{' '}
+                    <span aria-hidden>↗</span>
+                  </p>
+                ) : null}
+
+                {/* MC-3, para regra normativa sem valor próprio — decisão de
+                    incidência. Sem isto a memória diria "não incide" sem dizer
+                    por quê, que é o oposto do que o produto se propõe. */}
+                {etapa.fundamento ? (
+                  <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                    Fundamento:{' '}
+                    <a
+                      href={etapa.fundamento.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--color-brand)] underline"
+                    >
+                      {etapa.fundamento.norma}
+                      {etapa.fundamento.dispositivo ? `, ${etapa.fundamento.dispositivo}` : ''}
                     </a>{' '}
                     <span aria-hidden>↗</span>
                   </p>

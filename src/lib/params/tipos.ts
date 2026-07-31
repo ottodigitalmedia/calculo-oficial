@@ -52,6 +52,12 @@ export type OrgaoEmissor =
   | 'Ministério da Fazenda'
   | 'Ministério do Trabalho e Emprego'
   | 'Receita Federal do Brasil'
+  // Tribunais superiores entraram em CALC-002. Não emitem parâmetro numérico:
+  // emitem **fundamento de incidência** — a tese que decide se uma verba sofre
+  // contribuição ou imposto. `schema.ts` já admitia `jus.br` como domínio
+  // oficial justamente por isso; faltava o órgão no tipo.
+  | 'Superior Tribunal de Justiça'
+  | 'Tribunal Superior do Trabalho'
 
 /**
  * Origem normativa de um parâmetro. Nenhum parâmetro existe sem fonte
