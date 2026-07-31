@@ -24,6 +24,9 @@ export function Cabecalho() {
           <Link href="/#como-funciona" className="hover:text-[var(--color-brand)]">
             Como funciona
           </Link>
+          <Link href="/guias" className="hover:text-[var(--color-brand)]">
+            Guias
+          </Link>
           <Link href="/aviso-legal" className="hover:text-[var(--color-brand)]">
             Aviso legal
           </Link>

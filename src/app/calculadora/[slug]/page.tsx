@@ -1,8 +1,17 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { Calculadora } from '@/components/Calculadora'
+import {
+  DadosEstruturados,
+  dadosDaCalculadora,
+  dadosDeFaq,
+  dadosDeMigalhas,
+} from '@/components/DadosEstruturados'
+import { IconeSeta } from '@/components/Marca'
 import { CALCULADORAS, porSlug } from '@/lib/calculadoras'
+import { guiasDaCalculadora } from '@/lib/guias'
 
 /**
  * EP-004 — `/calculadora/{slug}`.
@@ -32,6 +41,12 @@ export async function generateMetadata({
     title: c.nome,
     description: c.descricaoSeo,
     alternates: { canonical: `/calculadora/${c.slug}` },
+    openGraph: {
+      type: 'website',
+      title: `${c.nome} · Cálculo Oficial`,
+      description: c.descricaoSeo,
+      url: `/calculadora/${c.slug}`,
+    },
   }
 }
 
@@ -44,9 +59,41 @@ export default async function PaginaCalculadora({
   const definicao = porSlug(slug)
   if (!definicao) notFound()
 
+  const relacionadas = definicao.relacionadas.map(porSlug).filter((c) => c !== undefined)
+  const guias = guiasDaCalculadora(definicao.slug)
+
   return (
     <main id="conteudo" className="mx-auto max-w-5xl px-5 py-10">
-      <header>
+      {/* O `FAQPage` sai do MESMO array que renderiza as perguntas abaixo, e o
+          `WebApplication` do mesmo objeto que dá título à página. Marcar o que
+          a página não mostra é a causa mais comum de penalização por dado
+          estruturado — aqui não há como divergir. */}
+      <DadosEstruturados
+        dados={dadosDaCalculadora({
+          nome: definicao.nome,
+          descricao: definicao.descricaoSeo,
+          caminho: `/calculadora/${definicao.slug}`,
+        })}
+      />
+      <DadosEstruturados dados={dadosDeFaq(definicao.faq)} />
+      <DadosEstruturados
+        dados={dadosDeMigalhas([
+          { nome: 'Início', caminho: '/' },
+          { nome: definicao.nome, caminho: `/calculadora/${definicao.slug}` },
+        ])}
+      />
+
+      <nav aria-label="Trilha de navegação" className="text-sm text-[var(--color-text-muted)]">
+        <Link href="/" className="hover:underline">
+          Início
+        </Link>
+        <span aria-hidden="true"> › </span>
+        <Link href="/#calculadoras" className="hover:underline">
+          Calculadoras
+        </Link>
+      </nav>
+
+      <header className="mt-4">
         <h1 className="text-3xl font-bold tracking-tight text-[var(--color-navy)] md:text-4xl">
           {definicao.nome}
         </h1>
@@ -75,6 +122,57 @@ export default async function PaginaCalculadora({
         </dl>
       </section>
 
+      {guias.length > 0 ? (
+        <section className="mt-12">
+          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-navy)]">
+            Entenda a conta
+          </h2>
+          <ul className="mt-4 space-y-3">
+            {guias.map((guia) => (
+              <li key={guia.slug}>
+                <Link
+                  href={`/guia/${guia.slug}`}
+                  className="block rounded-xl border border-[var(--color-border)] p-5 hover:border-[var(--color-brand)]"
+                >
+                  <span className="font-semibold text-[var(--color-navy)]">{guia.titulo}</span>
+                  <span className="mt-1 block text-sm text-[var(--color-text-muted)]">
+                    {guia.subtitulo}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {/* Critério de aceite do T-104 — "quando rolo até o fim, vejo as
+          relacionadas". As relacionadas estavam declaradas nas quatro
+          calculadoras desde então e não eram renderizadas em lugar nenhum. */}
+      {relacionadas.length > 0 ? (
+        <section className="mt-12">
+          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-navy)]">
+            Calculadoras relacionadas
+          </h2>
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {relacionadas.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/calculadora/${c.slug}`}
+                  className="flex h-full flex-col rounded-xl border border-[var(--color-border)] p-5 hover:border-[var(--color-brand)]"
+                >
+                  <span className="font-semibold text-[var(--color-navy)]">{c.nome}</span>
+                  <span className="mt-1 text-sm text-[var(--color-text-muted)]">
+                    {c.linhaDeContexto}
+                  </span>
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-brand)]">
+                    Calcular <IconeSeta />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </main>
   )
 }

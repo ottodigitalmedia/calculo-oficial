@@ -190,6 +190,9 @@ Executados em um navegador desktop e um mobile, com e sem consentimento de anún
 | TC-049 | LCP ≤ 2,0s | `RNF-001` | Bloqueia deploy |
 | TC-050 | CLS ≤ 0,05 **com anúncio carregado** | `RNF-002` | Bloqueia deploy |
 | TC-051 | JavaScript por rota ≤ 120 KB comprimido | `RNF-004` | Bloqueia deploy |
+
+**TC-051 passou a medir no T-106.** Do T-003 até o T-105 o passo era um `echo` justificado por "ainda não há rota de calculadora" — havia desde o T-103, e o `echo` continuou passando. `scripts/verificar-orcamento.ts` soma o JavaScript comprimido de cada rota a partir do manifesto do build e falha se uma rota de calculadora ultrapassar o teto. Avisa, sem falhar, quando a folga cai abaixo de 8 kB.
+
 | TC-052 | Cálculo ≤ 50ms | `RNF-005` | Alerta |
 | TC-053 | Funciona integralmente com terceiros bloqueados | `RNF-007` | Bloqueia deploy |
 

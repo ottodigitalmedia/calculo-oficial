@@ -1,0 +1,53 @@
+/**
+ * Índice leve do catálogo — só o que a busca da home precisa exibir.
+ *
+ * **Por que um segundo arquivo.** `index.ts` importa as quatro definições, e
+ * cada definição importa o motor e, por ele, as tabelas legais. A busca da home
+ * é componente de cliente: importar dali fazia a página inicial baixar o motor
+ * de cálculo inteiro e os parâmetros de INSS e IRRF para filtrar uma lista de
+ * quatro nomes. Eram 11 kB comprimidos gastos em nada, com `RNF-004` medindo
+ * 1,8 kB de folga na rota vizinha.
+ *
+ * **O risco que isso cria, e como ele é contido.** Duas listas do mesmo
+ * conjunto divergem — foi o que aconteceu com o rodapé, que ficou anunciando
+ * "em breve" três calculadoras já publicadas. Aqui a divergência é impossível
+ * de passar: `tests/unit/catalogo.test.ts` compara este índice com as
+ * definições campo a campo e falha se um nome, um slug ou uma linha de contexto
+ * sair de sincronia.
+ *
+ * Não é a solução mais elegante — a elegante seria a definição separar
+ * metadado de cálculo. É a que custa um arquivo e um teste, em vez de refazer
+ * o molde.
+ */
+
+export interface ItemDoCatalogo {
+  readonly slug: string
+  readonly nome: string
+  readonly linhaDeContexto: string
+}
+
+export const CATALOGO: readonly ItemDoCatalogo[] = [
+  {
+    slug: 'salario-liquido',
+    nome: 'Salário líquido',
+    linhaDeContexto:
+      'Quanto sobra do seu salário depois dos descontos legais — com a conta à mostra.',
+  },
+  {
+    slug: 'inss',
+    nome: 'INSS mensal',
+    linhaDeContexto:
+      'Quanto é descontado de contribuição previdenciária — faixa a faixa, com a alíquota efetiva.',
+  },
+  {
+    slug: 'irrf',
+    nome: 'Imposto de Renda na fonte',
+    linhaDeContexto:
+      'Quanto é retido de IRRF no mês — com a escolha entre deduções legais e desconto simplificado à mostra.',
+  },
+  {
+    slug: 'juros-compostos',
+    nome: 'Juros compostos',
+    linhaDeContexto: 'Quanto um valor rende ao longo do tempo, com aportes mensais.',
+  },
+]

@@ -50,6 +50,11 @@ Este documento especifica o que de fato existe:
 | EP-011 | `/cookies` | Estática | Sim |
 | EP-012 | `/aviso-legal` | Estática | Sim |
 | EP-013 | `/sitemap.xml` | Gerada no build | — |
+
+**EP-005, EP-006 e EP-013 desde o T-106.** As rotas do sitemap são derivadas dos registros de calculadoras e de guias (`lib/seo.ts`), nunca escritas à mão: uma lista paralela envelhece, e uma calculadora publicada fora do sitemap é invisível para o único canal de aquisição do produto. `lastModified` só aparece onde há data real de revisão — carimbar a data do build em tudo faz o site alegar, a cada deploy, que todas as páginas mudaram, e o buscador passa a ignorar o campo.
+
+**EP-002, EP-003, EP-007 e EP-008 não existem ainda.** Categorias, sobre e contato ficaram fora do lançamento por `ADR-008`. Não estão no sitemap nem são linkadas.
+
 | EP-014 | `/robots.txt` | Estática | — |
 | EP-015 | `/404` | Estática | Não |
 | EP-016 | `/api/health` | Dinâmica | **Não** |

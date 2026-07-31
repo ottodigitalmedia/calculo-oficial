@@ -28,7 +28,9 @@ Tudo em `docs/`. Comece por `docs/README.md`.
 
 ## Stack
 
-Next.js App Router · TypeScript · Tailwind · shadcn/ui · MDX · Vitest · Playwright · Docker · VPS com EasyPanel · GitHub Actions.
+Next.js App Router · TypeScript · Tailwind · shadcn/ui · Vitest · Playwright · Docker · VPS com EasyPanel · GitHub Actions.
+
+Guias são dado declarativo em `lib/guias/`, não MDX — `ADR-009`. O motivo é a regra 1: valor legal na prosa de um guia seria constante legal fora de `lib/params/`.
 
 Sem banco na aplicação. Sem ORM. Sem autenticação. Sem IA.
 
@@ -38,10 +40,11 @@ Sem banco na aplicação. Sem ORM. Sem autenticação. Sem IA.
 src/
 ├── app/            rotas
 ├── components/
-├── content/        MDX: guias e FAQ
+├── content/        reservado — ver ADR-009
 └── lib/
     ├── engine/     motor de cálculo — puro, zero dependência
     ├── params/     parâmetros legais por vigência
+    ├── guias/      guias como dado declarativo (ADR-009)
     └── format/     formatação pt-BR
 tests/
 ├── golden/         casos-ouro
@@ -65,6 +68,7 @@ Cada uma deriva de uma decisão registrada. Quebrar qualquer uma delas quebra um
 | 8 | **Nunca escrever "você tem direito a".** Sempre "estimativa com base nos dados informados" | `RN-028` |
 | 9 | **Anúncio nunca acima do resultado nem dentro da memória de cálculo** | `RF-009`, MC-5 |
 | 10 | **Caso-ouro nunca vem de outro site.** Só fonte oficial, exemplo oficial ou documento real | CO-1 |
+| 11 | **Nenhum valor legal escrito na prosa de guia.** Entra por bloco que lê `lib/params/` | `ADR-009` G-1 |
 
 ## Nunca faça
 
@@ -88,6 +92,7 @@ npm run test:golden      # só casos-ouro
 npm run test:e2e         # ponta a ponta
 npm run test:leak        # não vazamento (TC-040 a TC-043)
 npm run lint             # inclui BV-10 e BV-11
+npm run check:orcamento  # TC-051 — JavaScript por rota ≤ 120 KB comprimido
 npm run build
 npm run check            # tudo acima, na ordem do pipeline
 ```

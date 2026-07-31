@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
 import { IconeSeta } from '@/components/Marca'
-import { CALCULADORAS } from '@/lib/calculadoras'
+import { CATALOGO } from '@/lib/calculadoras/indice'
 
 /**
  * Busca local no catálogo — `RF-007`, `03-functional-spec` §2.1.
@@ -12,6 +12,10 @@ import { CALCULADORAS } from '@/lib/calculadoras'
  * **Sem rede.** O catálogo inteiro já veio no pacote da página; filtrar é
  * trabalho de memória. Além de instantâneo, isso mantém a promessa: o termo
  * que a pessoa digita não sai do navegador.
+ *
+ * Importa `calculadoras/indice`, e não o registro completo: o registro traz as
+ * funções de cálculo e, por elas, o motor e as tabelas legais. Numa página que
+ * só filtra nomes, isso custava 11 kB comprimidos ao visitante da home.
  *
  * `> ⚠️ Quando a análise de uso entrar (adiada por ADR-008), instrumentar aqui
  * o evento `busca_sem_resultado` — é a única exceção de RN-031.1 e a
@@ -39,8 +43,8 @@ export function BuscaCatalogo() {
 
   const resultados = useMemo(() => {
     const t = normalizar(termo)
-    if (t === '') return CALCULADORAS
-    return CALCULADORAS.filter((c) => {
+    if (t === '') return CATALOGO
+    return CATALOGO.filter((c) => {
       const alvo = normalizar(`${c.nome} ${c.linhaDeContexto} ${(SINONIMOS[c.slug] ?? []).join(' ')}`)
       return alvo.includes(t)
     })

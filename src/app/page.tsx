@@ -1,5 +1,8 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { DadosEstruturados, dadosDoSite } from '@/components/DadosEstruturados'
+import { GUIAS } from '@/lib/guias'
 import {
   IconeCheque,
   IconeFonte,
@@ -9,6 +12,15 @@ import {
   IconeSeta,
 } from '@/components/Marca'
 import { BuscaCatalogo } from '@/components/BuscaCatalogo'
+
+/**
+ * A canônica da home precisa ser declarada explicitamente. Sem ela, a página
+ * fica sem `rel=canonical`, e `/` acaba competindo com qualquer variante que
+ * o buscador descubra — `?utm_source=…`, por exemplo.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 /**
  * Página inicial — `03-functional-spec` §2.1, com a estrutura da referência de
@@ -88,6 +100,12 @@ const PROMESSAS = [
 export default function Home() {
   return (
     <main id="conteudo">
+      <DadosEstruturados
+        dados={dadosDoSite(
+          'Calculadoras trabalhistas, tributárias e financeiras com memória de cálculo auditável: passo a passo, parâmetro legal, vigência e link para a norma.',
+        )}
+      />
+
       {/* -------------------------------------------------------- herói -- */}
       <section className="bg-[var(--color-surface-tint)]">
         <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
@@ -205,8 +223,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* -------------------------------------------------------- guias -- */}
+      <section id="guias" className="bg-[var(--color-surface-tint)]">
+        <div className="mx-auto max-w-6xl px-5 py-16">
+          <h2 className="text-3xl font-bold tracking-tight text-[var(--color-navy)]">Guias</h2>
+          <p className="mt-2 text-[var(--color-text-muted)]">
+            Entender a conta é o que permite conferir o resultado.
+          </p>
+
+          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {GUIAS.map((guia) => (
+              <li key={guia.slug}>
+                <Link
+                  href={`/guia/${guia.slug}`}
+                  className="flex h-full flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 hover:border-[var(--color-brand)]"
+                >
+                  <h3 className="font-semibold text-[var(--color-navy)]">{guia.titulo}</h3>
+                  <p className="mt-2 text-sm text-[var(--color-text-muted)]">{guia.subtitulo}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-brand)]">
+                    Ler o guia <IconeSeta />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ------------------------------------------------------- chamada - */}
-      <section className="mx-auto max-w-6xl px-5 pb-4">
+      <section className="mx-auto mt-16 max-w-6xl px-5 pb-4">
         <div className="rounded-2xl bg-[var(--color-navy)] px-8 py-12 text-[var(--color-text-inverse)] md:px-12">
           <h2 className="max-w-lg text-3xl font-bold tracking-tight">
             Confira seu holerite em menos de um minuto.

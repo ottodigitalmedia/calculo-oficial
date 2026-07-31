@@ -13,6 +13,7 @@
     "start": "node scripts/serve-standalone.mjs",
     "validate:params": "tsx scripts/validate-params.ts",
     "validate:commits": "tsx scripts/validate-commit-msg.ts",
+    "check:orcamento": "tsx scripts/verificar-orcamento.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
@@ -20,7 +21,7 @@
     "test:e2e": "playwright test --config=playwright.config.ts --pass-with-no-tests",
     "test:leak": "playwright test --config=playwright.leak.config.ts --pass-with-no-tests",
     "audit:deps": "npm audit --audit-level=high",
-    "check": "npm run validate:params && npm run typecheck && npm run lint && npm run test:coverage && npm run audit:deps && npm run build && npm run test:e2e && npm run test:leak",
+    "check": "npm run validate:params && npm run typecheck && npm run lint && npm run test:coverage && npm run audit:deps && npm run build && npm run check:orcamento && npm run test:e2e && npm run test:leak",
     "test:coverage": "vitest run --coverage"
   },
   "//overrides": "Versões transitivas fixadas para eliminar vulnerabilidade conhecida sem downgrade de framework (07-security §8). Cada entrada é uma correção publicada dentro da mesma major — não é supressão de alerta. Reavaliar a cada `npm run audit:deps`: quando o pacote pai passar a resolver a versão corrigida sozinho, a entrada sai daqui.",

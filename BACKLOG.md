@@ -24,6 +24,8 @@
 | ✅ | T-003 | Pipeline de integração e entrega |
 | ✅ | T-005 | Tipos e aritmética monetária em centavos |
 | ✅ | T-006 | Modelo e carregador de parâmetros por vigência |
+| ✅ | T-101 a T-105 | Parâmetros, motores, molde, quatro calculadoras, busca e permalink |
+| ✅ | T-106 | SEO técnico, três guias e orçamento de performance |
 
 T-004 (VPS, TLS) foi absorvido por **T-108**. T-007 a T-040 foram substituídos
 pelos tickets abaixo.
@@ -127,15 +129,31 @@ depois do lançamento.
 
 ---
 
-## T-106 · SEO técnico e 3 guias · 1 dia
+## ✅ T-106 · SEO técnico e 3 guias · 1 dia
 
-- **Dado** cada rota, **quando** inspeciono, **então** há título, descrição e canônica próprios
-- **Dado** o sitemap, **quando** consulto, **então** todas as rotas indexáveis estão nele e nenhuma com query
-- **Dado** os guias, **quando** leio, **então** explicam o conceito em linguagem comum e conduzem à calculadora
-- **Dado** qualquer texto, **quando** leio, **então** não há linguagem prescritiva de direito (`RN-028`)
+- [x] **Dado** cada rota, **quando** inspeciono, **então** há título, descrição e canônica próprios
+- [x] **Dado** o sitemap, **quando** consulto, **então** todas as rotas indexáveis estão nele e nenhuma com query
+- [x] **Dado** os guias, **quando** leio, **então** explicam o conceito em linguagem comum e conduzem à calculadora
+- [x] **Dado** qualquer texto, **quando** leio, **então** não há linguagem prescritiva de direito (`RN-028`)
 
 **Guias:** como o INSS é calculado · imposto de renda na folha · por que a
 diferença entre bruto e líquido surpreende.
+
+**Entregue além do combinado, e por quê:**
+
+- `ADR-009` — guia é dado declarativo, não MDX. Valor legal na prosa seria
+  constante legal fora de `lib/params/`, e o guia passaria a envelhecer em
+  silêncio a cada portaria nova. Verificado por teste (regra G-1).
+- **TC-051 passou a medir de verdade.** Era um `echo` desde o T-003, com a
+  justificativa de que não havia rota a medir. Havia desde o T-103.
+- **`relacionadas` renderizado.** Critério de aceite do T-104 que ficou por
+  fazer: as quatro calculadoras declaravam relacionadas e nenhuma página as
+  exibia.
+- **Rodapé corrigido.** Anunciava "em breve" INSS, IRRF e juros compostos, as
+  três publicadas no T-104. Passou a derivar do registro, e um teste impede a
+  divergência de voltar.
+- **Home 7,6 kB mais leve.** A busca importava o registro completo, e com ele o
+  motor e as tabelas legais, para filtrar quatro nomes.
 
 ---
 

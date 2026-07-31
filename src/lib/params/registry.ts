@@ -19,6 +19,7 @@ import type {
   Parametro,
   ResultadoVigencia,
   Vigencia,
+  VigenciaResolvida,
 } from './tipos'
 
 interface IndiceDeParametro {
@@ -50,6 +51,17 @@ export interface Registro {
    * um ano e o cálculo usar outro.
    */
   anosDisponiveis(parametrosIds: readonly string[]): readonly number[]
+  /**
+   * Vigência mais recente cadastrada de um parâmetro — `ADR-009` regra G-4.
+   *
+   * É o que os guias exibem. Determinística de propósito: resolver pela data
+   * do build faria dois builds do mesmo commit produzirem HTML diferente, e
+   * um guia que muda sozinho na virada do ano é um guia que ninguém consegue
+   * conferir contra a fonte.
+   *
+   * `null` se o parâmetro não existe ou não tem vigência.
+   */
+  maisRecente(parametroId: string): VigenciaResolvida | null
   readonly parametros: readonly Parametro[]
 }
 
@@ -173,6 +185,18 @@ export function construirRegistro(...conjuntos: readonly ConjuntoDeParametros[])
       }
 
       return { ok: true, resolvida: { parametro: indice.parametro, vigencia, fonte } }
+    },
+
+    maisRecente(parametroId) {
+      const indice = indices.get(parametroId)
+      if (!indice) return null
+      const ultima = indice.vigencias[indice.vigencias.length - 1]
+      if (!ultima) return null
+      const fonte = fontes.get(ultima.fonteId)
+      // Mesma razão de `resolver`: RN-029 exige a fonte junto do valor, então
+      // devolver o valor sem ela seria pior que devolver nada.
+      if (!fonte) return null
+      return { parametro: indice.parametro, vigencia: ultima, fonte }
     },
 
     anosDisponiveis(parametrosIds) {

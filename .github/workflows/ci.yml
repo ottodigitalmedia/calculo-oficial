@@ -122,12 +122,14 @@ jobs:
         run: npm run build
 
       # --- 8. Orçamento de performance (TC-051) ------------------------------
-      # ≤ 120 KB comprimidos por rota de calculadora (RNF-004). Implementação
-      # em T-033, junto das primeiras rotas de calculadora — hoje não há rota
-      # a medir, e um verificador que sempre passa por falta de objeto é pior
-      # que a ausência dele.
+      # ≤ 120 KB comprimidos por rota de calculadora (RNF-004).
+      #
+      # Este passo foi um `echo` do T-003 ao T-105, com a justificativa de que
+      # não havia rota a medir. Havia desde o T-103, e o `echo` continuou
+      # passando — que é exatamente o que o comentário original advertia. Mede
+      # de verdade desde o T-106, e bloqueia.
       - name: 'TC-051 · orçamento de performance'
-        run: echo "::notice title=TC-051::Sem rota de calculadora para medir. Implementação em T-033."
+        run: npm run check:orcamento
 
       # --- 9. E2E + vazamento ------------------------------------------------
       # TC-040 a TC-043 são o controle C-07 (07-security §4.2): o único que
