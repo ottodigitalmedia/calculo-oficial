@@ -41,9 +41,28 @@ const nextConfig: NextConfig = {
  *
  * Entram aqui os que **não** dependem das origens da rede de anúncio.
  * `Content-Security-Policy` continua adiada, porque exige a lista exata do
- * provedor e não admite curinga. `Strict-Transport-Security` fica para o
- * T-108: `13-deployment` §7 condiciona a ativação a confirmar que o TLS está
- * estável, e HSTS mal configurado tira o site do ar por meses.
+ * provedor e não admite curinga.
+ *
+ * STRICT-TRANSPORT-SECURITY · CONDIÇÃO SATISFEITA
+ *
+ * `13-deployment` §7 condicionava a ativação a confirmar que o TLS está
+ * estável — e HSTS mal configurado tira o site do ar por meses, então a
+ * condição não era formalidade. Ela foi satisfeita **por evidência, não por
+ * configuração**: o certificado foi substituído sozinho em 30/07/2026, sem
+ * intervenção. Registrado em `13-deployment` §7.
+ *
+ * `includeSubDomains` porque `07-security` §5 pede "ativo, com subdomínios".
+ * Hoje só o ápice é servido; a diretiva não exige que subdomínio exista, só
+ * proíbe que ele seja servido em texto claro quando existir.
+ *
+ * **`preload` fica de fora, deliberadamente.** Entrar na lista de pré-carga é
+ * uma porta de mão única: a remoção leva meses e passa por navegador de
+ * terceiro, não por nós. O pré-requisito de infraestrutura foi satisfeito em
+ * 31/07/2026 — `www` passou a ser servido em HTTPS —, mas o ganho continua
+ * estreito: `preload` só vale para a PRIMEIRA visita de quem nunca esteve
+ * aqui; para todos os demais, este cabeçalho já basta. Trocar ganho estreito
+ * por compromisso irreversível é decisão a registrar, não configuração a
+ * ligar.
  *
  * REFERRER-POLICY · CORREÇÃO DE ESPECIFICAÇÃO
  *
@@ -63,6 +82,7 @@ const nextConfig: NextConfig = {
  * onde vieram.
  */
 const CABECALHOS = [
+  { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
   { key: 'Referrer-Policy', value: 'strict-origin' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -73,5 +93,36 @@ const CABECALHOS = [
 ]
 
 nextConfig.headers = async () => [{ source: '/:caminho*', headers: CABECALHOS }]
+
+/**
+ * `www` redireciona para o ápice — `13-deployment` §7.
+ *
+ * O documento manda **escolher um e manter**. Até 31/07/2026 `www` não era
+ * servido: quem digitasse chegava a um erro de certificado. Passou a ser
+ * servido no mesmo dia, e servir o MESMO conteúdo em dois domínios é conteúdo
+ * duplicado — o buscador precisa decidir qual indexar, e decide sozinho.
+ *
+ * As canônicas já apontam para o ápice, o que resolveria o caso. O
+ * redirecionamento é melhor mesmo assim: canônica é dica, redirecionamento é
+ * instrução, e ele também consolida num só endereço os links que outros sites
+ * fizerem para `www`. Com busca orgânica como único canal de aquisição, essa
+ * consolidação é o ativo.
+ *
+ * `permanent: true` emite 308, que preserva o método e é tratado como
+ * permanente pelos buscadores.
+ *
+ * A condição de `host` casa contra o cabeçalho `Host` da requisição, então em
+ * desenvolvimento e nos testes (onde o host é `localhost`) a regra simplesmente
+ * não se aplica. Há teste com `Host` forjado em `tests/e2e/cabecalhos.spec.ts`,
+ * para que ela não deixe de valer sem ninguém notar.
+ */
+nextConfig.redirects = async () => [
+  {
+    source: '/:caminho*',
+    has: [{ type: 'host', value: 'www.calculoficial.com.br' }],
+    destination: 'https://calculoficial.com.br/:caminho*',
+    permanent: true,
+  },
+]
 
 export default nextConfig

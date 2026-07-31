@@ -96,7 +96,13 @@ O efeito real, encontrado por TC-040: ao digitar o salário, `replaceState` o co
 
 `strict-origin` envia só a origem, inclusive para nós mesmos. Nenhuma query viaja em cabeçalho, e os links para as normas oficiais continuam sabendo de onde vieram. Verificado por `referersComCaminho` em `tests/leak/vazamento.spec.ts`, com prova de mutação: revertendo o valor, o teste reprova.
 
-**Estado dos demais.** `X-Content-Type-Options`, `X-Frame-Options` e `Permissions-Policy` entraram junto, em `next.config.ts`. `Content-Security-Policy` continua adiada por depender das origens do provedor de anúncio. `Strict-Transport-Security` fica para o T-108: `13-deployment` §7 condiciona a ativação a confirmar que o TLS está estável, e HSTS mal configurado tira o site do ar por meses.
+**Estado dos demais.** `X-Content-Type-Options`, `X-Frame-Options` e `Permissions-Policy` entraram junto, em `next.config.ts`. `Content-Security-Policy` continua adiada por depender das origens do provedor de anúncio.
+
+**`Strict-Transport-Security` ativado em 31/07/2026**, com `max-age=31536000; includeSubDomains`. A condição de `13-deployment` §7 — TLS estável — foi satisfeita por evidência: o certificado foi substituído sozinho em 30/07/2026, sem intervenção.
+
+**Sem `preload`, por decisão.** A lista de pré-carga é porta de mão única: a remoção leva meses e depende do navegador, não de nós. Ela exige, além disso, que `www` responda em HTTPS, e `www.calculoficial.com.br` ainda não é servido. Enquanto o domínio não estiver completo, `preload` compra risco irreversível por uma proteção que só vale para a **primeira** visita de quem nunca esteve no site.
+
+**Verificação.** `tests/e2e/cabecalhos.spec.ts` mede o que o servidor de produção envia — não o que o `next.config.ts` declara — em uma rota estática, uma de calculadora e uma de API. A asserção é de valor exato: `max-age` zerado, ou `includeSubDomains` perdido numa edição, deixa o cabeçalho presente e a proteção ausente, que é o formato preferido de regressão silenciosa. Um teste separado reprova se `preload` aparecer.
 
 > ⚠️ VERIFICAR: a rede de anúncio exigirá origens adicionais na política de conteúdo. Levantar a lista exata na documentação do provedor e **não** recorrer a curinga como atalho — curinga na política anula a proteção contra AM-02, que é a ameaça mais provável do sistema.
 

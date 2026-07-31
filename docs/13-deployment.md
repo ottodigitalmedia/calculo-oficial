@@ -150,8 +150,8 @@ A ausência de banco transforma migração em refatoração — reversível por 
 | Domínio | **`calculoficial.com.br`** |
 | DNS | Registro apontando para a VPS |
 | TLS | Certificado automático via EasyPanel. **Renovação automática confirmada em 31/07/2026 por evidência:** o certificado foi substituído sozinho em 30/07/2026, sem intervenção. Emissor Let's Encrypt |
-| Redirecionamentos | Sem `www` para com `www`, ou o inverso — escolher um e manter; HTTP para HTTPS sempre |
-| HSTS | Ativo após confirmar que o TLS está estável |
+| Redirecionamentos | **Escolhido o ápice.** Desde 31/07/2026 `www.calculoficial.com.br` é servido com certificado próprio e responde **308 para o ápice**, preservando caminho e query. O redirecionamento vive em `next.config.ts` (condição de `host`), não no painel — assim é versionado e testável; ver `tests/e2e/cabecalhos.spec.ts`. HTTP para HTTPS sempre |
+| HSTS | **Ativo desde 31/07/2026**, com `max-age=31536000; includeSubDomains`. A condição — TLS estável — foi satisfeita por evidência, não por configuração. **Sem `preload`:** é porta de mão única e exige `www` servido em HTTPS. Ver `07-security` §5 |
 
 **Canônica.** `NEXT_PUBLIC_SITE_URL=https://calculoficial.com.br` em produção. O valor entra no build, não em runtime — o prefixo `NEXT_PUBLIC_` é substituído no bundle. Consequência prática: mudar o domínio exige rebuild, não apenas reconfigurar o painel.
 
