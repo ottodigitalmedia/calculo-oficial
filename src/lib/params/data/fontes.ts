@@ -639,6 +639,54 @@ export const LEI_11033_ART_3: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+// ---------------------------------------------------------------------------
+// Banco de horas — CALC-013
+// ---------------------------------------------------------------------------
+
+/**
+ * O prazo do banco de horas por norma coletiva, e o que acontece na rescisão.
+ *
+ * § 2º: o acréscimo de salário pode ser dispensado se, por força de acordo ou
+ * convenção coletiva, o excesso de um dia for compensado em outro, *"no período
+ * máximo de um ano"*, sem ultrapassar dez horas diárias.
+ *
+ * § 3º é o que dá utilidade à calculadora: *"na hipótese de rescisão do contrato
+ * de trabalho sem que tenha havido a compensação integral da jornada
+ * extraordinária [...] o trabalhador terá direito ao pagamento das horas extras
+ * não compensadas, calculadas sobre o valor da remuneração na data da
+ * rescisão"*. Saldo positivo não compensado não evapora: vira dinheiro, pelo
+ * salário do fim e com adicional.
+ */
+export const CLT_ART_59: Fonte = {
+  id: 'clt-art-59',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Medida Provisória nº 2.164-41, de 2001',
+  dispositivo: 'Art. 59, § 2º e § 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Os dois prazos que a Reforma Trabalhista criou, e a regra do art. 59-B.
+ *
+ * § 5º: o banco de horas *"poderá ser pactuado por acordo individual escrito,
+ * desde que a compensação ocorra no período máximo de seis meses"*.
+ * § 6º: acordo individual, tácito ou escrito, *"para a compensação no mesmo
+ * mês"*.
+ *
+ * Art. 59-B: descumpridas as exigências da compensação, não há repetição do
+ * pagamento das horas — *"sendo devido apenas o respectivo adicional"* —, desde
+ * que não ultrapassada a duração máxima semanal. E o parágrafo único fecha a
+ * discussão mais comum: *"a prestação de horas extras habituais não
+ * descaracteriza o acordo de compensação de jornada e o banco de horas"*.
+ */
+export const CLT_ART_59_REFORMA: Fonte = {
+  id: 'clt-art-59-reforma',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 13.467, de 2017',
+  dispositivo: 'Art. 59, § 5º e § 6º, e art. 59-B',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -687,4 +735,6 @@ export const FONTES: readonly Fonte[] = [
   LC_150_ART_23,
   LEI_11033_ART_1,
   LEI_11033_ART_3,
+  CLT_ART_59,
+  CLT_ART_59_REFORMA,
 ]
