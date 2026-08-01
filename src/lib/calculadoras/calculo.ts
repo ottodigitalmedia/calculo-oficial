@@ -72,6 +72,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './aviso-previo'
     ).then((m) => m.calcular),
+  'seguro-desemprego': () =>
+    import(
+      /* webpackChunkName: "calc-seguro-desemprego" */
+      /* webpackExports: ["calcular"] */
+      './seguro-desemprego'
+    ).then((m) => m.calcular),
   ferias: () =>
     import(
       /* webpackChunkName: "calc-ferias" */

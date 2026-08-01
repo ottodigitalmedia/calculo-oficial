@@ -23,17 +23,17 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **18** de 75 — v1 completo, quatro de crédito, três de rescisão e as duas primeiras sem cifrão nenhum |
+| Calculadoras no ar | **19** de 75 — v1 completo, quatro de crédito, o bloco de desligamento fechado e as duas primeiras sem cifrão nenhum |
 | Guias no ar | 3 de 10 |
-| Testes | 514 de unidade · 265 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 12 vigências abertas, **0 divergências** (01/08/2026) |
-| Orçamento de JavaScript | 127,0 kB de **135** na pior rota (rescisão) — folga de 8,0 kB. Limite revisado com medição, ver §7.7 |
+| Testes | 546 de unidade · 273 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 23 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Orçamento de JavaScript | 127,3 kB de **135** na pior rota (rescisão) — folga de 7,7 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
-- **Trabalhista do v2:** rescisão por acordo mútuo · aviso prévio proporcional
+- **Trabalhista do v2:** rescisão por acordo mútuo · aviso prévio proporcional · seguro-desemprego
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão
 - **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
@@ -130,9 +130,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 57 de 75
+## 4. Calculadoras pendentes — 56 de 75
 
-Publicadas: **CALC-001 a CALC-008, CALC-010, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-010, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -276,6 +276,7 @@ esta lista é só o resumo.
 | **Vale-transporte (`RN-027`)** em CALC-001 | O percentual legal não foi localizado em fonte oficial. O campo **não existe** na calculadora — não foi estimado. Resolver antes de anunciar CALC-001 como completa |
 | **Incidência de INSS e IRRF sobre verbas rescisórias** | Pré-requisito de CALC-002 a CALC-005. Ver §6.2 |
 | **`RN-006`** — arredondamento da faixa intermediária do redutor | Indeterminado. Só afeta rendimentos entre R$ 5.000,01 e R$ 7.350,00 |
+| **A portaria da tabela do seguro-desemprego de 2026** | ⚠️ **A fonte mais fraca do projeto.** Os valores estão no portal do próprio MTE, publicados em 13/01/2026 com vigência declarada a partir de 11/01/2026 — mas o ato normativo que os formaliza não foi localizado. Foram tentados a busca do DOU por período e por órgão, o JSON diário de 09 a 14/01/2026 e a página de serviço do MTE. **Trocar pela norma na próxima auditoria**, como foi feito com o INSS em 31/07/2026. Ver a nota em `MTE_TABELA_SEGURO_DESEMPREGO` |
 
 ### 5.2 Citação de fonte — ✅ resolvido em 31/07/2026
 
@@ -761,6 +762,73 @@ não modela —, e o que passa por ela sai na tela exatamente como foi escrito.
 o que faltou em três lugares, todos escritos em momentos diferentes e todos com o
 mesmo descuido.
 
+### 7.17 Publicar com a fonte que existe, dizendo qual é
+
+CALC-009 tem duas metades com auditabilidade muito diferente, e isso está na
+cara do código.
+
+O **número de parcelas** sai do art. 4º, § 2º da Lei nº 7.998/1990, lido no
+Planalto. Fonte de primeira, como todo o resto do projeto.
+
+O **valor** depende de limites que o art. 5º expressa em **BTN** — moeda extinta
+em 1991. Os valores em reais são reajustados todo ano pelo INPC e divulgados pelo
+MTE. Foram encontrados no portal do próprio órgão, com vigência declarada a
+partir de 11/01/2026; **a portaria que os formaliza não foi localizada**, depois
+de tentar a busca do DOU por período e por órgão, o JSON diário de 09 a 14/01 e a
+página de serviço do ministério.
+
+**O que decidiu publicar assim, em vez de parar:**
+
+1. É fonte oficial — portal do órgão emissor —, o que satisfaz BV-07 e a
+   convenção de `fontes.ts`, ainda que seja mais fraca que texto normativo.
+2. Há **conferência cruzada**: o piso declarado ali, R$ 1.621,00, coincide com
+   `salario-minimo` de 2026, conferido no PDF da portaria interministerial. Um
+   erro de transcrição teria de coincidir com outro documento para passar.
+3. A fraqueza está **declarada em três lugares** — no comentário da fonte, na
+   `observacao` da vigência e em §5.1 — em vez de dissolvida no silêncio.
+
+O contraste com o que foi **recusado** em CALC-023 no mesmo dia é o que define a
+régua: lá a afirmação sobre o pagamento mínimo de 15% não tinha nenhuma fonte, e
+a pergunta foi removida. Aqui há fonte do órgão, e ela é nomeada pelo que é.
+
+> **Não confunda as duas situações.** "Sem fonte" não se publica. "Fonte oficial
+> mais fraca que o ideal" se publica **dizendo que é**, e entra na lista de
+> pendências para ser trocada.
+
+### 7.18 O caso-ouro que estava errado — e virou o melhor caso do arquivo
+
+`R$ 2.000,00 × 0,8 = R$ 1.600,00` reprovou. O motivo: R$ 1.600,00 fica **abaixo
+do salário mínimo**, e o art. 5º, § 2º eleva o benefício ao piso. O cálculo
+estava certo; o caso é que fora mal desenhado — escolheu um salário que dispara o
+piso para testar a fórmula da 1ª faixa.
+
+`CLAUDE.md` proíbe ajustar o valor esperado para o caso passar; manda descobrir
+qual dos dois está errado. Aqui era o caso — e ele não foi apagado, foi
+**movido** para o bloco do piso, onde vira a informação mais útil da calculadora:
+como o fator da 1ª faixa é 0,8, o benefício só ultrapassa o mínimo a partir de
+uma média de **R$ 2.026,25**. Abaixo disso, que cobre boa parte dos salários do
+país, todo mundo recebe exatamente o mesmo valor.
+
+### 7.19 Preenchedor genérico não vence regra ENTRE campos
+
+O teste "calcula de verdade" preenche todo campo obrigatório com um valor que
+respeita o tipo e o teto daquele campo. CALC-009 quebrou essa premissa: o mínimo
+de "meses trabalhados" **depende de qual solicitação é** — 12 na primeira, 9 na
+segunda, 6 da terceira em diante. Com os 5 meses do preenchedor, a calculadora
+recusou. E estava certa.
+
+Nenhum ajuste no preenchedor resolve, porque a restrição não é de um campo: é
+entre dois. E pôr `minimo: 12` no campo bloquearia quem legitimamente tem 6 meses
+na terceira solicitação — distorcer o produto para caber no teste, que §7.10 já
+tinha registrado como o caminho errado.
+
+**A saída usou o que o produto já tem:** o estado do formulário na URL
+(`RF-006`). Um mapa pequeno e visível no próprio arquivo de teste declara a
+combinação válida por slug, e a calculadora é exercitada por permalink.
+
+Quando a próxima calculadora tiver campos que interagem, o lugar de declarar isso
+é `ENTRADAS_QUE_INTERAGEM`.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -776,15 +844,16 @@ Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
 
 O que sobrou, em ordem:
 
-1. **CALC-009 · seguro-desemprego.** Virou a mais valiosa que resta: CALC-008
-   diz ao usuário que ele **perde** o seguro-desemprego, e não diz quanto isso
-   vale. As duas juntas respondem "compensa aceitar o acordo?", que é a pergunta
-   real. Depende de faixas de valor com vigência, publicadas em resolução do
-   CODEFAT — pesquisa em fonte oficial antes de qualquer linha de código.
+1. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
+   do projeto que toca a tese do produto, e ela ficou aberta com uma calculadora
+   publicada em cima.
 2. **CALC-030 · cheque especial.** `docs/18` registra que é praticamente o mesmo
    motor de CALC-023, que agora existe.
 3. **CALC-011 · custo real do funcionário.** Reaproveita FGTS, 13º e férias, que
    já existem, e é a de maior valor publicitário do bloco trabalhista.
+4. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
+   tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
+   faz. Não está no catálogo com ID; exige decisão do mantenedor.
 4. **`/api/health` que responde igual em toda versão.** O passo de verificação
    do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
    constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto

@@ -75,8 +75,36 @@ test('juros compostos · não tem seletor de período, por não ter parâmetro l
  * quando a data de referência padrão caiu fora da vigência dos parâmetros.
  * Aqui todo campo obrigatório é preenchido e o resultado tem de aparecer.
  */
+/**
+ * Calculadoras cujos campos INTERAGEM, e que por isso não se satisfazem com um
+ * preenchimento genérico.
+ *
+ * CALC-009 é a primeira: o valor mínimo de "meses trabalhados" depende de qual
+ * solicitação é. Com 5 meses na primeira solicitação a calculadora recusa — **e
+ * está certa**, porque a lei exige 12. Nenhum ajuste no preenchedor resolve
+ * isso, porque a restrição não é de um campo: é entre dois.
+ *
+ * A saída usa o que o produto já tem — o estado do formulário na URL (`RF-006`).
+ * A combinação válida fica declarada aqui, à vista, em vez de o campo ganhar um
+ * mínimo que bloquearia quem legitimamente tem 6 meses na terceira solicitação.
+ */
+const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
+  'seguro-desemprego': '?salario1=300000&mesesTrabalhados=24&solicitacao=primeira',
+}
+
 for (const c of CALCULADORAS) {
   test(`${c.slug} · calcula de verdade, não só renderiza`, async ({ page }) => {
+    const query = ENTRADAS_QUE_INTERAGEM[c.slug]
+    if (query) {
+      await page.goto(`/calculadora/${c.slug}${query}`)
+      const caixa = page.locator('main [aria-live]')
+      await expect(
+        caixa.getByRole('button', { name: 'Ver como este valor foi calculado' }),
+      ).toBeVisible()
+      await expect(caixa).not.toContainText('Não foi possível calcular')
+      return
+    }
+
     await page.goto(`/calculadora/${c.slug}`)
 
     /**

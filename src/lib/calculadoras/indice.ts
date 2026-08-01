@@ -58,6 +58,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quantos dias de aviso prévio o seu tempo de casa garante — e quanto eles valem.',
   },
   {
+    slug: 'seguro-desemprego',
+    nome: 'Seguro-desemprego',
+    linhaDeContexto: 'Quantas parcelas você tem direito a receber, e de quanto é cada uma.',
+  },
+  {
     slug: 'ferias',
     nome: 'Férias',
     linhaDeContexto:

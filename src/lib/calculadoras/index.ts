@@ -24,6 +24,7 @@ import { RESCISAO_ACORDO_MUTUO } from './rescisao-acordo-mutuo'
 import { RESCISAO_PEDIDO_DEMISSAO } from './rescisao-pedido-demissao'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
 import { SALARIO_LIQUIDO } from './salario-liquido'
+import { SEGURO_DESEMPREGO } from './seguro-desemprego'
 import type { DefinicaoCalculadora } from './tipos'
 
 export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
@@ -32,6 +33,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RESCISAO_PEDIDO_DEMISSAO,
   RESCISAO_ACORDO_MUTUO,
   AVISO_PREVIO,
+  SEGURO_DESEMPREGO,
   FERIAS,
   DECIMO_TERCEIRO,
   HORAS_EXTRAS,

@@ -31,7 +31,8 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 01/08/2026
 
-Seis calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010 e CALC-008.
+Sete calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008 e
+CALC-009 — o bloco de desligamento fechado.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
 ### Adicionado · `cartao-teto-juros-encargos` · a partir de 2024-01-03
@@ -89,6 +90,51 @@ unidade em `Etapa` e em `SaidaCalculadora`, e o tipo de campo `decimal`.
 CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entre os
 combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
 de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
+
+### Adicionado · parâmetros do seguro-desemprego · CALC-009
+
+**Duas naturezas, e a diferença está declarada no código.**
+
+*Número de parcelas* — Lei nº 7.998/1990, art. 4º, § 2º, com a redação da Lei nº
+13.134/2015, lida no Planalto. Vigência a partir de 17/06/2015.
+`https://www.planalto.gov.br/ccivil_03/leis/l7998.htm`
+
+*Valor da parcela* — o art. 5º fixa o método e expressa os limites em **BTN**,
+moeda extinta em 1991. Os valores em reais vêm da tabela anual do Ministério do
+Trabalho e Emprego, com vigência a partir de 11/01/2026:
+
+| Faixa de salário médio | Cálculo |
+|---|---|
+| Até R$ 2.222,17 | média × 0,8 |
+| De R$ 2.222,18 a R$ 3.703,99 | (média − R$ 2.222,17) × 0,5 + R$ 1.777,74 |
+| Acima de R$ 3.703,99 | R$ 2.518,65 (teto) |
+
+Piso: o salário mínimo, pelo art. 5º, § 2º — parâmetro que já existia.
+
+⚠️ **A FONTE MAIS FRACA DO PROJETO, E ISSO ESTÁ DITO.** A portaria que formaliza
+a tabela não foi localizada: foram tentados a busca do DOU por período e por
+órgão, o JSON diário de 09 a 14/01/2026 e a página de serviço do MTE. O que se
+tem é a divulgação no portal do próprio órgão emissor, publicada em 13/01/2026.
+
+Conferência cruzada que aumenta a confiança: o piso declarado ali, R$ 1.621,00,
+coincide com `salario-minimo` de 2026, conferido no PDF da Portaria
+Interministerial MPS/MF nº 13/2026.
+
+**A fazer na próxima auditoria:** localizar a portaria e trocar a URL pelo texto
+com força normativa, como foi feito com o INSS em 31/07/2026.
+
+### Adicionado · CALC-009 · seguro-desemprego
+
+Fecha a pergunta que CALC-008 deixa aberta: a rescisão por acordo avisa que o
+trabalhador perde o seguro-desemprego e não diz quanto isso vale. As duas se
+citam.
+
+**Um caso-ouro reprovou por estar errado, e virou o melhor caso do arquivo.**
+`R$ 2.000,00 × 0,8 = R$ 1.600,00` falhou porque R$ 1.600,00 fica abaixo do
+salário mínimo e o § 2º eleva ao piso. O caso foi movido para o bloco do piso,
+onde revela o que a calculadora tem de mais útil: como o fator da 1ª faixa é 0,8,
+o benefício só ultrapassa o mínimo a partir de uma média de R$ 2.026,25 — abaixo
+disso, todo mundo recebe o mesmo valor.
 
 ### Adicionado · `aviso-previo-fracao-acordo` e `fgts-saque-acordo-mutuo` · a partir de 2017-11-11
 
