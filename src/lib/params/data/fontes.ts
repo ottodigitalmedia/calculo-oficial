@@ -273,6 +273,46 @@ export const CLT_ART_484A: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * A outra metade do inciso I, e a razão de CALC-008 existir separada.
+ *
+ * *"I - por metade: a) o aviso prévio, se indenizado"*. Repare no **se**: só o
+ * aviso indenizado é reduzido. O trabalhado é salário do período, e salário não
+ * se paga pela metade.
+ *
+ * Fonte própria e não reaproveitamento de `CLT_ART_484A` porque o dispositivo é
+ * outro — a alínea "b" trata da multa do FGTS. O link da memória de cálculo
+ * precisa levar ao dispositivo que decide **aquela** verba, e não ao artigo em
+ * geral. Conferido no texto do Planalto em 01/08/2026.
+ */
+export const CLT_ART_484A_AVISO: Fonte = {
+  id: 'clt-art-484a-aviso',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 13.467, de 2017',
+  dispositivo: 'Art. 484-A, I, "a"',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * O que a extinção por acordo **permite** e o que ela **impede**.
+ *
+ * § 1º: a movimentação da conta vinculada fica *"limitada até 80% (oitenta por
+ * cento) do valor dos depósitos"*.
+ * § 2º: a extinção por acordo *"não autoriza o ingresso no Programa de
+ * Seguro-Desemprego"*.
+ *
+ * O § 2º não produz número, e ainda assim é a informação que mais muda a decisão
+ * de quem está avaliando o acordo — por isso vira `fundamento` na memória, e não
+ * apenas texto de FAQ.
+ */
+export const CLT_ART_484A_SAQUE: Fonte = {
+  id: 'clt-art-484a-saque',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 13.467, de 2017',
+  dispositivo: 'Art. 484-A, § 1º e § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const CLT_ART_64: Fonte = {
   id: 'clt-art-64',
   norma: 'Consolidação das Leis do Trabalho',
@@ -415,6 +455,8 @@ export const FONTES: readonly Fonte[] = [
   CF_ART_7_XVI,
   CLT_ART_73,
   CLT_ART_484A,
+  CLT_ART_484A_AVISO,
+  CLT_ART_484A_SAQUE,
   CLT_ART_64,
   LEI_605_ART_7,
   TST_SUMULA_431,

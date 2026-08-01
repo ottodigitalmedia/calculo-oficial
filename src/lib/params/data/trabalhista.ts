@@ -21,13 +21,24 @@ import {
   CF_ART_7_XVI,
   CLT_ART_73,
   CLT_ART_484A,
+  CLT_ART_484A_AVISO,
+  CLT_ART_484A_SAQUE,
   LEI_8036_ART_15,
   LEI_8036_ART_18,
   LEI_12506_2011,
 } from './fontes'
 
 export const TRABALHISTA: ConjuntoDeParametros = {
-  fontes: [LEI_8036_ART_15, LEI_8036_ART_18, LEI_12506_2011, CF_ART_7_XVI, CLT_ART_73, CLT_ART_484A],
+  fontes: [
+    LEI_8036_ART_15,
+    LEI_8036_ART_18,
+    LEI_12506_2011,
+    CF_ART_7_XVI,
+    CLT_ART_73,
+    CLT_ART_484A,
+    CLT_ART_484A_AVISO,
+    CLT_ART_484A_SAQUE,
+  ],
 
   parametros: [
     {
@@ -66,6 +77,20 @@ export const TRABALHISTA: ConjuntoDeParametros = {
       id: 'fgts-multa-acordo-mutuo',
       nome: 'Multa do FGTS — extinção por acordo',
       descricao: 'Metade da indenização do art. 18, § 1º, da Lei nº 8.036/1990.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'aviso-previo-fracao-acordo',
+      nome: 'Aviso prévio indenizado — fração devida na extinção por acordo',
+      descricao:
+        'Percentual do aviso prévio indenizado devido quando o contrato é extinto por acordo entre as partes.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'fgts-saque-acordo-mutuo',
+      nome: 'FGTS — limite de saque na extinção por acordo',
+      descricao:
+        'Percentual máximo dos depósitos da conta vinculada que o trabalhador pode movimentar na extinção por acordo.',
       tipo: 'percentual',
     },
     {
@@ -184,6 +209,41 @@ export const TRABALHISTA: ConjuntoDeParametros = {
       valor: { tipo: 'percentual', aliquotaBp: 2_000 },
       observacao:
         'Metade dos 40% do art. 18, § 1º, da Lei nº 8.036/1990, conforme o art. 484-A, I, "b", da CLT. A movimentação da conta fica limitada a 80% dos depósitos (§ 1º).',
+    },
+
+    // -----------------------------------------------------------------------
+    // Extinção por acordo — CLT, art. 484-A (Lei nº 13.467/2017)
+    //
+    //   "I - por metade:
+    //     a) o aviso prévio, se indenizado; e
+    //     b) a indenização sobre o saldo do Fundo de Garantia [...]
+    //    II - na integralidade, as demais verbas trabalhistas.
+    //    § 1º A extinção do contrato prevista no caput deste artigo permite a
+    //    movimentação da conta vinculada [...] limitada até 80% (oitenta por
+    //    cento) do valor dos depósitos."
+    //
+    // Repare no SE da alínea "a": só o aviso indenizado é reduzido. O aviso
+    // trabalhado é salário do período, e salário não se paga pela metade.
+    // -----------------------------------------------------------------------
+    {
+      id: 'aviso-previo-fracao-acordo-2017',
+      parametroId: 'aviso-previo-fracao-acordo',
+      fonteId: 'clt-art-484a-aviso',
+      inicio: '2017-11-11',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 5_000 },
+      observacao:
+        'Aplica-se apenas ao aviso indenizado. O aviso trabalhado é salário do período e não sofre redução. O número de DIAS continua sendo o da Lei nº 12.506/2011 — o que a norma reduz é a verba, não o prazo.',
+    },
+    {
+      id: 'fgts-saque-acordo-2017',
+      parametroId: 'fgts-saque-acordo-mutuo',
+      fonteId: 'clt-art-484a-saque',
+      inicio: '2017-11-11',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 8_000 },
+      observacao:
+        'Limite de movimentação da conta vinculada, não valor devido: os 20% restantes continuam na conta do trabalhador. O § 2º veda o ingresso no Programa de Seguro-Desemprego.',
     },
 
     {
