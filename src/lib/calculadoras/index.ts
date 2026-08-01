@@ -18,6 +18,7 @@ import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { PORCENTAGEM } from './porcentagem'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
+import { ROTATIVO_CARTAO } from './rotativo-cartao'
 import { RESCISAO_PEDIDO_DEMISSAO } from './rescisao-pedido-demissao'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
 import { SALARIO_LIQUIDO } from './salario-liquido'
@@ -36,6 +37,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   JUROS_COMPOSTOS,
   CET,
   AMORTIZACAO,
+  ROTATIVO_CARTAO,
   QUITACAO_ANTECIPADA,
   PORCENTAGEM,
   COMBUSTIVEL,

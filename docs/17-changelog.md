@@ -29,6 +29,75 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 01/08/2026
+
+Quatro calculadoras: CALC-026, CALC-070, CALC-054 e CALC-023. A última trouxe o
+primeiro parâmetro legal do bloco de crédito.
+
+### Adicionado · `cartao-teto-juros-encargos` · a partir de 2024-01-03
+
+**Valor:** 100% (10.000 basis points) do valor original da dívida.
+
+**Fonte:** Lei nº 14.690, de 3 de outubro de 2023, art. 28, § 1º —
+*"o total cobrado em cada caso a título de juros e encargos financeiros não
+poderá exceder o valor original da dívida"*.
+`https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/L14690.htm`
+
+**Verificado contra:** o texto compilado do Planalto, lido na íntegra em
+01/08/2026, e a versão consolidada da Resolução CMN nº 4.549/2017 publicada pelo
+Banco Central em `normativos.bcb.gov.br`, que traz as alterações da Resolução CMN
+nº 5.112/2023 marcadas dispositivo a dispositivo.
+
+**Por que a vigência começa em 03/01/2024 e não na publicação.** O art. 28, § 1º
+condiciona o teto ao decurso de 90 dias sem aprovação dos limites de
+autorregulação. A Resolução CMN nº 4.549/2017, art. 2º-D (incluído pela 5.112),
+declara que o teto *"se aplica somente às operações realizadas após o prazo de 90
+(noventa) dias"*. Registrar a data de publicação aplicaria o limite a três meses
+em que ele não existia — e `RN-002` resolve por data, então o erro produziria
+número errado com aparência de certo em toda fatura do último trimestre de 2023.
+
+**Casos-ouro afetados:** `tests/golden/rotativo.test.ts`, inclusive um caso que
+exige `vigencia_ausente` em 30/11/2023 — a data anterior à eficácia precisa
+**bloquear** o cálculo, nunca extrapolar.
+
+### Adicionado · CALC-023 · rotativo do cartão
+
+A conta intuitiva do rotativo está errada por estrutura, não por aritmética.
+A Resolução CMN nº 4.549/2017 limita o rotativo a **um ciclo** (art. 1º) e obriga
+a migração para um parcelamento mais barato (art. 2º); simular doze meses de
+rotativo descreve algo proibido desde 2017. E o teto do art. 28, § 1º da Lei
+14.690/2023 vale para a cadeia inteira: na migração, o valor original continua
+sendo o montante inicial do rotativo e os juros são contados desde o início dele.
+
+Aviso contextual próprio, como `00-catalogo` §6 exige da categoria de crédito.
+
+**Recusado por falta de fonte:** uma pergunta do FAQ afirmava que o pagamento
+mínimo de 15% foi revogado em 2017. Não foi possível confirmar em fonte oficial;
+a pergunta foi substituída por outra, não suavizada. Regra 10.
+
+### Adicionado · CALC-026 · quitação antecipada
+
+Art. 52, § 2º do Código de Defesa do Consumidor: a liquidação antecipada se dá
+*"mediante redução proporcional dos juros e demais acréscimos"*. O saldo devedor
+de hoje é o **valor presente** das parcelas que faltam, não a soma delas.
+
+### Adicionado · CALC-070 · porcentagem · e CALC-054 · álcool ou gasolina
+
+As duas primeiras cujo resultado nem sempre é dinheiro. Exigiram a declaração de
+unidade em `Etapa` e em `SaidaCalculadora`, e o tipo de campo `decimal`.
+
+CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entre os
+combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
+de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
+
+### Corrigido · o aviso de estimativa alegava fundamento legal onde não havia
+
+A frase única dizia *"parâmetros legais vigentes em <data>"* também no CET, na
+amortização e nos juros compostos, que não consultam parâmetro legal nenhum.
+Agora são duas redações, escolhidas pela cobertura de vigências.
+
+---
+
 ## Pós-lançamento — 31/07/2026
 
 Primeiro ciclo depois do MR-2. Duas pendências que o lançamento deixou

@@ -99,6 +99,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto muda entre parcela fixa e parcela decrescente — no bolso e no total.',
   },
   {
+    slug: 'rotativo-do-cartao',
+    nome: 'Rotativo do cartão — custo real',
+    linhaDeContexto:
+      'Quanto custa não pagar a fatura inteira — e qual é o teto que a lei impõe à cobrança.',
+  },
+  {
     slug: 'quitacao-antecipada',
     nome: 'Quitação antecipada — economia de juros',
     linhaDeContexto:

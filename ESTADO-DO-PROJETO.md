@@ -23,17 +23,17 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **15** de 75 — v1 completo, três de crédito e as duas primeiras sem cifrão nenhum |
+| Calculadoras no ar | **16** de 75 — v1 completo, quatro de crédito e as duas primeiras sem cifrão nenhum |
 | Guias no ar | 3 de 10 |
 | Testes | 455 de unidade · 243 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
+| Auditoria de parâmetros | 10 vigências abertas, **0 divergências** (01/08/2026) |
 | Orçamento de JavaScript | 123,5 kB de **135** na pior rota — folga de 11,5 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
-- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada
+- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão
 - **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
@@ -129,9 +129,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 60 de 75
+## 4. Calculadoras pendentes — 59 de 75
 
-Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022, CALC-024 a CALC-026, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -597,6 +597,35 @@ inverso: `campos.tsx` expõe `data-maximo` nos quatro campos numéricos e o test
 limita o valor ao teto de cada campo. **Quando o teste e o produto discordam,
 verifique qual dos dois está errado antes de mudar o produto.**
 
+### 7.11 A norma às vezes muda a ESTRUTURA da conta, não só um número
+
+CALC-023 é o caso mais claro do catálogo até aqui. A conta "óbvia" do rotativo —
+aplicar a taxa da fatura por doze meses — descreve algo que a **Resolução CMN nº
+4.549/2017 proíbe desde 2017**: o art. 1º limita o rotativo ao vencimento da
+fatura seguinte, e o art. 2º obriga a migração para um parcelamento
+comprovadamente mais barato. Um mês de rotativo, e o resto parcelado.
+
+E há um teto. A **Lei nº 14.690/2023, art. 28, § 1º** determina que juros e
+encargos não podem exceder o valor original da dívida — em vigor desde
+**03/01/2024**, decorridos os 90 dias que o próprio dispositivo concede à
+autorregulação que nunca foi aprovada. A **Resolução CMN nº 5.112/2023**, que
+alterou a 4.549, fecha a porta dos fundos: na migração do rotativo para o
+parcelamento, o valor original continua sendo o montante inicial do rotativo e os
+juros são contados **desde o início dele** (art. 2º-A, parágrafo único, I e II).
+Sem essa regra, bastaria reparcelar para zerar a contagem do teto.
+
+**A lição para as próximas.** Antes de escrever a fórmula, pergunte se a norma
+diz algo sobre a *forma* da operação, e não só sobre alíquota. Aqui, ler só a lei
+do teto e ignorar a resolução do Banco Central teria produzido uma calculadora
+que erra por larga margem — para cima, que é o erro que assusta o usuário
+endividado sem ajudá-lo.
+
+**O que foi recusado por falta de fonte.** Uma pergunta do FAQ afirmava que o
+pagamento mínimo de 15% foi revogado em 2017. É provavelmente verdade, e não foi
+possível confirmar em fonte oficial nas tentativas feitas — a pergunta foi
+**substituída**, não suavizada. `CLAUDE.md`, regra 10: na dúvida, a afirmação não
+existe.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -606,20 +635,18 @@ fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
 O que sobrou, em ordem:
 
 Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
-~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8).
+~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8) ·
+~~CALC-023~~ ✅ (§7.11).
 
 O que sobrou, em ordem:
 
-1. **CALC-023 · juros do rotativo do cartão.** Fecha o bloco de crédito do v2 e
-   é a de maior valor publicitário que resta sem dependência: o motor de
-   `financeira.ts` já resolve, e o teto do rotativo tem norma própria — Lei
-   14.690/2023 — que precisa ser conferida em fonte oficial antes de virar
-   parâmetro.
-2. **CALC-010 · aviso prévio proporcional.** `LEI_12506_2011` já está
+1. **CALC-010 · aviso prévio proporcional.** `LEI_12506_2011` já está
    cadastrada e `rescisao.ts` já aplica a proporcionalidade internamente; falta
    expô-la como calculadora própria.
-3. **CALC-008 · rescisão por acordo mútuo.** `CLT_ART_484A` já está cadastrada
+2. **CALC-008 · rescisão por acordo mútuo.** `CLT_ART_484A` já está cadastrada
    e o motor de rescisão já tem a modalidade parcialmente prevista.
+3. **CALC-030 · cheque especial.** `docs/18` registra que é praticamente o mesmo
+   motor de CALC-023, que agora existe.
 4. **`/api/health` que responde igual em toda versão.** O passo de verificação
    do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
    constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto

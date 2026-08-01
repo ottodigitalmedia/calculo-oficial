@@ -114,6 +114,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './juros-compostos'
     ).then((m) => m.calcular),
+  'rotativo-do-cartao': () =>
+    import(
+      /* webpackChunkName: "calc-rotativo-cartao" */
+      /* webpackExports: ["calcular"] */
+      './rotativo-cartao'
+    ).then((m) => m.calcular),
   'quitacao-antecipada': () =>
     import(
       /* webpackChunkName: "calc-quitacao-antecipada" */
