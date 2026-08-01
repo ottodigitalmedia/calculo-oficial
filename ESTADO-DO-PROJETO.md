@@ -671,6 +671,42 @@ ela é escolha e muda o resultado.
 
 Afetava CALC-006, CALC-007 e CALC-023.
 
+### 7.14 O pipeline ficou verde com o deploy não tendo acontecido
+
+Em 01/08/2026 o webhook do EasyPanel devolveu **HTTP 000** — falha de conexão do
+runner ao painel — e o job `Implantar` terminou **success**. A correção de dois
+defeitos ficou uma hora parada em produção, e o único sintoma visível era o site
+continuar servindo o commit anterior. Os três deploys anteriores do mesmo dia
+responderam 200; foi transitório.
+
+**Por que passava batido.** O passo tratava resposta não-2xx como aviso, com uma
+razão escrita e boa: quando o webhook **não está configurado**, falhar deixaria o
+pipeline permanentemente vermelho por uma condição esperada — e vermelho
+permanente é como se aprende a ignorar vermelho. Mas esse caso já era separado
+pelo `if` do próprio passo. Dentro dele, o webhook está configurado, e não
+responder é **incidente**, não estado esperado.
+
+Agora são três tentativas com 15 s de intervalo, e falha se todas caírem. A
+repetição vem antes da falha porque o 000 foi transitório: a mesma requisição,
+reexecutada minutos depois, devolveu 200.
+
+**Como diagnosticar isso rápido da próxima vez:**
+
+```bash
+gh run view "$(gh run list --branch main --limit 1 --json databaseId --jq '.[0].databaseId')" --log | grep -oE "(Deploy disparado \(HTTP [0-9]+\)|Webhook respondeu HTTP [0-9]+)"
+```
+
+E para reexecutar só o deploy, sem commit novo:
+
+```bash
+gh run rerun --job "$(gh run view "$(gh run list --branch main --limit 1 --json databaseId --jq '.[0].databaseId')" --json jobs --jq '.jobs[] | select(.name=="Implantar") | .databaseId')"
+```
+
+> **A verificação de saúde não teria pego.** Ela só roda quando o disparo dá
+> certo. E mesmo rodando, `/api/health` responde igual em toda versão — ela
+> aprova o contêiner ANTIGO. Expor o hash do commit em `rev` e comparar continua
+> pendente (§8), e é o que fecharia o buraco de vez.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a

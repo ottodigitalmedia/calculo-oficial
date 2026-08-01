@@ -260,25 +260,47 @@ jobs:
         if: steps.cfg.outputs.pronto == 'sim'
         id: disparo
         run: |
-          # `|| true` e não `|| echo "000"`: quando não conecta, o curl SAI com
-          # erro **e** já escreveu "000" pelo --write-out. O echo somava um
-          # segundo "000" e o aviso saía com "HTTP 000000".
-          codigo=$(curl --silent --output /dev/null --write-out '%{http_code}' \
-                        --connect-timeout 10 --max-time 30 \
-                        -X POST "${{ secrets.DEPLOY_WEBHOOK_URL }}" || true)
+          # TRÊS TENTATIVAS, E FALHA SE TODAS CAÍREM.
+          #
+          # Em 01/08/2026 o webhook devolveu HTTP 000 — falha de conexão do
+          # runner ao painel — e o pipeline ficou VERDE com o deploy não tendo
+          # acontecido. A correção de dois defeitos ficou uma hora parada, e o
+          # único sintoma era produção continuar servindo o commit anterior.
+          #
+          # O aviso silencioso fazia sentido quando o webhook NÃO estava
+          # configurado: falhar ali deixaria o pipeline permanentemente vermelho
+          # por uma condição esperada, e vermelho permanente é como se aprende a
+          # ignorar vermelho. Mas esse caso já é separado pelo `if` deste passo:
+          # aqui dentro, o webhook está configurado e os três deploys anteriores
+          # responderam 200. Não responder é INCIDENTE, não estado esperado.
+          #
+          # A repetição vem antes da falha porque o 000 foi transitório: a mesma
+          # requisição, reexecutada minutos depois, devolveu 200.
+          for tentativa in 1 2 3; do
+            # `|| true` e não `|| echo "000"`: quando não conecta, o curl SAI com
+            # erro **e** já escreveu "000" pelo --write-out. O echo somava um
+            # segundo "000" e o aviso saía com "HTTP 000000".
+            codigo=$(curl --silent --output /dev/null --write-out '%{http_code}' \
+                          --connect-timeout 10 --max-time 30 \
+                          -X POST "${{ secrets.DEPLOY_WEBHOOK_URL }}" || true)
 
-          # `case` e não `[ -ge ]`: com resposta não numérica o teste aritmético
-          # erraria, e o passo cairia pelo motivo errado.
-          case "$codigo" in
-            2??)
-              echo "Deploy disparado (HTTP $codigo)."
-              echo "implantou=true" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "::warning title=Deploy manual::Webhook respondeu HTTP $codigo. A imagem foi publicada com a etiqueta do commit; implante pelo painel do EasyPanel. Estado esperado — ver 13-deployment §4."
-              echo "implantou=false" >> "$GITHUB_OUTPUT"
-              ;;
-          esac
+            # `case` e não `[ -ge ]`: com resposta não numérica o teste
+            # aritmético erraria, e o passo cairia pelo motivo errado.
+            case "$codigo" in
+              2??)
+                echo "Deploy disparado (HTTP $codigo) na tentativa $tentativa."
+                echo "implantou=true" >> "$GITHUB_OUTPUT"
+                exit 0
+                ;;
+            esac
+
+            echo "tentativa $tentativa: webhook respondeu HTTP $codigo"
+            [ "$tentativa" -lt 3 ] && sleep 15
+          done
+
+          echo "implantou=false" >> "$GITHUB_OUTPUT"
+          echo "::error title=Deploy não disparado::O webhook respondeu HTTP $codigo em três tentativas. A imagem FOI publicada com a etiqueta do commit, então produção está atrás do repositório até alguém agir. Reexecute o job Implantar; se insistir, implante pelo painel do EasyPanel (15-runbook RB-01)."
+          exit 1
 
       # D-4 / 13-deployment §4: falha aqui dispara rollback automático.
       - name: 'Verificação de saúde (EP-016)'
