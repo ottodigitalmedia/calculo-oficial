@@ -52,6 +52,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto se recebe na extinção por acordo — e o que se abre mão para ter esse valor.',
   },
   {
+    slug: 'rescisao-domestico',
+    nome: 'Rescisão — empregado doméstico',
+    linhaDeContexto:
+      'Quanto se recebe na saída do trabalho doméstico — sem multa de 40%, com o fundo de 3,2%.',
+  },
+  {
     slug: 'aviso-previo-proporcional',
     nome: 'Aviso prévio proporcional',
     linhaDeContexto:

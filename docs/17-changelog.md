@@ -31,9 +31,9 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 01/08/2026
 
-Nove calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
-CALC-009, CALC-030 e CALC-011. O bloco de desligamento fechou, e o de crédito
-chegou a cinco.
+Dez calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
+CALC-009, CALC-030, CALC-011 e CALC-012. O bloco de desligamento fechou, e o de
+crédito chegou a cinco.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
 ### Adicionado · `cartao-teto-juros-encargos` · a partir de 2024-01-03
@@ -91,6 +91,45 @@ unidade em `Etapa` e em `SaidaCalculadora`, e o tipo de campo `decimal`.
 CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entre os
 combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
 de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
+
+### Adicionado · parâmetros do trabalho doméstico · a partir de 2015-06-02
+
+**Valores:** indenização compensatória de 3,2%; aviso prévio de 30 dias, mais 3
+por ano, até 90.
+
+**Fonte:** Lei Complementar nº 150, de 1º de junho de 2015, art. 22 e art. 23.
+Vigência pelo art. 47 — data da publicação, DOU de 2.6.2015.
+`https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm`
+
+**Verificado contra:** o texto do Planalto, lido na íntegra em 01/08/2026.
+
+**A remissão negativa é o ponto.** O art. 22 diz que o depósito de 3,2% se
+destina à indenização pela perda do emprego *"não se aplicando ao empregado
+doméstico o disposto nos §§ 1º a 3º do art. 18 da Lei nº 8.036"* — e esses
+parágrafos são justamente os da multa de 40%. No doméstico ela **não existe**.
+
+**Os parâmetros de aviso prévio são duplicados de propósito.** Repetem os números
+da Lei nº 12.506/2011 com fundamento próprio, porque o contrato doméstico não é
+regido por ela. Reaproveitar os da CLT faria a memória citar uma lei que não rege
+aquele contrato. Um caso-ouro trava a citação nos dois regimes.
+
+### Adicionado · CALC-012 · rescisão do empregado doméstico
+
+Entrou como `regime`, eixo **ortogonal** à modalidade — e não como uma quarta
+modalidade. Um doméstico também pode ser dispensado, pedir demissão ou fazer
+acordo; empilhar "doméstico" naquele eixo criaria combinações impossíveis.
+
+O campo é obrigatório, e o compilador cobrou de todo chamador: seis literais de
+entrada, em três definições e três arquivos de caso-ouro, pararam de compilar até
+declararem o regime. Nada passou a ser doméstico ou celetista por omissão.
+
+### Adiado · CALC-017 · restituição do IRPF anual, por fonte
+
+A página de tabelas da Receita traz a progressiva ANUAL do ano-calendário 2026 —
+e a declaração que se entrega hoje é a do ano-calendário 2025, ano em que a
+tabela mensal mudou em maio. A anual de 2025 é um conjunto próprio de números,
+que não foi localizado. Construir sobre a tabela do ano errado produziria
+exatamente o dano que o projeto existe para evitar.
 
 ### Adicionado · `cheque-especial-teto-juros-mes` · a partir de 2020-01-06
 

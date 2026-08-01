@@ -23,17 +23,17 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **21** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito e a primeira do lado do empregador |
+| Calculadoras no ar | **22** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 579 de unidade · 285 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 28 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 127,7 kB de **135** na pior rota (rescisão) — folga de 7,3 kB. Limite revisado com medição, ver §7.7 |
+| Testes | 596 de unidade · 291 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 32 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Orçamento de JavaScript | 129,0 kB de **135** na pior rota (rescisão doméstica) — folga de 6,0 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
-- **Trabalhista do v2:** rescisão por acordo mútuo · aviso prévio proporcional · seguro-desemprego · custo do funcionário
+- **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
 - **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
@@ -130,9 +130,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 54 de 75
+## 4. Calculadoras pendentes — 53 de 75
 
-Publicadas: **CALC-001 a CALC-011, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-030, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-012, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-030, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -905,6 +905,58 @@ Agora `catalogo.test.ts` varre todo texto de tela de toda calculadora publicada 
 reprova asterisco de ênfase e acento grave de código. Custa duas asserções e
 fecha a classe inteira, para todas as calculadoras que vierem.
 
+### 7.24 O eixo ortogonal custa menos que a quarta modalidade
+
+CALC-012 poderia ter virado uma quarta `Modalidade` — e teria ficado errada.
+`Modalidade` responde **quem rompeu o contrato**; um doméstico também pode ser
+dispensado, pedir demissão ou fazer acordo. Empilhar "doméstico" ali criaria
+combinações impossíveis de representar.
+
+Entrou como `regime: 'clt' | 'domestico'`, **eixo ortogonal**, e o que ele muda é
+pequeno e nomeável:
+
+1. **Não existe multa de 40%.** A LC 150/2015, art. 22, afasta por remissão
+   negativa os §§ 1º a 3º do art. 18 da Lei nº 8.036 e põe no lugar um fundo de
+   3,2% da remuneração, formado mês a mês em variação distinta da conta.
+2. O aviso prévio tem **norma própria** — art. 23 —, com os mesmos números.
+
+**O campo entrou como obrigatório, e o compilador cobrou de todo chamador.** Seis
+literais de entrada, em três definições e três arquivos de caso-ouro, pararam de
+compilar até declararem o regime. É o oposto de um valor padrão silencioso: nada
+passou a ser doméstico ou celetista por omissão.
+
+### 7.25 Números iguais, fundamentos distintos — quando duplicar é o certo
+
+Os três parâmetros de aviso prévio do doméstico repetem 30, 3 e 90 — exatamente
+os da Lei nº 12.506/2011. Duplicação deliberada.
+
+A regra geral do projeto continua valendo: *duas verdades sobre o mesmo número
+divergem na primeira manutenção*. Mas ela é sobre o mesmo número **no mesmo
+contexto**. Aqui os contextos são dois estatutos, e reaproveitar os parâmetros da
+CLT faria a memória de uma rescisão doméstica **citar uma lei que não rege aquele
+contrato**, com um link que leva o leitor ao lugar errado.
+
+Um caso-ouro trava exatamente isso: a etapa de dias no regime doméstico cita a
+Lei Complementar e **não** cita a 12.506; no celetista, o inverso.
+
+> O critério, quando aparecer o próximo número repetido: **os dois casos podem
+> mudar separadamente?** Se sim, são dois parâmetros. Se não — o FGTS de 8%, que
+> o art. 34, IV remete à própria Lei nº 8.036 —, é um só.
+
+### 7.26 A coincidência que não virou fórmula
+
+3,2% é exatamente 40% de 8%. O legislador dimensionou o fundo do doméstico para
+chegar ao mesmo lugar da multa, e um caso-ouro registra que os dois valores ficam
+a menos de um real de distância.
+
+**E ainda assim o motor não calcula um a partir do outro.** Os 3,2% saem da
+remuneração acumulada, não do saldo do FGTS — porque são contas vinculadas
+distintas, cada uma com correção própria, e a igualdade se desfaz no instante em
+que o usuário informa o saldo real de uma delas.
+
+Coincidência aritmética é atalho tentador e raciocínio errado. Registre-a no
+teste; não a use na conta.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -923,11 +975,16 @@ O que sobrou, em ordem:
 1. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
    do projeto que toca a tese do produto, e ela ficou aberta com uma calculadora
    publicada em cima.
-2. **CALC-012 · rescisão do empregado doméstico (LC 150/2015).** O motor de
-   rescisão já tem três modalidades; a doméstica muda alíquotas e acrescenta o
-   regime próprio do FGTS. É a que mais reaproveita do que existe.
-3. **CALC-017 · restituição estimada do IRPF anual.** Fecha o bloco tributário
-   do v2 e reaproveita as tabelas de IRRF que já estão cadastradas.
+2. **CALC-017 · restituição estimada do IRPF anual.** ⚠️ **Sondada e adiada em
+   01/08/2026, por fonte.** A página de tabelas da Receita traz a progressiva
+   ANUAL do ano-calendário **2026** — e a declaração que se entrega hoje é a do
+   ano-calendário **2025**, ano em que a tabela mensal mudou em maio. A anual de
+   2025 é, portanto, um conjunto próprio de números, que **não foi localizado**.
+   Construir sobre a tabela do ano errado produziria exatamente o dano que o
+   projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
+3. **CALC-018 · IR sobre renda fixa (tabela regressiva).** Fecha o bloco
+   tributário do v2 por outro caminho, e a tabela regressiva não tem o problema
+   de ano-calendário: os prazos e alíquotas estão no corpo da Lei nº 11.033/2004.
 4. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
    tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
    faz. Não está no catálogo com ID; exige decisão do mantenedor.

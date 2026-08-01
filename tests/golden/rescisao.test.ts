@@ -35,6 +35,7 @@ const BASE = {
   desligamento: '2026-07-15' as DataISO,
   salario: centavos(300_000),
   modalidade: 'sem-justa-causa' as const,
+  regime: 'clt' as const,
   avisoPrevio: 'indenizado' as const,
   temFeriasVencidas: false,
   saldoFgtsInformado: centavos(2_000_000),

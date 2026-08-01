@@ -157,6 +157,7 @@ describe('CALC-010 · entradas inválidas', () => {
 // ---------------------------------------------------------------------------
 
 const RESCISAO_BASE = {
+  regime: 'clt',
   admissao: '2016-03-01' as DataISO,
   desligamento: '2026-06-30' as DataISO,
   salario: centavos(300_000),

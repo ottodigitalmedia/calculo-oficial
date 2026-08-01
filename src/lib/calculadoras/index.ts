@@ -23,6 +23,7 @@ import { PORCENTAGEM } from './porcentagem'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
 import { ROTATIVO_CARTAO } from './rotativo-cartao'
 import { RESCISAO_ACORDO_MUTUO } from './rescisao-acordo-mutuo'
+import { RESCISAO_DOMESTICO } from './rescisao-domestico'
 import { RESCISAO_PEDIDO_DEMISSAO } from './rescisao-pedido-demissao'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
 import { SALARIO_LIQUIDO } from './salario-liquido'
@@ -34,6 +35,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RESCISAO_SEM_JUSTA_CAUSA,
   RESCISAO_PEDIDO_DEMISSAO,
   RESCISAO_ACORDO_MUTUO,
+  RESCISAO_DOMESTICO,
   AVISO_PREVIO,
   SEGURO_DESEMPREGO,
   CUSTO_EMPREGADOR,

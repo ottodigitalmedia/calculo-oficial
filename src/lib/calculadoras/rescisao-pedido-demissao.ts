@@ -43,6 +43,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       desligamento: texto(valores, 'desligamento') as never,
       salario: centavos(numero(valores, 'salario')),
       modalidade: 'pedido-demissao',
+      regime: 'clt',
       avisoPrevio: texto(valores, 'avisoPrevio') === 'nao-cumprido' ? 'nao-cumprido' : 'cumprido',
       temFeriasVencidas: texto(valores, 'feriasVencidas') === 'sim',
       // O saldo do FGTS não entra: sem multa, ele não afeta nenhuma verba.

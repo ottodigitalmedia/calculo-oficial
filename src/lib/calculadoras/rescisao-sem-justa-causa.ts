@@ -35,6 +35,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       desligamento: texto(valores, 'desligamento') as never,
       salario: centavos(numero(valores, 'salario')),
       modalidade: 'sem-justa-causa',
+      regime: 'clt',
       avisoPrevio: texto(valores, 'avisoPrevio') === 'trabalhado' ? 'trabalhado' : 'indenizado',
       temFeriasVencidas: texto(valores, 'feriasVencidas') === 'sim',
       saldoFgtsInformado: centavos(numero(valores, 'saldoFgts')),

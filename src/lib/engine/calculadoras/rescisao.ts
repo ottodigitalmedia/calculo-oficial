@@ -93,11 +93,31 @@ export type Modalidade = 'sem-justa-causa' | 'pedido-demissao' | 'acordo-mutuo'
  */
 export type ModalidadeAviso = 'indenizado' | 'trabalhado' | 'cumprido' | 'nao-cumprido'
 
+/**
+ * Qual estatuto rege o contrato. **Eixo ORTOGONAL à modalidade**, e é isso que
+ * o torna barato: um doméstico também pode ser dispensado, pedir demissão ou
+ * fazer acordo, e as verbas base são as mesmas.
+ *
+ * O que a Lei Complementar nº 150/2015 muda:
+ *
+ *   1. **Não há multa de 40%.** O art. 22 afasta expressamente os §§ 1º a 3º do
+ *      art. 18 da Lei nº 8.036 e põe no lugar um fundo de 3,2% da remuneração,
+ *      formado mês a mês em variação distinta da conta vinculada.
+ *   2. O aviso prévio tem **norma própria** — art. 23 —, com os mesmos números
+ *      da Lei nº 12.506/2011 e fundamento distinto.
+ *
+ * Tudo o mais — saldo, 13º, férias, e as incidências de INSS e IRRF verba a
+ * verba — é idêntico. Por isso `regime` entrou como campo desta entrada, e não
+ * como um segundo motor.
+ */
+export type Regime = 'clt' | 'domestico'
+
 export interface EntradaRescisao {
   readonly admissao: DataISO
   readonly desligamento: DataISO
   readonly salario: Centavos
   readonly modalidade: Modalidade
+  readonly regime: Regime
   readonly avisoPrevio: ModalidadeAviso
   readonly temFeriasVencidas: boolean
   /** Saldo real da conta vinculada. Zero significa "estimar" (`RN-023`). */
@@ -127,6 +147,10 @@ export interface SaidaRescisao {
   readonly fracaoAvisoBp: BasisPoints
   /** Percentual da multa aplicado, conforme a modalidade. */
   readonly multaBp: BasisPoints
+  /** No doméstico, o fundo de 3,2% acumulado; zero no regime celetista. */
+  readonly indenizacaoCompensatoria: Centavos
+  /** Verdadeiro quando o fundo é movimentado pelo trabalhador. */
+  readonly indenizacaoLiberada: boolean
   /** Quanto da conta vinculada pode ser movimentado. */
   readonly saqueDisponivel: Centavos
   readonly limiteSaqueBp: BasisPoints
@@ -159,9 +183,16 @@ export function calcularRescisao(
     return { ok: false, motivo: 'entrada_incompleta', detalhe: 'Informe o último salário bruto para ver o resultado.' }
   }
 
-  const base = inteiro(registro, 'aviso-previo-dias-base', dataReferencia)
-  const porAno = inteiro(registro, 'aviso-previo-dias-por-ano', dataReferencia)
-  const maximo = inteiro(registro, 'aviso-previo-dias-maximo', dataReferencia)
+  /**
+   * O prefixo dos parâmetros de aviso muda com o regime. Números iguais, normas
+   * distintas — ver a nota em `params/data/domestico.ts`.
+   */
+  const prefixoAviso = entrada.regime === 'domestico' ? 'domestico-aviso-previo' : 'aviso-previo'
+  const idAvisoBase = `${prefixoAviso}-dias-base`
+
+  const base = inteiro(registro, idAvisoBase, dataReferencia)
+  const porAno = inteiro(registro, `${prefixoAviso}-dias-por-ano`, dataReferencia)
+  const maximo = inteiro(registro, `${prefixoAviso}-dias-maximo`, dataReferencia)
   const aliquotaFgts = registro.resolver('fgts-aliquota-deposito', dataReferencia)
   /**
    * Qual multa, decidido pela modalidade — e não uma constante com desconto
@@ -174,6 +205,19 @@ export function calcularRescisao(
       ? 'fgts-multa-acordo-mutuo'
       : 'fgts-multa-sem-justa-causa'
   const multaFgts = registro.resolver(idDaMulta, dataReferencia)
+
+  /**
+   * No doméstico não há multa a resolver — há um fundo. A LC 150 afasta os
+   * §§ 1º a 3º do art. 18 da Lei nº 8.036 por remissão negativa, e é dela que
+   * sai o percentual do depósito mensal.
+   */
+  const indenizacaoDomestico =
+    entrada.regime === 'domestico'
+      ? registro.resolver('domestico-indenizacao-compensatoria', dataReferencia)
+      : null
+  if (indenizacaoDomestico && !indenizacaoDomestico.ok) {
+    return { ok: false, motivo: 'vigencia_ausente', detalhe: indenizacaoDomestico.detalhe }
+  }
 
   if (base === null || porAno === null || maximo === null) {
     return { ok: false, motivo: 'vigencia_ausente', detalhe: 'Não há parâmetros de aviso prévio para a data informada.' }
@@ -217,7 +261,7 @@ export function calcularRescisao(
   const proporcional = quemAvisa === 'empregador'
   const diasAviso = diasDeAvisoPrevio(anos, base, porAno, maximo, quemAvisa)
 
-  const resolvidaBase = registro.resolver('aviso-previo-dias-base', dataReferencia)
+  const resolvidaBase = registro.resolver(idAvisoBase, dataReferencia)
   if (resolvidaBase.ok) traco.vigencias.add(resolvidaBase.resolvida.vigencia.id)
 
   registrar({
@@ -235,7 +279,7 @@ export function calcularRescisao(
     ...(resolvidaBase.ok
       ? {
           parametro: {
-            parametroId: 'aviso-previo-dias-base',
+            parametroId: idAvisoBase,
             nome: resolvidaBase.resolvida.parametro.nome,
             vigenciaInicio: resolvidaBase.resolvida.vigencia.inicio,
             vigenciaFim: resolvidaBase.resolvida.vigencia.fim,
@@ -421,24 +465,34 @@ export function calcularRescisao(
 
   const fgtsEstimado = entrada.saldoFgtsInformado <= 0
 
+  /**
+   * Remuneração acumulada do contrato, sempre calculada.
+   *
+   * Ela é a base da ESTIMATIVA de FGTS e, no doméstico, a base do fundo de 3,2%
+   * — que é conta vinculada em variação distinta e cujo saldo o usuário não
+   * informa. Por isso ela existe mesmo quando o saldo do FGTS veio informado.
+   */
+  const mesesDeContratoTotal = Math.max(
+    0,
+    (desligamento.ano - admissao.ano) * AVOS_NO_ANO + (desligamento.mes - admissao.mes),
+  )
+  const remuneracaoDaEstimativa = proporcao(
+    entrada.salario,
+    mesesDeContratoTotal * (AVOS_NO_ANO + 1),
+    AVOS_NO_ANO,
+    POLITICA,
+  )
+
   let baseFgts: Centavos
   if (fgtsEstimado) {
     // `RN-023` — estimativa declarada, nunca apresentada como saldo real. Conta
     // 13 remunerações por ano (12 meses + gratificação natalina), porque o
     // art. 15 inclui a Gratificação de Natal na base.
-    const mesesDeContrato =
-      (desligamento.ano - admissao.ano) * AVOS_NO_ANO + (desligamento.mes - admissao.mes)
-    const remuneracaoTotal = proporcao(
-      entrada.salario,
-      Math.max(0, mesesDeContrato) * (AVOS_NO_ANO + 1),
-      AVOS_NO_ANO,
-      POLITICA,
-    )
-    baseFgts = aplicarAliquota(remuneracaoTotal, aliquotaDeposito, POLITICA)
+    baseFgts = aplicarAliquota(remuneracaoDaEstimativa, aliquotaDeposito, POLITICA)
 
     registrar({
       rotulo: 'Depósitos de FGTS — estimativa',
-      formula: `${Math.max(0, mesesDeContrato)} meses × ${reais(entrada.salario)} (+ 13º) × 8,00%`,
+      formula: `${mesesDeContratoTotal} meses × ${reais(entrada.salario)} (+ 13º) × ${percentual(aliquotaDeposito)}`,
       resultado: baseFgts,
       parametro: {
         parametroId: 'fgts-aliquota-deposito',
@@ -471,10 +525,10 @@ export function calcularRescisao(
    * verbas lê-se como defeito de cálculo, não como ausência de direito
    * (`03-functional-spec` §3.3). A nota fixa explica a ausência.
    */
-  const temMulta = entrada.modalidade !== 'pedido-demissao'
+  const temMulta = entrada.regime === 'clt' && entrada.modalidade !== 'pedido-demissao'
   const multa = temMulta ? aplicarAliquota(baseFgts, aliquotaMulta, POLITICA) : ZERO
 
-  if (!temMulta) {
+  if (!temMulta && entrada.regime === 'clt') {
     registrar({
       rotulo: 'Sem multa de FGTS',
       formula: 'A multa de 40% é devida na despedida pelo empregador sem justa causa',
@@ -483,6 +537,56 @@ export function calcularRescisao(
       justificativa:
         'No pedido de demissão não há multa de FGTS nem direito ao saque, salvo nas ' +
         'hipóteses previstas em lei.',
+    })
+  }
+
+  /**
+   * O FUNDO DE 3,2% — o que existe no lugar da multa.
+   *
+   * Não é percentual do saldo do FGTS: é um depósito próprio, de 3,2% da
+   * remuneração de cada mês, em variação distinta da conta vinculada. Calculá-lo
+   * como fração do saldo daria número parecido — 3,2% é exatamente 40% de 8% —,
+   * mas seria raciocínio errado, e quebraria no instante em que o usuário
+   * informasse o saldo real da conta, que tem correção própria.
+   *
+   * Por isso ele sai da mesma REMUNERAÇÃO ACUMULADA de que sai a estimativa do
+   * FGTS, e não do saldo.
+   */
+  let indenizacaoCompensatoria: Centavos = ZERO
+  let indenizacaoLiberada = false
+
+  if (entrada.regime === 'domestico' && indenizacaoDomestico?.ok) {
+    const v = indenizacaoDomestico.resolvida.vigencia.valor
+    if (v.tipo !== 'percentual') {
+      return { ok: false, motivo: 'entrada_invalida', detalhe: 'O parâmetro de indenização não é percentual.' }
+    }
+    const aliquotaIndenizacao = basisPoints(v.aliquotaBp)
+    traco.vigencias.add(indenizacaoDomestico.resolvida.vigencia.id)
+
+    // O art. 22, § 1º lista quem movimenta o fundo em cada hipótese.
+    indenizacaoLiberada = entrada.modalidade === 'sem-justa-causa'
+
+    const acumulado = aplicarAliquota(
+      // A mesma base da estimativa de FGTS, reconstruída a partir dela para não
+      // duplicar a contagem de meses: base ÷ 8% × 3,2%.
+      remuneracaoDaEstimativa,
+      aliquotaIndenizacao,
+      POLITICA,
+    )
+    indenizacaoCompensatoria = indenizacaoLiberada ? acumulado : ZERO
+
+    registrar({
+      rotulo: indenizacaoLiberada
+        ? 'Indenização compensatória — 3,2% acumulados'
+        : 'Indenização compensatória — movimentada pelo empregador',
+      formula: `${reais(remuneracaoDaEstimativa)} (remuneração acumulada) × ${percentual(aliquotaIndenizacao)}`,
+      resultado: indenizacaoCompensatoria,
+      parametro: citar(indenizacaoDomestico.resolvida),
+      justificativa: indenizacaoLiberada
+        ? 'No doméstico não existe multa de 40%: a Lei Complementar nº 150/2015 afasta os §§ 1º ' +
+          'a 3º do art. 18 da Lei nº 8.036 e põe no lugar este fundo, formado mês a mês.'
+        : 'O fundo existe e foi depositado, mas nesta hipótese quem o movimenta é o empregador, ' +
+          'pelo art. 22, § 1º. Ele não entra no que você recebe.',
     })
   }
 
@@ -721,7 +825,9 @@ export function calcularRescisao(
       fgtsEstimado,
       baseFgts,
       fracaoAvisoBp,
-      multaBp: aliquotaMulta,
+      multaBp: temMulta ? aliquotaMulta : basisPoints(0),
+      indenizacaoCompensatoria,
+      indenizacaoLiberada,
       saqueDisponivel,
       limiteSaqueBp,
     },
