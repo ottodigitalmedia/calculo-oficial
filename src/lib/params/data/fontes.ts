@@ -598,6 +598,47 @@ export const LC_150_ART_23: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+// ---------------------------------------------------------------------------
+// Renda fixa — CALC-018
+// ---------------------------------------------------------------------------
+
+/**
+ * A tabela regressiva do imposto de renda sobre aplicações financeiras.
+ *
+ * Art. 1º: 22,5% até 180 dias; 20% de 181 a 360; 17,5% de 361 a 720; 15% acima
+ * de 720. Art. 3º, II: isenção, na fonte e na declaração, da remuneração
+ * produzida por letras hipotecárias, CRI e LCI.
+ *
+ * **UMA MEDIDA PROVISÓRIA QUASE MUDOU TUDO ISSO, E CADUCOU.** A MP nº 1.303, de
+ * 11 de junho de 2025, propunha substituir a tabela regressiva por alíquota
+ * única e tributar os títulos hoje isentos. O Planalto marca a MP com
+ * **"Vigência encerrada"** — ela perdeu eficácia sem conversão em lei, e a Lei
+ * nº 11.033 vale exatamente como escrita.
+ *
+ * O texto compilado traz a remissão "(Vide Medida Provisória nº 1.303, de 2025)"
+ * ao lado de quase todo dispositivo, o que assusta na primeira leitura. A
+ * etiqueta seguinte — "Vigência encerrada" — é a que decide, e ela está na
+ * página da própria MP. Conferido nas duas em 01/08/2026.
+ *
+ * É o segundo caso do dia, depois do art. 2º da Resolução CMN nº 4.765: norma
+ * que existe no texto e não vale mais. Ver `ESTADO-DO-PROJETO` §7.20.
+ */
+export const LEI_11033_ART_1: Fonte = {
+  id: 'lei-11033-2004-art-1',
+  norma: 'Lei nº 11.033, de 21 de dezembro de 2004',
+  dispositivo: 'Art. 1º, I a IV',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_11033_ART_3: Fonte = {
+  id: 'lei-11033-2004-art-3',
+  norma: 'Lei nº 11.033, de 21 de dezembro de 2004',
+  dispositivo: 'Art. 3º, II',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm',
+  orgao: 'Congresso Nacional',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -644,4 +685,6 @@ export const FONTES: readonly Fonte[] = [
   STF_TEMA_985,
   LC_150_ART_22,
   LC_150_ART_23,
+  LEI_11033_ART_1,
+  LEI_11033_ART_3,
 ]
