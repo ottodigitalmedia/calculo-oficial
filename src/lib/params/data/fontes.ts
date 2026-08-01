@@ -481,6 +481,73 @@ export const MTE_TABELA_SEGURO_DESEMPREGO: Fonte = {
   orgao: 'Ministério do Trabalho e Emprego',
 }
 
+// ---------------------------------------------------------------------------
+// Cheque especial — CALC-030
+// ---------------------------------------------------------------------------
+
+/**
+ * O teto de 8% ao mês — e uma lição sobre ler a norma inteira.
+ *
+ * Art. 3º: *"As taxas de juros remuneratórios cobradas sobre o valor utilizado
+ * do cheque especial estão limitadas a, no máximo, 8% (oito por cento) ao
+ * mês."* Vigente desde 6 de janeiro de 2020, pelo art. 6º.
+ *
+ * **O art. 2º da mesma resolução NÃO vale mais.** Ele admitia tarifa de até
+ * 0,25% ao mês sobre o limite que excedesse R$ 500,00, e foi **revogado a partir
+ * de 1º/11/2021** pela Resolução CMN nº 4.962/2021 — além de ter sido declarado
+ * **inconstitucional** pelo STF na ADI 6.407-DF.
+ *
+ * Toda descrição secundária desta resolução que se encontra por aí ainda cita a
+ * tarifa, porque descreve o texto de 2019. Construir a calculadora a partir de
+ * um resumo teria publicado uma cobrança extinta há cinco anos. É exatamente o
+ * que a regra "abra a fonte oficial, não o site que diz o que ela diz" existe
+ * para impedir — e desta vez ela pagou o próprio custo.
+ *
+ * Conferido no PDF consolidado do Banco Central em 01/08/2026.
+ */
+export const RES_CMN_4765: Fonte = {
+  id: 'resolucao-cmn-4765-2019',
+  norma: 'Resolução CMN nº 4.765, de 27 de novembro de 2019',
+  dispositivo: 'Art. 3º, caput',
+  url: 'https://normativos.bcb.gov.br/Lists/Normativos/Attachments/50875/Res_4765_v2_P.pdf',
+  orgao: 'Banco Central do Brasil',
+}
+
+// ---------------------------------------------------------------------------
+// Encargos do empregador — CALC-011
+// ---------------------------------------------------------------------------
+
+export const LEI_8212_ART_22: Fonte = {
+  id: 'lei-8212-1991-art-22',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991, com a redação das Leis nº 9.876, de 1999, e nº 9.732, de 1998',
+  dispositivo: 'Art. 22, I e II',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * A virada de entendimento que muda o custo de toda folha de pagamento.
+ *
+ * Até 2020 prevalecia a tese do STJ, firmada em repetitivo de 2014, de que o
+ * terço constitucional tinha natureza indenizatória e **não** sofria
+ * contribuição patronal. O STF decidiu o contrário no Tema 985 (RE 1.072.485):
+ * *"É legítima a incidência de contribuição social sobre o valor satisfeito a
+ * título de terço constitucional de férias."*
+ *
+ * Com **modulação**: a cobrança vale a partir de 15/09/2020, data da publicação
+ * da ata de julgamento.
+ *
+ * Não produz valor numérico — decide uma incidência. Por isso entra como
+ * `fundamento`, como as teses do STJ e do TST usadas em CALC-002.
+ */
+export const STF_TEMA_985: Fonte = {
+  id: 'stf-tema-985',
+  norma: 'Tema 985 da Repercussão Geral do Supremo Tribunal Federal (RE 1.072.485)',
+  dispositivo: 'Tese firmada, com modulação a partir de 15/09/2020',
+  url: 'https://portal.stf.jus.br/jurisprudenciaRepercussao/tema.asp?num=985',
+  orgao: 'Supremo Tribunal Federal',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -522,4 +589,7 @@ export const FONTES: readonly Fonte[] = [
   LEI_7998_ART_4,
   LEI_7998_ART_5,
   MTE_TABELA_SEGURO_DESEMPREGO,
+  RES_CMN_4765,
+  LEI_8212_ART_22,
+  STF_TEMA_985,
 ]

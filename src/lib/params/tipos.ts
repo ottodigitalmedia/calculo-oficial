@@ -56,6 +56,7 @@ export type OrgaoEmissor =
   // emitem **fundamento de incidência** — a tese que decide se uma verba sofre
   // contribuição ou imposto. `schema.ts` já admitia `jus.br` como domínio
   // oficial justamente por isso; faltava o órgão no tipo.
+  | 'Supremo Tribunal Federal'
   | 'Superior Tribunal de Justiça'
   | 'Tribunal Superior do Trabalho'
   | 'Banco Central do Brasil'
