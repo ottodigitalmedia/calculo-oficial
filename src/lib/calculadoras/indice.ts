@@ -166,6 +166,23 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto custa quitar hoje, com os juros reduzidos na proporção que a lei manda.',
   },
   {
+    slug: 'amortizacao-extra',
+    nome: 'Amortização extra — prazo ou parcela',
+    linhaDeContexto:
+      'O que rende mais com o mesmo dinheiro: encurtar o contrato ou baixar a prestação.',
+  },
+  {
+    slug: 'rentabilidade-de-aluguel',
+    nome: 'Rentabilidade de imóvel para locação',
+    linhaDeContexto: 'Quanto o imóvel rende de verdade — depois da vacância, do IPTU e da taxa.',
+  },
+  {
+    slug: 'reserva-de-emergencia',
+    nome: 'Reserva de emergência',
+    linhaDeContexto:
+      'De quanto ela precisa ser, quanto falta e em quanto tempo o seu aporte fecha.',
+  },
+  {
     slug: 'porcentagem',
     nome: 'Porcentagem',
     linhaDeContexto:

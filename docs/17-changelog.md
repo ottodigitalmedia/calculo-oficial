@@ -36,6 +36,53 @@ CALC-009, CALC-030, CALC-011, CALC-012, CALC-018, CALC-013, CALC-032 e CALC-031.
 O bloco de desligamento fechou, e o de crédito chegou a cinco.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
+### Adicionado · CALC-036, CALC-035 e CALC-044 · a fila do bloco A começou
+
+As três primeiras do **bloco A do v3** — o conjunto que `docs/18` §1 identificou
+como "não depende de nada que não exista hoje". Com o v2 esgotado até onde ia sem
+dependência externa (§4.2 de `ESTADO-DO-PROJETO`), é esta a fila que continua.
+
+**CALC-036 · amortização extra: prazo ou parcela.** Ela preenche um buraco real
+de CALC-026, e não é repetição dela. A quitação antecipada parte do **valor da
+parcela** e deduz o saldo devedor a valor presente — o que pressupõe parcela
+constante, ou seja, sistema francês. Num financiamento no SAC as prestações não
+se repetem, e o caminho não serve; o extrato, por outro lado, já traz o **saldo
+devedor**, que é por onde esta começa. E as duas escolhas aparecem **juntas**,
+sem o usuário ter de optar antes de ver o resultado: a escolha é o que ele veio
+decidir, e o banco costuma oferecer uma das duas sem mencionar a outra.
+
+O caso-ouro foi montado para ser conferível de cabeça: R$ 200.000,00 em 200
+prestações no SAC amortizam R$ 1.000,00 por mês, então R$ 20.000,00 de extra
+eliminam exatamente vinte prestações. A afirmação que a página faz — encurtar o
+prazo economiza mais que baixar a prestação — é **testada nos dois sistemas**, e
+não afirmada.
+
+**CALC-035 · rentabilidade de imóvel para locação.** O que ela existe para
+mostrar é a distância entre dois números: a rentabilidade bruta, que é a do
+anúncio, e a líquida, que é a que chega. A conta é feita **em um ano**, e não em
+um mês, porque três dos quatro custos são anuais ou intermitentes — mensalizar
+antes de somar obrigaria a inventar um duodécimo para a vacância, que não
+acontece todo mês. O IPTU varia por município, e `00-catalogo` §14 exclui dado
+hiperlocal: ele entra como campo, que é o que a própria exclusão prescreve.
+
+Ficam **declaradamente** de fora a valorização do imóvel — que é expectativa, não
+dado, e projetá-la daria a uma previsão a mesma aparência de solidez do resto da
+página — e o imposto de renda sobre o aluguel, que é conta sobre a pessoa e não
+sobre o imóvel.
+
+**CALC-044 · reserva de emergência.** Mesmo tratamento que CALC-032 deu aos "30%
+da renda": os seis meses que todo mundo repete **não estão em norma nenhuma**, e
+por isso são campo com padrão declarado como praxe — a memória de cálculo diz, na
+etapa, que a escolha foi do usuário. A calculadora estima valor e prazo e
+**declina** a pergunta seguinte: onde guardar é decisão que ela não toma.
+
+Sem aporte informado, ela diz que não há prazo a estimar em vez de devolver o
+teto do laço de simulação. Um "1.200 meses" seria lido como cálculo, e é limite
+de guarda — o mesmo erro de categoria que §7.5 registra sobre verificador que
+sempre passa.
+
+Rotas novas em 113,5 a 114,2 kB, todas com parte variável abaixo de 2 kB.
+
 ### Adicionado · CALC-031 · financiamento imobiliário, com os encargos dentro
 
 O que a separa de CALC-025 não é a amortização — é o que o banco cobra ao lado

@@ -8,6 +8,7 @@
 
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
 import { AMORTIZACAO } from './amortizacao'
+import { AMORTIZACAO_EXTRA } from './amortizacao-extra'
 import { AVISO_PREVIO } from './aviso-previo'
 import { BANCO_DE_HORAS } from './banco-de-horas'
 import { CAPACIDADE } from './capacidade'
@@ -22,8 +23,10 @@ import { HORAS_EXTRAS } from './horas-extras'
 import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
+import { LOCACAO } from './locacao'
 import { PORCENTAGEM } from './porcentagem'
 import { RENDA_FIXA } from './renda-fixa'
+import { RESERVA_DE_EMERGENCIA } from './reserva'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
 import { ROTATIVO_CARTAO } from './rotativo-cartao'
 import { RESCISAO_ACORDO_MUTUO } from './rescisao-acordo-mutuo'
@@ -59,6 +62,9 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   CAPACIDADE,
   FINANCIAMENTO_IMOBILIARIO,
   QUITACAO_ANTECIPADA,
+  AMORTIZACAO_EXTRA,
+  LOCACAO,
+  RESERVA_DE_EMERGENCIA,
   PORCENTAGEM,
   COMBUSTIVEL,
 ]

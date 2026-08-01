@@ -186,6 +186,24 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './quitacao-antecipada'
     ).then((m) => m.calcular),
+  'amortizacao-extra': () =>
+    import(
+      /* webpackChunkName: "calc-amortizacao-extra" */
+      /* webpackExports: ["calcular"] */
+      './amortizacao-extra'
+    ).then((m) => m.calcular),
+  'rentabilidade-de-aluguel': () =>
+    import(
+      /* webpackChunkName: "calc-locacao" */
+      /* webpackExports: ["calcular"] */
+      './locacao'
+    ).then((m) => m.calcular),
+  'reserva-de-emergencia': () =>
+    import(
+      /* webpackChunkName: "calc-reserva" */
+      /* webpackExports: ["calcular"] */
+      './reserva'
+    ).then((m) => m.calcular),
   porcentagem: () =>
     import(
       /* webpackChunkName: "calc-porcentagem" */

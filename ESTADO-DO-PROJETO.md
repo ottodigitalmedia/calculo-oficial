@@ -25,11 +25,11 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **26** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, duas de imóveis e a primeira do lado do empregador |
+| Calculadoras no ar | **29** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, a primeira de investimentos e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 694 de unidade · 316 ponta a ponta · 3 de vazamento |
+| Testes | 745 de unidade · 334 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 128,8 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
+| Orçamento de JavaScript | 128,9 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -37,7 +37,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
-- **Imóveis:** capacidade de financiamento · financiamento imobiliário completo
+- **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel
+- **Investimentos:** reserva de emergência
 - **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
@@ -133,9 +134,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 49 de 75
+## 4. Calculadoras pendentes — 46 de 75
 
-Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-044, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -170,7 +171,15 @@ externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 > três destas e mais nove do v3 — é a dependência de maior alcance que restou no
 > projeto inteiro, e as seis armadilhas do endpoint já estão medidas (§6.1).
 
-### 4.3 v3 — 28 calculadoras
+### 4.3 v3 — 25 pendentes de 28
+
+Publicadas em 01/08/2026: **CALC-035, CALC-036 e CALC-044** — as três primeiras do
+bloco A, aberto porque o v2 esgotou o que dava para fazer sem dependência
+externa. As linhas delas saíram da tabela.
+
+> **A fila do bloco A é o caminho padrão daqui em diante**, enquanto `ADR-006` e
+> a tabela anual do IRPF não se resolverem. `docs/18` §3 lista o conjunto inteiro
+> com dificuldade e armadilha de cada uma; nenhuma depende de pesquisa em norma.
 
 | ID | Calculadora | Categoria |
 |---|---|---|
@@ -184,12 +193,9 @@ externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 | CALC-028 | Plano de quitação (bola de neve vs. avalanche) | CRD |
 | CALC-033 | Custo total de aquisição de imóvel | IMV |
 | CALC-034 | Alugar vs. comprar — comparativo de longo prazo | IMV |
-| CALC-035 | Rentabilidade de imóvel para locação | IMV |
-| CALC-036 | Amortização extra no financiamento | IMV |
 | CALC-037 | Reajuste de aluguel por índice contratual | IMV |
 | CALC-042 | Quanto rende X reais por mês | INV |
 | CALC-043 | Meta de independência financeira | INV |
-| CALC-044 | Reserva de emergência — dimensionamento | INV |
 | CALC-049 | Precificação de hora — freelancer e autônomo | AUT |
 | CALC-050 | INSS do contribuinte individual e facultativo | AUT |
 | CALC-055 | Consumo e custo de viagem por combustível | VEI |
@@ -332,9 +338,12 @@ CALC-064.
 > **A contagem já esteve errada aqui, e o erro custava fila.** Este parágrafo
 > dizia 13, listando "CALC-039 a CALC-045" em bloco. `docs/18` §5.2 conferiu
 > contra a coluna `Fonte` do catálogo: **CALC-043 e CALC-044 não dependem de
-> série nenhuma** — são matemática pura, do bloco A, e podem ser feitas hoje. Em
-> compensação CALC-034 depende e ficou de fora da lista. Somar mal aqui não é
-> detalhe: mantém no bloqueado duas calculadoras que não estão.
+> série nenhuma** — são matemática pura, do bloco A. Em compensação CALC-034
+> depende e ficou de fora da lista. Somar mal aqui não é detalhe: mantém no
+> bloqueado duas calculadoras que não estão. **CALC-044 foi publicada no mesmo
+> dia em que a correção foi lida**, o que é a demonstração mais curta do custo do
+> erro de contagem: ela estava a poucas horas de trabalho e figurava como
+> bloqueada por uma API.
 
 ```
 GET https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados?formato=json&dataInicial=dd/MM/aaaa&dataFinal=dd/MM/aaaa
@@ -1041,7 +1050,8 @@ Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
 ~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8) ·
 ~~CALC-023~~ ✅ (§7.11) · ~~CALC-010~~ ✅ · ~~CALC-008~~ ✅ (§7.15) ·
 ~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14) · ~~CALC-031~~ ✅ (§7.30),
-que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2.
+que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2 · e as
+três primeiras do bloco A do v3: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅.
 
 O que sobrou, em ordem:
 
