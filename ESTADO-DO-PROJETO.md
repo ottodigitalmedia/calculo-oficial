@@ -8,7 +8,9 @@
 > redirecionando · fonte do INSS 2026 passou a ser o texto da portaria ·
 > orçamento de JavaScript passou a ser por calculadora · deploy automático ·
 > sobreposição com o projeto irmão decidida (§6.4) · **CALC-002 publicada**,
-> com a pesquisa de incidências fechada em fonte primária (`docs/19`).
+> com a pesquisa de incidências fechada em fonte primária (`docs/19`) ·
+> **o v2 chegou ao fim do que dava para construir sem dependência externa**, com
+> CALC-031 (§4.2) — e a próxima decisão de maior alcance passou a ser `ADR-006`.
 >
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
@@ -23,11 +25,11 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **25** de 75 — v1 completo, o bloco de desligamento fechado, seis de crédito e a primeira do lado do empregador |
+| Calculadoras no ar | **26** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, duas de imóveis e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 661 de unidade · 309 ponta a ponta · 3 de vazamento |
+| Testes | 694 de unidade · 316 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 129,1 kB de **150** na pior rota — e **16,7 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
+| Orçamento de JavaScript | 128,8 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -35,6 +37,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
+- **Imóveis:** capacidade de financiamento · financiamento imobiliário completo
 - **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
@@ -130,9 +133,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 50 de 75
+## 4. Calculadoras pendentes — 49 de 75
 
-Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030, CALC-032, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -145,52 +148,27 @@ mostra que **33 das restantes não dependem de nada**: nem de pesquisa em norma,
 nem de série externa. Entre elas estão as de maior valor publicitário do
 catálogo.
 
-### 4.2 v2 — 17 calculadoras
+### 4.2 v2 — 11 de 17 no ar, e as 6 que faltam estão TODAS bloqueadas
 
-**Trabalhista**
-| ID | Calculadora |
-|---|---|
-| CALC-008 | Rescisão — acordo mútuo (art. 484-A da CLT) |
-| CALC-009 | Seguro-desemprego — parcelas e valor |
-| CALC-010 | Aviso prévio proporcional (Lei 12.506/2011) |
+Publicadas: CALC-008, CALC-009, CALC-010, CALC-018, CALC-023, CALC-024,
+CALC-025, CALC-031, CALC-032, CALC-054 e CALC-070.
 
-**Tributos PF**
-| ID | Calculadora |
-|---|---|
-| CALC-017 | Restituição estimada do IRPF anual |
-| CALC-018 | IR sobre renda fixa — tabela regressiva |
+**Nenhuma das seis restantes depende só de escrever código.** Isso é resultado,
+não impedimento: o v2 esgotou o que dava para fazer sem resolver uma dependência
+externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 
-**Crédito e dívidas**
-| ID | Calculadora |
-|---|---|
-| CALC-023 | Juros do rotativo do cartão — custo real |
-| CALC-024 | CET — custo efetivo total de um empréstimo |
-| CALC-025 | Amortização — tabela completa SAC vs. Price |
+| ID | Calculadora | Bloqueio |
+|---|---|---|
+| CALC-017 | Restituição estimada do IRPF anual | A tabela ANUAL do ano-calendário 2025 não foi localizada — ver §8, item 2 |
+| CALC-039 | CDB/LCI/LCA — rendimento líquido com IR | Série do Banco Central (`ADR-006`, §6.1) |
+| CALC-040 | Comparador: Tesouro Selic vs. CDB vs. Poupança | Série do Banco Central — **e** campo de lista, como CALC-028 (§7.29) |
+| CALC-041 | Rendimento da poupança | Série do Banco Central |
+| CALC-047 | DAS-MEI — valor mensal por atividade | D-3 de `docs/18`: anexos da LC 123/2006 |
+| CALC-048 | Comparador CLT vs. PJ vs. MEI | D-3, mais premissas que precisam ficar visíveis, não embutidas |
 
-**Imóveis**
-| ID | Calculadora |
-|---|---|
-| CALC-031 | Financiamento imobiliário — SAC vs. Price completo |
-| CALC-032 | Capacidade de financiamento (renda × parcela) |
-
-**Investimentos** — as quatro dependem de série externa (ver §6.1)
-| ID | Calculadora |
-|---|---|
-| CALC-039 | CDB/LCI/LCA — rendimento líquido com IR |
-| CALC-040 | Comparador: Tesouro Selic vs. CDB vs. Poupança |
-| CALC-041 | Rendimento da poupança |
-
-**Autônomo, MEI e PJ**
-| ID | Calculadora |
-|---|---|
-| CALC-047 | DAS-MEI — valor mensal por atividade |
-| CALC-048 | Comparador CLT vs. PJ vs. MEI — renda líquida real |
-
-**Veículos e utilitários**
-| ID | Calculadora |
-|---|---|
-| CALC-054 | Álcool vs. gasolina — qual compensa |
-| CALC-070 | Porcentagem — aumento, desconto, variação |
+> **A leitura que isto sugere para a próxima sessão.** Resolver `ADR-006` libera
+> três destas e mais nove do v3 — é a dependência de maior alcance que restou no
+> projeto inteiro, e as seis armadilhas do endpoint já estão medidas (§6.1).
 
 ### 4.3 v3 — 28 calculadoras
 
@@ -347,8 +325,16 @@ As fichas são ponteiro de pesquisa. Elas encurtam a **busca**, nunca a
 
 ### 6.1 BCB SGS — a fonte mais reaproveitável
 
-`docs/fontes/bcb-sgs.md`. Resolve `ADR-006` (série econômica) e destrava 13
-calculadoras: CALC-037, CALC-039 a CALC-045, CALC-060 a CALC-064.
+`docs/fontes/bcb-sgs.md`. Resolve `ADR-006` (série econômica) e destrava **12**
+calculadoras: CALC-034, CALC-037, CALC-039 a CALC-042, CALC-045 e CALC-060 a
+CALC-064.
+
+> **A contagem já esteve errada aqui, e o erro custava fila.** Este parágrafo
+> dizia 13, listando "CALC-039 a CALC-045" em bloco. `docs/18` §5.2 conferiu
+> contra a coluna `Fonte` do catálogo: **CALC-043 e CALC-044 não dependem de
+> série nenhuma** — são matemática pura, do bloco A, e podem ser feitas hoje. Em
+> compensação CALC-034 depende e ficou de fora da lista. Somar mal aqui não é
+> detalhe: mantém no bloqueado duas calculadoras que não estão.
 
 ```
 GET https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados?formato=json&dataInicial=dd/MM/aaaa&dataFinal=dd/MM/aaaa
@@ -1021,48 +1007,80 @@ As duas saídas, quando chegar a hora:
 Como §7.4 registra, o molde cresce por **necessidade medida**. Duas calculadoras
 que precisam é medida; uma é palpite.
 
+### 7.30 A unidade do sistema não cabia no dado — e o dado do usuário resolveu
+
+CALC-031 precisava do prêmio do MIP, que a seguradora expressa como taxa sobre o
+saldo devedor. As taxas praticadas ficam na casa de **0,025% ao mês**, e o basis
+point tem resolução de 0,01%: `ADR-004` A-2 simplesmente **não representa esse
+número**. Arredondar para 0,02% ou 0,03% moveria o prêmio em 20% a 50% — e num
+produto cuja tese é auditabilidade, um encargo errado por metade é pior que
+encargo ausente.
+
+O reflexo seria ampliar a unidade. Seria caro e errado: `BasisPoints` atravessa
+as vinte e seis calculadoras, e mexer nela para acomodar uma desprotegeria todas.
+
+**A saída veio de perguntar que dado o usuário de fato tem em mãos.** Ele não
+tem a alíquota — tem a simulação do banco, que traz o prêmio em reais na
+primeira prestação. O campo passou a pedir isso, e o motor reduz o valor na
+proporção do saldo, que é o que "incide sobre o saldo devedor" significa. No
+primeiro mês a proporção devolve exatamente o número informado; nenhuma alíquota
+é inferida e exibida como se fosse do contrato.
+
+> **O padrão, quando a unidade do sistema não couber num parâmetro novo:**
+> antes de mexer na unidade, verifique se o usuário sequer possui a grandeza que
+> ela não representa. Com frequência o que ele tem é o **resultado** da taxa, não
+> a taxa — e aí a conta muda de direção, não de unidade.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
 fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
 ~~decidir a sobreposição com o projeto irmão~~ ✅ (§6.4) · ~~servir `www`~~ ✅.
 
-O que sobrou, em ordem:
-
 Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
 ~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8) ·
 ~~CALC-023~~ ✅ (§7.11) · ~~CALC-010~~ ✅ · ~~CALC-008~~ ✅ (§7.15) ·
-~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14).
+~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14) · ~~CALC-031~~ ✅ (§7.30),
+que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2.
 
 O que sobrou, em ordem:
 
-1. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
+1. **Implementar `ADR-006` — a coleta da série do Banco Central no build.**
+   Subiu para o primeiro lugar porque virou a dependência de maior alcance que
+   restou: libera **doze** calculadoras (CALC-039 a CALC-041 do v2 e mais nove do
+   v3), e é a única pendência cuja resolução destrava mais de uma fase. O
+   endpoint e as **seis armadilhas** já estão medidos em §6.1 — o que falta é
+   implementação, não pesquisa. Atenção à regra R-3: falha na coleta não
+   interrompe o pipeline, e a calculadora funciona com o último valor em cache,
+   **exibindo a data do dado**.
+2. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
    do projeto que toca a tese do produto, e ela ficou aberta com uma calculadora
    publicada em cima.
-2. **CALC-017 · restituição estimada do IRPF anual.** ⚠️ **Sondada e adiada em
+3. **CALC-017 · restituição estimada do IRPF anual.** ⚠️ **Sondada e adiada em
    01/08/2026, por fonte.** A página de tabelas da Receita traz a progressiva
    ANUAL do ano-calendário **2026** — e a declaração que se entrega hoje é a do
    ano-calendário **2025**, ano em que a tabela mensal mudou em maio. A anual de
    2025 é, portanto, um conjunto próprio de números, que **não foi localizado**.
    Construir sobre a tabela do ano errado produziria exatamente o dano que o
    projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
-3. **CALC-023 já feita; CALC-019 está BLOQUEADA pela mesma fonte que CALC-017.**
-   `docs/18` registra que ela "é CALC-017 rodado duas vezes" — ela compara os
-   dois modelos da declaração ANUAL, e depende da tabela anual que não foi
-   localizada. Não tente construí-la antes de resolver §5.1.
+   **CALC-019 está bloqueada pela mesma fonte** — `docs/18` registra que ela "é
+   CALC-017 rodado duas vezes".
 4. **CALC-028 · plano de quitação (bola de neve vs. avalanche).** Sem parâmetro
    legal, reaproveita `financeira.ts`. O obstáculo é de molde, não de fonte: ela
    precisa de uma LISTA de dívidas, e `Campo` não modela grupo repetido — decidir
-   entre campos fixos para N dívidas ou fazer o contrato crescer.
-4. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
-   tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
-   faz. Não está no catálogo com ID; exige decisão do mantenedor.
-4. **`/api/health` que responde igual em toda versão.** O passo de verificação
+   entre campos fixos para N dívidas ou fazer o contrato crescer. **A segunda
+   calculadora que precisa disso já tem nome:** CALC-040, do v2, que o `ADR-006`
+   destrava. Duas que precisam é a "necessidade medida" de §7.4 — quando as duas
+   estiverem na mesa, fazer o contrato crescer deixa de ser palpite.
+5. **`/api/health` que responde igual em toda versão.** O passo de verificação
    do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
    constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto
    irmão já faz assim.
-5. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
-6. **Os 7 guias restantes** (§4.6).
+6. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
+   tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
+   faz. Não está no catálogo com ID; exige decisão do mantenedor.
+7. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
+8. **Os 7 guias restantes** (§4.6).
 
 > **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
 > variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o

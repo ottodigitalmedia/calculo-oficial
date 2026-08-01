@@ -154,6 +154,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto de financiamento a sua renda sustenta — e quanto ele custa no total.',
   },
   {
+    slug: 'financiamento-imobiliario',
+    nome: 'Financiamento imobiliário',
+    linhaDeContexto:
+      'Quanto a prestação custa de verdade — com os seguros e a tarifa dentro da conta.',
+  },
+  {
     slug: 'quitacao-antecipada',
     nome: 'Quitação antecipada — economia de juros',
     linhaDeContexto:

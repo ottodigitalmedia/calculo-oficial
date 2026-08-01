@@ -31,10 +31,58 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 01/08/2026
 
-Treze calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
-CALC-009, CALC-030, CALC-011, CALC-012, CALC-018, CALC-013 e CALC-032. O bloco de desligamento
-fechou, e o de crédito chegou a cinco.
+Quatorze calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
+CALC-009, CALC-030, CALC-011, CALC-012, CALC-018, CALC-013, CALC-032 e CALC-031.
+O bloco de desligamento fechou, e o de crédito chegou a cinco.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
+
+### Adicionado · CALC-031 · financiamento imobiliário, com os encargos dentro
+
+O que a separa de CALC-025 não é a amortização — é o que o banco cobra ao lado
+dela. Seguro de morte e invalidez, seguro de danos ao imóvel e tarifa mensal de
+administração não aparecem na taxa anunciada, entram em toda prestação e, num
+contrato de trinta anos, respondem por uma fatia que surpreende quem só olhou o
+percentual. A calculadora existe para exibir essa fatia, e o resultado a declara
+em número e em proporção do total pago.
+
+**Nenhum dos três é estimado.** `docs/18` §3.2 já registrava o motivo — os
+prêmios variam por seguradora, por banco e pela idade do tomador, e não há fonte
+oficial que os fixe. São campos, preenchidos com o que está na simulação do
+banco. Com eles em branco, o resultado mostra apenas amortização e juros, e
+nenhuma linha de seguro aparece: não há zero a explicar.
+
+**A única modelagem assumida, e onde ela está declarada.** O MIP incide sobre o
+saldo devedor e o DFI sobre o valor de avaliação do imóvel. O primeiro cai a cada
+mês junto com o saldo; o segundo não muda, porque a base dele não muda. Como o
+que o usuário tem em mãos é o prêmio da **primeira** prestação, o dos meses
+seguintes sai pela proporção do saldo — que é o que "incide sobre o saldo
+devedor" significa. Nenhuma alíquota é inferida e exibida como se fosse do
+contrato: o que entra na conta é a proporção, e ela está na memória de cálculo,
+na nota e no FAQ.
+
+**O que a calculadora declara não fazer**, em vez de deixar o usuário descobrir
+depois: o saldo devedor não é corrigido por índice, e contratos do sistema
+financeiro da habitação costumam corrigi-lo mês a mês; o prêmio do seguro não é
+reajustado pela idade do segurado; e os custos de aquisição — ITBI, cartório,
+avaliação — ficam fora, porque são pagos uma vez e fora da prestação.
+
+**Conferência por concordância, não por tabela de terceiro.** Sem parâmetro legal
+e sem fonte contra a qual comparar, os casos-ouro se apoiam em duas coisas: a
+identidade *total = financiado + juros + seguros + tarifa*, que quebra se
+qualquer mês estiver errado, e a exigência de que, com os encargos zerados, este
+motor reproduza `calcularAmortizacao` **centavo a centavo** nos dois sistemas.
+São duas implementações independentes da mesma amortização, e a coincidência pega
+o erro que nenhuma das duas pegaria sozinha.
+
+O detalhamento decompõe o total em quatro linhas que somam a última — e um
+caso-ouro roda a função da **definição**, não a do motor, para travar isso.
+É o defeito de `ESTADO-DO-PROJETO` §7.12: em CALC-023 cada número estava certo e
+a coluna não fechava, porque a escolha de quais valores exibir acontece fora do
+motor.
+
+Rota nova em 114,5 kB, com 1,9 kB de parte variável. Nenhuma rota existente se
+moveu — o motor é arquivo próprio, e não uma ampliação de `credito.ts`, que teria
+engordado CALC-024, CALC-025 e CALC-026 sem benefício para elas.
 
 ### Adicionado · `cartao-teto-juros-encargos` · a partir de 2024-01-03
 

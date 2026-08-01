@@ -174,6 +174,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './capacidade'
     ).then((m) => m.calcular),
+  'financiamento-imobiliario': () =>
+    import(
+      /* webpackChunkName: "calc-financiamento-imobiliario" */
+      /* webpackExports: ["calcular"] */
+      './financiamento-imobiliario'
+    ).then((m) => m.calcular),
   'quitacao-antecipada': () =>
     import(
       /* webpackChunkName: "calc-quitacao-antecipada" */

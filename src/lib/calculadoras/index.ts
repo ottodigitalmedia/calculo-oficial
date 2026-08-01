@@ -16,6 +16,7 @@ import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
+import { FINANCIAMENTO_IMOBILIARIO } from './financiamento-imobiliario'
 import { FGTS } from './fgts'
 import { HORAS_EXTRAS } from './horas-extras'
 import { INSS_MENSAL } from './inss'
@@ -56,6 +57,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   ROTATIVO_CARTAO,
   CHEQUE_ESPECIAL,
   CAPACIDADE,
+  FINANCIAMENTO_IMOBILIARIO,
   QUITACAO_ANTECIPADA,
   PORCENTAGEM,
   COMBUSTIVEL,
