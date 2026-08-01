@@ -626,6 +626,51 @@ possível confirmar em fonte oficial nas tentativas feitas — a pergunta foi
 **substituída**, não suavizada. `CLAUDE.md`, regra 10: na dúvida, a afirmação não
 existe.
 
+### 7.12 Cada número certo, a soma errada — o pior defeito possível aqui
+
+Encontrado à mão em produção, em 01/08/2026, minutos depois de CALC-023 subir.
+Com o teto legal cortando, a tela mostrava:
+
+```
+Saldo que entrou no rotativo      R$ 1.000,00
+Juros de um mês de rotativo     − R$   150,00
+Juros do parcelamento           − R$ 2.888,00
+Total a pagar                     R$ 2.000,00
+```
+
+Todo número correto isoladamente: os juros abertos são os **sem teto**, o total
+é o **limitado**. E a soma não fecha. Quem lê não tem como saber por quê — lê
+como defeito de cálculo, que é a leitura mais destrutiva possível num produto
+cuja tese é confiança.
+
+**Nenhum caso-ouro do motor pegaria isso**, porque o motor devolvia os dois
+valores corretamente; o defeito nasceu ao escolher **quais** exibir. O teste que
+o trava roda a função da *definição*, não a do motor, e afirma que a soma das
+linhas é a última linha — nos dois cenários, com e sem teto.
+
+**A lição.** Quando o motor devolve tanto o valor bruto quanto o limitado,
+decida explicitamente qual deles vai para a tela, e teste a identidade da tela.
+Vale para todo teto, piso e arredondamento que vier.
+
+### 7.13 A frase que constrói confiança dizia 1990
+
+Defeito pré-existente, descoberto ao conferir CALC-023: o FGTS anunciava
+*"parâmetros legais vigentes em **15/06/1990**"*. Literalmente verdadeiro — a
+alíquota de 8% vige desde 1990 e nunca mudou — e lido como produto abandonado,
+na exata frase que existe para dizer ao visitante que o cálculo é atual.
+
+A origem é `anosDisponiveis`: com uma única vigência aberta, o único ano
+disponível é o de início, e a data de referência sintética vira `1990-06-15`.
+
+**A correção não foi mexer na data, foi parar de citá-la.** Quando há um só
+exercício, o seletor de período já fica escondido — ou seja, a data **não é
+escolha do usuário**, e pinar um dia dentro do intervalo não informa nada. O
+aviso passa a citar o **intervalo de vigência**: *"parâmetros legais em vigor a
+partir de 11/05/1990"*. Quando há mais de um exercício, a data volta, porque aí
+ela é escolha e muda o resultado.
+
+Afetava CALC-006, CALC-007 e CALC-023.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a

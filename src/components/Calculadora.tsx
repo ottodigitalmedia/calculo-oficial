@@ -15,7 +15,13 @@ import {
   type ValoresFormulario,
 } from '@/lib/calculadoras/tipos'
 import type { Resultado, Unidade } from '@/lib/engine/traco'
-import { formatarData, formatarNumero, formatarPercentual, formatarReal } from '@/lib/format/moeda'
+import {
+  formatarData,
+  formatarNumero,
+  formatarPercentual,
+  formatarPeriodo,
+  formatarReal,
+} from '@/lib/format/moeda'
 import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
 
 /**
@@ -254,7 +260,8 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
           estado={estado}
           rotulo={formulario.rotuloResultado}
           dataReferencia={dataReferencia}
-          temParametroLegal={cobertura !== null}
+          cobertura={cobertura}
+          periodoEhEscolha={anos.length > 1}
           {...(formulario.avisoAdicional ? { avisoAdicional: formulario.avisoAdicional } : {})}
         />
       </div>
@@ -278,14 +285,17 @@ function Resultado({
   estado,
   rotulo,
   dataReferencia,
-  temParametroLegal,
+  cobertura,
+  periodoEhEscolha,
   avisoAdicional,
 }: {
   readonly estado: Estado
   readonly rotulo: string
   readonly dataReferencia: string
-  /** Falso nas calculadoras cuja entrada é inteiramente digitada. */
-  readonly temParametroLegal: boolean
+  /** Nulo nas calculadoras cuja entrada é inteiramente digitada. */
+  readonly cobertura: { readonly inicio: string; readonly fim: string | null } | null
+  /** Verdadeiro quando há mais de um exercício a escolher. */
+  readonly periodoEhEscolha: boolean
   readonly avisoAdicional?: string
 }) {
   // Altura mínima reservada: nenhum estado empurra o que está abaixo
@@ -380,15 +390,29 @@ function Resultado({
 
         {/* RN-028: aviso de estimativa na MESMA dobra do resultado.
 
-            Duas redações, porque a frase única mentia. Ela citava "os parâmetros
-            legais vigentes em <data>" também no CET, na amortização e nos juros
-            compostos — calculadoras que não consultam parâmetro legal nenhum,
-            cuja entrada inteira é digitada. Num produto cuja tese é a
-            auditabilidade, alegar fundamento legal onde não há é o pior tipo de
-            imprecisão: some justamente na calculadora em que o leitor não tem
-            como conferir. */}
+            TRÊS REDAÇÕES, e cada uma corrige uma frase que enganava.
+
+            A original citava "os parâmetros legais vigentes em <data>" em toda
+            calculadora. Isso alegava fundamento legal no CET, na amortização e
+            nos juros compostos, que não consultam parâmetro nenhum — e num
+            produto cuja tese é a auditabilidade, alegar fundamento onde não há é
+            o pior tipo de imprecisão.
+
+            E pinava uma DATA onde ela não é escolha do usuário. O FGTS anunciava
+            "parâmetros legais vigentes em 15/06/1990": literalmente verdadeiro,
+            porque a alíquota de 8% vige desde 1990 e nunca mudou, e ainda assim
+            lido como produto desatualizado — na exata frase que existe para
+            construir confiança. Quando há um só exercício, o seletor de período
+            fica escondido, a data é sintética, e o que informa é o INTERVALO de
+            vigência, não um dia dentro dele. */}
         <p className="mt-5 rounded border border-[var(--color-warning-border)] bg-[var(--color-warning-surface)] p-3 text-sm">
-          {temParametroLegal ? (
+          {cobertura === null ? (
+            <>
+              Estimativa com base exclusivamente nos dados que você informou — esta calculadora
+              não consulta parâmetro legal com vigência. Confira se os valores digitados
+              correspondem ao contrato ou à proposta.
+            </>
+          ) : periodoEhEscolha ? (
             <>
               Estimativa com base nos dados informados e nos parâmetros legais vigentes em{' '}
               {formatarData(dataReferencia)}. O valor final pode variar conforme acordos,
@@ -396,9 +420,9 @@ function Resultado({
             </>
           ) : (
             <>
-              Estimativa com base exclusivamente nos dados que você informou — esta calculadora
-              não consulta parâmetro legal com vigência. Confira se os valores digitados
-              correspondem ao contrato ou à proposta.
+              Estimativa com base nos dados informados e nos parâmetros legais em vigor{' '}
+              {formatarPeriodo(cobertura.inicio, cobertura.fim)}. O valor final pode variar
+              conforme acordos, convenções coletivas e particularidades do seu contrato.
             </>
           )}
           {avisoAdicional ? ` ${avisoAdicional}` : ''}

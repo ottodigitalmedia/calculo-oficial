@@ -44,12 +44,36 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
 
   const v = r.valores
 
-  const detalhamento: LinhaDetalhamento[] = [
-    { rotulo: 'Saldo que entrou no rotativo', valor: v.financiado, sinal: 'neutro' },
-    { rotulo: 'Juros de um mês de rotativo', valor: v.jurosDoRotativo, sinal: 'debito' },
-    { rotulo: 'Juros do parcelamento', valor: v.jurosDoParcelamento, sinal: 'debito' },
-    { rotulo: 'Total a pagar', valor: v.totalPago, sinal: 'neutro' },
-  ]
+  /**
+   * O detalhamento tem de FECHAR — e quando o teto corta, a abertura em rotativo
+   * e parcelamento deixa de fechar.
+   *
+   * Conferido em produção: com R$ 1.000,00 no rotativo a 15% e 24 parcelas a
+   * 14%, as linhas mostravam R$ 1.000,00 + R$ 150,00 + R$ 2.888,00 ao lado de um
+   * total de R$ 2.000,00. Cada número estava certo isoladamente e a soma não
+   * batia, porque os juros exibidos eram os **sem teto** e o total era o
+   * **limitado**. Quem lê não tem como saber disso — lê como defeito de cálculo,
+   * que é a leitura mais destrutiva possível num produto cuja tese é confiança.
+   *
+   * Quando o teto corta, a abertura por operação vira informação da memória e da
+   * nota, e o detalhamento mostra o que de fato será cobrado.
+   */
+  const detalhamento: LinhaDetalhamento[] = v.tetoAtingido
+    ? [
+        { rotulo: 'Saldo que entrou no rotativo', valor: v.financiado, sinal: 'neutro' },
+        {
+          rotulo: 'Juros e encargos, limitados pelo teto legal',
+          valor: v.jurosEEncargos,
+          sinal: 'debito',
+        },
+        { rotulo: 'Total a pagar', valor: v.totalPago, sinal: 'neutro' },
+      ]
+    : [
+        { rotulo: 'Saldo que entrou no rotativo', valor: v.financiado, sinal: 'neutro' },
+        { rotulo: 'Juros de um mês de rotativo', valor: v.jurosDoRotativo, sinal: 'debito' },
+        { rotulo: 'Juros do parcelamento', valor: v.jurosDoParcelamento, sinal: 'debito' },
+        { rotulo: 'Total a pagar', valor: v.totalPago, sinal: 'neutro' },
+      ]
 
   const destaques: Destaque[] = [
     { rotulo: 'Parcela do parcelamento', valor: formatarReal(v.parcelaDoParcelamento) },

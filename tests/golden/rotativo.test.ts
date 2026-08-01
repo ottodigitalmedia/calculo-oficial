@@ -21,6 +21,7 @@
 
 import { describe, expect, it } from 'vitest'
 
+import { calcular } from '../../src/lib/calculadoras/rotativo-cartao'
 import { calcularRotativo } from '../../src/lib/engine/calculadoras/rotativo'
 import { basisPoints, centavos } from '../../src/lib/engine/types'
 import { CREDITO } from '../../src/lib/params/data/credito'
@@ -205,6 +206,68 @@ describe('CALC-023 · entradas que não produzem cálculo', () => {
 
   it('valor pago negativo é recusado', () => {
     expect(calcularRotativo({ ...BASE, valorPago: centavos(-1) }, REF, registro).ok).toBe(false)
+  })
+})
+
+/**
+ * O DETALHAMENTO TEM DE FECHAR.
+ *
+ * Defeito encontrado à mão em produção, em 01/08/2026: quando o teto cortava, a
+ * tela mostrava os juros SEM teto abertos por operação ao lado de um total JÁ
+ * limitado. Cada número certo isoladamente, a soma não batendo — e quem lê não
+ * tem como saber por quê; lê como defeito de cálculo.
+ *
+ * O teste roda a função da DEFINIÇÃO, e não a do motor, porque é ali que o
+ * detalhamento é montado. Nenhum caso-ouro do motor pegaria isto.
+ */
+describe('CALC-023 · o que aparece na tela soma', () => {
+  const somaDoDetalhamento = (valores: Record<string, number | string>) => {
+    const r = calcular(valores, REF)
+    if (!r.ok) throw new Error(`esperado sucesso, veio ${r.motivo}: ${r.detalhe}`)
+    const linhas = r.valores.detalhamento
+    const total = linhas[linhas.length - 1]
+    // Todas as linhas menos a última, com o sinal que a tela exibe.
+    const parcelas = linhas.slice(0, -1).reduce((acc, l) => acc + l.valor, 0)
+    return { parcelas, total: total?.valor ?? 0 }
+  }
+
+  it('fecha no cenário sem teto', () => {
+    const { parcelas, total } = somaDoDetalhamento({
+      valorDaFatura: 200_000,
+      valorPago: 100_000,
+      taxaRotativo: 1_500,
+      taxaParcelamento: 800,
+      parcelas: 12,
+    })
+    expect(parcelas).toBe(total)
+  })
+
+  it('fecha no cenário em que o teto corta — o caso do defeito', () => {
+    const { parcelas, total } = somaDoDetalhamento({
+      valorDaFatura: 200_000,
+      valorPago: 100_000,
+      taxaRotativo: 1_500,
+      taxaParcelamento: 1_400,
+      parcelas: 24,
+    })
+    expect(parcelas).toBe(total)
+  })
+
+  it('quando o teto corta, a nota informa o valor que seria cobrado sem ele', () => {
+    const r = calcular(
+      {
+        valorDaFatura: 200_000,
+        valorPago: 100_000,
+        taxaRotativo: 1_500,
+        taxaParcelamento: 1_400,
+        parcelas: 24,
+      },
+      REF,
+    )
+    if (!r.ok) throw new Error('esperado sucesso')
+    // A abertura por operação não some do produto: ela migra para a nota e para
+    // a memória de cálculo, onde o contexto explica a diferença.
+    expect(r.valores.notas?.join(' ')).toContain('a lei limita a cobrança')
   })
 })
 

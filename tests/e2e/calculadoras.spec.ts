@@ -152,6 +152,29 @@ for (const c of CALCULADORAS) {
 }
 
 /**
+ * O aviso de estimativa não pode citar uma data que ninguém escolheu.
+ *
+ * O FGTS anunciava "parâmetros legais vigentes em **15/06/1990**". A frase era
+ * literalmente verdadeira — a alíquota de 8% vige desde 1990 e nunca mudou —, e
+ * ainda assim se lia como produto abandonado, na exata frase que existe para
+ * construir confiança. Quando há um só exercício o seletor fica escondido, a
+ * data é sintética, e o que informa é o intervalo de vigência.
+ */
+test('o aviso de estimativa cita intervalo quando o período não é escolha', async ({ page }) => {
+  await page.goto('/calculadora/fgts?salario=300000&mesesTrabalhados=12')
+  const resultado = page.locator('main [aria-live]')
+  await expect(resultado).toContainText('em vigor a partir de')
+  await expect(resultado).not.toContainText('vigentes em 15/06/1990')
+})
+
+test('o aviso cita a data quando o período É escolha do usuário', async ({ page }) => {
+  await page.goto('/calculadora/salario-liquido?salarioBruto=500000')
+  const resultado = page.locator('main [aria-live]')
+  await expect(page.getByLabel('Período de referência')).toBeVisible()
+  await expect(resultado).toContainText('parâmetros legais vigentes em')
+})
+
+/**
  * "− R$ 0,00" anuncia um desconto que não existe. Em CALC-005 ele aparecia ao
  * lado de verbas reais, e nesse contexto lê-se como defeito de cálculo — não
  * como ausência de imposto.

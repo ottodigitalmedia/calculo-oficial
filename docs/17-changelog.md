@@ -90,6 +90,24 @@ CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entr
 combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
 de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
 
+### Corrigido · o detalhamento de CALC-023 não fechava quando o teto cortava
+
+Encontrado à mão em produção, minutos depois do deploy. A tela abria os juros
+**sem teto** por operação ao lado de um total **já limitado**: cada número certo
+isoladamente, a soma não batendo. Quando o teto corta, o detalhamento passa a
+mostrar a cobrança efetiva, e a abertura por operação vive na nota e na memória.
+
+Travado por teste que roda a função da definição, não a do motor — nenhum
+caso-ouro do motor pegaria, porque o motor devolvia os dois valores corretamente.
+
+### Corrigido · o aviso de estimativa citava uma data que ninguém escolheu
+
+O FGTS anunciava "parâmetros legais vigentes em 15/06/1990". Verdadeiro — a
+alíquota de 8% vige desde 1990 — e lido como produto abandonado. Quando há um só
+exercício disponível, o seletor de período já fica escondido e a data não é
+escolha do usuário; o aviso passa a citar o intervalo de vigência. Afetava
+CALC-006, CALC-007 e CALC-023.
+
 ### Corrigido · o aviso de estimativa alegava fundamento legal onde não havia
 
 A frase única dizia *"parâmetros legais vigentes em <data>"* também no CET, na
