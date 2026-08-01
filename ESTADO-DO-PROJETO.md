@@ -746,6 +746,21 @@ O item 2 é o ponto em que rescisões por acordo mais divergem na prática. A
 leitura está **declarada na memória de cálculo**, com link para o dispositivo, e
 travada por caso-ouro que compara as duas modalidades com a mesma entrada.
 
+### 7.16 `Destaque.valor` é texto livre — e por isso escapa da formatação
+
+`Tempo de serviço projetado até: **2026-08-29**` esteve no ar desde que CALC-002
+foi publicada. Não era erro de cálculo, e nenhum caso-ouro pegaria: o motor
+devolve `DataISO` porque é o tipo certo para ele devolver.
+
+A causa é estrutural. Todo valor **numérico** do resultado atravessa
+`formatarValor` no componente, e por isso não tem como sair sem formatação. Mas
+`Destaque.valor` é `string` — a escotilha que existe para grandezas que o molde
+não modela —, e o que passa por ela sai na tela exatamente como foi escrito.
+
+**Ao criar um `Destaque`, pergunte se o valor já passou por `lib/format/`.** Foi
+o que faltou em três lugares, todos escritos em momentos diferentes e todos com o
+mesmo descuido.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a

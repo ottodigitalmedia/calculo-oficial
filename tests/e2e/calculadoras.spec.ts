@@ -186,3 +186,20 @@ test('valor zerado no detalhamento não leva sinal de menos', async ({ page }) =
   await expect(detalhamento).not.toContainText('− R$ 0,00')
   await expect(detalhamento).not.toContainText('+ R$ 0,00')
 })
+
+/**
+ * Data em destaque sai em pt-BR, não em ISO.
+ *
+ * `Tempo de serviço projetado até: 2026-08-29` estava assim desde que CALC-002
+ * foi ao ar. Não é erro de cálculo — é a única data do produto que escapava de
+ * `formatarData`, porque `Destaque.valor` é texto livre e não passa pela
+ * formatação do componente.
+ */
+test('a data projetada aparece em pt-BR, e não em ISO', async ({ page }) => {
+  await page.goto(
+    '/calculadora/rescisao-sem-justa-causa?admissao=2016-03-01&desligamento=2026-06-30&salario=300000',
+  )
+  const resultado = page.locator('main [aria-live]')
+  await expect(resultado).toContainText('29/08/2026')
+  await expect(resultado).not.toContainText('2026-08-29')
+})

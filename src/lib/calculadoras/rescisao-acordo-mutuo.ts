@@ -22,7 +22,7 @@
 
 import { calcularRescisao } from '../engine/calculadoras/rescisao'
 import { centavos } from '../engine/types'
-import { formatarPercentual, formatarReal } from '../format/moeda'
+import { formatarData, formatarPercentual, formatarReal } from '../format/moeda'
 import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
 import { INSS } from '../params/data/inss'
@@ -91,7 +91,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         },
         { rotulo: 'Seguro-desemprego', valor: 'Não tem direito' },
         ...(v.dataProjetada !== texto(valores, 'desligamento')
-          ? [{ rotulo: 'Tempo de serviço projetado até', valor: v.dataProjetada }]
+          ? [{ rotulo: 'Tempo de serviço projetado até', valor: formatarData(v.dataProjetada) }]
           : []),
       ],
       notas: [

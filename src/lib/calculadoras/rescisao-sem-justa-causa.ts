@@ -10,6 +10,7 @@
 
 import { calcularRescisao } from '../engine/calculadoras/rescisao'
 import { centavos } from '../engine/types'
+import { formatarData } from '../format/moeda'
 import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
 import { INSS } from '../params/data/inss'
@@ -69,7 +70,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       destaques: [
         { rotulo: 'Aviso prévio', valor: `${v.diasAviso} dias` },
         ...(v.dataProjetada !== texto(valores, 'desligamento')
-          ? [{ rotulo: 'Tempo de serviço projetado até', valor: v.dataProjetada }]
+          ? [{ rotulo: 'Tempo de serviço projetado até', valor: formatarData(v.dataProjetada) }]
           : []),
       ],
       notas: [

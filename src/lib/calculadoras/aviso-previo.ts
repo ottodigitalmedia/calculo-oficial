@@ -16,6 +16,7 @@ import { basisPoints, centavos } from '../engine/types'
 import { TRABALHISTA } from '../params/data/trabalhista'
 import { construirRegistro } from '../params/registry'
 import { subtrair } from '../engine/money'
+import { formatarData } from '../format/moeda'
 import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
 /** Registro montado no módulo adiado — ver a nota em `salario-liquido.ts`. */
@@ -78,7 +79,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         { rotulo: 'Dias de aviso prévio', valor: `${v.diasTotais} dias` },
         { rotulo: 'Tempo de casa', valor: `${v.anosCompletos} ano(s) completo(s)` },
         ...(indenizado
-          ? [{ rotulo: 'Contrato projetado até', valor: v.dataProjetada }]
+          ? [{ rotulo: 'Contrato projetado até', valor: formatarData(v.dataProjetada) }]
           : []),
       ],
       notas: [

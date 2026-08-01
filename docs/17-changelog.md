@@ -144,6 +144,13 @@ tentativas com 15 s de intervalo, e falha se todas caírem. O aviso silencioso
 continua correto para o caso em que o webhook **não está configurado** — que já
 era separado pelo `if` do próprio passo.
 
+### Corrigido · a data projetada aparecia em ISO, não em pt-BR
+
+`Tempo de serviço projetado até: 2026-08-29` estava assim desde que CALC-002 foi
+ao ar. Não é erro de cálculo: é a única data do produto que escapava de
+`formatarData`, porque `Destaque.valor` é texto livre e não passa pela formatação
+do componente. Afetava CALC-002, e teria afetado CALC-008 e CALC-010.
+
 ### Corrigido · o detalhamento de CALC-023 não fechava quando o teto cortava
 
 Encontrado à mão em produção, minutos depois do deploy. A tela abria os juros
