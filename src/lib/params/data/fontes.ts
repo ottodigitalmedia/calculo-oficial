@@ -331,6 +331,54 @@ export const RESOLUCAO_CMN_4881: Fonte = {
  *
  * Conferido no texto compilado do Planalto em 01/08/2026.
  */
+/**
+ * O teto que CALC-023 existe para mostrar.
+ *
+ * Art. 28, § 1º: *"Se os limites referidos no caput deste artigo não forem
+ * aprovados no prazo máximo de 90 (noventa) dias, contado da data da publicação
+ * desta Lei, o total cobrado em cada caso a título de juros e encargos
+ * financeiros não poderá exceder o valor original da dívida."*
+ *
+ * A autorregulação do caput **não foi aprovada** no prazo, e por isso o teto do
+ * § 1º passou a valer — foi o que a Resolução CMN nº 5.112/2023 regulamentou.
+ * Conferido no texto do Planalto em 01/08/2026.
+ */
+export const LEI_14690_ART_28: Fonte = {
+  id: 'lei-14690-2023-art-28',
+  norma: 'Lei nº 14.690, de 3 de outubro de 2023',
+  dispositivo: 'Art. 28, § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/L14690.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * A norma que define a **estrutura** do financiamento da fatura, e sem a qual a
+ * conta do rotativo sai errada por construção.
+ *
+ * - Art. 1º: o saldo não pago *"somente pode ser objeto de financiamento na
+ *   modalidade de crédito rotativo até o vencimento da fatura subsequente"*. O
+ *   rotativo dura **um ciclo**, não doze.
+ * - Art. 2º: depois disso o saldo remanescente pode ser parcelado *"desde que
+ *   em condições mais vantajosas para o cliente em relação àquelas praticadas
+ *   na modalidade de crédito rotativo, inclusive no que diz respeito à cobrança
+ *   de encargos financeiros"*.
+ * - Art. 2º-A, parágrafo único (incluído pela Resolução CMN nº 5.112/2023): na
+ *   migração, o valor original da dívida é o **montante inicial do rotativo**, e
+ *   os juros e encargos são apurados **desde o início do rotativo**. O teto vale
+ *   para a cadeia inteira, não por operação.
+ *
+ * A URL é a versão **consolidada** publicada pelo Banco Central, que já traz as
+ * alterações da Resolução CMN nº 5.112/2023 marcadas dispositivo a dispositivo —
+ * conferida em 01/08/2026.
+ */
+export const RES_CMN_4549: Fonte = {
+  id: 'resolucao-cmn-4549-2017',
+  norma: 'Resolução CMN nº 4.549, de 26 de janeiro de 2017, com as alterações da Resolução CMN nº 5.112, de 21 de dezembro de 2023',
+  dispositivo: 'Art. 1º, art. 2º e art. 2º-A',
+  url: 'https://normativos.bcb.gov.br/Lists/Normativos/Attachments/50330/Res_4549_v2_L.pdf',
+  orgao: 'Banco Central do Brasil',
+}
+
 export const CDC_ART_52: Fonte = {
   id: 'lei-8078-1990-art-52',
   norma: 'Lei nº 8.078, de 11 de setembro de 1990 — Código de Defesa do Consumidor',
@@ -373,4 +421,6 @@ export const FONTES: readonly Fonte[] = [
   TST_SUMULA_172,
   RESOLUCAO_CMN_4881,
   CDC_ART_52,
+  LEI_14690_ART_28,
+  RES_CMN_4549,
 ]
