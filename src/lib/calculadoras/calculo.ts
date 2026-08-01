@@ -114,6 +114,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './horas-extras'
     ).then((m) => m.calcular),
+  'banco-de-horas': () =>
+    import(
+      /* webpackChunkName: "calc-banco-de-horas" */
+      /* webpackExports: ["calcular"] */
+      './banco-de-horas'
+    ).then((m) => m.calcular),
   fgts: () =>
     import(
       /* webpackChunkName: "calc-fgts" */
@@ -161,6 +167,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-rotativo-cartao" */
       /* webpackExports: ["calcular"] */
       './rotativo-cartao'
+    ).then((m) => m.calcular),
+  'capacidade-de-financiamento': () =>
+    import(
+      /* webpackChunkName: "calc-capacidade" */
+      /* webpackExports: ["calcular"] */
+      './capacidade'
     ).then((m) => m.calcular),
   'quitacao-antecipada': () =>
     import(

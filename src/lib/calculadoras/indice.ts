@@ -92,6 +92,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto valem suas horas extras, o adicional noturno e o reflexo no descanso semanal.',
   },
   {
+    slug: 'banco-de-horas',
+    nome: 'Banco de horas',
+    linhaDeContexto:
+      'Quanto tempo você tem para compensar — e quanto o saldo vale se não compensar.',
+  },
+  {
     slug: 'fgts',
     nome: 'FGTS — saldo e multa',
     linhaDeContexto:
@@ -141,6 +147,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     slug: 'cheque-especial',
     nome: 'Cheque especial — custo real',
     linhaDeContexto: 'Quanto custam os dias no vermelho — e qual é o teto que a lei impõe.',
+  },
+  {
+    slug: 'capacidade-de-financiamento',
+    nome: 'Capacidade de financiamento',
+    linhaDeContexto: 'Quanto de financiamento a sua renda sustenta — e quanto ele custa no total.',
   },
   {
     slug: 'quitacao-antecipada',

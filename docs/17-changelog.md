@@ -31,8 +31,8 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 01/08/2026
 
-Onze calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
-CALC-009, CALC-030, CALC-011, CALC-012 e CALC-018. O bloco de desligamento
+Treze calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
+CALC-009, CALC-030, CALC-011, CALC-012, CALC-018, CALC-013 e CALC-032. O bloco de desligamento
 fechou, e o de crédito chegou a cinco.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
@@ -91,6 +91,42 @@ unidade em `Etapa` e em `SaidaCalculadora`, e o tipo de campo `decimal`.
 CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entre os
 combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
 de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
+
+### Adicionado · prazos do banco de horas · a partir de 2001-08-24 e 2017-11-11
+
+**Valores:** 12 meses por norma coletiva; 6 meses por acordo individual escrito;
+1 mês por acordo individual tácito.
+
+**Fonte:** CLT, art. 59, § 2º (redação da MP nº 2.164-41/2001) e §§ 5º e 6º
+(incluídos pela Lei nº 13.467/2017).
+`https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm`
+
+**Verificado contra:** o texto compilado do Planalto, lido em 01/08/2026.
+
+**Duas vigências, e a diferença conta uma história.** O prazo de um ano por norma
+coletiva existe desde 2001. Os outros dois são criação da Reforma Trabalhista —
+antes dela o banco de horas só podia ser pactuado coletivamente. Registrar os
+três com a mesma data apagaria isso e daria resposta errada para contrato
+encerrado antes de novembro de 2017. Um caso-ouro trava a fronteira.
+
+### Adicionado · CALC-013 · banco de horas · e CALC-032 · capacidade de financiamento
+
+CALC-013 responde a pergunta que importa, que é sobre dinheiro: o art. 59, § 3º
+manda pagar o saldo não compensado na rescisão, sobre a remuneração da data da
+saída e com adicional. Saldo negativo é tratado pelo que é — tempo a cumprir, não
+dívida —, com o art. 59-B citado.
+
+CALC-032 é a conta de CALC-024 lida de trás para frente: parte da renda e chega
+ao valor financiável, com `valorPresenteDeSerie`. **O percentual de
+comprometimento não virou parâmetro legal**, porque não é lei nenhuma — é
+política de crédito. Ele é campo, e a memória de cálculo declara isso na etapa.
+
+### Corrigido · CALC-019 foi sugerida por engano
+
+Foi anunciada como próxima com a justificativa de que "não esbarra no
+ano-calendário problemático". `docs/18` registra o contrário: ela **é CALC-017
+rodado duas vezes** — compara os dois modelos da declaração ANUAL e depende da
+mesma tabela não localizada. Fica bloqueada junto com a 017.
 
 ### Adicionado · `ir-renda-fixa-*` · a partir de 2005-01-01
 

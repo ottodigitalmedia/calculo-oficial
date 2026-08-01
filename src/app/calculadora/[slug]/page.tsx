@@ -12,6 +12,7 @@ import {
 import { IconeSeta } from '@/components/Marca'
 import { CALCULADORAS, porSlug } from '@/lib/calculadoras'
 import { formularioDe } from '@/lib/calculadoras/tipos'
+import { BANCO_DE_HORAS } from '@/lib/params/data/banco-de-horas'
 import { CREDITO } from '@/lib/params/data/credito'
 import { DOMESTICO } from '@/lib/params/data/domestico'
 import { EMPREGADOR } from '@/lib/params/data/empregador'
@@ -43,7 +44,7 @@ import { guiasDaCalculadora } from '@/lib/guias'
  * tabelas de INSS, IRRF e trabalhistas entravam no pacote estático de toda
  * rota de calculadora — para produzir dois dados serializáveis.
  */
-const registro = construirRegistro(INSS, IRRF, TRABALHISTA, CREDITO, SEGURO_DESEMPREGO, EMPREGADOR, DOMESTICO, RENDA_FIXA)
+const registro = construirRegistro(INSS, IRRF, TRABALHISTA, CREDITO, SEGURO_DESEMPREGO, EMPREGADOR, DOMESTICO, RENDA_FIXA, BANCO_DE_HORAS)
 
 export function generateStaticParams() {
   return CALCULADORAS.map((c) => ({ slug: c.slug }))

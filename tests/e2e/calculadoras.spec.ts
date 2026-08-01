@@ -89,7 +89,11 @@ test('juros compostos · não tem seletor de período, por não ter parâmetro l
  * mínimo que bloquearia quem legitimamente tem 6 meses na terceira solicitação.
  */
 const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
+  // O mínimo de meses depende de qual solicitação é: 12, 9 ou 6.
   'seguro-desemprego': '?salario1=300000&mesesTrabalhados=24&solicitacao=primeira',
+  // Exige crédito OU débito, e os dois campos são opcionais isoladamente —
+  // exigir um deles bloquearia quem só tem horas do outro tipo.
+  'banco-de-horas': '?salario=220000&horasPositivas=1000&jornadaSemanal=44',
 }
 
 for (const c of CALCULADORAS) {

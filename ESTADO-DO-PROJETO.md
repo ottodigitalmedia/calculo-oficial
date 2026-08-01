@@ -23,10 +23,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **23** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito e a primeira do lado do empregador |
+| Calculadoras no ar | **25** de 75 — v1 completo, o bloco de desligamento fechado, seis de crédito e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 622 de unidade · 297 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 39 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 661 de unidade · 309 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,1 kB de **150** na pior rota — e **16,7 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -130,9 +130,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 52 de 75
+## 4. Calculadoras pendentes — 50 de 75
 
-Publicadas: **CALC-001 a CALC-012, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030, CALC-032, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -988,6 +988,39 @@ Hoje: **16,7 kB de 30 permitidos**, na rescisão doméstica.
 > existe para pegar. Se o número que está apertando não é o que pega aquilo,
 > suba-o — e ponha no lugar um que pegue.
 
+### 7.28 Eu sugeri uma calculadora bloqueada, e o levantamento já dizia
+
+Sugeri CALC-019 afirmando que ela "reaproveita as tabelas de IRRF e não esbarra
+no ano-calendário problemático". **Estava errado.** `docs/18` registra, em uma
+linha: *"CALC-019 | Simplificado vs. completo | v3 | **É CALC-017 rodado duas
+vezes**"*.
+
+O comparador é entre os dois modelos da declaração **anual** — e depende
+exatamente da tabela anual que fez CALC-017 ser adiada. O que me confundiu foi
+CALC-016, que já mostra a escolha entre deduções e desconto simplificado no
+cálculo **mensal**; concluí do mensal para o anual sem abrir o levantamento.
+
+> **O levantamento existe para ser consultado antes de sugerir, não depois.**
+> `docs/18-levantamento-calculadoras.md` tem uma linha por calculadora restante
+> com a dependência de cada uma. Custa dez segundos e teria evitado isto.
+
+### 7.29 Onde o molde vai apertar de novo
+
+CALC-028 (bola de neve vs. avalanche) é a próxima do bloco de crédito sem
+dependência de fonte — e ela **não cabe no molde atual**. Precisa de uma lista de
+dívidas de tamanho variável, e `Campo` modela campo único, não grupo repetido.
+
+As duas saídas, quando chegar a hora:
+
+1. **Campos fixos para N dívidas** — cinco blocos de três campos, com `visivelSe`
+   escondendo os vazios. Cabe hoje, sem tocar no contrato, e fica feio.
+2. **Fazer o contrato crescer** com um tipo de campo repetível. É a resposta
+   certa se mais de uma calculadora precisar — CALC-028 e CALC-040 (comparador
+   de investimentos) precisam.
+
+Como §7.4 registra, o molde cresce por **necessidade medida**. Duas calculadoras
+que precisam é medida; uma é palpite.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -1013,8 +1046,14 @@ O que sobrou, em ordem:
    2025 é, portanto, um conjunto próprio de números, que **não foi localizado**.
    Construir sobre a tabela do ano errado produziria exatamente o dano que o
    projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
-3. **CALC-019 · comparador simplificado vs. completo.** Reaproveita as tabelas
-   de IRRF que já existem e não depende do ano-calendário problemático.
+3. **CALC-023 já feita; CALC-019 está BLOQUEADA pela mesma fonte que CALC-017.**
+   `docs/18` registra que ela "é CALC-017 rodado duas vezes" — ela compara os
+   dois modelos da declaração ANUAL, e depende da tabela anual que não foi
+   localizada. Não tente construí-la antes de resolver §5.1.
+4. **CALC-028 · plano de quitação (bola de neve vs. avalanche).** Sem parâmetro
+   legal, reaproveita `financeira.ts`. O obstáculo é de molde, não de fonte: ela
+   precisa de uma LISTA de dívidas, e `Campo` não modela grupo repetido — decidir
+   entre campos fixos para N dívidas ou fazer o contrato crescer.
 4. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
    tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
    faz. Não está no catálogo com ID; exige decisão do mantenedor.

@@ -9,6 +9,8 @@
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
 import { AMORTIZACAO } from './amortizacao'
 import { AVISO_PREVIO } from './aviso-previo'
+import { BANCO_DE_HORAS } from './banco-de-horas'
+import { CAPACIDADE } from './capacidade'
 import { CET } from './cet'
 import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
@@ -43,6 +45,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   FERIAS,
   DECIMO_TERCEIRO,
   HORAS_EXTRAS,
+  BANCO_DE_HORAS,
   FGTS,
   INSS_MENSAL,
   IRRF_MENSAL,
@@ -52,6 +55,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   AMORTIZACAO,
   ROTATIVO_CARTAO,
   CHEQUE_ESPECIAL,
+  CAPACIDADE,
   QUITACAO_ANTECIPADA,
   PORCENTAGEM,
   COMBUSTIVEL,
