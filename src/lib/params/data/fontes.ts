@@ -548,6 +548,56 @@ export const STF_TEMA_985: Fonte = {
   orgao: 'Supremo Tribunal Federal',
 }
 
+// ---------------------------------------------------------------------------
+// Empregado doméstico — CALC-012
+// ---------------------------------------------------------------------------
+
+/**
+ * A diferença estrutural do regime doméstico, e a razão de CALC-012 não ser
+ * CALC-002 com outro nome.
+ *
+ * *"O empregador doméstico depositará a importância de 3,2% (três inteiros e
+ * dois décimos por cento) sobre a remuneração devida, no mês anterior, a cada
+ * empregado, destinada ao pagamento da indenização compensatória da perda do
+ * emprego, sem justa causa ou por culpa do empregador, **não se aplicando ao
+ * empregado doméstico o disposto nos §§ 1º a 3º do art. 18 da Lei nº 8.036**"*.
+ *
+ * Ou seja: **não existe multa de 40% no doméstico.** No lugar dela há um fundo
+ * formado mês a mês, em variação distinta da conta do FGTS (§ 3º), que o
+ * trabalhador movimenta na dispensa sem justa causa e que o **empregador**
+ * movimenta no pedido de demissão, na justa causa, no fim do contrato por prazo
+ * determinado, na aposentadoria e no falecimento (§ 1º).
+ *
+ * Conferido no texto do Planalto em 01/08/2026.
+ */
+export const LC_150_ART_22: Fonte = {
+  id: 'lc-150-2015-art-22',
+  norma: 'Lei Complementar nº 150, de 1º de junho de 2015',
+  dispositivo: 'Art. 22, caput e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * O aviso prévio do doméstico tem norma própria, com os mesmos números.
+ *
+ * Art. 23, § 1º e § 2º: trinta dias até um ano de serviço, acrescidos de três
+ * dias por ano, até o total de noventa. É o mesmo desenho da Lei nº 12.506/2011,
+ * e ainda assim outra norma — o contrato doméstico não é regido por ela.
+ *
+ * Parâmetros próprios, portanto. Reaproveitar os da CLT faria a memória de
+ * cálculo de uma rescisão doméstica citar uma lei que não rege aquele contrato,
+ * e o link levaria o leitor ao lugar errado. Números iguais, fundamentos
+ * distintos — a duplicação aqui é o que mantém a citação correta.
+ */
+export const LC_150_ART_23: Fonte = {
+  id: 'lc-150-2015-art-23',
+  norma: 'Lei Complementar nº 150, de 1º de junho de 2015',
+  dispositivo: 'Art. 23, § 1º, § 2º e § 4º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm',
+  orgao: 'Congresso Nacional',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -592,4 +642,6 @@ export const FONTES: readonly Fonte[] = [
   RES_CMN_4765,
   LEI_8212_ART_22,
   STF_TEMA_985,
+  LC_150_ART_22,
+  LC_150_ART_23,
 ]
