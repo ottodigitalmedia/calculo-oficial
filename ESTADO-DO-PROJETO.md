@@ -23,16 +23,18 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **12** de 75 — v1 completo, e as duas primeiras do bloco de crédito |
+| Calculadoras no ar | **15** de 75 — v1 completo, três de crédito e as duas primeiras sem cifrão nenhum |
 | Guias no ar | 3 de 10 |
-| Testes | 416 de unidade · 225 ponta a ponta · 3 de vazamento |
+| Testes | 455 de unidade · 243 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 9 vigências abertas, **0 divergências** (31/07/2026) |
-| Orçamento de JavaScript | 123,0 kB de **135** na pior rota — folga de 12,0 kB. Limite revisado com medição, ver §7.7 |
+| Orçamento de JavaScript | 123,5 kB de **135** na pior rota — folga de 11,5 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
+- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada
+- **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -127,9 +129,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 63 de 75
+## 4. Calculadoras pendentes — 60 de 75
 
-Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022, CALC-024 e CALC-025**.
+Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022, CALC-024 a CALC-026, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -542,6 +544,59 @@ pelo **runtime do empacotador**. Se a extração parar de reconhecer o formato, 
 script falha alto. **Não confie em medição de pacote que melhora sozinha** —
 verifique o que ela deixou de contar.
 
+### 7.8 O molde cresce por necessidade medida, nunca por antecipação
+
+Três calculadoras de 01/08/2026 exigiram três ampliações do contrato, e cada
+uma tem um defeito concreto por trás:
+
+| O que entrou | O defeito que ela impede |
+|---|---|
+| `Unidade` em `Etapa` e em `SaidaCalculadora` | A memória imprimiria **R$ 25,00** onde a resposta de CALC-070 é **25,00%**. Número certo com unidade errada é a forma mais convincente de estar errado |
+| `TipoCampo` `'decimal'` | O campo de km/l de CALC-054 desenharia "R$ 12,50" ao lado de "km por litro" |
+| Aviso de estimativa em duas redações | A frase única alegava *"parâmetros legais vigentes em <data>"* no CET, na amortização e nos juros compostos — que **não consultam parâmetro legal nenhum**. Alegar fundamento onde não há é o pior tipo de imprecisão num produto cuja tese é a auditabilidade |
+
+`principal` continua tipado como `Centavos` mesmo quando a unidade não é moeda,
+e isso é decisão, não descuido: o invariante que a marca protege — inteiro,
+dentro do inteiro seguro, sem zero negativo — vale nas três unidades, e trocá-la
+por `number` cru desprotegeria as doze calculadoras monetárias para acomodar
+duas que não são.
+
+### 7.9 A suíte de ponta a ponta só é confiável com as portas livres
+
+**Antes de rodar `npm run check`, libere 3100 e 3101.** No PowerShell:
+
+```powershell
+foreach ($p in 3100,3101) { Get-NetTCPConnection -LocalPort $p -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } }
+```
+
+Com uma delas ocupada, a corrida de 01/08/2026 devolveu **34 de 250** e cinco
+minutos e meio; com as portas livres, **243 passaram em 39 segundos**. O
+sintoma engana: as falhas aparecem como `locator.fill: Test timeout`,
+`/guias sem h1 único` e `strict-transport-security: undefined` — todas
+parecendo defeito de aplicação, nenhuma sendo.
+
+**Como distinguir em cinco segundos.** Suba o servidor à mão e peça uma rota:
+
+```bash
+PORT=3100 npm run start
+```
+
+Se `/calculadora/salario-liquido` responde 200 com dezenas de kB, a aplicação
+está sã e o problema é o ambiente da suíte.
+
+### 7.10 Teste genérico com valor fixo reprova calculadora certa
+
+O teste "calcula de verdade" preenche todo campo obrigatório com um valor fixo
+para provar que cada calculadora publicada de fato computa. Um valor fixo não
+cabe em toda faixa: R$ 3.000,00 é um salário plausível e é um preço de
+combustível absurdo, que a validação de CALC-054 recusa **com razão** — e o
+teste reprovava a calculadora por ela estar correta.
+
+A tentação era afrouxar o limite do campo para caber no teste. O certo foi o
+inverso: `campos.tsx` expõe `data-maximo` nos quatro campos numéricos e o teste
+limita o valor ao teto de cada campo. **Quando o teste e o produto discordam,
+verifique qual dos dois está errado antes de mudar o produto.**
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -550,16 +605,27 @@ fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
 
 O que sobrou, em ordem:
 
-1. **CALC-006 · horas extras.** É a única do v1 com aritmética de tempo — hora
-   reduzida de 52min30s no adicional noturno, e o DSR sobre as extras, que é
-   onde os concorrentes mais erram.
-2. **CALC-007 · FGTS.** `RN-023` exige aviso próprio; a estimativa de saldo já
-   existe em `rescisao.ts` e pode ser reaproveitada.
-3. **`− R$ 0,00` no detalhamento.** Quando não há imposto, a linha aparece com
-   sinal de menos e zero. Não está errado, mas polui — vale decidir se linha
-   zerada some. Afeta CALC-002 a CALC-005 juntas.
-4. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
-5. **Os 7 guias restantes** (§4.6).
+Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
+~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8).
+
+O que sobrou, em ordem:
+
+1. **CALC-023 · juros do rotativo do cartão.** Fecha o bloco de crédito do v2 e
+   é a de maior valor publicitário que resta sem dependência: o motor de
+   `financeira.ts` já resolve, e o teto do rotativo tem norma própria — Lei
+   14.690/2023 — que precisa ser conferida em fonte oficial antes de virar
+   parâmetro.
+2. **CALC-010 · aviso prévio proporcional.** `LEI_12506_2011` já está
+   cadastrada e `rescisao.ts` já aplica a proporcionalidade internamente; falta
+   expô-la como calculadora própria.
+3. **CALC-008 · rescisão por acordo mútuo.** `CLT_ART_484A` já está cadastrada
+   e o motor de rescisão já tem a modalidade parcialmente prevista.
+4. **`/api/health` que responde igual em toda versão.** O passo de verificação
+   do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
+   constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto
+   irmão já faz assim.
+5. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
+6. **Os 7 guias restantes** (§4.6).
 
 > **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
 > variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o

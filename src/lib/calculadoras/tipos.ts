@@ -10,7 +10,7 @@
  * medição em vez de antes do lançamento.
  */
 
-import type { Resultado } from '../engine/traco'
+import type { Resultado, Unidade } from '../engine/traco'
 import type { Centavos } from '../engine/types'
 import type { DataISO } from '../params/tipos'
 import type { Registro } from '../params/registry'
@@ -27,7 +27,14 @@ import type { Registro } from '../params/registry'
  * data não tem unidade inteira natural, e inventar uma (dias desde uma época)
  * tornaria a URL compartilhada ilegível.
  */
-export type TipoCampo = 'monetario' | 'inteiro' | 'selecao' | 'percentual' | 'data'
+/**
+ * `decimal` entrou em CALC-054, a primeira calculadora que pede uma grandeza
+ * fracionária que **não é dinheiro**: km por litro. `monetario` serviria para o
+ * valor interno — os dois são inteiros escalados por cem —, mas desenharia
+ * "R$ 12,50" ao lado de "km/l", e um cifrão no lugar errado é erro de fato, não
+ * de estilo: quem lê acredita.
+ */
+export type TipoCampo = 'monetario' | 'decimal' | 'inteiro' | 'selecao' | 'percentual' | 'data'
 
 /** Campos cujo valor interno é texto, não número. */
 export function campoEhTexto(tipo: TipoCampo): boolean {
@@ -133,6 +140,16 @@ export interface TabelaResultado {
 
 export interface SaidaCalculadora {
   readonly principal: Centavos
+  /**
+   * Como ler `principal` e os valores do detalhamento. Ausente = moeda.
+   *
+   * Mesma declaração de `Etapa.unidade`, e pelo mesmo motivo — ver `Unidade` em
+   * `engine/traco.ts`. Fica no resultado e não na definição da calculadora
+   * porque CALC-070 muda de unidade conforme a operação escolhida: "15% de 200"
+   * devolve um número, "de 200 para 250" devolve um percentual, e é a mesma
+   * calculadora.
+   */
+  readonly unidade?: Unidade
   readonly detalhamento: readonly LinhaDetalhamento[]
   readonly destaques?: readonly Destaque[]
   readonly tabela?: TabelaResultado

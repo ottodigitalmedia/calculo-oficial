@@ -98,4 +98,21 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto:
       'Quanto muda entre parcela fixa e parcela decrescente — no bolso e no total.',
   },
+  {
+    slug: 'quitacao-antecipada',
+    nome: 'Quitação antecipada — economia de juros',
+    linhaDeContexto:
+      'Quanto custa quitar hoje, com os juros reduzidos na proporção que a lei manda.',
+  },
+  {
+    slug: 'porcentagem',
+    nome: 'Porcentagem',
+    linhaDeContexto:
+      'Parte, acréscimo, desconto, proporção e variação — com a conta aberta ao lado.',
+  },
+  {
+    slug: 'alcool-ou-gasolina',
+    nome: 'Álcool ou gasolina',
+    linhaDeContexto: 'Qual compensa no seu carro — pelo consumo real, não pela regra dos 70%.',
+  },
 ]

@@ -18,6 +18,7 @@ import { describe, expect, it } from 'vitest'
 import {
   calcularAmortizacao,
   calcularCet,
+  calcularQuitacaoAntecipada,
 } from '../../src/lib/engine/calculadoras/credito'
 import { parcelaPrice } from '../../src/lib/engine/financeira'
 import { basisPoints, centavos } from '../../src/lib/engine/types'
@@ -231,6 +232,157 @@ describe('CALC-025 · entradas inválidas', () => {
 
   it('taxa negativa é recusada', () => {
     expect(calcularAmortizacao({ ...AMORT_BASE, taxaMensal: basisPoints(-1) }, REF).ok).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// CALC-026 — Quitação antecipada
+// ---------------------------------------------------------------------------
+
+/**
+ * Financiamento montado ao contrário, para que o resultado seja conferível por
+ * identidade: R$ 20.000,00 em 24 parcelas a 2% ao mês. A parcela sai da fórmula
+ * do sistema francês, e o saldo devedor de hoje tem de devolver o principal.
+ */
+const PRINCIPAL_ORIGINAL = centavos(2_000_000)
+const PARCELA_DO_CONTRATO = parcelaPrice(PRINCIPAL_ORIGINAL, 24, basisPoints(200))
+
+const QUITACAO_BASE = {
+  valorParcela: PARCELA_DO_CONTRATO,
+  parcelasRestantes: 24,
+  taxaMensal: basisPoints(200),
+  valorDisponivel: centavos(0),
+  modalidade: 'reduzir-prazo',
+} as const
+
+describe('CALC-026 · o saldo devedor é o valor presente, não a soma das parcelas', () => {
+  const r = calcularQuitacaoAntecipada(QUITACAO_BASE, REF)
+  if (!r.ok) throw new Error('esperado sucesso')
+
+  /**
+   * A identidade que prova a conta: as 24 parcelas foram geradas a partir de
+   * R$ 20.000,00 a 2% ao mês, então trazê-las a valor presente àquela mesma
+   * taxa tem de devolver os R$ 20.000,00 — a menos do centavo de arredondamento
+   * da prestação.
+   */
+  it('devolve o principal de onde as parcelas saíram', () => {
+    expect(Math.abs(r.valores.saldoPresente - PRINCIPAL_ORIGINAL)).toBeLessThanOrEqual(100)
+  })
+
+  it('a soma nua das parcelas é bem maior que o saldo', () => {
+    expect(r.valores.somaDasParcelas).toBe(PARCELA_DO_CONTRATO * 24)
+    expect(r.valores.somaDasParcelas).toBeGreaterThan(r.valores.saldoPresente)
+  })
+
+  it('a economia é a diferença entre as duas leituras', () => {
+    expect(r.valores.economia).toBe(r.valores.somaDasParcelas - r.valores.saldoPresente)
+    expect(r.valores.quitacaoTotal).toBe(true)
+    expect(r.valores.totalFuturo).toBe(0)
+  })
+
+  it('a etapa do saldo cita o art. 52 do Código de Defesa do Consumidor', () => {
+    const etapa = r.traco.etapas.find((e) => e.rotulo.startsWith('Saldo devedor hoje'))
+    expect(etapa?.fundamento?.norma).toContain('8.078')
+    expect(etapa?.fundamento?.dispositivo).toContain('52')
+  })
+})
+
+/**
+ * Sem juros não há o que reduzir, e a calculadora precisa dizer isso em vez de
+ * inventar um desconto.
+ */
+describe('CALC-026 · a juros zero não existe economia', () => {
+  const r = calcularQuitacaoAntecipada({ ...QUITACAO_BASE, taxaMensal: basisPoints(0) }, REF)
+  if (!r.ok) throw new Error('esperado sucesso')
+
+  it('o saldo é a própria soma das parcelas', () => {
+    expect(r.valores.saldoPresente).toBe(r.valores.somaDasParcelas)
+  })
+
+  it('a economia e o desconto são zero', () => {
+    expect(r.valores.economia).toBe(0)
+    expect(r.valores.descontoBp).toBe(0)
+  })
+})
+
+describe('CALC-026 · amortização parcial — as duas escolhas', () => {
+  const disponivel = centavos(500_000)
+
+  const prazo = calcularQuitacaoAntecipada(
+    { ...QUITACAO_BASE, valorDisponivel: disponivel, modalidade: 'reduzir-prazo' },
+    REF,
+  )
+  const parcela = calcularQuitacaoAntecipada(
+    { ...QUITACAO_BASE, valorDisponivel: disponivel, modalidade: 'reduzir-parcela' },
+    REF,
+  )
+  if (!prazo.ok || !parcela.ok) throw new Error('esperado sucesso')
+
+  it('reduzir prazo mantém a parcela e corta meses', () => {
+    expect(prazo.valores.novaParcela).toBe(PARCELA_DO_CONTRATO)
+    expect(prazo.valores.novoPrazo).toBeLessThan(24)
+  })
+
+  it('reduzir parcela mantém o prazo e baixa a prestação', () => {
+    expect(parcela.valores.novoPrazo).toBe(24)
+    expect(parcela.valores.novaParcela).toBeLessThan(PARCELA_DO_CONTRATO)
+  })
+
+  /**
+   * O conselho que a calculadora dá, verificado em vez de afirmado: cada mês
+   * eliminado é um mês inteiro de juros que deixa de existir.
+   */
+  it('cortar prazo economiza mais que reduzir parcela, com o mesmo dinheiro', () => {
+    expect(prazo.valores.economia).toBeGreaterThan(parcela.valores.economia)
+  })
+
+  it('nas duas, a economia é o que se deixa de pagar no total', () => {
+    for (const r of [prazo, parcela]) {
+      expect(r.valores.economia).toBe(
+        r.valores.somaDasParcelas - r.valores.valorPagoAgora - r.valores.totalFuturo,
+      )
+      expect(r.valores.quitacaoTotal).toBe(false)
+      expect(r.valores.valorPagoAgora).toBe(disponivel)
+    }
+  })
+})
+
+describe('CALC-026 · fronteiras', () => {
+  it('oferecer mais que o saldo é quitação total, não troco', () => {
+    const r = calcularQuitacaoAntecipada(
+      { ...QUITACAO_BASE, valorDisponivel: centavos(50_000_000) },
+      REF,
+    )
+    if (!r.ok) throw new Error('esperado sucesso')
+    expect(r.valores.quitacaoTotal).toBe(true)
+    expect(r.valores.valorPagoAgora).toBe(r.valores.saldoPresente)
+  })
+
+  it('campo obrigatório vazio mantém o estado pendente', () => {
+    expect(
+      calcularQuitacaoAntecipada({ ...QUITACAO_BASE, valorParcela: centavos(0) }, REF).ok,
+    ).toBe(false)
+    expect(
+      calcularQuitacaoAntecipada({ ...QUITACAO_BASE, parcelasRestantes: 0 }, REF).ok,
+    ).toBe(false)
+  })
+
+  it('taxa negativa e valor negativo são recusados', () => {
+    expect(
+      calcularQuitacaoAntecipada({ ...QUITACAO_BASE, taxaMensal: basisPoints(-1) }, REF).ok,
+    ).toBe(false)
+    expect(
+      calcularQuitacaoAntecipada({ ...QUITACAO_BASE, valorDisponivel: centavos(-1) }, REF).ok,
+    ).toBe(false)
+  })
+
+  it('uma parcela restante já produz alguma economia', () => {
+    const r = calcularQuitacaoAntecipada({ ...QUITACAO_BASE, parcelasRestantes: 1 }, REF)
+    if (!r.ok) throw new Error('esperado sucesso')
+    expect(r.valores.economia).toBeGreaterThan(0)
+    // Uma parcela descontada por um mês a 2%: o desconto tende a 2/102.
+    expect(r.valores.descontoBp).toBeGreaterThan(150)
+    expect(r.valores.descontoBp).toBeLessThan(250)
   })
 })
 

@@ -86,12 +86,35 @@ export function fundamentar(fonte: {
   }
 }
 
+/**
+ * Unidade em que o valor de uma etapa deve ser lido. Ausente = `'moeda'`.
+ *
+ * **Por que existe.** Até CALC-054 toda etapa do sistema era dinheiro, e a
+ * memória de cálculo podia formatar `resultado` como real sem perguntar. CALC-070
+ * quebrou isso: "quanto é 15% de 200" não tem cifrão, e "de 200 para 250 a
+ * variação foi de 25%" não tem nem cifrão nem a mesma escala. Sem esta
+ * declaração a memória imprimiria **R$ 25,00** onde a resposta é **25,00%** — um
+ * número certo com unidade errada, que é a forma mais convincente de estar
+ * errado.
+ *
+ * **O que `resultado` continua sendo.** Um inteiro escalado por cem, sempre. Em
+ * `'moeda'` são centavos de real (`ADR-004` A-1); em `'percentual'`, basis
+ * points (A-2); em `'numero'`, centésimos da unidade que o usuário informou. A
+ * marca `Centavos` foi mantida no campo de propósito: o invariante que ela
+ * protege — inteiro, dentro do inteiro seguro, sem zero negativo — é o mesmo nos
+ * três casos, e trocá-la por `number` cru desprotegeria as doze calculadoras
+ * monetárias para acomodar duas que não são.
+ */
+export type Unidade = 'moeda' | 'numero' | 'percentual'
+
 export interface Etapa {
   /** Nome em linguagem comum. Ex.: "Contribuição — 2ª faixa". */
   readonly rotulo: string
   /** Expressão com os valores substituídos. */
   readonly formula: string
   readonly resultado: Centavos
+  /** Como ler `resultado`. Ausente = moeda. */
+  readonly unidade?: Unidade
   /** Presente quando a etapa usa parâmetro legal. */
   readonly parametro?: CitacaoParametro
   /** Presente quando a etapa aplica regra normativa sem valor próprio. */

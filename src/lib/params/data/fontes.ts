@@ -317,6 +317,28 @@ export const RESOLUCAO_CMN_4881: Fonte = {
   orgao: 'Banco Central do Brasil',
 }
 
+/**
+ * O dispositivo que dá razão de existir a CALC-026.
+ *
+ * *"É assegurado ao consumidor a liquidação antecipada do débito, total ou
+ * parcialmente, mediante redução proporcional dos juros e demais acréscimos."*
+ *
+ * A palavra que decide a conta é **proporcional**: quitar antes não é pagar a
+ * soma das parcelas que faltam, é pagar o valor presente delas. A diferença
+ * entre as duas leituras é exatamente o que a calculadora mostra — e é dinheiro
+ * que o consumidor deixa na mesa quando aceita o primeiro número que o banco
+ * informa.
+ *
+ * Conferido no texto compilado do Planalto em 01/08/2026.
+ */
+export const CDC_ART_52: Fonte = {
+  id: 'lei-8078-1990-art-52',
+  norma: 'Lei nº 8.078, de 11 de setembro de 1990 — Código de Defesa do Consumidor',
+  dispositivo: 'Art. 52, § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm',
+  orgao: 'Congresso Nacional',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -350,4 +372,5 @@ export const FONTES: readonly Fonte[] = [
   TST_SUMULA_431,
   TST_SUMULA_172,
   RESOLUCAO_CMN_4881,
+  CDC_ART_52,
 ]

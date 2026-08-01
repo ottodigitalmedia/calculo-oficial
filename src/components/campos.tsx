@@ -2,7 +2,7 @@
 
 import { useId } from 'react'
 
-import { formatarReal, formatarTaxa } from '@/lib/format/moeda'
+import { formatarNumero, formatarReal, formatarTaxa } from '@/lib/format/moeda'
 import type { Campo } from '@/lib/calculadoras/tipos'
 
 /**
@@ -112,6 +112,16 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
     )
   }
 
+  /**
+   * `data-maximo` expõe o teto do campo ao teste genérico de ponta a ponta.
+   *
+   * Ele preenche todo campo obrigatório com um valor fixo para provar que cada
+   * calculadora publicada de fato CALCULA — e um valor fixo não cabe em toda
+   * faixa: R$ 3.000,00 é um salário plausível e é um preço de combustível
+   * absurdo, que a validação de CALC-054 recusa com razão. O teste passava a
+   * reprovar a calculadora por ela estar certa. Com o teto legível, ele adapta
+   * o valor em vez de o produto afrouxar o limite para caber no teste.
+   */
   if (campo.tipo === 'inteiro') {
     return (
       <div>
@@ -126,11 +136,41 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
           aria-describedby={idMensagem}
           aria-invalid={erro ? true : undefined}
           aria-required={campo.obrigatorio ? true : undefined}
+          {...(campo.maximo === undefined ? {} : { 'data-maximo': campo.maximo })}
           onChange={(e) => {
             const so = e.target.value.replace(/\D/g, '')
             onChange(so === '' ? 0 : Number(so))
           }}
           className={CLASSE_ENTRADA}
+        />
+        <Mensagem id={idMensagem} {...(erro ? { erro } : {})} {...(campo.ajuda ? { ajuda: campo.ajuda } : {})} />
+      </div>
+    )
+  }
+
+  if (campo.tipo === 'decimal') {
+    // Mesma mecânica do monetário — o valor interno são CENTÉSIMOS inteiros, e
+    // o que se digita é interpretado nessa unidade — sem o cifrão, porque a
+    // grandeza não é dinheiro. Ver `TipoCampo` em `calculadoras/tipos.ts`.
+    const centesimos = typeof valor === 'number' ? valor : 0
+    return (
+      <div>
+        <Rotulo id={id} campo={campo} />
+        <input
+          id={id}
+          type="text"
+          inputMode="decimal"
+          value={centesimos === 0 ? '' : formatarNumero(centesimos)}
+          placeholder="0,00"
+          aria-describedby={idMensagem}
+          aria-invalid={erro ? true : undefined}
+          aria-required={campo.obrigatorio ? true : undefined}
+          {...(campo.maximo === undefined ? {} : { 'data-maximo': campo.maximo })}
+          onChange={(e) => {
+            const digitos = e.target.value.replace(/\D/g, '')
+            onChange(digitos === '' ? 0 : Number(digitos))
+          }}
+          className={`${CLASSE_ENTRADA} tabular text-right`}
         />
         <Mensagem id={idMensagem} {...(erro ? { erro } : {})} {...(campo.ajuda ? { ajuda: campo.ajuda } : {})} />
       </div>
@@ -154,6 +194,7 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
             aria-describedby={idMensagem}
             aria-invalid={erro ? true : undefined}
             aria-required={campo.obrigatorio ? true : undefined}
+            {...(campo.maximo === undefined ? {} : { 'data-maximo': campo.maximo })}
             onChange={(e) => {
               const digitos = e.target.value.replace(/\D/g, '')
               onChange(digitos === '' ? 0 : Number(digitos))
@@ -188,6 +229,7 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
         aria-describedby={idMensagem}
         aria-invalid={erro ? true : undefined}
         aria-required={campo.obrigatorio ? true : undefined}
+        {...(campo.maximo === undefined ? {} : { 'data-maximo': campo.maximo })}
         onChange={(e) => {
           const digitos = e.target.value.replace(/\D/g, '')
           onChange(digitos === '' ? 0 : Number(digitos))
@@ -218,6 +260,7 @@ export function validar(campo: Campo, valor: number | string): string | undefine
   if (n < 0) return 'Informe um valor igual ou maior que zero.'
   if (campo.maximo !== undefined && n > campo.maximo) {
     if (campo.tipo === 'monetario') return `Informe um valor de até ${formatarReal(campo.maximo)}.`
+    if (campo.tipo === 'decimal') return `Informe um valor de até ${formatarNumero(campo.maximo)}.`
     if (campo.tipo === 'percentual') return `Informe uma taxa de até ${formatarTaxa(campo.maximo)}%.`
     return `Informe um número entre ${campo.minimo ?? 0} e ${campo.maximo}.`
   }

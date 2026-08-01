@@ -14,8 +14,8 @@ import {
   type SaidaCalculadora,
   type ValoresFormulario,
 } from '@/lib/calculadoras/tipos'
-import type { Resultado } from '@/lib/engine/traco'
-import { formatarData, formatarReal } from '@/lib/format/moeda'
+import type { Resultado, Unidade } from '@/lib/engine/traco'
+import { formatarData, formatarNumero, formatarPercentual, formatarReal } from '@/lib/format/moeda'
 import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
 
 /**
@@ -254,6 +254,7 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
           estado={estado}
           rotulo={formulario.rotuloResultado}
           dataReferencia={dataReferencia}
+          temParametroLegal={cobertura !== null}
           {...(formulario.avisoAdicional ? { avisoAdicional: formulario.avisoAdicional } : {})}
         />
       </div>
@@ -261,15 +262,30 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
   )
 }
 
+/**
+ * Formata um valor conforme a unidade declarada pelo cálculo (`Unidade`).
+ *
+ * Sem `unidade` é moeda, que é o caso de doze das quinze calculadoras — e o
+ * caso de todas até CALC-054.
+ */
+function formatarValor(valor: number, unidade: Unidade | undefined): string {
+  if (unidade === 'percentual') return formatarPercentual(valor)
+  if (unidade === 'numero') return formatarNumero(valor)
+  return formatarReal(valor)
+}
+
 function Resultado({
   estado,
   rotulo,
   dataReferencia,
+  temParametroLegal,
   avisoAdicional,
 }: {
   readonly estado: Estado
   readonly rotulo: string
   readonly dataReferencia: string
+  /** Falso nas calculadoras cuja entrada é inteiramente digitada. */
+  readonly temParametroLegal: boolean
   readonly avisoAdicional?: string
 }) {
   // Altura mínima reservada: nenhum estado empurra o que está abaixo
@@ -327,7 +343,7 @@ function Resultado({
         <p className="text-sm text-[var(--color-text-secondary)]">{rotulo}</p>
         {/* O maior elemento da página: o resultado é o herói (princípio 1). */}
         <p className="tabular mt-1 text-4xl font-semibold tracking-tight">
-          {formatarReal(r.valores.principal)}
+          {formatarValor(r.valores.principal, r.valores.unidade)}
         </p>
 
         <dl className="mt-5 space-y-2 border-t border-[var(--color-border)] pt-4">
@@ -356,17 +372,35 @@ function Resultado({
                     : linha.sinal === 'credito'
                       ? '+ '
                       : ''}
-                {formatarReal(linha.valor)}
+                {formatarValor(linha.valor, r.valores.unidade)}
               </dd>
             </div>
           ))}
         </dl>
 
-        {/* RN-028: aviso de estimativa na MESMA dobra do resultado. */}
+        {/* RN-028: aviso de estimativa na MESMA dobra do resultado.
+
+            Duas redações, porque a frase única mentia. Ela citava "os parâmetros
+            legais vigentes em <data>" também no CET, na amortização e nos juros
+            compostos — calculadoras que não consultam parâmetro legal nenhum,
+            cuja entrada inteira é digitada. Num produto cuja tese é a
+            auditabilidade, alegar fundamento legal onde não há é o pior tipo de
+            imprecisão: some justamente na calculadora em que o leitor não tem
+            como conferir. */}
         <p className="mt-5 rounded border border-[var(--color-warning-border)] bg-[var(--color-warning-surface)] p-3 text-sm">
-          Estimativa com base nos dados informados e nos parâmetros legais vigentes em{' '}
-          {formatarData(dataReferencia)}. O valor final pode variar conforme acordos, convenções
-          coletivas e particularidades do seu contrato.
+          {temParametroLegal ? (
+            <>
+              Estimativa com base nos dados informados e nos parâmetros legais vigentes em{' '}
+              {formatarData(dataReferencia)}. O valor final pode variar conforme acordos,
+              convenções coletivas e particularidades do seu contrato.
+            </>
+          ) : (
+            <>
+              Estimativa com base exclusivamente nos dados que você informou — esta calculadora
+              não consulta parâmetro legal com vigência. Confira se os valores digitados
+              correspondem ao contrato ou à proposta.
+            </>
+          )}
           {avisoAdicional ? ` ${avisoAdicional}` : ''}
         </p>
 
@@ -414,7 +448,7 @@ function Resultado({
                   </th>
                   {linha.valores.map((v, i) => (
                     <td key={i} className="tabular px-4 py-2 text-right">
-                      {formatarReal(v)}
+                      {formatarValor(v, r.valores.unidade)}
                     </td>
                   ))}
                 </tr>

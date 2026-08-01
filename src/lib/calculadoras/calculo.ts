@@ -114,6 +114,24 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './juros-compostos'
     ).then((m) => m.calcular),
+  'quitacao-antecipada': () =>
+    import(
+      /* webpackChunkName: "calc-quitacao-antecipada" */
+      /* webpackExports: ["calcular"] */
+      './quitacao-antecipada'
+    ).then((m) => m.calcular),
+  porcentagem: () =>
+    import(
+      /* webpackChunkName: "calc-porcentagem" */
+      /* webpackExports: ["calcular"] */
+      './porcentagem'
+    ).then((m) => m.calcular),
+  'alcool-ou-gasolina': () =>
+    import(
+      /* webpackChunkName: "calc-combustivel" */
+      /* webpackExports: ["calcular"] */
+      './combustivel'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

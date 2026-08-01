@@ -106,26 +106,48 @@ for (const c of CALCULADORAS) {
         continue
       }
 
+      /**
+       * O valor desejado é limitado ao teto do próprio campo.
+       *
+       * Um número fixo não cabe em toda faixa do catálogo: R$ 3.000,00 é um
+       * salário plausível e é um preço de combustível absurdo, que CALC-054
+       * recusa com razão — e o teste reprovava a calculadora por ela estar
+       * certa. `data-maximo` vem de `campos.tsx` e existe exatamente para isto.
+       */
+      const teto = Number(await campo.getAttribute('data-maximo')) || Number.MAX_SAFE_INTEGER
+      const preencher = (desejado: number) => campo.fill(String(Math.min(desejado, teto)))
+
       const modo = await campo.getAttribute('inputMode')
       if (modo === 'numeric') {
-        // 5 cabe em todo mínimo e em todo máximo inteiro do catálogo.
-        await campo.fill('5')
+        // 5 cabe em todo mínimo inteiro do catálogo.
+        await preencher(5)
         continue
       }
 
-      // Monetário e percentual dividem `inputMode="decimal"`; o placeholder os
-      // separa. A taxa tem máximo de 100%, e enchê-la com o valor do campo
-      // monetário deixa o formulário em erro de validação.
+      // Monetário, percentual e decimal dividem `inputMode="decimal"`; o
+      // placeholder separa o monetário dos outros dois. A taxa tem máximo de
+      // 100%, e enchê-la com o valor do campo monetário deixa o formulário em
+      // erro de validação.
       const marcador = await campo.getAttribute('placeholder')
-      await campo.fill(marcador === 'R$ 0,00' ? '300000' : '100')
+      await preencher(marcador === 'R$ 0,00' ? 300_000 : 100)
     }
 
+    /**
+     * A prova de que calculou é a MEMÓRIA, não o cifrão.
+     *
+     * Era `toContainText('R$')`, o que funcionou enquanto toda calculadora
+     * devolvia dinheiro. CALC-070 devolve número puro e CALC-070 na variação
+     * devolve percentual — e um teste que exige cifrão passaria a reprovar a
+     * calculadora justamente por ela estar certa. O acionador da memória de
+     * cálculo só é renderizado no estado calculado, então ele prova o mesmo sem
+     * presumir a unidade.
+     */
     const resultado = page.locator('main [aria-live]')
-    await expect(resultado).toContainText('R$')
     await expect(
-      resultado,
+      resultado.getByRole('button', { name: 'Ver como este valor foi calculado' }),
       'a calculadora renderizou mas não calculou — parâmetro sem cobertura na data padrão?',
-    ).not.toContainText('Não foi possível calcular')
+    ).toBeVisible()
+    await expect(resultado).not.toContainText('Não foi possível calcular')
   })
 }
 

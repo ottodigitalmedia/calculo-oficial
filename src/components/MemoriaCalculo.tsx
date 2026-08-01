@@ -2,7 +2,12 @@
 
 import { useState } from 'react'
 
-import { formatarPeriodo, formatarReal } from '@/lib/format/moeda'
+import {
+  formatarNumero,
+  formatarPercentual,
+  formatarPeriodo,
+  formatarReal,
+} from '@/lib/format/moeda'
 import type { Traco } from '@/lib/engine/traco'
 
 /**
@@ -119,9 +124,16 @@ export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
                   </p>
                 ) : null}
 
-                {/* MC-4: monoespaçada, à direita. */}
+                {/* MC-4: monoespaçada, à direita. A unidade é declarada pela
+                    etapa: sem ela, "de 200 para 250" sairia como R$ 25,00 no
+                    lugar de 25,00%. Ver `Unidade` em `engine/traco.ts`. */}
                 <p className="tabular mt-1 text-right font-medium">
-                  = {formatarReal(etapa.resultado)}
+                  ={' '}
+                  {etapa.unidade === 'percentual'
+                    ? formatarPercentual(etapa.resultado)
+                    : etapa.unidade === 'numero'
+                      ? formatarNumero(etapa.resultado)
+                      : formatarReal(etapa.resultado)}
                 </p>
               </li>
             ))}
