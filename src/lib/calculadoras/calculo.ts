@@ -78,6 +78,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './seguro-desemprego'
     ).then((m) => m.calcular),
+  'cheque-especial': () =>
+    import(
+      /* webpackChunkName: "calc-cheque-especial" */
+      /* webpackExports: ["calcular"] */
+      './cheque-especial'
+    ).then((m) => m.calcular),
+  'custo-do-funcionario': () =>
+    import(
+      /* webpackChunkName: "calc-custo-empregador" */
+      /* webpackExports: ["calcular"] */
+      './custo-empregador'
+    ).then((m) => m.calcular),
   ferias: () =>
     import(
       /* webpackChunkName: "calc-ferias" */

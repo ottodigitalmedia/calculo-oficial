@@ -63,6 +63,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quantas parcelas você tem direito a receber, e de quanto é cada uma.',
   },
   {
+    slug: 'custo-do-funcionario',
+    nome: 'Custo real do funcionário',
+    linhaDeContexto: 'Quanto um salário custa de verdade — com encargos e provisões na conta.',
+  },
+  {
     slug: 'ferias',
     nome: 'Férias',
     linhaDeContexto:
@@ -120,6 +125,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     nome: 'Rotativo do cartão — custo real',
     linhaDeContexto:
       'Quanto custa não pagar a fatura inteira — e qual é o teto que a lei impõe à cobrança.',
+  },
+  {
+    slug: 'cheque-especial',
+    nome: 'Cheque especial — custo real',
+    linhaDeContexto: 'Quanto custam os dias no vermelho — e qual é o teto que a lei impõe.',
   },
   {
     slug: 'quitacao-antecipada',

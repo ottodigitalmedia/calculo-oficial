@@ -23,18 +23,18 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **19** de 75 — v1 completo, quatro de crédito, o bloco de desligamento fechado e as duas primeiras sem cifrão nenhum |
+| Calculadoras no ar | **21** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 546 de unidade · 273 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 23 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 127,3 kB de **135** na pior rota (rescisão) — folga de 7,7 kB. Limite revisado com medição, ver §7.7 |
+| Testes | 577 de unidade · 285 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 28 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Orçamento de JavaScript | 127,7 kB de **135** na pior rota (rescisão) — folga de 7,3 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
-- **Trabalhista do v2:** rescisão por acordo mútuo · aviso prévio proporcional · seguro-desemprego
-- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão
+- **Trabalhista do v2:** rescisão por acordo mútuo · aviso prévio proporcional · seguro-desemprego · custo do funcionário
+- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
 - **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
@@ -130,9 +130,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 56 de 75
+## 4. Calculadoras pendentes — 54 de 75
 
-Publicadas: **CALC-001 a CALC-010, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-011, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-030, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -829,6 +829,66 @@ combinação válida por slug, e a calculadora é exercitada por permalink.
 Quando a próxima calculadora tiver campos que interagem, o lugar de declarar isso
 é `ENTRADAS_QUE_INTERAGEM`.
 
+### 7.20 A norma revogada que quase virou parâmetro
+
+CALC-030 quase publicou uma cobrança extinta há cinco anos.
+
+A Resolução CMN nº 4.765/2019 é famosa por duas coisas: o teto de 8% ao mês para
+o cheque especial (art. 3º) e a tarifa de 0,25% sobre o limite acima de R$ 500
+(art. 2º). **A segunda não existe mais.** O art. 2º foi revogado a partir de
+1º/11/2021 pela Resolução CMN nº 4.962/2021 e declarado **inconstitucional** pelo
+STF na ADI 6.407-DF.
+
+Toda descrição secundária que se encontra por aí ainda cita a tarifa, porque
+descreve o texto de 2019. O PDF **consolidado** do Banco Central traz as duas
+tarjas no corpo do artigo, e é só por isso que a armadilha apareceu.
+
+> **A regra "abra a fonte oficial, não o site que diz o que ela diz" cobrou o
+> próprio preço aqui.** E há um corolário: a fonte oficial precisa ser a versão
+> **consolidada**. O texto original publicado no DOU em 2019 traria o art. 2º
+> vivo, sem nenhuma marca de que ele morreu depois.
+
+O comentário na vigência de `cheque-especial-teto-juros-mes` avisa quem for
+atualizar: aquele artigo não é parâmetro deste sistema, e não deve virar um.
+
+### 7.21 A fronteira do §14, atravessada por dentro
+
+`docs/18` marcava CALC-011 como **alta** dificuldade, com um motivo específico:
+as alíquotas de terceiros (Sistema S) variam por código FPAS, e persegui-las
+levaria a calculadora para o *tributário empresarial complexo* que `00-catalogo`
+§14 excluiu em definitivo.
+
+A saída estava no próprio §14, escrita para a categoria hiperlocal: *"onde o dado
+é indispensável, ele entra como campo preenchido pelo usuário"*. Terceiros virou
+campo. Ficaram como parâmetro apenas as alíquotas que estão **no corpo da Lei nº
+8.212/1991** — patronal de 20% e RAT de 1, 2 ou 3% —, que só mudam por alteração
+legislativa.
+
+E o que fica de fora fica **declarado**: Simples Nacional, desoneração da folha e
+FAP aparecem em nota, no aviso e no FAQ. Uma calculadora que não diz o que ignora
+é pior que uma que ignora menos.
+
+**O padrão a reaproveitar:** quando uma calculadora do catálogo encostar numa
+categoria excluída, procure primeiro a saída que a própria exclusão prescreve,
+antes de concluir que a calculadora não cabe.
+
+### 7.22 Dois casos-ouro errados no mesmo dia, pelo mesmo motivo
+
+Em CALC-009, `R$ 2.000,00 × 0,8 = R$ 1.600,00` — e o piso do salário mínimo
+elevava para R$ 1.621,00.
+
+Em CALC-030, `1,08^12 − 1 = 15.182` basis points — e `anualizar` trunca a divisão
+inteira do `BigInt`, devolvendo 15.181.
+
+**Os dois vieram de fazer a conta de cabeça e esquecer uma regra do próprio
+sistema.** Nos dois o código estava certo. A tentação em ambos era mexer no
+motor — pôr arredondamento em `anualizar` teria movido um número que CALC-024
+publica desde 31/07/2026, por sete milésimos de ponto percentual.
+
+Ao escrever caso-ouro, refaça a conta **pelo caminho do sistema**, não pelo
+caminho da calculadora de bolso: com a política de arredondamento declarada, com
+os pisos e tetos aplicados, na ordem em que o motor os aplica.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -847,10 +907,11 @@ O que sobrou, em ordem:
 1. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
    do projeto que toca a tese do produto, e ela ficou aberta com uma calculadora
    publicada em cima.
-2. **CALC-030 · cheque especial.** `docs/18` registra que é praticamente o mesmo
-   motor de CALC-023, que agora existe.
-3. **CALC-011 · custo real do funcionário.** Reaproveita FGTS, 13º e férias, que
-   já existem, e é a de maior valor publicitário do bloco trabalhista.
+2. **CALC-012 · rescisão do empregado doméstico (LC 150/2015).** O motor de
+   rescisão já tem três modalidades; a doméstica muda alíquotas e acrescenta o
+   regime próprio do FGTS. É a que mais reaproveita do que existe.
+3. **CALC-017 · restituição estimada do IRPF anual.** Fecha o bloco tributário
+   do v2 e reaproveita as tabelas de IRRF que já estão cadastradas.
 4. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
    tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
    faz. Não está no catálogo com ID; exige decisão do mantenedor.

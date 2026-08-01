@@ -31,8 +31,9 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 01/08/2026
 
-Sete calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008 e
-CALC-009 — o bloco de desligamento fechado.
+Nove calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
+CALC-009, CALC-030 e CALC-011. O bloco de desligamento fechou, e o de crédito
+chegou a cinco.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
 ### Adicionado · `cartao-teto-juros-encargos` · a partir de 2024-01-03
@@ -90,6 +91,72 @@ unidade em `Etapa` e em `SaidaCalculadora`, e o tipo de campo `decimal`.
 CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entre os
 combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
 de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
+
+### Adicionado · `cheque-especial-teto-juros-mes` · a partir de 2020-01-06
+
+**Valor:** 8% ao mês.
+
+**Fonte:** Resolução CMN nº 4.765, de 27 de novembro de 2019, art. 3º —
+*"as taxas de juros remuneratórios cobradas sobre o valor utilizado do cheque
+especial estão limitadas a, no máximo, 8% (oito por cento) ao mês"*. Vigência
+pelo art. 6º.
+`https://normativos.bcb.gov.br/Lists/Normativos/Attachments/50875/Res_4765_v2_P.pdf`
+
+**Verificado contra:** o PDF **consolidado** do Banco Central, lido em
+01/08/2026.
+
+⚠️ **O art. 2º da mesma resolução NÃO vale mais, e quase virou parâmetro.** Ele
+admitia tarifa de até 0,25% ao mês sobre o limite que excedesse R$ 500,00, e foi
+revogado a partir de 1º/11/2021 pela Resolução CMN nº 4.962/2021 — além de
+declarado inconstitucional pelo STF na ADI 6.407-DF. Toda descrição secundária
+que circula ainda cita a tarifa, porque descreve o texto de 2019. Só o PDF
+consolidado traz a tarja.
+
+**Corolário para a próxima auditoria:** a fonte oficial precisa ser a versão
+CONSOLIDADA. O texto original publicado no DOU traria o artigo vivo, sem nenhuma
+marca de que ele morreu depois.
+
+### Adicionado · `contribuicao-patronal` e RAT · a partir de 1999-11-26 e 1998-12-11
+
+**Valores:** 20% de contribuição patronal; RAT de 1%, 2% e 3%.
+
+**Fonte:** Lei nº 8.212, de 24 de julho de 1991, art. 22, I e II, com a redação
+das Leis nº 9.876/1999 e nº 9.732/1998.
+`https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm`
+
+**Verificado contra:** o texto compilado do Planalto, lido em 01/08/2026.
+
+A alíquota de **terceiros** (Sistema S) NÃO entrou como parâmetro: varia por
+código FPAS e depende de tabela mantida por outro órgão. Virou campo do usuário,
+que é o que `00-catalogo` §14 prescreve para dado indispensável e hiperlocal.
+
+### Adicionado · `STF_TEMA_985` como fundamento
+
+*"É legítima a incidência de contribuição social sobre o valor satisfeito a
+título de terço constitucional de férias."* RE 1.072.485, com modulação a partir
+de 15/09/2020 — reverte a tese anterior do STJ, de 2014, que dava natureza
+indenizatória ao terço. É a decisão que mais mexeu no custo de folha na década, e
+CALC-011 a cita na etapa dos encargos sobre provisões.
+
+### Adicionado · CALC-030 · cheque especial · e CALC-011 · custo do funcionário
+
+CALC-030 é a prima do rotativo: mesmo argumento, mesmo aviso contextual. O número
+que ela existe para mostrar é o anual — 8% ao mês, capitalizados, passam de 150%
+ao ano. O teto é alto, não baixo.
+
+CALC-011 é a primeira do catálogo escrita do lado do empregador, e a que mais
+perto passa da fronteira do §14. O que a mantém do lado certo: só alíquotas do
+corpo da Lei nº 8.212/1991, terceiros como campo, e Simples Nacional, desoneração
+e FAP declarados como fora — em nota, no aviso e no FAQ.
+
+### Corrigido · dois casos-ouro errados, pelo mesmo motivo
+
+`R$ 2.000,00 × 0,8 = R$ 1.600,00` em CALC-009 ignorava o piso do salário mínimo;
+`1,08^12 − 1 = 15.182` em CALC-030 ignorava que `anualizar` trunca a divisão
+inteira do `BigInt`, devolvendo 15.181. Nos dois o código estava certo.
+
+Pôr arredondamento em `anualizar` teria movido um número que CALC-024 publica
+desde 31/07/2026, por sete milésimos de ponto percentual. Não foi feito.
 
 ### Adicionado · parâmetros do seguro-desemprego · CALC-009
 

@@ -10,6 +10,8 @@ import { DECIMO_TERCEIRO } from './decimo-terceiro'
 import { AMORTIZACAO } from './amortizacao'
 import { AVISO_PREVIO } from './aviso-previo'
 import { CET } from './cet'
+import { CHEQUE_ESPECIAL } from './cheque-especial'
+import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
 import { FGTS } from './fgts'
@@ -34,6 +36,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RESCISAO_ACORDO_MUTUO,
   AVISO_PREVIO,
   SEGURO_DESEMPREGO,
+  CUSTO_EMPREGADOR,
   FERIAS,
   DECIMO_TERCEIRO,
   HORAS_EXTRAS,
@@ -44,6 +47,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   CET,
   AMORTIZACAO,
   ROTATIVO_CARTAO,
+  CHEQUE_ESPECIAL,
   QUITACAO_ANTECIPADA,
   PORCENTAGEM,
   COMBUSTIVEL,
