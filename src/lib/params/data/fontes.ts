@@ -427,6 +427,60 @@ export const CDC_ART_52: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+// ---------------------------------------------------------------------------
+// Seguro-desemprego — CALC-009
+// ---------------------------------------------------------------------------
+
+export const LEI_7998_ART_4: Fonte = {
+  id: 'lei-7998-1990-art-4',
+  norma: 'Lei nº 7.998, de 11 de janeiro de 1990, com a redação da Lei nº 13.134, de 2015',
+  dispositivo: 'Art. 4º, § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l7998.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_7998_ART_5: Fonte = {
+  id: 'lei-7998-1990-art-5',
+  norma: 'Lei nº 7.998, de 11 de janeiro de 1990',
+  dispositivo: 'Art. 5º, caput e § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l7998.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * A ÚNICA FONTE DESTE PROJETO QUE NÃO É TEXTO NORMATIVO NEM PÁGINA DE TABELA.
+ *
+ * O art. 5º da Lei nº 7.998/1990 fixa o MÉTODO — três faixas, fatores 0,8 e
+ * 0,5, piso no salário mínimo — mas expressa os limites em BTN, moeda extinta.
+ * Os limites em reais são reajustados todo ano pelo INPC, na forma da Resolução
+ * CODEFAT nº 957/2022, e divulgados pelo Ministério do Trabalho e Emprego.
+ *
+ * **A portaria que os formaliza não foi localizada.** Foram tentados: a busca do
+ * Diário Oficial por período e por órgão, o JSON diário do DOU de 09 a 14/01/2026
+ * e a página de serviço do MTE. Nenhum devolveu o ato.
+ *
+ * O que se tem é a divulgação no **portal do próprio órgão emissor** — o Portal
+ * do FAT, do MTE —, publicada em 13/01/2026, declarando vigência a partir de
+ * 11/01/2026 e citando a lei e a resolução. É fonte oficial para BV-07 e para a
+ * convenção deste arquivo, e é mais fraca que todas as outras do projeto.
+ *
+ * **Conferência cruzada que aumenta a confiança:** o piso declarado ali,
+ * R$ 1.621,00, coincide com `salario-minimo` de 2026, que foi conferido no PDF
+ * da Portaria Interministerial MPS/MF nº 13/2026. Um erro de transcrição na
+ * tabela teria de coincidir com outro documento para passar.
+ *
+ * **A fazer na próxima auditoria:** localizar a portaria e trocar esta URL pelo
+ * texto com força normativa, como foi feito com o INSS de 2026 em 31/07/2026.
+ */
+export const MTE_TABELA_SEGURO_DESEMPREGO: Fonte = {
+  id: 'mte-tabela-seguro-desemprego-2026',
+  norma:
+    'Tabela anual do seguro-desemprego divulgada pelo Ministério do Trabalho e Emprego, na forma do art. 5º da Lei nº 7.998/1990 e da Resolução CODEFAT nº 957, de 2022',
+  dispositivo: 'Faixas vigentes a partir de 11/01/2026',
+  url: 'https://portalfat.mte.gov.br/mte-reajusta-valores-do-beneficio-seguro-desemprego/',
+  orgao: 'Ministério do Trabalho e Emprego',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -465,4 +519,7 @@ export const FONTES: readonly Fonte[] = [
   CDC_ART_52,
   LEI_14690_ART_28,
   RES_CMN_4549,
+  LEI_7998_ART_4,
+  LEI_7998_ART_5,
+  MTE_TABELA_SEGURO_DESEMPREGO,
 ]
