@@ -20,6 +20,7 @@ import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { PORCENTAGEM } from './porcentagem'
+import { RENDA_FIXA } from './renda-fixa'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
 import { ROTATIVO_CARTAO } from './rotativo-cartao'
 import { RESCISAO_ACORDO_MUTUO } from './rescisao-acordo-mutuo'
@@ -45,6 +46,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   FGTS,
   INSS_MENSAL,
   IRRF_MENSAL,
+  RENDA_FIXA,
   JUROS_COMPOSTOS,
   CET,
   AMORTIZACAO,

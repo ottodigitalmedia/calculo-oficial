@@ -110,6 +110,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto é retido de IRRF no mês — com a escolha entre deduções legais e desconto simplificado à mostra.',
   },
   {
+    slug: 'ir-renda-fixa',
+    nome: 'IR sobre renda fixa',
+    linhaDeContexto: 'Quanto o imposto tira do seu rendimento — e quanto o prazo devolve.',
+  },
+  {
     slug: 'juros-compostos',
     nome: 'Juros compostos',
     linhaDeContexto: 'Quanto um valor rende ao longo do tempo, com aportes mensais.',

@@ -195,13 +195,19 @@ No lugar deles há um teste de **linha de base**: zero requisição a terceiro e
 |---|---|---|---|
 | TC-049 | LCP ≤ 2,0s | `RNF-001` | Bloqueia deploy |
 | TC-050 | CLS ≤ 0,05 **com anúncio carregado** | `RNF-002` | Bloqueia deploy |
-| TC-051 | JavaScript por rota ≤ 135 KB comprimido | `RNF-004` | Bloqueia deploy |
+| TC-051 | JavaScript por rota ≤ 150 KB comprimido, e parte variável ≤ 30 KB | `RNF-004` | Bloqueia deploy |
 
 **TC-051 passou a medir no T-106.** Do T-003 até o T-105 o passo era um `echo` justificado por "ainda não há rota de calculadora" — havia desde o T-103, e o `echo` continuou passando. `scripts/verificar-orcamento.ts` soma o JavaScript comprimido de cada rota a partir do manifesto do build e falha se uma rota de calculadora ultrapassar o teto. Avisa, sem falhar, quando a folga cai abaixo de 8 kB.
 
 **O limite passou de 120 para 135 kB em 31/07/2026, com medição.** O número original foi escrito na fundação documental, antes de existir build — e portanto antes de se saber quanto custa o piso. Medido: **React e Next ocupam 100,5 kB**, 84% do teto antigo, deixando 19,5 kB para o produto inteiro (componente, campos, memória de cálculo, motores e tabelas legais de cinco calculadoras). Não era um orçamento apertado; era um orçamento consumido por dependência que não se escolhe por rota.
 
-O propósito de `RNF-004` não mudou. Quem mede a experiência é `TC-049` (LCP ≤ 2,0s); este limite continua sendo o guarda-corpo contra crescimento por descuido, e 135 kB deixa ~13 kB de folga sobre a rota mais pesada — suficiente para as trabalhistas que faltam, insuficiente para uma biblioteca inteira entrar sem ninguém notar.
+O propósito de `RNF-004` não mudou. Quem mede a experiência é `TC-049` (LCP ≤ 2,0s); este limite continua sendo o guarda-corpo contra crescimento por descuido.
+
+**Revisado de 135 para 150 kB em 01/08/2026, e o guarda-corpo mudou de lugar.** As três rescisões subiram 5,6 kB numa única sessão — o motor compartilhado ganhou a extinção por acordo e o regime doméstico — e a folga caiu de 11,5 para 5,9 kB. A próxima calculadora a tocar aquele motor estouraria sem ter feito nada errado.
+
+Subir o teto sozinho seria puro afrouxamento, então entrou junto um **segundo limite, que é o que de fato pega crescimento por descuido**: a *parte variável* de cada rota, medida contra a rota mais leve. O piso — framework, componente genérico, campos, memória — é o mesmo em toda rota e não cresce com o catálogo desde que a carga passou a ser por slug. O que varia é o motor e as tabelas que cada calculadora arrasta, e é aí que uma dependência indevida apareceria.
+
+Medido em 01/08/2026: rota mais leve em 112,1 kB, parte variável máxima de 16,7 kB na rescisão doméstica, de 30 kB permitidos. O limite dá espaço para uma calculadora que componha quase o dobro do que a mais composta de hoje compõe, e ainda assim reprova a entrada de uma biblioteca de porte médio.
 
 **TC-051 passou a enxergar o adiado em 31/07/2026.** Desde então cada calculadora carrega o cálculo em pedaço próprio, sob demanda — e **pedaço adiado não consta do manifesto da rota**. Medir só o manifesto mostraria a rota emagrecendo de 117,6 para 110,9 kB sem contar os 2 a 3,5 kB que o navegador baixa em seguida para a calculadora funcionar: um orçamento que passa por deixar de olhar, que é a mesma falha do `echo` acima.
 

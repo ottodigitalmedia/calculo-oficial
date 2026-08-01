@@ -17,6 +17,7 @@ import { DOMESTICO } from '@/lib/params/data/domestico'
 import { EMPREGADOR } from '@/lib/params/data/empregador'
 import { INSS } from '@/lib/params/data/inss'
 import { IRRF } from '@/lib/params/data/irrf'
+import { RENDA_FIXA } from '@/lib/params/data/renda-fixa'
 import { SEGURO_DESEMPREGO } from '@/lib/params/data/seguro-desemprego'
 import { TRABALHISTA } from '@/lib/params/data/trabalhista'
 import { construirRegistro } from '@/lib/params/registry'
@@ -42,7 +43,7 @@ import { guiasDaCalculadora } from '@/lib/guias'
  * tabelas de INSS, IRRF e trabalhistas entravam no pacote estático de toda
  * rota de calculadora — para produzir dois dados serializáveis.
  */
-const registro = construirRegistro(INSS, IRRF, TRABALHISTA, CREDITO, SEGURO_DESEMPREGO, EMPREGADOR, DOMESTICO)
+const registro = construirRegistro(INSS, IRRF, TRABALHISTA, CREDITO, SEGURO_DESEMPREGO, EMPREGADOR, DOMESTICO, RENDA_FIXA)
 
 export function generateStaticParams() {
   return CALCULADORAS.map((c) => ({ slug: c.slug }))

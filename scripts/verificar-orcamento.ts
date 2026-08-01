@@ -35,32 +35,52 @@ const PEDACOS = join(DIRETORIO_BUILD, 'static', 'chunks')
 /**
  * `RNF-004`. Em bytes, sobre o conteúdo comprimido.
  *
- * **Revisado de 120 para 135 kB em 31/07/2026, com medição.** O limite original
- * foi escrito na fundação documental, antes de existir build — e portanto antes
- * de se saber quanto custa o piso. A medição:
+ * **Revisado duas vezes, sempre com medição registrada.**
  *
- *     piso do framework (React + Next)   100,5 kB    84% do orçamento antigo
- *     nosso código estático                8,0 kB
- *     adiado da calculadora mais rica     13,3 kB
- *                                        --------
- *                                        121,8 kB
+ * 120 → 135 kB em 31/07/2026. O limite original foi escrito na fundação
+ * documental, antes de existir build — e portanto antes de se saber quanto custa
+ * o piso: React e Next sozinhos ocupavam 100,5 kB, 84% do orçamento antigo.
  *
- * Um teto de 120 kB deixava 19,5 kB para o produto inteiro — componente,
- * campos, memória de cálculo, motores e tabelas legais de cinco calculadoras.
- * Não era um orçamento apertado: era um orçamento consumido por dependência que
- * não escolhemos por rota.
+ * 135 → 150 kB em 01/08/2026. A medição do dia:
  *
- * **O propósito de `RNF-004` não muda.** Ele existe porque o produto é
- * consumido em rede móvel e cada quilobyte adiado é resultado que demora a
- * aparecer. Quem mede isso de verdade é `TC-049` (LCP ≤ 2,0s), sobre a
- * experiência, não sobre o byte. Este limite continua sendo o guarda-corpo
- * contra crescimento por descuido — e 135 kB deixa ~13 kB de folga sobre a
- * rota mais pesada de hoje, o suficiente para as trabalhistas que faltam sem
- * abrir espaço para uma biblioteca inteira entrar sem ninguém notar.
+ *     rota mais leve (juros compostos)     112,1 kB   piso + calculadora trivial
+ *     rota mais pesada (rescisão)          129,1 kB   piso + 17,0 kB de motor
+ *     folga sobre 135                        5,9 kB
+ *
+ * As três rescisões compartilham o motor que ganhou, no mesmo dia, a extinção
+ * por acordo e o regime doméstico. Elas subiram 5,6 kB em uma sessão, e a folga
+ * caiu de 11,5 para 5,9 kB — perto o suficiente para que a próxima calculadora
+ * a tocar aquele motor estourasse sem ter feito nada errado.
+ *
+ * **O PROPÓSITO NÃO MUDA, E ELE NÃO É DESEMPENHO.** Quem mede a experiência é
+ * `TC-049` (LCP ≤ 2,0s), sobre o que o usuário sente. `RNF-004` é guarda-corpo
+ * contra crescimento por descuido: ele existe para que uma biblioteca inteira
+ * não entre no pacote sem ninguém notar.
+ *
+ * E é por isso que subir o teto sozinho seria puro afrouxamento. Entrou junto o
+ * `ORCAMENTO_VARIAVEL` — ver abaixo —, que vigia o que de fato pode crescer por
+ * descuido: a parte que cada calculadora acrescenta ao piso compartilhado.
  *
  * Não aumente este número de novo sem medir e registrar por quê.
  */
-const ORCAMENTO_CALCULADORA = 135 * 1024
+const ORCAMENTO_CALCULADORA = 150 * 1024
+
+/**
+ * Quanto UMA calculadora pode acrescentar ao piso compartilhado.
+ *
+ * **É este o número que pega crescimento por descuido**, e não o absoluto. O
+ * piso — framework, componente genérico, campos, memória de cálculo — é o mesmo
+ * em toda rota e não cresce com o catálogo desde que a carga passou a ser por
+ * slug. O que varia é o motor e as tabelas que cada calculadora arrasta, e é aí
+ * que uma dependência indevida apareceria.
+ *
+ * Medido em 01/08/2026: a rota mais leve fica em 112,1 kB e a mais pesada em
+ * 129,1 kB — 17,0 kB de parte variável na rescisão, que é a mais composta do
+ * catálogo. O limite de 30 kB dá espaço para uma calculadora que componha quase
+ * o dobro disso, e ainda assim reprova a entrada de uma biblioteca de porte
+ * médio, que é o caso que o guarda-corpo existe para pegar.
+ */
+const ORCAMENTO_VARIAVEL = 30 * 1024
 
 /**
  * Rotas sujeitas ao limite bloqueante.
@@ -337,6 +357,46 @@ function main(): void {
         `Antes de aumentar o orçamento, procure o que entrou no pacote sem precisar.`,
     )
     process.exit(1)
+  }
+
+  /**
+   * A parte variável, medida contra a rota mais LEVE.
+   *
+   * A mais leve é a melhor aproximação do piso compartilhado que se pode obter
+   * sem instrumentar o empacotador: ela é piso mais uma calculadora cujo motor
+   * é aritmética pura. O que sobra em cada rota acima dela é o que aquela
+   * calculadora custou.
+   */
+  const bloqueantes = medidas.filter((m) => m.bloqueante)
+  const maisLeve = bloqueantes[bloqueantes.length - 1]
+
+  if (maisLeve) {
+    const excedentes = bloqueantes.filter(
+      (m) => m.bytes - maisLeve.bytes > ORCAMENTO_VARIAVEL,
+    )
+    if (excedentes.length > 0) {
+      const detalhe = excedentes
+        .map((m) => `  ${m.rota} — ${kb(m.bytes - maisLeve.bytes)} de motor e tabelas`)
+        .join('\n')
+
+      console.error(
+        `\nParte variável acima de ${kb(ORCAMENTO_VARIAVEL)} em ${excedentes.length} rota(s),\n` +
+          `medida contra a rota mais leve (${maisLeve.rota}, ${kb(maisLeve.bytes)}):\n` +
+          `${detalhe}\n\n` +
+          `O teto absoluto pode não ter sido violado, e ainda assim algo entrou\n` +
+          `no pacote de UMA calculadora sem precisar. Procure a dependência antes\n` +
+          `de aumentar o limite.`,
+      )
+      process.exit(1)
+    }
+
+    const maiorVariavel = bloqueantes[0]
+    if (maiorVariavel) {
+      console.log(
+        `Parte variável máxima: ${kb(maiorVariavel.bytes - maisLeve.bytes)} ` +
+          `(${maiorVariavel.rota}), de ${kb(ORCAMENTO_VARIAVEL)} permitidos.\n`,
+      )
+    }
   }
 
   const maiorBloqueante = medidas.find((m) => m.bloqueante)

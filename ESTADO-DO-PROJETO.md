@@ -23,11 +23,11 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **22** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito e a primeira do lado do empregador |
+| Calculadoras no ar | **23** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 596 de unidade · 291 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 32 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 129,0 kB de **135** na pior rota (rescisão doméstica) — folga de 6,0 kB. Limite revisado com medição, ver §7.7 |
+| Testes | 622 de unidade · 297 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 39 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Orçamento de JavaScript | 129,1 kB de **150** na pior rota — e **16,7 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -130,9 +130,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 53 de 75
+## 4. Calculadoras pendentes — 52 de 75
 
-Publicadas: **CALC-001 a CALC-012, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-030, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-012, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -957,6 +957,37 @@ que o usuário informa o saldo real de uma delas.
 Coincidência aritmética é atalho tentador e raciocínio errado. Registre-a no
 teste; não a use na conta.
 
+### 7.27 Subir o teto sem mover o guarda-corpo é só afrouxar
+
+`RNF-004` foi revisado de 135 para 150 kB em 01/08/2026, com autorização do
+mantenedor. A medição que motivou:
+
+    rota mais leve (juros compostos)     112,1 kB   piso + calculadora trivial
+    rota mais pesada (rescisão)          129,1 kB   piso + 17,0 kB de motor
+    folga sobre 135                        5,9 kB
+
+As três rescisões subiram 5,6 kB numa única sessão — o motor compartilhado ganhou
+a extinção por acordo e o regime doméstico — e a folga caiu de 11,5 para 5,9 kB.
+A próxima calculadora a tocar aquele motor estouraria **sem ter feito nada
+errado**.
+
+**Mas o propósito de `RNF-004` não é desempenho.** Isso está escrito em
+`12-test-plan` desde a revisão anterior: quem mede a experiência é `TC-049`
+(LCP ≤ 2,0s). `RNF-004` é guarda-corpo contra crescimento por descuido — e um
+guarda-corpo que se afasta toda vez que alguém encosta nele não é guarda-corpo.
+
+Por isso entrou junto um **segundo limite, que é o que de fato pega o descuido**:
+a *parte variável* de cada rota, medida contra a rota mais leve. O piso é o mesmo
+em toda rota e não cresce com o catálogo desde que a carga passou a ser por slug;
+o que varia é o motor e as tabelas de cada calculadora, e é aí que uma
+dependência indevida apareceria.
+
+Hoje: **16,7 kB de 30 permitidos**, na rescisão doméstica.
+
+> **O padrão, para a próxima vez que um limite apertar:** pergunte o que ele
+> existe para pegar. Se o número que está apertando não é o que pega aquilo,
+> suba-o — e ponha no lugar um que pegue.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -982,9 +1013,8 @@ O que sobrou, em ordem:
    2025 é, portanto, um conjunto próprio de números, que **não foi localizado**.
    Construir sobre a tabela do ano errado produziria exatamente o dano que o
    projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
-3. **CALC-018 · IR sobre renda fixa (tabela regressiva).** Fecha o bloco
-   tributário do v2 por outro caminho, e a tabela regressiva não tem o problema
-   de ano-calendário: os prazos e alíquotas estão no corpo da Lei nº 11.033/2004.
+3. **CALC-019 · comparador simplificado vs. completo.** Reaproveita as tabelas
+   de IRRF que já existem e não depende do ano-calendário problemático.
 4. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
    tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
    faz. Não está no catálogo com ID; exige decisão do mantenedor.

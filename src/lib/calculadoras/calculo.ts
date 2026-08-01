@@ -144,6 +144,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './amortizacao'
     ).then((m) => m.calcular),
+  'ir-renda-fixa': () =>
+    import(
+      /* webpackChunkName: "calc-renda-fixa" */
+      /* webpackExports: ["calcular"] */
+      './renda-fixa'
+    ).then((m) => m.calcular),
   'juros-compostos': () =>
     import(
       /* webpackChunkName: "calc-juros-compostos" */

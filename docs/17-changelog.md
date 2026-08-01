@@ -31,9 +31,9 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 01/08/2026
 
-Dez calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
-CALC-009, CALC-030, CALC-011 e CALC-012. O bloco de desligamento fechou, e o de
-crédito chegou a cinco.
+Onze calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,
+CALC-009, CALC-030, CALC-011, CALC-012 e CALC-018. O bloco de desligamento
+fechou, e o de crédito chegou a cinco.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
 ### Adicionado · `cartao-teto-juros-encargos` · a partir de 2024-01-03
@@ -91,6 +91,59 @@ unidade em `Etapa` e em `SaidaCalculadora`, e o tipo de campo `decimal`.
 CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entre os
 combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
 de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
+
+### Adicionado · `ir-renda-fixa-*` · a partir de 2005-01-01
+
+**Valores:** 22,5% até 180 dias; 20% de 181 a 360; 17,5% de 361 a 720; 15% acima
+de 720.
+
+**Fonte:** Lei nº 11.033, de 21 de dezembro de 2004, art. 1º, I a IV. A vigência
+sai do próprio caput — "relativamente às aplicações e operações realizadas a
+partir de 1º de janeiro de 2005".
+`https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm`
+
+**Verificado contra:** o texto compilado do Planalto, e a página da Medida
+Provisória nº 1.303/2025, ambos lidos em 01/08/2026.
+
+⚠️ **UMA MP QUASE MUDOU TUDO ISSO, E CADUCOU.** A MP nº 1.303, de junho de 2025,
+propunha substituir a tabela regressiva por alíquota única e tributar os títulos
+hoje isentos. O texto compilado traz "(Vide Medida Provisória nº 1.303, de 2025)"
+ao lado de quase todo dispositivo, o que assusta na primeira leitura — mas a
+etiqueta seguinte é **"Vigência encerrada"**, e ela está também no cabeçalho da
+própria MP. A tabela da Lei nº 11.033 vale exatamente como escrita.
+
+Segundo caso do dia, depois do art. 2º da Resolução CMN nº 4.765: norma que
+existe no texto e não vale mais.
+
+**Os prazos entraram como parâmetro junto com as alíquotas.** A fronteira dos 180
+dias é tão legal quanto os 22,5%, e uma alíquota sem o prazo que a delimita não
+significa nada. O tipo `tabela_faixas` não serviu: ele mede limites em centavos, e
+estes são medidos em dias.
+
+### Adicionado · CALC-018 · IR sobre renda fixa
+
+Reaproveita o motor de CALC-022 inteiro — capitalização com conversão de taxa
+anual em mensal equivalente — e acrescenta a mordida do imposto. Mostra também
+quanto se ganha esperando a faixa seguinte, que é a informação acionável: a
+alíquota alcançada incide sobre TODO o rendimento acumulado, não sobre o do
+último período.
+
+### Alterado · `RNF-004` revisado de 135 para 150 kB, com um guarda-corpo novo
+
+As três rescisões subiram 5,6 kB numa única sessão — o motor compartilhado ganhou
+a extinção por acordo e o regime doméstico — e a folga caiu de 11,5 para 5,9 kB.
+A próxima calculadora a tocar aquele motor estouraria sem ter feito nada errado.
+
+**Subir o teto sozinho seria puro afrouxamento.** O propósito de `RNF-004` não é
+desempenho — quem mede a experiência é `TC-049` (LCP) —, é guarda-corpo contra
+crescimento por descuido, e um guarda-corpo que se afasta toda vez que alguém
+encosta nele não é guarda-corpo.
+
+Entrou junto um segundo limite: a **parte variável** de cada rota, medida contra
+a rota mais leve, com teto de 30 kB. O piso é o mesmo em toda rota e não cresce
+com o catálogo; o que varia é o motor e as tabelas de cada calculadora, e é aí
+que uma dependência indevida apareceria. Hoje: 16,7 kB de 30, na rescisão
+doméstica.
 
 ### Adicionado · parâmetros do trabalho doméstico · a partir de 2015-06-02
 
