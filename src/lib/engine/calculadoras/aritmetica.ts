@@ -366,3 +366,145 @@ export function calcularCombustivel(
     traco,
   }
 }
+
+// ---------------------------------------------------------------------------
+// CALC-071 — Regra de três simples e composta
+// ---------------------------------------------------------------------------
+
+/**
+ * O sentido de cada par de grandezas.
+ *
+ * **É a única decisão da calculadora, e ela é do usuário.** Nenhuma conta
+ * descobre sozinha se mais operários significam menos tempo ou mais tempo: isso
+ * é do problema, não da aritmética. Errar aqui produz um número plausível e
+ * errado, que é a forma mais cara de errar — por isso o sentido é campo, e a
+ * memória de cálculo declara qual foi aplicado.
+ */
+export type SentidoDaGrandeza = 'direta' | 'inversa'
+
+export type TipoRegraDeTres = 'simples' | 'composta'
+
+export interface EntradaRegraDeTres {
+  readonly tipo: TipoRegraDeTres
+  /** Todas as grandezas em centésimos da unidade: 12,5 é `1250`. */
+  readonly a: number
+  readonly b: number
+  readonly c: number
+  readonly sentido: SentidoDaGrandeza
+  /** Segundo par — só na composta. */
+  readonly a2: number
+  readonly c2: number
+  readonly sentido2: SentidoDaGrandeza
+}
+
+export interface SaidaRegraDeTres {
+  /** Em centésimos da unidade, como as entradas. */
+  readonly resultado: Centavos
+  /** O valor depois de aplicado só o primeiro par — útil na composta. */
+  readonly parcial: Centavos
+}
+
+/**
+ * Aplica um par de grandezas sobre o valor corrente.
+ *
+ * Direta multiplica pela razão `depois/antes`; inversa, pelo recíproco. É a
+ * definição de proporcionalidade, e é toda a matemática desta calculadora — o
+ * trabalho está em não deixar o usuário aplicar a errada sem perceber.
+ */
+function aplicarPar(
+  valor: Centavos,
+  antes: number,
+  depois: number,
+  sentido: SentidoDaGrandeza,
+): Centavos {
+  return sentido === 'direta'
+    ? proporcao(valor, depois, antes, POLITICA)
+    : proporcao(valor, antes, depois, POLITICA)
+}
+
+export function calcularRegraDeTres(
+  entrada: EntradaRegraDeTres,
+  dataReferencia: DataISO,
+): Resultado<SaidaRegraDeTres> {
+  const composta = entrada.tipo === 'composta'
+
+  if (entrada.a <= 0 || entrada.b <= 0 || entrada.c <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Preencha os três valores conhecidos para ver o resultado.',
+    }
+  }
+  if (composta && (entrada.a2 <= 0 || entrada.c2 <= 0)) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Preencha também os dois valores da segunda grandeza para ver o resultado.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  etapas.push({
+    rotulo: 'A proporção informada',
+    formula:
+      `${numero(centavos(entrada.a))} corresponde a ${numero(centavos(entrada.b))}; ` +
+      `${numero(centavos(entrada.c))} corresponde a quanto?`,
+    resultado: centavos(entrada.b),
+    unidade: 'numero',
+  })
+
+  const parcial = aplicarPar(centavos(entrada.b), entrada.a, entrada.c, entrada.sentido)
+
+  etapas.push({
+    rotulo:
+      entrada.sentido === 'direta'
+        ? 'Primeira grandeza — proporção direta'
+        : 'Primeira grandeza — proporção inversa',
+    formula:
+      entrada.sentido === 'direta'
+        ? `${numero(centavos(entrada.b))} × ${numero(centavos(entrada.c))} ÷ ${numero(centavos(entrada.a))}`
+        : `${numero(centavos(entrada.b))} × ${numero(centavos(entrada.a))} ÷ ${numero(centavos(entrada.c))}`,
+    resultado: parcial,
+    unidade: 'numero',
+    justificativa:
+      entrada.sentido === 'direta'
+        ? 'Direta: quando uma grandeza cresce, a outra cresce na mesma razão. A razão entre os ' +
+          'dois valores desta grandeza multiplica o resultado.'
+        : 'Inversa: quando uma grandeza cresce, a outra diminui na mesma razão. É o caso de ' +
+          'operários e tempo, de velocidade e duração — e a razão entra de cabeça para baixo.',
+  })
+
+  let resultado = parcial
+
+  if (composta) {
+    resultado = aplicarPar(parcial, entrada.a2, entrada.c2, entrada.sentido2)
+    etapas.push({
+      rotulo:
+        entrada.sentido2 === 'direta'
+          ? 'Segunda grandeza — proporção direta'
+          : 'Segunda grandeza — proporção inversa',
+      formula:
+        entrada.sentido2 === 'direta'
+          ? `${numero(parcial)} × ${numero(centavos(entrada.c2))} ÷ ${numero(centavos(entrada.a2))}`
+          : `${numero(parcial)} × ${numero(centavos(entrada.a2))} ÷ ${numero(centavos(entrada.c2))}`,
+      resultado,
+      unidade: 'numero',
+      justificativa:
+        'Na regra de três composta cada grandeza entra separadamente, uma depois da outra, e ' +
+        'o sentido de cada uma é decidido sozinho — misturar as duas de uma vez é onde a ' +
+        'conta costuma errar.',
+    })
+  }
+
+  etapas.push({
+    rotulo: 'Resultado',
+    formula: `O valor procurado é ${numero(resultado)}`,
+    resultado,
+    unidade: 'numero',
+  })
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return { ok: true, valores: { resultado, parcial }, traco }
+}

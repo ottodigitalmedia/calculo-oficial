@@ -210,11 +210,29 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './porcentagem'
     ).then((m) => m.calcular),
+  'regra-de-tres': () =>
+    import(
+      /* webpackChunkName: "calc-regra-de-tres" */
+      /* webpackExports: ["calcular"] */
+      './regra-de-tres'
+    ).then((m) => m.calcular),
   'alcool-ou-gasolina': () =>
     import(
       /* webpackChunkName: "calc-combustivel" */
       /* webpackExports: ["calcular"] */
       './combustivel'
+    ).then((m) => m.calcular),
+  'custo-de-viagem': () =>
+    import(
+      /* webpackChunkName: "calc-viagem" */
+      /* webpackExports: ["calcular"] */
+      './viagem'
+    ).then((m) => m.calcular),
+  'custo-mensal-do-carro': () =>
+    import(
+      /* webpackChunkName: "calc-custo-do-carro" */
+      /* webpackExports: ["calcular"] */
+      './custo-do-carro'
     ).then((m) => m.calcular),
 }
 

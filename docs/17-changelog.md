@@ -36,6 +36,45 @@ CALC-009, CALC-030, CALC-011, CALC-012, CALC-018, CALC-013, CALC-032 e CALC-031.
 O bloco de desligamento fechou, e o de crédito chegou a cinco.
 CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
+### Adicionado · CALC-071, CALC-055 e CALC-057 · aritmética e veículos
+
+**CALC-071 · regra de três, simples e composta.** Entrou no módulo de
+`aritmetica.ts`, ao lado de porcentagem e álcool-ou-gasolina, pela razão que o
+cabeçalho daquele arquivo já dava: elas compartilham a peça que as torna
+possíveis, que é a declaração de unidade de `traco.ts`.
+
+A conta é trivial e **a armadilha não é**: nenhuma calculadora descobre sozinha
+se mais operários significam menos tempo ou mais tempo. Isso está no enunciado do
+problema, não na aritmética, e escolher errado devolve um número plausível — a
+forma mais cara de errar. O sentido de cada grandeza é **campo**, com os dois
+casos nomeados em linguagem comum, e a memória declara qual foi aplicado. Na
+composta, cada grandeza entra separadamente e o **valor intermediário aparece**,
+que é onde se confere se o sentido escolhido fazia sentido.
+
+**CALC-055 · custo de viagem.** O erro mais comum ao estimar uma viagem não é de
+aritmética: é contar só a ida. Ida e volta é campo com padrão declarado, e a
+duplicação é etapa própria da memória. O custo do combustível é derivado dos
+**litros já arredondados**, e não de uma fórmula direta que os ignoraria: quem
+confere "50 litros × R$ 6,00" no celular precisa chegar ao número da tela.
+
+**CALC-057 · custo mensal de ter um carro.** Ela existe para desmontar a frase
+"o carro já está aí mesmo" — o custo que se tem em mente ao dizê-la é o do posto,
+e o resultado mostra que o mês custa mais que o dobro disso quando IPVA, seguro,
+licenciamento, manutenção e perda de valor entram. IPVA e licenciamento são dado
+estadual, que `00-catalogo` §14 exclui: entram como valor digitado, tirado do
+documento que o usuário tem em mãos, que é a saída que a própria exclusão
+prescreve.
+
+**A decisão que mais afeta o resultado dela** está no motor e tem caso-ouro
+próprio: cada custo anual é dividido por doze **já arredondado**, e o total é a
+soma das linhas mensais. Somar tudo e dividir no fim daria um total alguns
+centavos distante da coluna exibida — "cada número certo, a soma errada", que
+`ESTADO-DO-PROJETO` §7.12 registra como o pior defeito que este produto pode
+publicar.
+
+Rotas novas entre 114,0 e 114,4 kB. Parte variável máxima do catálogo inalterada,
+em 16,2 kB de 30.
+
 ### Adicionado · CALC-036, CALC-035 e CALC-044 · a fila do bloco A começou
 
 As três primeiras do **bloco A do v3** — o conjunto que `docs/18` §1 identificou

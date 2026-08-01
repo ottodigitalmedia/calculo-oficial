@@ -25,11 +25,11 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **29** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, a primeira de investimentos e a primeira do lado do empregador |
+| Calculadoras no ar | **32** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas utilitárias, a primeira de investimentos e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 745 de unidade · 334 ponta a ponta · 3 de vazamento |
+| Testes | 774 de unidade · 352 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 128,9 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
+| Orçamento de JavaScript | 129,1 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -39,7 +39,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel
 - **Investimentos:** reserva de emergência
-- **Utilitárias:** porcentagem · álcool ou gasolina
+- **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro
+- **Utilitárias:** porcentagem · regra de três
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -134,9 +135,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 46 de 75
+## 4. Calculadoras pendentes — 43 de 75
 
-Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-044, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-044, CALC-054, CALC-055, CALC-057, CALC-070 e CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -171,11 +172,11 @@ externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 > três destas e mais nove do v3 — é a dependência de maior alcance que restou no
 > projeto inteiro, e as seis armadilhas do endpoint já estão medidas (§6.1).
 
-### 4.3 v3 — 25 pendentes de 28
+### 4.3 v3 — 22 pendentes de 28
 
-Publicadas em 01/08/2026: **CALC-035, CALC-036 e CALC-044** — as três primeiras do
-bloco A, aberto porque o v2 esgotou o que dava para fazer sem dependência
-externa. As linhas delas saíram da tabela.
+Publicadas em 01/08/2026: **CALC-035, CALC-036, CALC-044, CALC-055, CALC-057 e
+CALC-071** — as seis primeiras do bloco A, aberto porque o v2 esgotou o que dava
+para fazer sem dependência externa. As linhas delas saíram da tabela.
 
 > **A fila do bloco A é o caminho padrão daqui em diante**, enquanto `ADR-006` e
 > a tabela anual do IRPF não se resolverem. `docs/18` §3 lista o conjunto inteiro
@@ -198,15 +199,12 @@ externa. As linhas delas saíram da tabela.
 | CALC-043 | Meta de independência financeira | INV |
 | CALC-049 | Precificação de hora — freelancer e autônomo | AUT |
 | CALC-050 | INSS do contribuinte individual e facultativo | AUT |
-| CALC-055 | Consumo e custo de viagem por combustível | VEI |
 | CALC-056 | Financiamento de veículo — parcela e CET | VEI |
-| CALC-057 | Custo mensal real de ter um carro | VEI |
 | CALC-060 | Correção por índice (IPCA, INPC, IGP-M, SELIC, TR) | IDX |
 | CALC-061 | Poder de compra ao longo do tempo | IDX |
 | CALC-062 | Conversor de moeda com IOF | IDX |
 | CALC-065 | Consumo de energia por aparelho — custo mensal | CSM |
 | CALC-066 | Retorno de investimento em energia solar | CSM |
-| CALC-071 | Regra de três simples e composta | UTI |
 | CALC-072 | Dias úteis entre datas (com feriados nacionais) | UTI |
 
 ### 4.4 v4 — 20 calculadoras
@@ -1051,7 +1049,8 @@ Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
 ~~CALC-023~~ ✅ (§7.11) · ~~CALC-010~~ ✅ · ~~CALC-008~~ ✅ (§7.15) ·
 ~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14) · ~~CALC-031~~ ✅ (§7.30),
 que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2 · e as
-três primeiras do bloco A do v3: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅.
+seis primeiras do bloco A do v3: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
+~~CALC-071~~ ✅ · ~~CALC-055~~ ✅ · ~~CALC-057~~ ✅.
 
 O que sobrou, em ordem:
 

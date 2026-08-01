@@ -189,8 +189,23 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Parte, acréscimo, desconto, proporção e variação — com a conta aberta ao lado.',
   },
   {
+    slug: 'regra-de-tres',
+    nome: 'Regra de três',
+    linhaDeContexto: 'Simples ou composta, direta ou inversa — com a proporção aberta ao lado.',
+  },
+  {
     slug: 'alcool-ou-gasolina',
     nome: 'Álcool ou gasolina',
     linhaDeContexto: 'Qual compensa no seu carro — pelo consumo real, não pela regra dos 70%.',
+  },
+  {
+    slug: 'custo-de-viagem',
+    nome: 'Custo de viagem de carro',
+    linhaDeContexto: 'Quanto a viagem gasta de combustível e pedágio — ida, volta e por pessoa.',
+  },
+  {
+    slug: 'custo-mensal-do-carro',
+    nome: 'Custo mensal de ter um carro',
+    linhaDeContexto: 'Quanto o carro custa por mês de verdade — não só o que sai no posto.',
   },
 ]

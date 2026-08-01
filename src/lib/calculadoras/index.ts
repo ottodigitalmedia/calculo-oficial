@@ -15,6 +15,7 @@ import { CAPACIDADE } from './capacidade'
 import { CET } from './cet'
 import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
+import { CUSTO_DO_CARRO } from './custo-do-carro'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
 import { FINANCIAMENTO_IMOBILIARIO } from './financiamento-imobiliario'
@@ -25,8 +26,10 @@ import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { LOCACAO } from './locacao'
 import { PORCENTAGEM } from './porcentagem'
+import { REGRA_DE_TRES } from './regra-de-tres'
 import { RENDA_FIXA } from './renda-fixa'
 import { RESERVA_DE_EMERGENCIA } from './reserva'
+import { VIAGEM } from './viagem'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
 import { ROTATIVO_CARTAO } from './rotativo-cartao'
 import { RESCISAO_ACORDO_MUTUO } from './rescisao-acordo-mutuo'
@@ -66,7 +69,10 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   LOCACAO,
   RESERVA_DE_EMERGENCIA,
   PORCENTAGEM,
+  REGRA_DE_TRES,
   COMBUSTIVEL,
+  VIAGEM,
+  CUSTO_DO_CARRO,
 ]
 
 export function porSlug(slug: string): DefinicaoCalculadora | undefined {
