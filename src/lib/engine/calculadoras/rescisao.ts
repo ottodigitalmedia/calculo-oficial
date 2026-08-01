@@ -28,14 +28,16 @@ import {
   somarDias,
   type DataCivil,
 } from '../datas'
+import { diasDeAvisoPrevio, type QuemAvisa } from './aviso-previo'
 import { calcularInss } from '../inss'
 import { calcularIrrf } from '../irrf'
 import { aplicarAliquota, naoNegativo, proporcao, somar, subtrair } from '../money'
-import { fundamentar, reais, type Etapa, type Resultado, type Traco } from '../traco'
-import { ZERO, basisPoints, centavos, type Centavos } from '../types'
+import { citar, fundamentar, percentual, reais, type Etapa, type Resultado, type Traco } from '../traco'
+import { ZERO, basisPoints, centavos, type BasisPoints, type Centavos } from '../types'
 import type { DataISO } from '../../params/tipos'
 import type { Registro } from '../../params/registry'
 import {
+  CLT_ART_484A_SAQUE,
   CLT_ART_487,
   LEI_8036_ART_18,
   LEI_8212_ART_28,
@@ -60,6 +62,10 @@ const DIAS_DO_MES_COMERCIAL = 30
 /** Avos de um ano. Unidade, não parâmetro legal. */
 const AVOS_NO_ANO = 12
 
+/** 100% em basis points (`ADR-004` A-2). Unidade, não parâmetro legal. */
+// eslint-disable-next-line no-restricted-syntax -- denominador do basis point, não parâmetro legal
+const BP_INTEIRO = 10_000
+
 /**
  * Quem rompeu o contrato. Muda três coisas, e só três — por isso os dois casos
  * dividem o mesmo motor em vez de existirem duas implementações que divergem
@@ -68,8 +74,16 @@ const AVOS_NO_ANO = 12
  *   sem-justa-causa   aviso indenizado é RECEBIDO e projeta o tempo de serviço
  *   pedido-demissao   aviso não cumprido é DESCONTADO e não projeta; não há
  *                     multa de FGTS
+ *   acordo-mutuo      aviso indenizado e multa de FGTS pela METADE (CLT art.
+ *                     484-A, I); demais verbas integrais (II); saque limitado a
+ *                     80% (§ 1º) e sem seguro-desemprego (§ 2º)
+ *
+ * A terceira entrou em CALC-008. Ela é a prova de que dividir o motor foi a
+ * decisão certa: o acordo muda DUAS frações e um limite de saque — e nada mais.
+ * Uma implementação separada teria copiado as incidências de `docs/19`, que são
+ * a parte cara e a que não pode divergir.
  */
-export type Modalidade = 'sem-justa-causa' | 'pedido-demissao'
+export type Modalidade = 'sem-justa-causa' | 'pedido-demissao' | 'acordo-mutuo'
 
 /**
  * `indenizado` e `trabalhado` valem para a dispensa; `cumprido` e
@@ -109,6 +123,13 @@ export interface SaidaRescisao {
   /** Verdadeiro quando o saldo do FGTS foi estimado, não informado. */
   readonly fgtsEstimado: boolean
   readonly baseFgts: Centavos
+  /** Fração do aviso indenizado de fato devida. 10.000 bp fora do acordo. */
+  readonly fracaoAvisoBp: BasisPoints
+  /** Percentual da multa aplicado, conforme a modalidade. */
+  readonly multaBp: BasisPoints
+  /** Quanto da conta vinculada pode ser movimentado. */
+  readonly saqueDisponivel: Centavos
+  readonly limiteSaqueBp: BasisPoints
 }
 
 function inteiro(registro: Registro, id: string, data: DataISO): number | null {
@@ -142,7 +163,17 @@ export function calcularRescisao(
   const porAno = inteiro(registro, 'aviso-previo-dias-por-ano', dataReferencia)
   const maximo = inteiro(registro, 'aviso-previo-dias-maximo', dataReferencia)
   const aliquotaFgts = registro.resolver('fgts-aliquota-deposito', dataReferencia)
-  const multaFgts = registro.resolver('fgts-multa-sem-justa-causa', dataReferencia)
+  /**
+   * Qual multa, decidido pela modalidade — e não uma constante com desconto
+   * aplicado depois. O art. 484-A, I, "b" diz "por metade", mas quem guarda o
+   * valor dessa metade é `lib/params/`, com vigência e fonte próprias. Calcular
+   * 40% ÷ 2 aqui dentro seria constante legal fora de `params` por outra porta.
+   */
+  const idDaMulta =
+    entrada.modalidade === 'acordo-mutuo'
+      ? 'fgts-multa-acordo-mutuo'
+      : 'fgts-multa-sem-justa-causa'
+  const multaFgts = registro.resolver(idDaMulta, dataReferencia)
 
   if (base === null || porAno === null || maximo === null) {
     return { ok: false, motivo: 'vigencia_ausente', detalhe: 'Não há parâmetros de aviso prévio para a data informada.' }
@@ -181,8 +212,10 @@ export function calcularRescisao(
    *
    * A leitura está declarada na memória, não escondida no código.
    */
-  const proporcional = entrada.modalidade === 'sem-justa-causa'
-  const diasAviso = proporcional ? Math.min(base + porAno * anos, maximo) : base
+  const quemAvisa: QuemAvisa =
+    entrada.modalidade === 'pedido-demissao' ? 'empregado' : 'empregador'
+  const proporcional = quemAvisa === 'empregador'
+  const diasAviso = diasDeAvisoPrevio(anos, base, porAno, maximo, quemAvisa)
 
   const resolvidaBase = registro.resolver('aviso-previo-dias-base', dataReferencia)
   if (resolvidaBase.ok) traco.vigencias.add(resolvidaBase.resolvida.vigencia.id)
@@ -224,7 +257,7 @@ export function calcularRescisao(
 
   // `RN-019` — a projeção do aviso indenizado integra o tempo de serviço.
   const avisoIndenizado =
-    entrada.modalidade === 'sem-justa-causa' && entrada.avisoPrevio === 'indenizado'
+    entrada.modalidade !== 'pedido-demissao' && entrada.avisoPrevio === 'indenizado'
   const avisoNaoCumprido =
     entrada.modalidade === 'pedido-demissao' && entrada.avisoPrevio === 'nao-cumprido'
 
@@ -252,12 +285,64 @@ export function calcularRescisao(
     resultado: saldoSalario,
   })
 
-  const valorDoAviso = proporcao(entrada.salario, diasAviso, DIAS_DO_MES_COMERCIAL, POLITICA)
+  const valorCheioDoAviso = proporcao(
+    entrada.salario,
+    diasAviso,
+    DIAS_DO_MES_COMERCIAL,
+    POLITICA,
+  )
+
+  /**
+   * `CLT` art. 484-A, I, "a" — na extinção por acordo, "por metade: o aviso
+   * prévio, **se indenizado**".
+   *
+   * O que a norma reduz é a VERBA, não o PRAZO. Os dias continuam sendo os da
+   * Lei nº 12.506/2011, e é por isso que a projeção adiante usa `diasAviso`
+   * cheio: o art. 487, § 1º integra ao tempo de serviço "o período do aviso
+   * prévio", e o período não foi encurtado.
+   *
+   * É o ponto em que rescisões por acordo mais divergem entre si na prática, e
+   * por isso a leitura está declarada na memória de cálculo — com o link para
+   * o dispositivo — em vez de escondida aqui.
+   */
+  const fracaoDoAviso = registro.resolver('aviso-previo-fracao-acordo', dataReferencia)
+  const avisoPelaMetade =
+    entrada.modalidade === 'acordo-mutuo' &&
+    fracaoDoAviso.ok &&
+    fracaoDoAviso.resolvida.vigencia.valor.tipo === 'percentual'
+
+  const fracaoAvisoBp = basisPoints(
+    avisoPelaMetade && fracaoDoAviso.ok && fracaoDoAviso.resolvida.vigencia.valor.tipo === 'percentual'
+      ? fracaoDoAviso.resolvida.vigencia.valor.aliquotaBp
+      : BP_INTEIRO,
+  )
+
+  const valorDoAviso = avisoPelaMetade
+    ? aplicarAliquota(valorCheioDoAviso, fracaoAvisoBp, POLITICA)
+    : valorCheioDoAviso
+
   const avisoPrevioValor = avisoIndenizado ? valorDoAviso : ZERO
   // `RN-018` — guardado POSITIVO; quem lhe dá sinal é a apresentação.
   const descontoAvisoPrevio = avisoNaoCumprido ? valorDoAviso : ZERO
 
-  if (avisoIndenizado) {
+  if (avisoIndenizado && avisoPelaMetade && fracaoDoAviso.ok) {
+    traco.vigencias.add(fracaoDoAviso.resolvida.vigencia.id)
+    registrar({
+      rotulo: 'Aviso prévio indenizado — cheio',
+      formula: `${reais(entrada.salario)} ÷ ${DIAS_DO_MES_COMERCIAL} × ${diasAviso} dias`,
+      resultado: valorCheioDoAviso,
+    })
+    registrar({
+      rotulo: 'Aviso prévio indenizado — devido no acordo',
+      formula: `${reais(valorCheioDoAviso)} × 50,00%`,
+      resultado: avisoPrevioValor,
+      parametro: citar(fracaoDoAviso.resolvida),
+      justificativa:
+        'A norma reduz a VERBA, não o PRAZO: os dias continuam sendo os da Lei nº ' +
+        '12.506/2011, e é o período inteiro que integra o tempo de serviço pelo art. 487, ' +
+        '§ 1º. É o ponto em que rescisões por acordo mais divergem entre si na prática.',
+    })
+  } else if (avisoIndenizado) {
     registrar({
       rotulo: 'Aviso prévio indenizado',
       formula: `${reais(entrada.salario)} ÷ ${DIAS_DO_MES_COMERCIAL} × ${diasAviso} dias`,
@@ -386,7 +471,7 @@ export function calcularRescisao(
    * verbas lê-se como defeito de cálculo, não como ausência de direito
    * (`03-functional-spec` §3.3). A nota fixa explica a ausência.
    */
-  const temMulta = entrada.modalidade === 'sem-justa-causa'
+  const temMulta = entrada.modalidade !== 'pedido-demissao'
   const multa = temMulta ? aplicarAliquota(baseFgts, aliquotaMulta, POLITICA) : ZERO
 
   if (!temMulta) {
@@ -402,11 +487,17 @@ export function calcularRescisao(
   }
 
   if (temMulta) registrar({
-    rotulo: 'Multa rescisória do FGTS',
-    formula: `${reais(baseFgts)} × 40,00%`,
+    rotulo:
+      entrada.modalidade === 'acordo-mutuo'
+        ? 'Multa do FGTS — metade, por ser acordo'
+        : 'Multa rescisória do FGTS',
+    // O percentual sai do parâmetro RESOLVIDO. Escrito à mão, "40,00%" apareceria
+    // ao lado de uma multa de 20% assim que a modalidade de acordo entrasse — a
+    // fórmula contradizendo o próprio resultado, na memória de cálculo.
+    formula: `${reais(baseFgts)} × ${percentual(aliquotaMulta)}`,
     resultado: multa,
     parametro: {
-      parametroId: 'fgts-multa-sem-justa-causa',
+      parametroId: idDaMulta,
       nome: multaFgts.resolvida.parametro.nome,
       vigenciaInicio: multaFgts.resolvida.vigencia.inicio,
       vigenciaFim: multaFgts.resolvida.vigencia.fim,
@@ -417,6 +508,48 @@ export function calcularRescisao(
       url: multaFgts.resolvida.fonte.url,
     },
   })
+
+  /**
+   * `CLT` art. 484-A, § 1º e § 2º — o que o acordo permite e o que ele impede.
+   *
+   * O § 1º limita a movimentação da conta a 80% dos depósitos; os 20% restantes
+   * NÃO se perdem, ficam na conta vinculada. E o § 2º veda o seguro-desemprego,
+   * que não produz número nenhum e é a informação que mais muda a decisão de
+   * quem está avaliando a proposta de acordo — por isso é etapa da memória, com
+   * link para o dispositivo, e não linha de rodapé.
+   */
+  let saqueDisponivel: Centavos = temMulta ? baseFgts : ZERO
+  let limiteSaqueBp = basisPoints(BP_INTEIRO)
+
+  if (entrada.modalidade === 'acordo-mutuo') {
+    const limite = registro.resolver('fgts-saque-acordo-mutuo', dataReferencia)
+    if (limite.ok && limite.resolvida.vigencia.valor.tipo === 'percentual') {
+      limiteSaqueBp = basisPoints(limite.resolvida.vigencia.valor.aliquotaBp)
+      saqueDisponivel = aplicarAliquota(baseFgts, limiteSaqueBp, POLITICA)
+      traco.vigencias.add(limite.resolvida.vigencia.id)
+
+      registrar({
+        rotulo: 'Quanto do FGTS pode ser sacado',
+        formula: `${reais(baseFgts)} × ${percentual(limiteSaqueBp)} dos depósitos`,
+        resultado: saqueDisponivel,
+        parametro: citar(limite.resolvida),
+        justificativa:
+          'Os 20% restantes não se perdem: continuam na conta vinculada e podem ser sacados ' +
+          'nas hipóteses gerais da Lei nº 8.036/1990.',
+      })
+    }
+
+    registrar({
+      rotulo: 'Sem seguro-desemprego',
+      formula: 'A extinção por acordo não autoriza o ingresso no Programa',
+      resultado: ZERO,
+      fundamento: fundamentar(CLT_ART_484A_SAQUE),
+      justificativa:
+        'É o custo menos visível do acordo, e ele não aparece no valor da rescisão: quem ' +
+        'aceita abre mão das parcelas do seguro-desemprego a que teria direito na dispensa ' +
+        'sem justa causa.',
+    })
+  }
 
   if (avisoIndenizado) {
     registrar({
@@ -587,6 +720,10 @@ export function calcularRescisao(
       dataProjetada: escreverData(projetada),
       fgtsEstimado,
       baseFgts,
+      fracaoAvisoBp,
+      multaBp: aliquotaMulta,
+      saqueDisponivel,
+      limiteSaqueBp,
     },
     traco: tracoFinal,
   }

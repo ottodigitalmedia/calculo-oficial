@@ -23,16 +23,17 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **16** de 75 — v1 completo, quatro de crédito e as duas primeiras sem cifrão nenhum |
+| Calculadoras no ar | **18** de 75 — v1 completo, quatro de crédito, três de rescisão e as duas primeiras sem cifrão nenhum |
 | Guias no ar | 3 de 10 |
-| Testes | 455 de unidade · 243 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 10 vigências abertas, **0 divergências** (01/08/2026) |
-| Orçamento de JavaScript | 123,5 kB de **135** na pior rota — folga de 11,5 kB. Limite revisado com medição, ver §7.7 |
+| Testes | 514 de unidade · 265 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 12 vigências abertas, **0 divergências** (01/08/2026) |
+| Orçamento de JavaScript | 127,0 kB de **135** na pior rota (rescisão) — folga de 8,0 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
+- **Trabalhista do v2:** rescisão por acordo mútuo · aviso prévio proporcional
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão
 - **Utilitárias:** porcentagem · álcool ou gasolina
 - `/guias` e os três guias
@@ -129,9 +130,9 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 59 de 75
+## 4. Calculadoras pendentes — 57 de 75
 
-Publicadas: **CALC-001 a CALC-007, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-054 e CALC-070**.
+Publicadas: **CALC-001 a CALC-008, CALC-010, CALC-015, CALC-016, CALC-022 a CALC-026, CALC-054 e CALC-070**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -707,6 +708,44 @@ gh run rerun --job "$(gh run view "$(gh run list --branch main --limit 1 --json 
 > aprova o contêiner ANTIGO. Expor o hash do commit em `rev` e comparar continua
 > pendente (§8), e é o que fecharia o buraco de vez.
 
+### 7.15 A terceira modalidade custou 40 linhas porque as duas primeiras foram feitas certo
+
+CALC-008 é a rescisão por acordo do art. 484-A. Ela muda **três coisas** em
+relação à dispensa sem justa causa: aviso indenizado pela metade, multa do FGTS
+pela metade, saque limitado a 80%. Tudo o mais — saldo, 13º, férias, e sobretudo
+as **incidências de INSS e IRRF verba a verba** — é idêntico.
+
+Reaproveitar `calcularRescisao` com uma terceira `Modalidade` custou cerca de 40
+linhas. Uma calculadora própria teria copiado `docs/19` inteiro, que é a parte
+cara, a que levou uma sessão de pesquisa em fonte primária, e a única que não
+pode divergir entre duas implementações.
+
+**Dois defeitos latentes apareceram no caminho**, os dois pela mesma causa —
+constante escrita à mão onde havia parâmetro:
+
+| O que estava lá | O que aconteceria |
+|---|---|
+| `formula: \`${reais(baseFgts)} × 40,00%\`` | A memória exibiria **40,00%** ao lado de uma multa de 20% no instante em que o acordo entrasse. A fórmula contradizendo o próprio resultado |
+| `parametroId: 'fgts-multa-sem-justa-causa'` fixo | O link da memória levaria ao art. 18 da Lei 8.036 numa etapa fundamentada no art. 484-A |
+
+Nenhum dos dois quebrava nada **antes** de CALC-008. É o padrão a procurar
+quando uma calculadora ganha uma variante: valores que vinham de parâmetro
+resolvido continuam certos; textos que descrevem o parâmetro, não.
+
+**Onde a norma foi lida com cuidado.** O inciso I diz "por metade: a) o aviso
+prévio, **se indenizado**". Duas armadilhas num período:
+
+1. O **se** exclui o aviso trabalhado — que é salário do período, e salário não
+   se paga pela metade.
+2. O que é reduzido é a **verba**, não o **prazo**. Os dias continuam sendo os da
+   Lei nº 12.506/2011, e o art. 487, § 1º integra ao tempo de serviço "o período
+   do aviso prévio" — que não foi encurtado. Logo a projeção, e os avos de 13º e
+   férias, não mudam.
+
+O item 2 é o ponto em que rescisões por acordo mais divergem na prática. A
+leitura está **declarada na memória de cálculo**, com link para o dispositivo, e
+travada por caso-ouro que compara as duas modalidades com a mesma entrada.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -717,17 +756,20 @@ O que sobrou, em ordem:
 
 Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
 ~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8) ·
-~~CALC-023~~ ✅ (§7.11).
+~~CALC-023~~ ✅ (§7.11) · ~~CALC-010~~ ✅ · ~~CALC-008~~ ✅ (§7.15) ·
+~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14).
 
 O que sobrou, em ordem:
 
-1. **CALC-010 · aviso prévio proporcional.** `LEI_12506_2011` já está
-   cadastrada e `rescisao.ts` já aplica a proporcionalidade internamente; falta
-   expô-la como calculadora própria.
-2. **CALC-008 · rescisão por acordo mútuo.** `CLT_ART_484A` já está cadastrada
-   e o motor de rescisão já tem a modalidade parcialmente prevista.
-3. **CALC-030 · cheque especial.** `docs/18` registra que é praticamente o mesmo
+1. **CALC-009 · seguro-desemprego.** Virou a mais valiosa que resta: CALC-008
+   diz ao usuário que ele **perde** o seguro-desemprego, e não diz quanto isso
+   vale. As duas juntas respondem "compensa aceitar o acordo?", que é a pergunta
+   real. Depende de faixas de valor com vigência, publicadas em resolução do
+   CODEFAT — pesquisa em fonte oficial antes de qualquer linha de código.
+2. **CALC-030 · cheque especial.** `docs/18` registra que é praticamente o mesmo
    motor de CALC-023, que agora existe.
+3. **CALC-011 · custo real do funcionário.** Reaproveita FGTS, 13º e férias, que
+   já existem, e é a de maior valor publicitário do bloco trabalhista.
 4. **`/api/health` que responde igual em toda versão.** O passo de verificação
    do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
    constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto

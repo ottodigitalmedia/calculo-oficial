@@ -31,8 +31,8 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 01/08/2026
 
-Quatro calculadoras: CALC-026, CALC-070, CALC-054 e CALC-023. A última trouxe o
-primeiro parâmetro legal do bloco de crédito.
+Seis calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010 e CALC-008.
+CALC-023 trouxe o primeiro parâmetro legal do bloco de crédito.
 
 ### Adicionado · `cartao-teto-juros-encargos` · a partir de 2024-01-03
 
@@ -89,6 +89,60 @@ unidade em `Etapa` e em `SaidaCalculadora`, e o tipo de campo `decimal`.
 CALC-054 **não usa a regra dos 70%**: ela é a razão média de rendimento entre os
 combustíveis e varia por veículo. O consumo real é entrada obrigatória, e o preço
 de equilíbrio calculado a partir dele é a régua que substitui a regra decorada.
+
+### Adicionado · `aviso-previo-fracao-acordo` e `fgts-saque-acordo-mutuo` · a partir de 2017-11-11
+
+**Valores:** 50% do aviso prévio indenizado; 80% de limite de movimentação da
+conta vinculada.
+
+**Fonte:** CLT, art. 484-A, I, "a" e § 1º, com a redação da Lei nº 13.467, de
+2017 — *"I - por metade: a) o aviso prévio, se indenizado"* e *"§ 1º [...]
+limitada até 80% (oitenta por cento) do valor dos depósitos"*.
+`https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm`
+
+**Verificado contra:** o texto compilado do Planalto, lido na íntegra em
+01/08/2026, incluindo o § 2º, que veda o ingresso no Seguro-Desemprego.
+
+**Casos-ouro afetados:** `tests/golden/aviso-e-acordo.test.ts`.
+
+**A palavra que decide.** O inciso I diz "por metade: a) o aviso prévio, **se
+indenizado**". O "se" exclui o aviso trabalhado — que é salário do período — e o
+que a norma reduz é a **verba**, não o **prazo**: os dias continuam sendo os da
+Lei nº 12.506/2011, e o art. 487, § 1º integra ao tempo de serviço "o período do
+aviso prévio", que não foi encurtado. Por isso a projeção e os avos de 13º e
+férias não mudam. É o ponto em que rescisões por acordo mais divergem na prática,
+e a leitura está declarada na memória de cálculo com link para o dispositivo.
+
+### Adicionado · CALC-008 · rescisão por acordo mútuo · e CALC-010 · aviso prévio proporcional
+
+CALC-008 é uma terceira `Modalidade` do motor de rescisão, e não um motor
+próprio: o acordo muda três coisas — aviso e multa pela metade, saque limitado a
+80% —, e tudo o mais, inclusive as incidências de INSS e IRRF pesquisadas em
+`docs/19`, é idêntico à dispensa. Os casos-ouro afirmam cada item do art. 484-A
+**por comparação com a dispensa rodada com a mesma entrada**, o que também trava
+o inverso: nenhuma outra verba pode mudar.
+
+CALC-010 expõe uma regra que já existia dentro de CALC-002 e não era encontrável.
+A contagem de dias foi **extraída** para peça compartilhada, não copiada.
+
+### Corrigido · dois defeitos latentes que só apareceram com a terceira modalidade
+
+Os dois pela mesma causa — constante escrita à mão onde havia parâmetro:
+
+- a fórmula da multa do FGTS trazia `40,00%` fixo, e exibiria isso ao lado de uma
+  multa de 20% no instante em que o acordo entrasse;
+- o `parametroId` da etapa era sempre `fgts-multa-sem-justa-causa`, e o link da
+  memória levaria ao art. 18 da Lei 8.036 numa etapa fundamentada no art. 484-A.
+
+Nenhum dos dois quebrava nada antes de CALC-008.
+
+### Alterado · o passo de deploy repete e falha quando o webhook não responde
+
+O webhook do EasyPanel devolveu HTTP 000 e o job terminou `success` com o deploy
+não tendo acontecido; a correção ficou uma hora parada em produção. Três
+tentativas com 15 s de intervalo, e falha se todas caírem. O aviso silencioso
+continua correto para o caso em que o webhook **não está configurado** — que já
+era separado pelo `if` do próprio passo.
 
 ### Corrigido · o detalhamento de CALC-023 não fechava quando o teto cortava
 

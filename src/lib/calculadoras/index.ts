@@ -8,6 +8,7 @@
 
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
 import { AMORTIZACAO } from './amortizacao'
+import { AVISO_PREVIO } from './aviso-previo'
 import { CET } from './cet'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
@@ -19,6 +20,7 @@ import { JUROS_COMPOSTOS } from './juros-compostos'
 import { PORCENTAGEM } from './porcentagem'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
 import { ROTATIVO_CARTAO } from './rotativo-cartao'
+import { RESCISAO_ACORDO_MUTUO } from './rescisao-acordo-mutuo'
 import { RESCISAO_PEDIDO_DEMISSAO } from './rescisao-pedido-demissao'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
 import { SALARIO_LIQUIDO } from './salario-liquido'
@@ -28,6 +30,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   SALARIO_LIQUIDO,
   RESCISAO_SEM_JUSTA_CAUSA,
   RESCISAO_PEDIDO_DEMISSAO,
+  RESCISAO_ACORDO_MUTUO,
+  AVISO_PREVIO,
   FERIAS,
   DECIMO_TERCEIRO,
   HORAS_EXTRAS,

@@ -46,6 +46,18 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto você recebe ao pedir demissão — e o que é descontado se não cumprir o aviso.',
   },
   {
+    slug: 'rescisao-acordo-mutuo',
+    nome: 'Rescisão — acordo mútuo',
+    linhaDeContexto:
+      'Quanto se recebe na extinção por acordo — e o que se abre mão para ter esse valor.',
+  },
+  {
+    slug: 'aviso-previo-proporcional',
+    nome: 'Aviso prévio proporcional',
+    linhaDeContexto:
+      'Quantos dias de aviso prévio o seu tempo de casa garante — e quanto eles valem.',
+  },
+  {
     slug: 'ferias',
     nome: 'Férias',
     linhaDeContexto:

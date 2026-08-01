@@ -60,6 +60,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './rescisao-pedido-demissao'
     ).then((m) => m.calcular),
+  'rescisao-acordo-mutuo': () =>
+    import(
+      /* webpackChunkName: "calc-rescisao-acordo-mutuo" */
+      /* webpackExports: ["calcular"] */
+      './rescisao-acordo-mutuo'
+    ).then((m) => m.calcular),
+  'aviso-previo-proporcional': () =>
+    import(
+      /* webpackChunkName: "calc-aviso-previo" */
+      /* webpackExports: ["calcular"] */
+      './aviso-previo'
+    ).then((m) => m.calcular),
   ferias: () =>
     import(
       /* webpackChunkName: "calc-ferias" */
