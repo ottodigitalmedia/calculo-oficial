@@ -102,3 +102,36 @@ describe('formulário entregue ao navegador', () => {
     }
   })
 })
+
+/**
+ * Texto de tela é TEXTO, não markdown.
+ *
+ * `notas`, `destaques`, FAQ e ajuda são renderizados como texto puro — não há
+ * interpretador de markdown em nenhum deles, por decisão de `ADR-009`. Um
+ * `**Simples Nacional**` escrito por hábito foi ao ar em CALC-011 com os
+ * asteriscos à mostra, e a única coisa que o pegou foi olhar a página.
+ *
+ * O acento grave também entra: `RN-023` aparece bem no comentário do código e
+ * mal na tela do usuário.
+ */
+describe('microcopy · nenhum resquício de markdown no texto de tela', () => {
+  const textos = CALCULADORAS.flatMap((c) => [
+    c.nome,
+    c.linhaDeContexto,
+    c.descricaoSeo,
+    c.rotuloResultado,
+    c.avisoAdicional ?? '',
+    ...c.campos.flatMap((campo) => [campo.rotulo, campo.ajuda ?? '']),
+    ...c.faq.flatMap((f) => [f.pergunta, f.resposta]),
+  ])
+
+  it('não usa asterisco de ênfase', () => {
+    const comAsterisco = textos.filter((t) => t.includes('**'))
+    expect(comAsterisco).toEqual([])
+  })
+
+  it('não usa acento grave de código', () => {
+    const comCrase = textos.filter((t) => t.includes('`'))
+    expect(comCrase).toEqual([])
+  })
+})

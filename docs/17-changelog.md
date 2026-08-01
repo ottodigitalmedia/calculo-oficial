@@ -149,6 +149,13 @@ perto passa da fronteira do §14. O que a mantém do lado certo: só alíquotas 
 corpo da Lei nº 8.212/1991, terceiros como campo, e Simples Nacional, desoneração
 e FAP declarados como fora — em nota, no aviso e no FAQ.
 
+### Corrigido · markdown vazando para o texto de tela
+
+`**Simples Nacional**` foi ao ar em CALC-011 com os asteriscos à mostra. Notas,
+destaques, FAQ e ajuda são renderizados como texto puro, por decisão de
+`ADR-009`. `catalogo.test.ts` passou a varrer todo texto de tela de toda
+calculadora publicada e a reprovar asterisco de ênfase e acento grave.
+
 ### Corrigido · dois casos-ouro errados, pelo mesmo motivo
 
 `R$ 2.000,00 × 0,8 = R$ 1.600,00` em CALC-009 ignorava o piso do salário mínimo;

@@ -25,7 +25,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras no ar | **21** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 577 de unidade · 285 ponta a ponta · 3 de vazamento |
+| Testes | 579 de unidade · 285 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 28 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 127,7 kB de **135** na pior rota (rescisão) — folga de 7,3 kB. Limite revisado com medição, ver §7.7 |
 | Vulnerabilidades | 0 |
@@ -888,6 +888,22 @@ publica desde 31/07/2026, por sete milésimos de ponto percentual.
 Ao escrever caso-ouro, refaça a conta **pelo caminho do sistema**, não pelo
 caminho da calculadora de bolso: com a política de arredondamento declarada, com
 os pisos e tetos aplicados, na ordem em que o motor os aplica.
+
+### 7.23 Texto de tela é texto — e o hábito de escrever markdown vaza
+
+`**Simples Nacional**` foi ao ar em CALC-011 com os asteriscos à mostra. As
+`notas`, os `destaques`, o FAQ e a ajuda dos campos são renderizados como **texto
+puro**: não há interpretador de markdown em nenhum deles, e `ADR-009` decidiu
+isso de propósito.
+
+O hábito de escrever documentação em markdown atravessou para a string de
+produto, e nada no sistema reclamou — não é erro de tipo, não é erro de cálculo,
+e o teste genérico de ponta a ponta não olha ortografia. **A única coisa que
+pegou foi abrir a página.**
+
+Agora `catalogo.test.ts` varre todo texto de tela de toda calculadora publicada e
+reprova asterisco de ênfase e acento grave de código. Custa duas asserções e
+fecha a classe inteira, para todas as calculadoras que vierem.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

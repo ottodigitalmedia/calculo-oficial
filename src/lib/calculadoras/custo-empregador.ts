@@ -69,7 +69,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         { rotulo: 'Alíquota total de encargos', valor: formatarPercentual(v.aliquotaDeEncargosBp) },
       ],
       notas: [
-        'O cálculo cobre o regime geral. **Simples Nacional**, desoneração da folha e ' +
+        'O cálculo cobre o regime geral. Simples Nacional, desoneração da folha e ' +
           'substituição da contribuição patronal ficam de fora — nesses regimes a patronal de ' +
           '20% pode não ser devida sobre a folha, e o custo é bem menor.',
         ...(v.terceiros === 0
