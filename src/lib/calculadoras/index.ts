@@ -29,6 +29,7 @@ import { JUROS_COMPOSTOS } from './juros-compostos'
 import { LOCACAO } from './locacao'
 import { ORCAMENTO } from './orcamento'
 import { PORCENTAGEM } from './porcentagem'
+import { PRECIFICACAO } from './precificacao'
 import { REGRA_DE_TRES } from './regra-de-tres'
 import { RENDA_FIXA } from './renda-fixa'
 import { RESERVA_DE_EMERGENCIA } from './reserva'
@@ -72,6 +73,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   LOCACAO,
   RESERVA_DE_EMERGENCIA,
   INDEPENDENCIA,
+  PRECIFICACAO,
   ORCAMENTO,
   ENERGIA,
   PORCENTAGEM,

@@ -34,6 +34,28 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 Três calculadoras — CALC-043, CALC-065 e CALC-069 — e a correção de um limite do
 próprio verificador de orçamento.
 
+### Adicionado · CALC-049 · precificação de hora
+
+`docs/18` §3.6 nomeou o risco antes de a calculadora existir: *"o risco é a
+calculadora parecer prescritiva"*. Ela não diz quanto alguém vale nem quanto o
+mercado paga — resolve uma **conta de cobertura** sobre premissas que o usuário
+informa, e a nota de tela declara que as duas perguntas são diferentes.
+
+**Duas coisas separam esta conta da divisão ingênua**, e as duas aparecem lado a
+lado no resultado, de propósito:
+
+1. **A hora faturável.** Prospecção, orçamento, retrabalho, emissão de nota e
+   administração ocupam expediente e ninguém paga por elas. O percentual é campo
+   obrigatório, não premissa escondida — com 100%, a conta desta calculadora vira
+   a ingênua, e um caso-ouro exige exatamente essa coincidência.
+2. **O imposto por dentro.** Faturar e pagar 12% não deixa 88% de sobra útil:
+   para sobrar R$ 8.800,00 é preciso faturar R$ 10.000,00, e não R$ 9.856,00. Um
+   caso-ouro compara os dois caminhos e trava a diferença.
+
+A alíquota é digitada, e o motivo está declarado no motor: as faixas do Simples
+dependem do anexo da atividade e da receita bruta acumulada, que é `docs/18` D-3
+— pesquisa que este módulo não faz e **não finge fazer**.
+
 ### Adicionado · CALC-043, CALC-065 e CALC-069
 
 **CALC-043 · meta de independência financeira.** A terceira do catálogo a tratar

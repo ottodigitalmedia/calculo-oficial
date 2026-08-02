@@ -188,6 +188,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto patrimônio sustenta a renda que você quer — e quanto tempo até lá.',
   },
   {
+    slug: 'precificacao-de-hora',
+    nome: 'Precificação de hora',
+    linhaDeContexto:
+      'Quanto cobrar por hora para fechar a sua conta — com hora não faturável dentro.',
+  },
+  {
     slug: 'orcamento-domestico',
     nome: 'Orçamento doméstico 50/30/20',
     linhaDeContexto: 'Como dividir a renda do mês — com os percentuais no seu controle, não fixos.',

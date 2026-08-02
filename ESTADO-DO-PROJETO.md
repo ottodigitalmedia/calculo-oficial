@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **35** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos e a primeira do lado do empregador |
+| Calculadoras no ar | **36** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 811 de unidade · 370 ponta a ponta · 3 de vazamento |
+| Testes | 830 de unidade · 376 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -39,6 +39,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel
 - **Investimentos:** reserva de emergência · meta de independência financeira
+- **Autônomo:** precificação de hora
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro
 - **Utilitárias:** porcentagem · regra de três
@@ -136,10 +137,10 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 40 de 75
+## 4. Calculadoras pendentes — 39 de 75
 
 Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-065,
-CALC-069, CALC-070 e CALC-071**.
+CALC-049, CALC-069, CALC-070 e CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -174,16 +175,18 @@ externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 > três destas e mais nove do v3 — é a dependência de maior alcance que restou no
 > projeto inteiro, e as seis armadilhas do endpoint já estão medidas (§6.1).
 
-### 4.3 v3 — 19 pendentes de 28
+### 4.3 v3 — 18 pendentes de 28
 
 Publicadas: **CALC-035, CALC-036, CALC-043, CALC-044, CALC-055, CALC-057, CALC-065
 e CALC-071** — a fila do bloco A, aberta porque o v2 esgotou o que dava para fazer
 sem dependência externa. As linhas delas saíram da tabela, e **CALC-069**, que é
 do v4, entrou junto por ser do mesmo bloco de consumo doméstico.
 
-**Sobram quatro do bloco A no v3:** CALC-046 (dividend yield, v4), CALC-049
-(precificação de hora), CALC-066 (retorno de energia solar) e CALC-072 (dias úteis
-entre datas, que depende do calendário de feriados — D-5 de `docs/18`).
+**Sobram três do bloco A no v3:** CALC-066 (retorno de energia solar, que depende
+de irradiação e por isso vira campo do usuário), CALC-072 (dias úteis entre datas,
+bloqueada por D-5 — o calendário de feriados) e, no v4, CALC-046, CALC-058,
+CALC-059, CALC-067, CALC-068, CALC-073, CALC-074 e CALC-075. As três últimas
+esbarram no campo de lista que §7.29 registra.
 
 > **A fila do bloco A é o caminho padrão daqui em diante**, enquanto `ADR-006` e
 > a tabela anual do IRPF não se resolverem. `docs/18` §3 lista o conjunto inteiro
@@ -1078,7 +1081,7 @@ Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
 que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2 · e as
 fila do bloco A: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
 ~~CALC-071~~ ✅ · ~~CALC-055~~ ✅ · ~~CALC-057~~ ✅ · ~~CALC-043~~ ✅ ·
-~~CALC-065~~ ✅ · ~~CALC-069~~ ✅ · e ~~o recorte fixo que fazia
+~~CALC-065~~ ✅ · ~~CALC-069~~ ✅ · ~~CALC-049~~ ✅ · e ~~o recorte fixo que fazia
 `verificar-orcamento.ts` falhar por limite próprio~~ ✅ (§7.31).
 
 O que sobrou, em ordem:

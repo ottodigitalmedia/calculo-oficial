@@ -210,6 +210,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './independencia'
     ).then((m) => m.calcular),
+  'precificacao-de-hora': () =>
+    import(
+      /* webpackChunkName: "calc-precificacao" */
+      /* webpackExports: ["calcular"] */
+      './precificacao'
+    ).then((m) => m.calcular),
   'orcamento-domestico': () =>
     import(
       /* webpackChunkName: "calc-orcamento" */
