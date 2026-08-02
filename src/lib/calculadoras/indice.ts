@@ -183,6 +183,21 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'De quanto ela precisa ser, quanto falta e em quanto tempo o seu aporte fecha.',
   },
   {
+    slug: 'independencia-financeira',
+    nome: 'Meta de independência financeira',
+    linhaDeContexto: 'Quanto patrimônio sustenta a renda que você quer — e quanto tempo até lá.',
+  },
+  {
+    slug: 'orcamento-domestico',
+    nome: 'Orçamento doméstico 50/30/20',
+    linhaDeContexto: 'Como dividir a renda do mês — com os percentuais no seu controle, não fixos.',
+  },
+  {
+    slug: 'consumo-de-energia',
+    nome: 'Consumo de energia por aparelho',
+    linhaDeContexto: 'Quanto cada aparelho pesa na conta de luz — pela sua tarifa, não por média.',
+  },
+  {
     slug: 'porcentagem',
     nome: 'Porcentagem',
     linhaDeContexto:

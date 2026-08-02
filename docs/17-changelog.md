@@ -29,6 +29,66 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 02/08/2026
+
+Três calculadoras — CALC-043, CALC-065 e CALC-069 — e a correção de um limite do
+próprio verificador de orçamento.
+
+### Adicionado · CALC-043, CALC-065 e CALC-069
+
+**CALC-043 · meta de independência financeira.** A terceira do catálogo a tratar
+um número de bolso como campo, depois dos 30% de CALC-032 e dos seis meses de
+CALC-044. A regra dos 4% vem de um estudo sobre carteiras americanas do século
+passado, que mediu quanto uma retirada anual sobreviveu aos piores trinta anos
+daquela série — não é lei, não é garantia, e não foi medida sobre juro
+brasileiro. É o padrão declarado do campo, e a memória diz que a escolha foi do
+usuário.
+
+O laço de acumulação **não foi duplicado**: `acumularAte` saiu de dentro de
+CALC-044 e passou a ser função compartilhada em `reserva.ts`. As duas fazem a
+mesma pergunta em escalas diferentes — uma acumula meses de despesa, a outra o
+patrimônio que sustenta a despesa —, e duas cópias do mesmo laço divergiriam na
+primeira manutenção.
+
+**CALC-065 · consumo de energia por aparelho.** A tarifa é campo por regra do
+catálogo, não por escolha: `00-catalogo` §12 determina que ela venha da fatura,
+com instrução de onde achá-la, e **proíbe estimativa por região**. O FAQ traz o
+atalho que melhora a estimativa — dividir o valor total da fatura pelo consumo do
+mês, com o que bandeira, tributos e iluminação pública já entram no número — e
+declara o limite da conta: aparelho com termostato não consome potência cheia
+vezes tempo.
+
+**CALC-069 · orçamento 50/30/20.** A quarta a tratar regra de bolso como campo. O
+50/30/20 vem de um livro, e os três percentuais são editáveis: quem precisa de 70
+para necessidades informa 70, e a conta acompanha em vez de dar veredito. Somar
+acima de cem por cento é recusado, com o total informado na mensagem.
+
+**A linha "ainda sem destino" é o que faz a coluna fechar.** As três fatias são
+arredondadas ao centavo uma a uma, e a diferença para a renda informada aparece
+nomeada — seja porque os percentuais somam menos de cem, seja pelos centavos da
+divisão. Sem ela, a soma da tela ficaria alguns centavos abaixo da renda, que é o
+defeito de §7.12 em miniatura. Um caso-ouro roda doze combinações de renda e
+divisão e exige a identidade em todas.
+
+### Corrigido · o verificador de orçamento estourou o próprio recorte
+
+`verificar-orcamento.ts` lia o mapa de hashes do runtime do empacotador dentro de
+uma janela fixa de **2.000 caracteres** a partir de `.u=`. O primeiro dicionário
+daquele trecho — o dos nomes de pedaço — cresce uma entrada por calculadora, e
+com trinta e cinco publicadas o segundo dicionário, o dos hashes, caiu fora da
+janela.
+
+**O script fez exatamente o que devia: falhou alto**, com a mensagem certa sobre
+não conseguir ler o mapa. Só que o motivo da falha era ele, e não o build — e
+diagnosticar isso custa uma sessão olhando para o lugar errado.
+
+O recorte passou a ir de `.u=` até o `".js"` que fecha a própria função, que é um
+limite **estrutural** e não estimado. É a lição de §7.5 com um giro: verificador
+que falha por limite próprio não é tão perigoso quanto o que passa por deixar de
+olhar, mas ainda custa caro.
+
+---
+
 ## Ciclo de 01/08/2026
 
 Quatorze calculadoras: CALC-026, CALC-070, CALC-054, CALC-023, CALC-010, CALC-008,

@@ -204,6 +204,24 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './reserva'
     ).then((m) => m.calcular),
+  'independencia-financeira': () =>
+    import(
+      /* webpackChunkName: "calc-independencia" */
+      /* webpackExports: ["calcular"] */
+      './independencia'
+    ).then((m) => m.calcular),
+  'orcamento-domestico': () =>
+    import(
+      /* webpackChunkName: "calc-orcamento" */
+      /* webpackExports: ["calcular"] */
+      './orcamento'
+    ).then((m) => m.calcular),
+  'consumo-de-energia': () =>
+    import(
+      /* webpackChunkName: "calc-energia" */
+      /* webpackExports: ["calcular"] */
+      './energia'
+    ).then((m) => m.calcular),
   porcentagem: () =>
     import(
       /* webpackChunkName: "calc-porcentagem" */

@@ -25,11 +25,11 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **32** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas utilitárias, a primeira de investimentos e a primeira do lado do empregador |
+| Calculadoras no ar | **35** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 774 de unidade · 352 ponta a ponta · 3 de vazamento |
+| Testes | 811 de unidade · 370 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 129,1 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
+| Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -38,7 +38,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel
-- **Investimentos:** reserva de emergência
+- **Investimentos:** reserva de emergência · meta de independência financeira
+- **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro
 - **Utilitárias:** porcentagem · regra de três
 - `/guias` e os três guias
@@ -135,9 +136,10 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 43 de 75
+## 4. Calculadoras pendentes — 40 de 75
 
-Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-044, CALC-054, CALC-055, CALC-057, CALC-070 e CALC-071**.
+Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-065,
+CALC-069, CALC-070 e CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -172,11 +174,16 @@ externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 > três destas e mais nove do v3 — é a dependência de maior alcance que restou no
 > projeto inteiro, e as seis armadilhas do endpoint já estão medidas (§6.1).
 
-### 4.3 v3 — 22 pendentes de 28
+### 4.3 v3 — 19 pendentes de 28
 
-Publicadas em 01/08/2026: **CALC-035, CALC-036, CALC-044, CALC-055, CALC-057 e
-CALC-071** — as seis primeiras do bloco A, aberto porque o v2 esgotou o que dava
-para fazer sem dependência externa. As linhas delas saíram da tabela.
+Publicadas: **CALC-035, CALC-036, CALC-043, CALC-044, CALC-055, CALC-057, CALC-065
+e CALC-071** — a fila do bloco A, aberta porque o v2 esgotou o que dava para fazer
+sem dependência externa. As linhas delas saíram da tabela, e **CALC-069**, que é
+do v4, entrou junto por ser do mesmo bloco de consumo doméstico.
+
+**Sobram quatro do bloco A no v3:** CALC-046 (dividend yield, v4), CALC-049
+(precificação de hora), CALC-066 (retorno de energia solar) e CALC-072 (dias úteis
+entre datas, que depende do calendário de feriados — D-5 de `docs/18`).
 
 > **A fila do bloco A é o caminho padrão daqui em diante**, enquanto `ADR-006` e
 > a tabela anual do IRPF não se resolverem. `docs/18` §3 lista o conjunto inteiro
@@ -1038,6 +1045,26 @@ primeiro mês a proporção devolve exatamente o número informado; nenhuma alí
 > ela não representa. Com frequência o que ele tem é o **resultado** da taxa, não
 > a taxa — e aí a conta muda de direção, não de unidade.
 
+### 7.31 Verificador que falha pelo próprio limite custa a sessão errada
+
+`verificar-orcamento.ts` lia o mapa de hashes do empacotador dentro de uma janela
+fixa de **2.000 caracteres** a partir de `.u=`. O primeiro dicionário daquele
+trecho — o dos nomes de pedaço — cresce **uma entrada por calculadora**, e com
+trinta e cinco publicadas o segundo dicionário, o dos hashes, caiu fora da janela.
+
+O script fez o que devia e **falhou alto**, com a mensagem certa. Mas a mensagem
+descrevia um sintoma do build (*"o formato da saída do empacotador provavelmente
+mudou"*), e o defeito era do próprio recorte — o que manda quem diagnostica para
+o lugar errado.
+
+O recorte passou a ir de `.u=` até o `".js"` que **fecha a função**, que é limite
+estrutural e não estimado.
+
+> **O complemento de §7.5.** Verificador que sempre passa é o pior caso. O que
+> falha pelo próprio limite é melhor, e ainda assim caro: ele gasta uma sessão
+> procurando um problema que não existe. Quando escrever recorte, ancore no que a
+> estrutura garante, não no tamanho que ela tem hoje.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -1049,8 +1076,10 @@ Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
 ~~CALC-023~~ ✅ (§7.11) · ~~CALC-010~~ ✅ · ~~CALC-008~~ ✅ (§7.15) ·
 ~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14) · ~~CALC-031~~ ✅ (§7.30),
 que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2 · e as
-seis primeiras do bloco A do v3: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
-~~CALC-071~~ ✅ · ~~CALC-055~~ ✅ · ~~CALC-057~~ ✅.
+fila do bloco A: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
+~~CALC-071~~ ✅ · ~~CALC-055~~ ✅ · ~~CALC-057~~ ✅ · ~~CALC-043~~ ✅ ·
+~~CALC-065~~ ✅ · ~~CALC-069~~ ✅ · e ~~o recorte fixo que fazia
+`verificar-orcamento.ts` falhar por limite próprio~~ ✅ (§7.31).
 
 O que sobrou, em ordem:
 

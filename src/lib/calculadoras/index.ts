@@ -20,11 +20,14 @@ import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
 import { FINANCIAMENTO_IMOBILIARIO } from './financiamento-imobiliario'
 import { FGTS } from './fgts'
+import { ENERGIA } from './energia'
 import { HORAS_EXTRAS } from './horas-extras'
+import { INDEPENDENCIA } from './independencia'
 import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { LOCACAO } from './locacao'
+import { ORCAMENTO } from './orcamento'
 import { PORCENTAGEM } from './porcentagem'
 import { REGRA_DE_TRES } from './regra-de-tres'
 import { RENDA_FIXA } from './renda-fixa'
@@ -68,6 +71,9 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   AMORTIZACAO_EXTRA,
   LOCACAO,
   RESERVA_DE_EMERGENCIA,
+  INDEPENDENCIA,
+  ORCAMENTO,
+  ENERGIA,
   PORCENTAGEM,
   REGRA_DE_TRES,
   COMBUSTIVEL,

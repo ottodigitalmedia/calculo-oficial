@@ -199,7 +199,34 @@ function resolvedorDeArquivo(): (id: string) => string | undefined {
   }
 
   const fonte = readFileSync(join(PEDACOS, runtime), 'utf8')
-  const trecho = fonte.slice(fonte.indexOf('.u='), fonte.indexOf('.u=') + 2_000)
+
+  /**
+   * O recorte vai de `.u=` até o `".js"` que **fecha a própria função**, e não
+   * até um número fixo de caracteres.
+   *
+   * Havia aqui uma janela de 2.000 caracteres, e ela estourou em 01/08/2026,
+   * quando o catálogo passou de trinta calculadoras: o primeiro dicionário — o
+   * dos NOMES de pedaço — cresce uma entrada por calculadora, e a partir de
+   * certo ponto o segundo, o dos hashes, caiu fora da janela. O script fez o que
+   * devia e **falhou alto**, com a mensagem certa; só que o motivo da falha era
+   * ele, não o build.
+   *
+   * A lição é a de §7.5 com um giro: verificador que falha por limite próprio
+   * não é tão perigoso quanto o que passa por não olhar, mas custa uma sessão
+   * de diagnóstico no lugar errado. Recorte por limite estrutural, não por
+   * tamanho estimado.
+   */
+  const inicio = fonte.indexOf('.u=')
+  if (inicio === -1) {
+    console.error(
+      'Função `u` do runtime do empacotador não encontrada.' +
+        '\nÉ ela que monta a URL de cada pedaço adiado; sem ela o orçamento' +
+        '\nmediria menos do que o navegador baixa.',
+    )
+    process.exit(1)
+  }
+  const fecho = fonte.indexOf('.js"', inicio)
+  const trecho = fonte.slice(inicio, fecho === -1 ? fonte.length : fecho + '.js"'.length)
 
   const objetos = [...trecho.matchAll(/\{((?:\s*\d+:\s*"[^"]*",?)+)\}/g)].map((m) => {
     const dicionario: Record<string, string> = {}
