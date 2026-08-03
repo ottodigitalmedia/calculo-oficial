@@ -80,6 +80,51 @@ página se recusa a dizer é que ela é sempre a melhor escolha: a bola de neve
 entrega uma dívida a menos na lista mais cedo, e desistir no meio custa mais que
 a diferença de juros.
 
+### Adicionado · CALC-056, CALC-029 e CALC-033 — e o que sobra deixou de ser código
+
+Três de crédito e imóvel, todas sem parâmetro legal, todas sobre o motor de taxa
+interna que `credito.ts` já anunciava no cabeçalho desde CALC-024.
+
+**CALC-056 · financiamento de veículo.** Parte do preço do carro e da entrada,
+que é como a decisão é tomada na loja — e não do valor liberado, que é o começo
+de CALC-024. As tarifas entram DENTRO do valor financiado, porque é o que
+acontece na prática, e é uma das razões de o CET ficar acima da taxa anunciada.
+O IOF entra como valor digitado, não como alíquota: mesma decisão de CALC-062.
+
+Além do CET, a página responde o que a simulação da concessionária não responde:
+quanto o carro custa no fim, e em qual parcela o que já saiu do bolso ultrapassa
+o preço à vista.
+
+**CALC-029 · portabilidade de crédito.** A armadilha não é a taxa, é o **prazo**:
+parcela menor com prazo maior custa mais no total, mesmo com taxa menor. Quando a
+proposta alonga a dívida, o resultado mostra separadamente o que a taxa nova
+entregaria **sem** alongar — é o que separa ganho de juros de alívio de caixa.
+
+A taxa do contrato atual é descoberta pela busca, a partir do saldo devedor, da
+parcela e das parcelas que faltam. Quase ninguém sabe qual é, e é ela que a
+proposta precisa bater.
+
+**CALC-033 · custo de aquisição de imóvel.** Nenhum custo aqui pode ser
+cadastrado, e isso é o §14 do catálogo funcionando: o ITBI tem alíquota municipal
+e os emolumentos seguem tabela estadual. O que a página entrega é o número que
+trava negócio — quanto precisa estar em DINHEIRO no dia, que não é a entrada, é a
+entrada mais os custos, e eles não podem ser financiados junto com o imóvel.
+
+**O que sobra do catálogo mudou de natureza.** Das 15 pendentes, só CALC-038
+dispensa pesquisa em norma. O trecho do levantamento que falava em 33
+calculadoras sem dependência valia quando foi escrito — elas foram construídas.
+
+### Corrigido · o documento de estado listava como pendentes calculadoras no ar
+
+`indice.ts` existe porque duas listas do mesmo conjunto divergem, e
+`catalogo.test.ts` existe para provar que não divergiram. O `ESTADO-DO-PROJETO`
+violava essa lição em três seções ao mesmo tempo, com contagens paralelas
+mantidas à mão.
+
+As tabelas listavam CALC-011, CALC-012, CALC-013, CALC-039, CALC-040 e CALC-041
+como pendentes — todas publicadas. A lista virou uma só, com o comando que a
+confere contra as definições ao lado.
+
 ### Adicionado · CALC-074, CALC-067 e CALC-059 — e o bloco A acabou
 
 Com estas três, **nenhuma calculadora do bloco A continua pendente por falta de

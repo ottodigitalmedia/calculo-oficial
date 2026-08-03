@@ -22,6 +22,7 @@ import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CONTA_DE_AGUA } from './conta-de-agua'
 import { CONVERSOR_DE_UNIDADES } from './conversor-de-unidades'
 import { CORRECAO_POR_INDICE } from './correcao-por-indice'
+import { CUSTO_DE_AQUISICAO } from './custo-de-aquisicao'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { CUSTO_DO_CARRO } from './custo-do-carro'
 import { DEPRECIACAO_DE_VEICULO } from './depreciacao-de-veiculo'
@@ -30,6 +31,7 @@ import { DIVISAO_DE_CONTA } from './divisao-de-conta'
 import { ELETRICO_VS_COMBUSTAO } from './eletrico-vs-combustao'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
+import { FINANCIAMENTO_DE_VEICULO } from './financiamento-de-veiculo'
 import { FINANCIAMENTO_IMOBILIARIO } from './financiamento-imobiliario'
 import { FGTS } from './fgts'
 import { ENERGIA } from './energia'
@@ -43,6 +45,7 @@ import { MEDIA_PONDERADA } from './media-ponderada'
 import { ORCAMENTO } from './orcamento'
 import { PLANO_DE_QUITACAO } from './plano-de-quitacao'
 import { PODER_DE_COMPRA } from './poder-de-compra'
+import { PORTABILIDADE_DE_CREDITO } from './portabilidade-de-credito'
 import { PORCENTAGEM } from './porcentagem'
 import { POUPANCA } from './poupanca'
 import { PRECIFICACAO } from './precificacao'
@@ -89,9 +92,11 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   CHEQUE_ESPECIAL,
   CAPACIDADE,
   FINANCIAMENTO_IMOBILIARIO,
+  CUSTO_DE_AQUISICAO,
   QUITACAO_ANTECIPADA,
   AMORTIZACAO_EXTRA,
   PLANO_DE_QUITACAO,
+  PORTABILIDADE_DE_CREDITO,
   LOCACAO,
   ALUGAR_OU_COMPRAR,
   RENDA_MENSAL,
@@ -120,6 +125,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   CUSTO_DO_CARRO,
   ELETRICO_VS_COMBUSTAO,
   DEPRECIACAO_DE_VEICULO,
+  FINANCIAMENTO_DE_VEICULO,
   DIVISAO_DE_CONTA,
   MEDIA_PONDERADA,
   CONVERSOR_DE_UNIDADES,

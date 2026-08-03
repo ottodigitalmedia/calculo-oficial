@@ -533,4 +533,392 @@ export function calcularQuitacaoAntecipada(
   }
 }
 
+// ---------------------------------------------------------------------------
+// CALC-056 — Financiamento de veículo
+// ---------------------------------------------------------------------------
+
+/**
+ * **O que separa esta calculadora de CALC-024, que já calcula CET.** CALC-024
+ * parte do que o banco liberou; esta parte do **preço do carro e da entrada**,
+ * que é como a decisão é tomada na loja. E ela responde a pergunta que a
+ * simulação da concessionária não responde: quanto o carro custa no fim.
+ *
+ * **As tarifas entram DENTRO do valor financiado, porque é isso que acontece.**
+ * Cadastro, registro de contrato e IOF são embutidos no contrato na prática do
+ * mercado — o cliente não os paga no ato, financia-os. Somá-los ao valor
+ * financiado é o que faz a parcela bater com a do contrato, e é também o que
+ * revela por que o CET fica acima da taxa anunciada.
+ *
+ * **O IOF entra como valor digitado, não como alíquota.** É a mesma decisão de
+ * CALC-062, registrada em `ESTADO-DO-PROJETO` §7.33: a alíquota do IOF estava
+ * sob disputa quando esta calculadora foi construída, e publicar alíquota não
+ * confirmada é o dano que este produto existe para evitar. O valor está no
+ * contrato, discriminado.
+ */
+
+export interface EntradaFinanciamentoDeVeiculo {
+  readonly precoDoVeiculo: Centavos
+  readonly entrada: Centavos
+  readonly prazoMeses: number
+  readonly taxaMensalBp: BasisPoints
+  /** Cadastro, registro de contrato e IOF — todos digitados, todos do contrato. */
+  readonly tarifas: Centavos
+  /** Seguro prestamista ou proteção financeira cobrada junto da parcela. */
+  readonly seguroMensal: Centavos
+}
+
+export interface SaidaFinanciamentoDeVeiculo {
+  readonly valorFinanciado: Centavos
+  readonly valorFinanciadoComTarifas: Centavos
+  readonly parcela: Centavos
+  readonly totalPago: Centavos
+  readonly custoAcimaDoPreco: Centavos
+  readonly custoAcimaDoPrecoBp: BasisPoints
+  readonly cetMensal: BasisPoints
+  readonly cetAnual: BasisPoints
+  /** Em quantas parcelas o que já saiu do bolso ultrapassa o preço à vista. */
+  readonly mesesParaSuperarOPreco: number
+}
+
+export function calcularFinanciamentoDeVeiculo(
+  entrada: EntradaFinanciamentoDeVeiculo,
+  dataReferencia: DataISO,
+): Resultado<SaidaFinanciamentoDeVeiculo> {
+  if (entrada.precoDoVeiculo <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe o preço do veículo para ver o resultado.',
+    }
+  }
+  if (entrada.prazoMeses <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe em quantos meses o financiamento será pago para ver o resultado.',
+    }
+  }
+  if (entrada.taxaMensalBp <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe a taxa de juros mensal do contrato para ver o resultado.',
+    }
+  }
+
+  const valorFinanciado = subtrair(entrada.precoDoVeiculo, entrada.entrada)
+  if (valorFinanciado <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_invalida',
+      detalhe:
+        'A entrada cobre o preço do veículo inteiro — não há financiamento a calcular. Reduza a ' +
+        'entrada para simular o parcelamento.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  etapas.push({
+    rotulo: 'Quanto será financiado',
+    formula: `${reais(entrada.precoDoVeiculo)} de preço − ${reais(entrada.entrada)} de entrada`,
+    resultado: valorFinanciado,
+  })
+
+  const valorFinanciadoComTarifas = somar(valorFinanciado, entrada.tarifas)
+  if (entrada.tarifas > 0) {
+    etapas.push({
+      rotulo: 'Com as tarifas embutidas',
+      formula: `${reais(valorFinanciado)} + ${reais(entrada.tarifas)} de cadastro, registro e IOF`,
+      resultado: valorFinanciadoComTarifas,
+      justificativa:
+        'As tarifas não são pagas no ato: entram no valor financiado e passam a render juros ' +
+        'junto com o resto. É a prática do mercado, e é uma das razões de o custo efetivo ficar ' +
+        'acima da taxa anunciada.',
+    })
+  }
+
+  const parcelaSemSeguro = parcelaPrice(
+    valorFinanciadoComTarifas,
+    entrada.prazoMeses,
+    entrada.taxaMensalBp,
+  )
+  const parcela = somar(parcelaSemSeguro, entrada.seguroMensal)
+
+  etapas.push({
+    rotulo: 'Parcela',
+    formula:
+      `${reais(valorFinanciadoComTarifas)} em ${entrada.prazoMeses}× a ` +
+      `${percentual(entrada.taxaMensalBp)} ao mês` +
+      (entrada.seguroMensal > 0 ? `, mais ${reais(entrada.seguroMensal)} de seguro` : ''),
+    resultado: parcela,
+    fundamento: fundamentar(CDC_ART_52),
+  })
+
+  const totalDasParcelas = multiplicarPorInteiro(parcela, entrada.prazoMeses)
+  const totalPago = somar(totalDasParcelas, entrada.entrada)
+
+  etapas.push({
+    rotulo: 'Quanto o carro custa no fim',
+    formula: `${reais(entrada.entrada)} de entrada + ${entrada.prazoMeses} × ${reais(parcela)}`,
+    resultado: totalPago,
+  })
+
+  const custoAcimaDoPreco = subtrair(totalPago, entrada.precoDoVeiculo)
+  const custoAcimaDoPrecoBp = aliquotaEfetiva(
+    custoAcimaDoPreco,
+    entrada.precoDoVeiculo,
+    'meio_para_cima',
+  )
+
+  etapas.push({
+    rotulo: 'Quanto além do preço à vista',
+    formula: `${reais(totalPago)} − ${reais(entrada.precoDoVeiculo)}`,
+    resultado: custoAcimaDoPreco,
+    justificativa:
+      'É o preço de comprar hoje em vez de esperar. Comparar esse número com o rendimento do ' +
+      'mesmo dinheiro no prazo é a conta que decide entre financiar e juntar.',
+  })
+
+  /**
+   * O CET compara o fluxo das parcelas com o que o tomador de fato recebeu — o
+   * carro, e não o valor com as tarifas dentro. É a definição da Resolução CMN
+   * nº 4.881/2020, e é o que faz as tarifas aparecerem no custo.
+   */
+  const cetMensal = taxaInternaMensal(valorFinanciado, parcela, entrada.prazoMeses)
+  const cetMensalBp = cetMensal ?? basisPoints(0)
+
+  etapas.push({
+    rotulo: 'Custo efetivo total ao mês',
+    formula: `taxa que iguala ${entrada.prazoMeses} × ${reais(parcela)} a ${reais(valorFinanciado)}`,
+    resultado: centavos(cetMensalBp),
+    unidade: 'percentual',
+    fundamento: fundamentar(RESOLUCAO_CMN_4881),
+    justificativa:
+      'O CET compara as parcelas com o que você de fato recebeu — o carro. Tarifas e seguro ' +
+      'saem do seu bolso mas não voltam em veículo, e por isso empurram o custo para cima da ' +
+      'taxa anunciada.',
+  })
+
+  const cetAnual = anualizar(cetMensalBp)
+
+  /**
+   * Em quantas parcelas o que já saiu do bolso passa do preço à vista. É a
+   * tradução do custo em tempo, e costuma surpreender mais que o percentual.
+   */
+  let acumulado = entrada.entrada
+  let mesesParaSuperarOPreco = 0
+  for (let mes = 1; mes <= entrada.prazoMeses; mes += 1) {
+    acumulado = somar(acumulado, parcela)
+    if (acumulado > entrada.precoDoVeiculo) {
+      mesesParaSuperarOPreco = mes
+      break
+    }
+  }
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return {
+    ok: true,
+    valores: {
+      valorFinanciado,
+      valorFinanciadoComTarifas,
+      parcela,
+      totalPago,
+      custoAcimaDoPreco,
+      custoAcimaDoPrecoBp,
+      cetMensal: cetMensalBp,
+      cetAnual,
+      mesesParaSuperarOPreco,
+    },
+    traco,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CALC-029 — Portabilidade de crédito
+// ---------------------------------------------------------------------------
+
+/**
+ * **A armadilha da portabilidade é o PRAZO, não a taxa.**
+ *
+ * A proposta que chega mostra a parcela nova menor que a atual, e a conclusão
+ * parece óbvia. Mas parcela menor com prazo maior custa mais no total, mesmo
+ * com taxa menor — e é assim que se troca uma dívida cara e curta por uma
+ * barata e longa que custa mais dinheiro.
+ *
+ * Por isso esta calculadora compara **os dois cenários no prazo que o usuário
+ * informar** e diz explicitamente quando o prazo aumentou. Comparar só a
+ * parcela é o erro que a página existe para desfazer.
+ *
+ * **A taxa do contrato ATUAL é descoberta, não perguntada** — a maioria das
+ * pessoas não sabe qual é, e o extrato nem sempre traz. Ela sai do saldo
+ * devedor, da parcela e do número de parcelas que faltam, pela mesma busca do
+ * CET.
+ */
+
+export interface EntradaPortabilidade {
+  /** O que falta pagar hoje, se quitasse — o banco é obrigado a informar. */
+  readonly saldoDevedor: Centavos
+  readonly parcelaAtual: Centavos
+  readonly parcelasRestantes: number
+  readonly novaTaxaMensalBp: BasisPoints
+  readonly novoPrazoMeses: number
+  /** IOF e tarifas da nova operação, quando houver. */
+  readonly custosDaPortabilidade: Centavos
+}
+
+export interface SaidaPortabilidade {
+  /** A taxa que o contrato atual cobra, descoberta pelo fluxo. */
+  readonly taxaAtualBp: BasisPoints
+  readonly novaParcela: Centavos
+  readonly totalAtual: Centavos
+  readonly totalNovo: Centavos
+  readonly economia: Centavos
+  readonly diferencaDeParcela: Centavos
+  readonly cetNovoMensal: BasisPoints
+  /** Verdadeiro quando o novo prazo é maior — a armadilha da proposta. */
+  readonly prazoAumentou: boolean
+  readonly mesesAMais: number
+  /** O total da nova proposta se ela mantivesse o prazo atual. */
+  readonly totalNovoNoMesmoPrazo: Centavos
+}
+
+export function calcularPortabilidade(
+  entrada: EntradaPortabilidade,
+  dataReferencia: DataISO,
+): Resultado<SaidaPortabilidade> {
+  if (entrada.saldoDevedor <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe o saldo devedor de hoje para ver o resultado.',
+    }
+  }
+  if (entrada.parcelaAtual <= 0 || entrada.parcelasRestantes <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe a parcela atual e quantas ainda faltam para ver o resultado.',
+    }
+  }
+  if (entrada.novaTaxaMensalBp <= 0 || entrada.novoPrazoMeses <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe a taxa e o prazo da proposta nova para ver o resultado.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  const taxaAtual = taxaInternaMensal(
+    entrada.saldoDevedor,
+    entrada.parcelaAtual,
+    entrada.parcelasRestantes,
+  )
+  const taxaAtualBp = taxaAtual ?? basisPoints(0)
+
+  etapas.push({
+    rotulo: 'Taxa que o seu contrato cobra hoje',
+    formula:
+      `taxa que iguala ${entrada.parcelasRestantes} × ${reais(entrada.parcelaAtual)} a ` +
+      `${reais(entrada.saldoDevedor)}`,
+    resultado: centavos(taxaAtualBp),
+    unidade: 'percentual',
+    fundamento: fundamentar(RESOLUCAO_CMN_4881),
+    justificativa:
+      'Ela é descoberta pelo fluxo, e não perguntada: quase ninguém sabe a taxa do próprio ' +
+      'contrato, e é ela que a proposta nova precisa bater para valer a pena.',
+  })
+
+  const novoFinanciado = somar(entrada.saldoDevedor, entrada.custosDaPortabilidade)
+  if (entrada.custosDaPortabilidade > 0) {
+    etapas.push({
+      rotulo: 'Quanto a nova operação financia',
+      formula: `${reais(entrada.saldoDevedor)} + ${reais(entrada.custosDaPortabilidade)} de custos`,
+      resultado: novoFinanciado,
+    })
+  }
+
+  const novaParcela = parcelaPrice(novoFinanciado, entrada.novoPrazoMeses, entrada.novaTaxaMensalBp)
+  etapas.push({
+    rotulo: 'Parcela na proposta nova',
+    formula:
+      `${reais(novoFinanciado)} em ${entrada.novoPrazoMeses}× a ` +
+      `${percentual(entrada.novaTaxaMensalBp)} ao mês`,
+    resultado: novaParcela,
+  })
+
+  const totalAtual = multiplicarPorInteiro(entrada.parcelaAtual, entrada.parcelasRestantes)
+  const totalNovo = multiplicarPorInteiro(novaParcela, entrada.novoPrazoMeses)
+
+  etapas.push({
+    rotulo: 'Total que falta pagar hoje',
+    formula: `${entrada.parcelasRestantes} × ${reais(entrada.parcelaAtual)}`,
+    resultado: totalAtual,
+  })
+  etapas.push({
+    rotulo: 'Total pela proposta nova',
+    formula: `${entrada.novoPrazoMeses} × ${reais(novaParcela)}`,
+    resultado: totalNovo,
+  })
+
+  const economia = subtrair(totalAtual, totalNovo)
+  etapas.push({
+    rotulo: economia >= 0 ? 'Quanto a portabilidade economiza' : 'Quanto a portabilidade custa a mais',
+    formula: `${reais(totalAtual)} − ${reais(totalNovo)}`,
+    resultado: economia,
+  })
+
+  /**
+   * A comparação honesta: a mesma proposta no PRAZO ATUAL. É ela que separa o
+   * ganho de taxa do alívio de caixa — e que revela quando a economia anunciada
+   * vem só de empurrar a dívida para a frente.
+   */
+  const parcelaNoMesmoPrazo = parcelaPrice(
+    novoFinanciado,
+    entrada.parcelasRestantes,
+    entrada.novaTaxaMensalBp,
+  )
+  const totalNovoNoMesmoPrazo = multiplicarPorInteiro(
+    parcelaNoMesmoPrazo,
+    entrada.parcelasRestantes,
+  )
+
+  const prazoAumentou = entrada.novoPrazoMeses > entrada.parcelasRestantes
+  if (prazoAumentou) {
+    etapas.push({
+      rotulo: 'A mesma taxa, mantendo o prazo atual',
+      formula: `${entrada.parcelasRestantes} × ${reais(parcelaNoMesmoPrazo)}`,
+      resultado: totalNovoNoMesmoPrazo,
+      justificativa:
+        'Prazo maior baixa a parcela e aumenta o total, mesmo com taxa menor. Esta linha mostra ' +
+        'o que a taxa nova entrega sem alongar a dívida — é a comparação que separa ganho de ' +
+        'juros de alívio de caixa.',
+    })
+  }
+
+  const cetNovo = taxaInternaMensal(entrada.saldoDevedor, novaParcela, entrada.novoPrazoMeses)
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return {
+    ok: true,
+    valores: {
+      taxaAtualBp,
+      novaParcela,
+      totalAtual,
+      totalNovo,
+      economia,
+      diferencaDeParcela: subtrair(entrada.parcelaAtual, novaParcela),
+      cetNovoMensal: cetNovo ?? basisPoints(0),
+      prazoAumentou,
+      mesesAMais: Math.max(0, entrada.novoPrazoMeses - entrada.parcelasRestantes),
+      totalNovoNoMesmoPrazo,
+    },
+    traco,
+  }
+}
+
 export { basisPoints, centavos }

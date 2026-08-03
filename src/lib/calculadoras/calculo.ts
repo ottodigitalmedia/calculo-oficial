@@ -180,6 +180,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './financiamento-imobiliario'
     ).then((m) => m.calcular),
+  'custo-de-aquisicao-de-imovel': () =>
+    import(
+      /* webpackChunkName: "calc-custo-de-aquisicao" */
+      /* webpackExports: ["calcular"] */
+      './custo-de-aquisicao'
+    ).then((m) => m.calcular),
   'quitacao-antecipada': () =>
     import(
       /* webpackChunkName: "calc-quitacao-antecipada" */
@@ -197,6 +203,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-plano-de-quitacao" */
       /* webpackExports: ["calcular"] */
       './plano-de-quitacao'
+    ).then((m) => m.calcular),
+  'portabilidade-de-credito': () =>
+    import(
+      /* webpackChunkName: "calc-portabilidade-de-credito" */
+      /* webpackExports: ["calcular"] */
+      './portabilidade-de-credito'
     ).then((m) => m.calcular),
   'rentabilidade-de-aluguel': () =>
     import(
@@ -359,6 +371,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-depreciacao-de-veiculo" */
       /* webpackExports: ["calcular"] */
       './depreciacao-de-veiculo'
+    ).then((m) => m.calcular),
+  'financiamento-de-veiculo': () =>
+    import(
+      /* webpackChunkName: "calc-financiamento-de-veiculo" */
+      /* webpackExports: ["calcular"] */
+      './financiamento-de-veiculo'
     ).then((m) => m.calcular),
   'divisao-de-conta': () =>
     import(

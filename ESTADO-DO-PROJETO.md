@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **57** de 75 — v1 completo, o bloco de desligamento fechado, seis de crédito, quatro de imóveis, **quatro de veículos**, **quatro de consumo**, **cinco utilitárias**, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **60** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.125 de unidade · 503 ponta a ponta · 3 de vazamento |
+| Testes | 1.157 de unidade · 521 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -36,14 +36,14 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
-- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação
-- **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar
+- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade
+- **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
-- **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão · depreciação
+- **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão · depreciação · financiamento
 - **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada · conversor de unidades
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
@@ -139,11 +139,11 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 18 de 75
+## 4. Calculadoras pendentes — 15 de 75
 
-Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-034, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-058, CALC-065,
-CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060 a CALC-064, CALC-064, CALC-068, CALC-069, CALC-070,
-CALC-071, CALC-028, CALC-073, CALC-075, CALC-059, CALC-067 e CALC-074**.
+**Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
+da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
+vale é o que as definições dizem, e o comando que as lê está em §4.3.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -152,93 +152,60 @@ sustenta está em `docs/19-incidencias-verbas-rescisorias.md`, em fonte
 primária, e continua servindo a toda trabalhista que vier.
 
 **O próximo bloco é o v2** — §4.2. E `docs/18-levantamento-calculadoras.md`
-mostra que **33 das restantes não dependem de nada**: nem de pesquisa em norma,
-nem de série externa. Entre elas estão as de maior valor publicitário do
-catálogo.
+mostrava que **33 das restantes não dependiam de nada** — nem de pesquisa em
+norma, nem de série externa. Isso valia quando foi escrito, e em 03/08/2026
+deixou de valer: **elas foram construídas**. Das 15 que sobram, só CALC-038
+dispensa pesquisa em norma.
 
-### 4.2 v2 — 11 de 17 no ar, e as 6 que faltam estão TODAS bloqueadas
+### 4.2 A lista de pendentes é UMA, e está em §4.3
 
-Publicadas: CALC-008, CALC-009, CALC-010, CALC-018, CALC-023, CALC-024,
-CALC-025, CALC-031, CALC-032, CALC-054 e CALC-070.
+Havia aqui uma tabela do v2 e outra do v3, e as duas divergiam da realidade:
+listavam como bloqueadas calculadoras já publicadas — CALC-039, CALC-040 e
+CALC-041 entre elas, todas no ar desde 02/08/2026. O motivo é o mesmo que
+`catalogo.test.ts` combate no código: **duas listas do mesmo conjunto divergem**,
+e aqui nenhum teste as comparava.
 
-**Nenhuma das seis restantes depende só de escrever código.** Isso é resultado,
-não impedimento: o v2 esgotou o que dava para fazer sem resolver uma dependência
-externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
+Restou uma só, em §4.3, e o comando que a confere contra as definições está lá.
+O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
+existir é a contagem paralela.
 
-| ID | Calculadora | Bloqueio |
+### 4.3 As 15 que faltam, e o que trava cada uma
+
+**Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
+como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
+elas —, porque cada publicação tirava a linha de uma tabela e esquecia a outra.
+Uma lista derivada à mão de duas fontes diverge, que é exatamente o defeito que
+`catalogo.test.ts` impede no código e que aqui ninguém impedia.
+
+**Para conferir esta lista contra a verdade**, o comando é comparar os `id:` das
+definições com os IDs do catálogo:
+
+```bash
+grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sort
+```
+
+| ID | Calculadora | O que trava |
 |---|---|---|
-| CALC-017 | Restituição estimada do IRPF anual | A tabela ANUAL do ano-calendário 2025 não foi localizada — ver §8, item 2 |
-| CALC-039 | CDB/LCI/LCA — rendimento líquido com IR | Série do Banco Central (`ADR-006`, §6.1) |
-| CALC-040 | Comparador: Tesouro Selic vs. CDB vs. Poupança | Série do Banco Central |
-| CALC-041 | Rendimento da poupança | Série do Banco Central |
-| CALC-047 | DAS-MEI — valor mensal por atividade | D-3 de `docs/18`: anexos da LC 123/2006 |
-| CALC-048 | Comparador CLT vs. PJ vs. MEI | D-3, mais premissas que precisam ficar visíveis, não embutidas |
+| CALC-014 | Rescisão — contrato intermitente | Pesquisa em norma: art. 452-A e a forma de apurar média |
+| CALC-017 | Restituição estimada do IRPF anual | A tabela ANUAL do ano-calendário 2025 não foi localizada — §8, item 3 |
+| CALC-019 | Comparador simplificado vs. completo | Mesma fonte de CALC-017 |
+| CALC-020 | IR sobre ganho de capital em imóvel | Alíquotas progressivas, isenções e fatores de redução — pesquisa em norma |
+| CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
+| CALC-027 | Empréstimo consignado — margem | A margem consignável é legal e mudou mais de uma vez; exige fonte confirmada |
+| CALC-038 | Financiamento de reforma | Nada. É uma variação de CALC-024 com destino declarado |
+| CALC-047 | DAS-MEI — valor mensal | Anexos da LC 123/2006 (D-3 de `docs/18`) |
+| CALC-048 | Comparador CLT vs. PJ vs. MEI | D-3, mais premissas que precisam ficar visíveis |
+| CALC-050 | INSS do contribuinte individual | Alíquotas de 20%, 11% e 5% — pesquisa em norma |
+| CALC-051 | Pró-labore e encargos do sócio | Pesquisa em norma |
+| CALC-052 | Faturamento máximo do MEI | Limite e regra de desenquadramento — LC 123/2006 |
+| CALC-053 | Carnê-leão | Pesquisa em norma |
+| CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
+| CALC-072 | Dias úteis entre datas | D-5: o calendário de feriados |
 
-> **A leitura que isto sugere para a próxima sessão.** Resolver `ADR-006` libera
-> três destas e mais nove do v3 — é a dependência de maior alcance que restou no
-> projeto inteiro, e as seis armadilhas do endpoint já estão medidas (§6.1).
-
-### 4.3 v3 — 18 pendentes de 28
-
-Publicadas: **CALC-035, CALC-036, CALC-043, CALC-044, CALC-055, CALC-057, CALC-058, CALC-065
-e CALC-071** — a fila do bloco A, aberta porque o v2 esgotou o que dava para fazer
-sem dependência externa. As linhas delas saíram da tabela, e **CALC-069**, que é
-do v4, entrou junto por ser do mesmo bloco de consumo doméstico.
-
-**O bloco A ACABOU.** Sobram dois nomes nele, e os dois têm impedimento próprio:
-CALC-066 (retorno de energia solar, que depende de irradiação e por isso vira campo
-do usuário) e CALC-072 (dias úteis entre datas, bloqueada por D-5 — o calendário de
-feriados). **O campo de lista que §7.29 registrava como bloqueio saiu do caminho em
-03/08/2026**, e as três que dependiam dele estão no ar, junto com CALC-074,
-CALC-067 e CALC-059 — estas na mesma data.
-
-> **A fila do bloco A é o caminho padrão daqui em diante**, enquanto `ADR-006` e
-> a tabela anual do IRPF não se resolverem. `docs/18` §3 lista o conjunto inteiro
-> com dificuldade e armadilha de cada uma; nenhuma depende de pesquisa em norma.
-
-| ID | Calculadora | Categoria |
-|---|---|---|
-| CALC-011 | Custo real do funcionário (encargos + provisões) | TRB |
-| CALC-012 | Rescisão — empregado doméstico (LC 150/2015) | TRB |
-| CALC-013 | Banco de horas e jornada acumulada | TRB |
-| CALC-019 | Comparador: modelo simplificado vs. completo | TRI |
-| CALC-020 | IR sobre ganho de capital em venda de imóvel | TRI |
-| CALC-026 | Quitação antecipada — economia de juros | CRD |
-| CALC-027 | Empréstimo consignado — margem e parcela | CRD |
-| CALC-033 | Custo total de aquisição de imóvel | IMV |
-| CALC-034 | Alugar vs. comprar — comparativo de longo prazo | IMV |
-| CALC-037 | Reajuste de aluguel por índice contratual | IMV |
-| CALC-042 | Quanto rende X reais por mês | INV |
-| CALC-043 | Meta de independência financeira | INV |
-| CALC-049 | Precificação de hora — freelancer e autônomo | AUT |
-| CALC-050 | INSS do contribuinte individual e facultativo | AUT |
-| CALC-056 | Financiamento de veículo — parcela e CET | VEI |
-| CALC-060 | Correção por índice (IPCA, INPC, IGP-M, SELIC, TR) | IDX |
-| CALC-061 | Poder de compra ao longo do tempo | IDX |
-| CALC-062 | Conversor de moeda com IOF | IDX |
-| CALC-065 | Consumo de energia por aparelho — custo mensal | CSM |
-| CALC-066 | Retorno de investimento em energia solar | CSM |
-| CALC-072 | Dias úteis entre datas (com feriados nacionais) | UTI |
-
-### 4.4 v4 — 20 calculadoras
-
-| ID | Calculadora | Categoria |
-|---|---|---|
-| CALC-014 | Rescisão — contrato intermitente (art. 452-A) | TRB |
-| CALC-021 | IR sobre criptoativos | TRI |
-| CALC-029 | Portabilidade de crédito — vale a pena? | CRD |
-| CALC-030 | Cheque especial — custo real | CRD |
-| CALC-038 | Financiamento de reforma | IMV |
-| CALC-045 | Tesouro IPCA+ — rendimento real projetado | INV |
-| CALC-046 | Dividend yield e renda passiva | INV |
-| CALC-051 | Pró-labore e encargos do sócio | AUT |
-| CALC-052 | Faturamento máximo do MEI e desenquadramento | AUT |
-| CALC-053 | Carnê-leão — recolhimento mensal do autônomo | AUT |
-| CALC-058 | Carro elétrico vs. combustão — custo por km | VEI |
-| CALC-063 | Reajuste de salário por inflação acumulada | IDX |
-| CALC-064 | Valor futuro corrigido — projeção por índice | IDX |
-| CALC-068 | Duração e custo do botijão de gás | CSM |
-| CALC-069 | Orçamento doméstico — regra 50/30/20 | CSM |
+**Só uma delas não depende de pesquisa em norma: CALC-038.** O trecho do
+catálogo que dizia haver 33 calculadoras sem dependência valia quando foi
+escrito; elas foram construídas. O que restou é, quase todo, tributário e
+previdenciário — e o próximo passo do projeto deixou de ser código.
 
 ### 4.5 Fora do catálogo, em definitivo
 
@@ -1241,6 +1208,52 @@ mercado.
 de fonte inacessível, vale perguntar qual dado o usuário já tem em mãos e o que
 se pode derivar dele. Foi o mesmo movimento de CALC-068 com a duração do botijão
 e de CALC-057 com o IPVA.
+
+### 7.40 O que impede CALC-066, e por que ela não foi construída junto
+
+CALC-066 (retorno de energia solar) aparece como "Fonte: —, Manutenção: Nula" no
+catálogo, e a leitura fácil é que basta código. Não basta, e o motivo merece
+ficar escrito antes que alguém a construa.
+
+A geração do sistema em kWh depende de irradiação local, e a saída já estava
+decidida: **vira campo do usuário**, porque a proposta do instalador traz o
+número. Até aí, é o padrão de CALC-067 e CALC-057.
+
+O problema é outro. A **Lei nº 14.300/2022** instituiu cobrança gradual pelo uso
+da rede sobre a energia injetada — o chamado Fio B —, com percentual que cresce
+ano a ano. Uma calculadora de retorno que ignore isso devolve payback **otimista
+com aparência de exato**, que é precisamente o dano que este produto existe para
+evitar. E o percentual é valor legal: não pode ser inventado nem estimado, e
+transformá-lo em campo do usuário empurra para ele uma pergunta que ele não tem
+como responder.
+
+**O que destrava:** confirmar em fonte oficial o cronograma da Lei 14.300/2022 e
+cadastrá-lo em `lib/params/` com vigência, como qualquer parâmetro legal. É
+trabalho de leitura, não de código — e é por isso que ela ficou fora do lote de
+03/08/2026, junto com as outras que dependem de norma.
+
+### 7.41 Duas listas do mesmo conjunto divergem — inclusive as minhas
+
+`indice.ts` existe porque a home não podia importar as definições, e
+`catalogo.test.ts` existe porque duas listas do mesmo conjunto divergem. A lição
+estava escrita no código desde 31/07/2026, e este documento a violava em três
+lugares ao mesmo tempo: §4, §4.2 e §4.3 mantinham contagens paralelas das
+calculadoras pendentes, atualizadas à mão.
+
+O resultado foi previsível. Em 03/08/2026 as tabelas listavam CALC-011, CALC-012,
+CALC-013, CALC-039, CALC-040 e CALC-041 como pendentes — **todas publicadas**, as
+três primeiras havia dias. Eu li a tabela, acreditei nela e informei ao mantenedor
+uma fila de trabalho que não existia.
+
+A correção foi deixar **uma** lista, com o comando que a confere ao lado:
+
+```bash
+grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sort
+```
+
+> **O padrão, para qualquer contagem neste documento.** Se um número pode ser
+> derivado do código, ou ele é derivado na hora de usar, ou ele vai divergir. Não
+> existe terceira opção — e documento não tem suíte de testes.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

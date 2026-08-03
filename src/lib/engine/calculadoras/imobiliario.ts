@@ -29,6 +29,7 @@
 import { jurosDoPeriodo, parcelaPrice } from '../financeira'
 import {
   aliquotaEfetiva,
+  aplicarAliquota,
   dividirPorInteiro,
   naoNegativo,
   proporcao,
@@ -36,7 +37,7 @@ import {
   subtrair,
 } from '../money'
 import { percentual, reais, type Etapa, type Resultado, type Traco } from '../traco'
-import { ZERO, type BasisPoints, type Centavos } from '../types'
+import { ZERO, centavos, type BasisPoints, type Centavos } from '../types'
 import type { DataISO } from '../../params/tipos'
 
 const AVOS_NO_ANO = 12
@@ -361,6 +362,145 @@ export function calcularFinanciamentoImobiliario(
       totalPrice: price.total,
       economiaDoSac,
       evolucao: escolhida.evolucao,
+    },
+    traco,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CALC-033 — Custo total de aquisição de imóvel
+// ---------------------------------------------------------------------------
+
+/**
+ * **Nenhum dos custos daqui pode ser cadastrado, e isso não é limitação: é o
+ * §14 do catálogo funcionando.** O ITBI tem alíquota MUNICIPAL, e são mais de
+ * cinco mil municípios; os emolumentos de tabelionato e de registro seguem
+ * tabela ESTADUAL, revista todo ano. Publicar uma média nacional seria publicar
+ * um número errado com aparência de certo para quase todo mundo.
+ *
+ * A saída é a mesma de CALC-057 com o IPVA e de CALC-067 com a tarifa de água:
+ * o dado entra digitado, e a ajuda do campo diz onde encontrá-lo. A guia do
+ * ITBI vem da prefeitura, os emolumentos do site do tribunal de justiça do
+ * estado, e o banco informa a tarifa de avaliação.
+ *
+ * **O que a calculadora entrega é o que ninguém soma antes de assinar:** quanto
+ * é preciso ter EM DINHEIRO no dia, que não é a entrada — é a entrada mais os
+ * custos, e é aí que o negócio trava.
+ */
+
+export interface EntradaAquisicao {
+  readonly valorDoImovel: Centavos
+  readonly entrada: Centavos
+  /** Alíquota do ITBI do município, digitada. */
+  readonly itbiBp: BasisPoints
+  /** Emolumentos do tabelionato, quando há escritura pública. */
+  readonly escritura: Centavos
+  /** Emolumentos do registro de imóveis. */
+  readonly registro: Centavos
+  /** Tarifa de avaliação do banco, quando há financiamento. */
+  readonly avaliacao: Centavos
+  readonly outrasDespesas: Centavos
+}
+
+export interface SaidaAquisicao {
+  readonly itbi: Centavos
+  readonly custosAlemDoPreco: Centavos
+  readonly custosBp: BasisPoints
+  /** Entrada mais custos: o que precisa estar em dinheiro no dia. */
+  readonly desembolsoNaAssinatura: Centavos
+  readonly valorFinanciado: Centavos
+  readonly custoTotalDaCompra: Centavos
+}
+
+export function calcularCustoDeAquisicao(
+  entrada: EntradaAquisicao,
+  dataReferencia: DataISO,
+): Resultado<SaidaAquisicao> {
+  if (entrada.valorDoImovel <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe o valor do imóvel para ver o resultado.',
+    }
+  }
+  if (entrada.entrada > entrada.valorDoImovel) {
+    return {
+      ok: false,
+      motivo: 'entrada_invalida',
+      detalhe: 'A entrada não pode ser maior que o valor do imóvel.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  /**
+   * A base do ITBI é o valor da transação ou o valor venal de referência do
+   * município, o que for maior — e o segundo o produto não tem como saber. O
+   * campo aceita o valor informado, e a nota da tela avisa que a prefeitura
+   * pode arbitrar base diferente.
+   */
+  const itbi = aplicarAliquota(entrada.valorDoImovel, entrada.itbiBp, 'meio_para_cima')
+  if (entrada.itbiBp > 0) {
+    etapas.push({
+      rotulo: 'ITBI',
+      formula: `${reais(entrada.valorDoImovel)} × ${percentual(entrada.itbiBp)}`,
+      resultado: itbi,
+      justificativa:
+        'A alíquota é municipal e foi digitada por você. A prefeitura pode calcular o imposto ' +
+        'sobre o valor venal de referência dela, e não sobre o preço do negócio — quando o ' +
+        'valor de referência é maior, a guia sai acima desta conta.',
+    })
+  }
+
+  const custosAlemDoPreco = somar(
+    itbi,
+    entrada.escritura,
+    entrada.registro,
+    entrada.avaliacao,
+    entrada.outrasDespesas,
+  )
+
+  etapas.push({
+    rotulo: 'Custos além do preço',
+    formula:
+      `${reais(itbi)} de ITBI + ${reais(entrada.escritura)} de escritura + ` +
+      `${reais(entrada.registro)} de registro + ${reais(entrada.avaliacao)} de avaliação + ` +
+      `${reais(entrada.outrasDespesas)} de outras`,
+    resultado: custosAlemDoPreco,
+  })
+
+  const custosBp = aliquotaEfetiva(custosAlemDoPreco, entrada.valorDoImovel, 'meio_para_cima')
+  etapas.push({
+    rotulo: 'O que os custos representam sobre o preço',
+    formula: `${reais(custosAlemDoPreco)} ÷ ${reais(entrada.valorDoImovel)}`,
+    resultado: centavos(custosBp),
+    unidade: 'percentual',
+  })
+
+  const desembolsoNaAssinatura = somar(entrada.entrada, custosAlemDoPreco)
+  etapas.push({
+    rotulo: 'Quanto precisa estar em dinheiro',
+    formula: `${reais(entrada.entrada)} de entrada + ${reais(custosAlemDoPreco)} de custos`,
+    resultado: desembolsoNaAssinatura,
+    justificativa:
+      'Este é o número que trava negócio: o comprador junta a entrada e descobre os custos ' +
+      'depois. Eles não podem ser financiados junto com o imóvel — saem do bolso no dia.',
+  })
+
+  const valorFinanciado = subtrair(entrada.valorDoImovel, entrada.entrada)
+  const custoTotalDaCompra = somar(entrada.valorDoImovel, custosAlemDoPreco)
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return {
+    ok: true,
+    valores: {
+      itbi,
+      custosAlemDoPreco,
+      custosBp,
+      desembolsoNaAssinatura,
+      valorFinanciado,
+      custoTotalDaCompra,
     },
     traco,
   }

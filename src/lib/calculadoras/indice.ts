@@ -160,6 +160,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto a prestação custa de verdade — com os seguros e a tarifa dentro da conta.',
   },
   {
+    slug: 'custo-de-aquisicao-de-imovel',
+    nome: 'Custo total de aquisição de imóvel',
+    linhaDeContexto: 'Quanto precisa estar em dinheiro no dia — que não é só a entrada.',
+  },
+  {
     slug: 'quitacao-antecipada',
     nome: 'Quitação antecipada — economia de juros',
     linhaDeContexto:
@@ -176,6 +181,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     nome: 'Plano de quitação de dívidas',
     linhaDeContexto:
       'Bola de neve ou avalanche: com o mesmo dinheiro por mês, qual ordem sai mais barata.',
+  },
+  {
+    slug: 'portabilidade-de-credito',
+    nome: 'Portabilidade de crédito',
+    linhaDeContexto:
+      'Se a proposta compensa de verdade — comparada pelo total, não pela parcela.',
   },
   {
     slug: 'rentabilidade-de-aluguel',
@@ -327,6 +338,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     nome: 'Depreciação de veículo',
     linhaDeContexto:
       'Quanto o carro perde por mês — o custo que não tem boleto — e quanto valerá.',
+  },
+  {
+    slug: 'financiamento-de-veiculo',
+    nome: 'Financiamento de veículo',
+    linhaDeContexto: 'Quanto fica a parcela — e quanto o carro custa no fim, com o CET à mostra.',
   },
   {
     slug: 'divisao-de-conta',
