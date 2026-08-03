@@ -109,6 +109,17 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   'poder-de-compra': '?valor=100000&indice=ipca&de=2010-01-01&ate=2020-01-01',
   'reajuste-de-salario': '?salario=300000&indice=inpc&de=2023-01-01&ate=2024-01-01',
   'reajuste-de-aluguel': '?aluguel=200000&indice=igpm&de=2023-01-01&ate=2024-01-01',
+  /**
+   * As três de campo de lista. O preenchedor genérico enche `input` do
+   * formulário, e as células da lista não são obrigatórias uma a uma — o
+   * obrigatório é a lista, que só está satisfeita quando alguma célula tem
+   * valor. Exigir cada célula seria pior que declarar a entrada aqui: bloquearia
+   * a linha em branco, que é o que permite abrir o campo com linhas prontas.
+   */
+  'divisao-de-conta': '?consumos=3000;5000;2000&compartilhado=0&gorjeta=1000',
+  'media-ponderada': '?notas=800,100;600,300',
+  // A taxa vai em basis points e a parcela mínima em centavos, como na URL real.
+  'plano-de-quitacao': '?dividas=500000,1200,25000;100000,300,10000&extraMensal=50000',
 }
 
 for (const c of CALCULADORAS) {

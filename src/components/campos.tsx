@@ -3,7 +3,13 @@
 import { useId } from 'react'
 
 import { formatarNumero, formatarReal, formatarTaxa } from '@/lib/format/moeda'
-import type { Campo } from '@/lib/calculadoras/tipos'
+import {
+  escreverLista,
+  lerLista,
+  listaVazia,
+  type Campo,
+  type ColunaDaLista,
+} from '@/lib/calculadoras/tipos'
 
 /**
  * Campos de formulário — `10-ux-ui-spec` §3, `03-functional-spec` §1.3 e §1.4.
@@ -60,9 +66,144 @@ const CLASSE_ENTRADA =
   'mt-1 block w-full rounded border px-3 py-2 text-base bg-[var(--color-surface)] ' +
   'border-[var(--color-border)] focus:border-[var(--color-brand)]'
 
+/**
+ * Formata o valor interno de uma célula conforme o tipo da coluna.
+ *
+ * As três formatações já existem e são as mesmas dos campos escalares — a lista
+ * não inventa unidade nenhuma, ela só repete a que a coluna declara.
+ */
+function textoDaCelula(valor: number, tipo: ColunaDaLista['tipo']): string {
+  if (valor === 0) return ''
+  if (tipo === 'monetario') return formatarReal(valor)
+  if (tipo === 'percentual') return formatarTaxa(valor)
+  if (tipo === 'decimal') return formatarNumero(valor)
+  return String(valor)
+}
+
+function marcadorDaCelula(tipo: ColunaDaLista['tipo']): string {
+  if (tipo === 'monetario') return 'R$ 0,00'
+  if (tipo === 'inteiro') return '0'
+  return '0,00'
+}
+
+/**
+ * O editor de lista — `Campo` com `tipo: 'lista'`.
+ *
+ * **O estado vive no valor do campo, e não no componente.** As linhas são lidas
+ * do texto a cada renderização e reescritas a cada tecla. Guardar as linhas em
+ * estado local criaria uma segunda fonte de verdade, e ela divergiria do
+ * permalink no primeiro carregamento com query — que é justamente o caso que
+ * `RF-006` existe para servir.
+ *
+ * Acessibilidade: `fieldset` e `legend` agrupam, cada célula tem nome próprio
+ * que inclui o número do item, e os botões de remover dizem qual item removem.
+ * Sem isso, um leitor de tela anunciaria dez campos "Saldo" idênticos.
+ */
+function CampoDeLista({ campo, valor, erro, onChange }: Props) {
+  const id = useId()
+  const idMensagem = `${id}-msg`
+  const colunas = campo.colunas ?? []
+  const linhas = lerLista({ [campo.id]: valor }, campo.id, colunas.length)
+  const maximo = campo.maximoDeLinhas ?? 20
+
+  const alterar = (indice: number, coluna: number, novo: number) => {
+    onChange(
+      escreverLista(
+        linhas.map((linha, i) =>
+          i === indice ? linha.map((c, j) => (j === coluna ? novo : c)) : linha,
+        ),
+      ),
+    )
+  }
+
+  const remover = (indice: number) => {
+    onChange(escreverLista(linhas.filter((_, i) => i !== indice)))
+  }
+
+  const acrescentar = () => {
+    onChange(escreverLista([...linhas, colunas.map(() => 0)]))
+  }
+
+  return (
+    <fieldset className="rounded border border-[var(--color-border)] p-3">
+      <legend className="px-1 text-sm font-medium text-[var(--color-text-primary)]">
+        {campo.rotulo}
+      </legend>
+
+      <div className="space-y-2">
+        {linhas.map((linha, i) => (
+          <div key={i} className="flex items-end gap-2">
+            {colunas.map((coluna, j) => (
+              <div key={coluna.id} className="min-w-0 flex-1">
+                {i === 0 ? (
+                  <span className="block text-xs text-[var(--color-text-secondary)]">
+                    {coluna.rotulo}
+                  </span>
+                ) : null}
+                <input
+                  type="text"
+                  inputMode={coluna.tipo === 'inteiro' ? 'numeric' : 'decimal'}
+                  value={textoDaCelula(linha[j] ?? 0, coluna.tipo)}
+                  placeholder={marcadorDaCelula(coluna.tipo)}
+                  aria-label={`${coluna.rotulo}, item ${i + 1}`}
+                  {...(coluna.maximo === undefined ? {} : { 'data-maximo': coluna.maximo })}
+                  onChange={(e) => {
+                    const digitos = e.target.value.replace(/\D/g, '')
+                    alterar(i, j, digitos === '' ? 0 : Number(digitos))
+                  }}
+                  className={`${CLASSE_ENTRADA} tabular text-right`}
+                />
+              </div>
+            ))}
+
+            {/* `min-h` e `px` não são estética: o alvo de toque precisa de 24 px
+                em cada direção (WCAG 2.2, 2.5.8). O rodapé do site já custou
+                esse defeito uma vez. */}
+            <button
+              type="button"
+              onClick={() => remover(i)}
+              aria-label={`Remover item ${i + 1}`}
+              className="mt-1 min-h-[2.5rem] min-w-[2.5rem] rounded border border-[var(--color-border)] px-2 text-[var(--color-text-secondary)] hover:border-[var(--color-negative)]"
+            >
+              <span aria-hidden>×</span>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {linhas.length < maximo ? (
+        <button
+          type="button"
+          onClick={acrescentar}
+          className="mt-3 min-h-[2.5rem] rounded border border-[var(--color-border)] px-3 text-sm font-medium text-[var(--color-brand)] hover:border-[var(--color-brand)]"
+        >
+          Adicionar item
+        </button>
+      ) : null}
+
+      <Mensagem
+        id={idMensagem}
+        {...(erro ? { erro } : {})}
+        {...(campo.ajuda ? { ajuda: campo.ajuda } : {})}
+      />
+    </fieldset>
+  )
+}
+
 export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
   const id = useId()
   const idMensagem = `${id}-msg`
+
+  if (campo.tipo === 'lista') {
+    return (
+      <CampoDeLista
+        campo={campo}
+        valor={valor}
+        {...(erro ? { erro } : {})}
+        onChange={onChange}
+      />
+    )
+  }
 
   if (campo.tipo === 'selecao') {
     return (
@@ -244,6 +385,31 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
 /** Mensagens de validação — texto final de `03-functional-spec` §1.4. */
 export function validar(campo: Campo, valor: number | string): string | undefined {
   if (campo.tipo === 'selecao') return undefined
+
+  if (campo.tipo === 'lista') {
+    if (listaVazia(valor)) {
+      return campo.obrigatorio ? 'Preencha este campo para ver o resultado.' : undefined
+    }
+
+    const colunas = campo.colunas ?? []
+    const linhas = lerLista({ [campo.id]: valor }, campo.id, colunas.length)
+
+    for (const linha of linhas) {
+      for (const [j, coluna] of colunas.entries()) {
+        const celula = linha[j] ?? 0
+        if (coluna.maximo !== undefined && celula > coluna.maximo) {
+          if (coluna.tipo === 'monetario') {
+            return `${coluna.rotulo}: informe um valor de até ${formatarReal(coluna.maximo)}.`
+          }
+          if (coluna.tipo === 'percentual') {
+            return `${coluna.rotulo}: informe uma taxa de até ${formatarTaxa(coluna.maximo)}%.`
+          }
+          return `${coluna.rotulo}: informe um valor de até ${formatarNumero(coluna.maximo)}.`
+        }
+      }
+    }
+    return undefined
+  }
 
   if (campo.tipo === 'data') {
     const texto = typeof valor === 'string' ? valor : ''

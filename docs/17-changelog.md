@@ -29,6 +29,94 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 03/08/2026
+
+### Adicionado · o campo de LISTA · CALC-073, CALC-075 e CALC-028
+
+O contrato de `Campo` modelava **um valor por campo**, e três calculadoras
+publicáveis dependiam de grupo repetido. Como registra o critério de crescimento
+do molde — duas que precisam é medida, uma é palpite —, com três o contrato
+cresceu.
+
+`TipoCampo` ganhou `'lista'`; `Campo` ganhou `colunas`, `linhasIniciais` e
+`maximoDeLinhas`. **O valor continua sendo uma string serializável para a URL**
+(`RF-006`), no formato `nota,peso;nota,peso` — sem isso o permalink deixaria de
+funcionar justamente nas calculadoras em que ele é mais útil, porque redigitar
+oito linhas é pior que redigitar um campo.
+
+Três decisões que a implementação fixou:
+
+- **Linha em branco não entra na conta.** O campo abre com linhas prontas para
+  preencher, e o usuário deixa linhas sobrando o tempo todo. Uma linha de zeros
+  que entrasse dividiria a conta por gente que não existe ou mediria uma nota
+  que ninguém tirou. `listaVazia` também não deixa essas linhas fazerem o
+  formulário parecer preenchido — o estado pendente continua correto.
+- **Célula que não é dígito puro vale zero.** Ver a correção abaixo.
+- **A remoção de linha tem alvo de 2,5 rem**, por WCAG 2.2 2.5.8.
+
+**CALC-073 · divisão de conta.** Dividir o total por N resolve o caso fácil e
+erra o real: quase nunca todo mundo consome igual, e é aí que a conta vira
+discussão. A gorjeta é distribuída **na proporção do consumo**, e o que é de
+todos divide igual. A sobra do arredondamento fica com a **última pessoa**, e a
+tela diz isso — é a única forma de a soma das partes fechar com o total ao
+centavo, que é o defeito que alguém confere na mesa do restaurante. Caso-ouro
+verifica o fechamento em quatro conjuntos que não dividem exato, com três
+percentuais de gorjeta.
+
+**CALC-075 · média ponderada.** A pergunta que traz gente à página não é "qual é
+a minha média", é "quanto preciso tirar na última prova". A nota necessária
+arredonda **para cima**: para baixo, tirar exatamente o valor devolvido deixaria
+a média abaixo da pedida — o único erro que essa conta não pode cometer. Há
+caso-ouro varrendo quatro médias desejadas por quatro pesos restantes. Avaliação
+com peso zero não entra: é assim que se marca o que ainda não aconteceu.
+
+**CALC-028 · plano de quitação.** A comparação entre bola de neve e avalanche só
+é honesta porque **o desembolso mensal é o mesmo nas duas**. Se uma gastasse
+mais por mês, quitaria antes por gastar mais, e a página estaria medindo a
+carteira em vez da ordem. O que varia é apenas qual dívida recebe a sobra.
+
+A avalanche sempre custa menos ou igual — aritmética, e a página diz. O que a
+página se recusa a dizer é que ela é sempre a melhor escolha: a bola de neve
+entrega uma dívida a menos na lista mais cedo, e desistir no meio custa mais que
+a diferença de juros.
+
+### Corrigido · `Number()` aceitava o que a tela nunca produz
+
+O leitor da lista usava `Number(celula)` com teste de finitude e sinal. Não
+basta: `Number('1e9')` são um bilhão, `Number('0x10')` são dezesseis,
+`Number(' 5 ')` são cinco. Nada disso sai do editor — sai de URL colada ou
+editada à mão, que é a única entrada do sistema que vem do mundo.
+
+Encontrado por teste: `1e9` entrou como saldo de um bilhão de centavos em
+CALC-028 e os juros o multiplicaram até **estourar o inteiro seguro**, com
+exceção no lugar de resposta. Agora só dígito puro vale, que é exatamente o que
+a escrita produz e o que a validação de URL aceita — as três formas coincidem de
+propósito.
+
+### Corrigido · a simulação de quitação divergia em vez de parar
+
+`simularPlano` tinha teto de 600 meses e uma guarda de "sem progresso" que olhava
+o valor disponível. As duas eram insuficientes: com pagamento abaixo dos juros
+**há** progresso — paga-se algo todo mês — e o saldo cresce assim mesmo. Medido
+com R$ 10.000,00 a 15% ao mês e parcela de R$ 1,00: exceção.
+
+A guarda passou a olhar o **saldo somado**. Se ele terminou o mês igual ou maior
+do que começou, o plano não anda e a simulação para, e a página responde "esse
+valor por mês não quita as dívidas" — que é a resposta útil e a única honesta.
+
+Teto de iterações protege contra laço infinito, não contra divergência.
+
+### Alterado · vinte ramos defensivos viraram um
+
+`listas.ts` tinha 23 ocorrências de `?? 0` para índice de linha, cada uma um ramo
+que teste nenhum alcança — `lerLista` já entrega toda linha completada. Elas
+derrubaram a cobertura de ramos do projeto abaixo do limite de 90%, o que é o
+verificador funcionando: ele mediu que a métrica estava sendo diluída por código
+inalcançável. Concentradas numa função `celula`, a garantia é a mesma e a medida
+volta a medir o que deve.
+
+---
+
 ## Ciclo de 02/08/2026
 
 ### Adicionado · CALC-046, CALC-058 e CALC-068

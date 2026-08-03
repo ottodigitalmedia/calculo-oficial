@@ -8,6 +8,7 @@ import { carregarCalculo } from '@/lib/calculadoras/calculo'
 import {
   campoEhTexto,
   campoVisivel,
+  listaVazia,
   type FormularioCalculadora,
   type FuncaoCalculo,
   type Campo,
@@ -52,6 +53,13 @@ import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
  * com ela.
  */
 function vazio(campo: Campo, valor: number | string | undefined): boolean {
+  /**
+   * Lista abre com linhas prontas para preencher, e linhas em branco **não**
+   * fazem o formulário parecer preenchido. Sem esta ramificação, o campo com
+   * `"0,0;0,0"` seria lido como texto não vazio, e a calculadora tentaria
+   * calcular com zeros em vez de mostrar o estado pendente de §1.5.
+   */
+  if (campo.tipo === 'lista') return listaVazia(valor)
   if (campoEhTexto(campo.tipo)) return valor === undefined || valor === ''
   return (valor ?? 0) === 0
 }

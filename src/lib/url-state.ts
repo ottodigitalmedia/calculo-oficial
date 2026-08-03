@@ -14,7 +14,12 @@
  *     de análise, nem ao registro de erro.
  */
 
-import { campoEhTexto, type Campo, type ValoresFormulario } from './calculadoras/tipos'
+import {
+  campoEhTexto,
+  FORMATO_DE_LISTA,
+  type Campo,
+  type ValoresFormulario,
+} from './calculadoras/tipos'
 
 /** Nome do parâmetro de data de referência. */
 export const PARAM_REFERENCIA = 'ref'
@@ -44,6 +49,18 @@ export function lerDaUrl(
       if (campo.opcoes?.some((o) => o.valor === bruto && !o.indisponivel)) {
         valores[campo.id] = bruto
       }
+      continue
+    }
+
+    if (campo.tipo === 'lista') {
+      /**
+       * Só a forma declarada — dígitos e os dois separadores.
+       *
+       * O conteúdo em si não é validado aqui: célula fora de faixa é problema de
+       * `validar`, e derrubar a lista inteira por causa de uma cairia no padrão
+       * e apagaria o que a pessoa já tinha preenchido.
+       */
+      if (FORMATO_DE_LISTA.test(bruto)) valores[campo.id] = bruto
       continue
     }
 

@@ -172,6 +172,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'O que rende mais com o mesmo dinheiro: encurtar o contrato ou baixar a prestação.',
   },
   {
+    slug: 'plano-de-quitacao',
+    nome: 'Plano de quitação de dívidas',
+    linhaDeContexto:
+      'Bola de neve ou avalanche: com o mesmo dinheiro por mês, qual ordem sai mais barata.',
+  },
+  {
     slug: 'rentabilidade-de-aluguel',
     nome: 'Rentabilidade de imóvel para locação',
     linhaDeContexto: 'Quanto o imóvel rende de verdade — depois da vacância, do IPTU e da taxa.',
@@ -310,5 +316,16 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     slug: 'eletrico-ou-combustao',
     nome: 'Carro elétrico ou a combustão',
     linhaDeContexto: 'Quanto cada um custa por quilômetro — pela sua tarifa e pelo seu consumo.',
+  },
+  {
+    slug: 'divisao-de-conta',
+    nome: 'Divisão de conta',
+    linhaDeContexto:
+      'Quanto cada um paga quando o consumo foi diferente — com gorjeta na proporção.',
+  },
+  {
+    slug: 'media-ponderada',
+    nome: 'Média ponderada e média escolar',
+    linhaDeContexto: 'Qual é a sua média com os pesos — e quanto falta tirar no que resta.',
   },
 ]

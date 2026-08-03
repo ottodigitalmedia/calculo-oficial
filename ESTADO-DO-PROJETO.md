@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **51** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **54** de 75 — v1 completo, o bloco de desligamento fechado, seis de crédito, quatro de imóveis, três de veículos, duas de consumo, **quatro utilitárias**, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.037 de unidade · 470 ponta a ponta · 3 de vazamento |
+| Testes | 1.080 de unidade · 485 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -36,7 +36,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
-- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
+- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora
@@ -44,7 +44,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão
-- **Utilitárias:** porcentagem · regra de três
+- **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -139,11 +139,11 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 24 de 75
+## 4. Calculadoras pendentes — 21 de 75
 
 Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-034, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-058, CALC-065,
-CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060 a CALC-064, CALC-064, CALC-068, CALC-069, CALC-070 e
-CALC-071**.
+CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060 a CALC-064, CALC-064, CALC-068, CALC-069, CALC-070,
+CALC-071, CALC-028, CALC-073 e CALC-075**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -185,11 +185,11 @@ e CALC-071** — a fila do bloco A, aberta porque o v2 esgotou o que dava para f
 sem dependência externa. As linhas delas saíram da tabela, e **CALC-069**, que é
 do v4, entrou junto por ser do mesmo bloco de consumo doméstico.
 
-**Sobram três do bloco A no v3:** CALC-066 (retorno de energia solar, que depende
-de irradiação e por isso vira campo do usuário), CALC-072 (dias úteis entre datas,
-bloqueada por D-5 — o calendário de feriados) e, no v4, CALC-046, CALC-058,
-CALC-059, CALC-067, CALC-068, CALC-073, CALC-074 e CALC-075. As três últimas
-esbarram no campo de lista que §7.29 registra.
+**Sobram dois do bloco A no v3:** CALC-066 (retorno de energia solar, que depende
+de irradiação e por isso vira campo do usuário) e CALC-072 (dias úteis entre datas,
+bloqueada por D-5 — o calendário de feriados). No v4 sobram CALC-059, CALC-067 e
+CALC-074. **O campo de lista que §7.29 registrava como bloqueio saiu do caminho em
+03/08/2026** — ele existe, e as três que dependiam dele estão no ar.
 
 > **A fila do bloco A é o caminho padrão daqui em diante**, enquanto `ADR-006` e
 > a tabela anual do IRPF não se resolverem. `docs/18` §3 lista o conjunto inteiro
@@ -204,7 +204,6 @@ esbarram no campo de lista que §7.29 registra.
 | CALC-020 | IR sobre ganho de capital em venda de imóvel | TRI |
 | CALC-026 | Quitação antecipada — economia de juros | CRD |
 | CALC-027 | Empréstimo consignado — margem e parcela | CRD |
-| CALC-028 | Plano de quitação (bola de neve vs. avalanche) | CRD |
 | CALC-033 | Custo total de aquisição de imóvel | IMV |
 | CALC-034 | Alugar vs. comprar — comparativo de longo prazo | IMV |
 | CALC-037 | Reajuste de aluguel por índice contratual | IMV |
@@ -241,9 +240,7 @@ esbarram no campo de lista que §7.29 registra.
 | CALC-067 | Conta de água — consumo estimado | CSM |
 | CALC-068 | Duração e custo do botijão de gás | CSM |
 | CALC-069 | Orçamento doméstico — regra 50/30/20 | CSM |
-| CALC-073 | Divisão de conta entre pessoas | UTI |
 | CALC-074 | Conversor de unidades | UTI |
-| CALC-075 | Média ponderada e média escolar | UTI |
 
 ### 4.5 Fora do catálogo, em definitivo
 
@@ -1041,6 +1038,16 @@ As duas saídas, quando chegar a hora:
 Como §7.4 registra, o molde cresce por **necessidade medida**. Duas calculadoras
 que precisam é medida; uma é palpite.
 
+> **Resolvido em 03/08/2026, pela saída 2.** Três calculadoras precisavam —
+> CALC-028, CALC-073 e CALC-075 —, e o contrato cresceu: `TipoCampo` ganhou
+> `'lista'`, `Campo` ganhou `colunas`, `linhasIniciais` e `maximoDeLinhas`, e o
+> valor continua sendo **uma string serializável para a URL** (`RF-006`), no
+> formato `saldo,taxa,parcela;saldo,taxa,parcela`. A correção da nota acima
+> registrava que CALC-040 **não** precisava do campo; ela continua valendo.
+>
+> As três estão no ar. A saída 1 — blocos fixos com `visivelSe` — teria custado
+> quinze campos por calculadora e não sobreviveria a CALC-074.
+
 ### 7.30 A unidade do sistema não cabia no dado — e o dado do usuário resolveu
 
 CALC-031 precisava do prêmio do MIP, que a seguradora expressa como taxa sobre o
@@ -1137,6 +1144,42 @@ ampliação de contrato, e §7.8 manda que ela venha de **necessidade medida**: 
 calculadora que precisa é palpite. Fica registrado para quando a segunda
 aparecer.
 
+### 7.35 `Number()` aceita coisas que a sua tela nunca produz
+
+O leitor da lista usava `Number(celula)` com um teste de finitude e sinal. Parece
+suficiente, e não é: `Number('1e9')` são um bilhão, `Number('0x10')` são dezesseis
+e `Number(' 5 ')` são cinco. Nada disso sai do editor de lista — sai de uma URL
+colada ou editada à mão, que é a única entrada do sistema que vem do mundo.
+
+O caso que expôs isso foi o teste de célula ininteligível: `1e9` entrou como
+1.000.000.000 de centavos e, em CALC-028, virou saldo que os juros multiplicaram
+até **estourar o inteiro seguro** — `centavos()` lançou, e a página quebraria.
+
+Agora só dígito puro vale (`/^\d{1,15}$/`), que é exatamente o que
+`escreverLista` produz e o que `FORMATO_DE_LISTA` aceita. **As três formas
+coincidem de propósito**: se uma aceitasse o que a outra não escreve, o permalink
+devolveria um formulário diferente do compartilhado.
+
+### 7.36 Simulação que não converge tem de PARAR, não estourar
+
+`simularPlano` tinha um teto de 600 meses e uma guarda de "sem progresso" que
+comparava o disponível com o desembolso. As duas eram insuficientes: com
+pagamento **abaixo** dos juros, há progresso — paga-se algo todo mês — e o saldo
+cresce assim mesmo, exponencialmente. Muito antes dos 600 meses, o número
+ultrapassa o inteiro seguro da linguagem.
+
+Medido com R$ 10.000,00 a 15% ao mês e parcela mínima de R$ 1,00: exceção de
+`RangeError` no lugar de resposta.
+
+A guarda certa não olha o disponível, olha o **saldo somado**: se ele terminou o
+mês igual ou maior do que começou, o plano não anda, e a simulação para com
+`quitou: false`. A página então diz "esse valor por mês não quita as dívidas" —
+que é a resposta útil, e a única honesta.
+
+> **O padrão, para a próxima simulação iterativa.** Teto de iterações protege
+> contra laço infinito, não contra divergência. Quem itera sobre juros precisa de
+> uma medida de progresso do próprio saldo.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -1190,11 +1233,12 @@ O que sobrou, em ordem:
    projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
    **CALC-019 está bloqueada pela mesma fonte** — `docs/18` registra que ela "é
    CALC-017 rodado duas vezes".
-4. **O campo de LISTA — e agora ele é o maior desbloqueio que resta.** `Campo`
-   modela um valor por campo, e **três** calculadoras publicáveis dependem de
-   grupo repetido: CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N
-   notas). §7.4 diz que duas que precisam é medida e uma é palpite — com três,
-   fazer o contrato crescer deixou de ser decisão adiável.
+4. ~~**O campo de LISTA**~~ ✅ **feito em 03/08/2026.** `Campo` modelava um valor
+   por campo, e **três** calculadoras publicáveis dependiam de grupo repetido:
+   CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N notas). §7.4 diz que
+   duas que precisam é medida e uma é palpite — com três, o contrato cresceu, e
+   **as três estão no ar**. O caminho e os dois defeitos que ele revelou estão em
+   §7.29, §7.35 e §7.36.
 
    > **O desenho não é trivial, e é por isso que ele merece sessão própria.** As
    > três precisam de lista de **registros**, não de escalares: CALC-028 pede

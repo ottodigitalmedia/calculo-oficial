@@ -34,11 +34,117 @@ import type { Registro } from '../params/registry'
  * "R$ 12,50" ao lado de "km/l", e um cifrão no lugar errado é erro de fato, não
  * de estilo: quem lê acredita.
  */
-export type TipoCampo = 'monetario' | 'decimal' | 'inteiro' | 'selecao' | 'percentual' | 'data'
+/**
+ * `lista` entrou em CALC-028, e o contrato esperou **três** calculadoras para
+ * crescer — CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N notas).
+ * §7.4 de `ESTADO-DO-PROJETO` fixou a régua: duas que precisam é necessidade
+ * medida, uma é palpite. A alternativa considerada e descartada em §7.29 era
+ * campos fixos para N itens com `visivelSe`, que cabia no molde de então e
+ * ficava feia — e, pior, impunha um teto arbitrário ao usuário.
+ *
+ * **O valor interno é TEXTO**, como `selecao` e `data`, e por um motivo que não
+ * é de gosto: ele precisa atravessar a fronteira servidor→cliente e viajar na
+ * query (`RF-006`). Linhas são separadas por `;` e colunas por `,`, e cada
+ * célula é o mesmo inteiro que o campo escalar equivalente usaria — centavos,
+ * basis points ou centésimos. JSON caberia e custaria três vezes mais caracteres
+ * numa URL que já carrega o cenário inteiro.
+ */
+export type TipoCampo =
+  | 'monetario'
+  | 'decimal'
+  | 'inteiro'
+  | 'selecao'
+  | 'percentual'
+  | 'data'
+  | 'lista'
 
 /** Campos cujo valor interno é texto, não número. */
 export function campoEhTexto(tipo: TipoCampo): boolean {
-  return tipo === 'selecao' || tipo === 'data'
+  return tipo === 'selecao' || tipo === 'data' || tipo === 'lista'
+}
+
+/**
+ * Uma coluna de um campo de lista.
+ *
+ * O `tipo` é o mesmo vocabulário dos campos escalares, e é ele que decide como a
+ * célula é desenhada e em que unidade o valor interno vive. Não há coluna de
+ * texto: nome de pessoa ou de dívida seria dado do usuário viajando na URL sem
+ * necessidade de cálculo, e `07-security` §4.3 já trata query como material
+ * sensível. O que a lista carrega são números.
+ */
+export interface ColunaDaLista {
+  readonly id: string
+  readonly rotulo: string
+  readonly tipo: 'monetario' | 'decimal' | 'inteiro' | 'percentual'
+  readonly minimo?: number
+  readonly maximo?: number
+  /** Texto curto abaixo da coluna, na primeira linha. */
+  readonly ajuda?: string
+}
+
+/** O separador de linhas e o de colunas, nomeados uma vez. */
+const SEPARADOR_DE_LINHA = ';'
+const SEPARADOR_DE_COLUNA = ','
+
+/**
+ * A forma que a lista aceita, e a única.
+ *
+ * Só dígitos e os dois separadores. Valor fora disso chegou pela URL adulterada
+ * e cai no padrão, como todo campo — `lerDaUrl` nunca lança.
+ */
+export const FORMATO_DE_LISTA = /^\d+(,\d+)*(;\d+(,\d+)*)*$/
+
+/**
+ * Lê um campo de lista como matriz de inteiros.
+ *
+ * Linha curta é completada com zeros e linha longa é truncada, conforme o número
+ * de colunas declarado: o motor recebe sempre a forma que espera, e uma URL
+ * malformada vira dado incompleto em vez de exceção.
+ *
+ * **Só dígito vale, e a exigência não é preciosismo.** `Number` aceita `1e9`,
+ * `0x10`, `Infinity` e espaço em volta; qualquer um deles entraria como número
+ * gigante numa entrada que a tela nunca produz — e o motor, que trabalha com
+ * inteiro seguro, lançaria. A célula que não é dígito puro vale zero, como toda
+ * célula que a URL não soube dizer.
+ */
+const CELULA_VALIDA = /^\d{1,15}$/
+
+export function lerLista(
+  valores: ValoresFormulario,
+  id: string,
+  colunas: number,
+): readonly (readonly number[])[] {
+  const bruto = valores[id]
+  if (typeof bruto !== 'string' || bruto === '') return []
+
+  return bruto
+    .split(SEPARADOR_DE_LINHA)
+    .filter((linha) => linha !== '')
+    .map((linha) => {
+      const celulas = linha
+        .split(SEPARADOR_DE_COLUNA)
+        .map((c) => (CELULA_VALIDA.test(c) ? Number(c) : 0))
+      return Array.from({ length: colunas }, (_, i) => celulas[i] ?? 0)
+    })
+}
+
+/** Escreve a matriz de volta na forma de texto. */
+export function escreverLista(linhas: readonly (readonly number[])[]): string {
+  return linhas
+    .map((linha) => linha.map((c) => String(Math.max(0, Math.trunc(c)))).join(SEPARADOR_DE_COLUNA))
+    .join(SEPARADOR_DE_LINHA)
+}
+
+/**
+ * Uma lista está vazia quando **nenhuma célula tem valor**.
+ *
+ * Linhas em branco não contam: o campo abre com linhas prontas para preencher, e
+ * elas não podem fazer o formulário parecer preenchido — o estado pendente de
+ * `03-functional-spec` §1.5 existe justamente para esse momento.
+ */
+export function listaVazia(bruto: unknown): boolean {
+  if (typeof bruto !== 'string' || bruto === '') return true
+  return bruto.split(/[;,]/).every((c) => c === '' || Number(c) === 0)
 }
 
 export interface OpcaoSelecao {
@@ -83,6 +189,11 @@ export interface Campo {
   readonly minimo?: number
   readonly maximo?: number
   readonly opcoes?: readonly OpcaoSelecao[]
+  /** Colunas do campo de lista. Obrigatório quando `tipo` é `'lista'`. */
+  readonly colunas?: readonly ColunaDaLista[]
+  /** Quantas linhas o campo abre, e quantas admite. */
+  readonly linhasIniciais?: number
+  readonly maximoDeLinhas?: number
   /** Texto curto abaixo do campo. */
   readonly ajuda?: string
   /** Habilitação condicional. Ver `03-functional-spec` §3. */

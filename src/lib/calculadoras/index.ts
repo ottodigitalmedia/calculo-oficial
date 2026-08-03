@@ -23,6 +23,7 @@ import { CORRECAO_POR_INDICE } from './correcao-por-indice'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { CUSTO_DO_CARRO } from './custo-do-carro'
 import { DIVIDENDOS } from './dividendos'
+import { DIVISAO_DE_CONTA } from './divisao-de-conta'
 import { ELETRICO_VS_COMBUSTAO } from './eletrico-vs-combustao'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
@@ -35,7 +36,9 @@ import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { LOCACAO } from './locacao'
+import { MEDIA_PONDERADA } from './media-ponderada'
 import { ORCAMENTO } from './orcamento'
+import { PLANO_DE_QUITACAO } from './plano-de-quitacao'
 import { PODER_DE_COMPRA } from './poder-de-compra'
 import { PORCENTAGEM } from './porcentagem'
 import { POUPANCA } from './poupanca'
@@ -85,6 +88,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   FINANCIAMENTO_IMOBILIARIO,
   QUITACAO_ANTECIPADA,
   AMORTIZACAO_EXTRA,
+  PLANO_DE_QUITACAO,
   LOCACAO,
   ALUGAR_OU_COMPRAR,
   RENDA_MENSAL,
@@ -111,6 +115,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   VIAGEM,
   CUSTO_DO_CARRO,
   ELETRICO_VS_COMBUSTAO,
+  DIVISAO_DE_CONTA,
+  MEDIA_PONDERADA,
 ]
 
 export function porSlug(slug: string): DefinicaoCalculadora | undefined {

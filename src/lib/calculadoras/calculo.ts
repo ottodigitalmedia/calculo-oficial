@@ -192,6 +192,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './amortizacao-extra'
     ).then((m) => m.calcular),
+  'plano-de-quitacao': () =>
+    import(
+      /* webpackChunkName: "calc-plano-de-quitacao" */
+      /* webpackExports: ["calcular"] */
+      './plano-de-quitacao'
+    ).then((m) => m.calcular),
   'rentabilidade-de-aluguel': () =>
     import(
       /* webpackChunkName: "calc-locacao" */
@@ -347,6 +353,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-eletrico-vs-combustao" */
       /* webpackExports: ["calcular"] */
       './eletrico-vs-combustao'
+    ).then((m) => m.calcular),
+  'divisao-de-conta': () =>
+    import(
+      /* webpackChunkName: "calc-divisao-de-conta" */
+      /* webpackExports: ["calcular"] */
+      './divisao-de-conta'
+    ).then((m) => m.calcular),
+  'media-ponderada': () =>
+    import(
+      /* webpackChunkName: "calc-media-ponderada" */
+      /* webpackExports: ["calcular"] */
+      './media-ponderada'
     ).then((m) => m.calcular),
 }
 
