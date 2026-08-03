@@ -209,6 +209,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto sobra de ganho real depois do imposto — que morde a correção também.',
   },
   {
+    slug: 'dividend-yield',
+    nome: 'Dividend yield e renda passiva',
+    linhaDeContexto:
+      'Quanto os proventos rendem sobre o preço — e quanto seria preciso para viver deles.',
+  },
+  {
     slug: 'reserva-de-emergencia',
     nome: 'Reserva de emergência',
     linhaDeContexto:
@@ -234,6 +240,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     slug: 'consumo-de-energia',
     nome: 'Consumo de energia por aparelho',
     linhaDeContexto: 'Quanto cada aparelho pesa na conta de luz — pela sua tarifa, não por média.',
+  },
+  {
+    slug: 'custo-do-botijao-de-gas',
+    nome: 'Custo do botijão de gás',
+    linhaDeContexto:
+      'Quanto o gás pesa por mês — e quanto você paga por quilo, que é o que compara.',
   },
   {
     slug: 'correcao-por-indice',
@@ -293,5 +305,10 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     slug: 'custo-mensal-do-carro',
     nome: 'Custo mensal de ter um carro',
     linhaDeContexto: 'Quanto o carro custa por mês de verdade — não só o que sai no posto.',
+  },
+  {
+    slug: 'eletrico-ou-combustao',
+    nome: 'Carro elétrico ou a combustão',
+    linhaDeContexto: 'Quanto cada um custa por quilômetro — pela sua tarifa e pelo seu consumo.',
   },
 ]

@@ -234,6 +234,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './tesouro-ipca'
     ).then((m) => m.calcular),
+  'dividend-yield': () =>
+    import(
+      /* webpackChunkName: "calc-dividendos" */
+      /* webpackExports: ["calcular"] */
+      './dividendos'
+    ).then((m) => m.calcular),
   'reserva-de-emergencia': () =>
     import(
       /* webpackChunkName: "calc-reserva" */
@@ -263,6 +269,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-energia" */
       /* webpackExports: ["calcular"] */
       './energia'
+    ).then((m) => m.calcular),
+  'custo-do-botijao-de-gas': () =>
+    import(
+      /* webpackChunkName: "calc-botijao" */
+      /* webpackExports: ["calcular"] */
+      './botijao'
     ).then((m) => m.calcular),
   'correcao-por-indice': () =>
     import(
@@ -329,6 +341,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-custo-do-carro" */
       /* webpackExports: ["calcular"] */
       './custo-do-carro'
+    ).then((m) => m.calcular),
+  'eletrico-ou-combustao': () =>
+    import(
+      /* webpackChunkName: "calc-eletrico-vs-combustao" */
+      /* webpackExports: ["calcular"] */
+      './eletrico-vs-combustao'
     ).then((m) => m.calcular),
 }
 

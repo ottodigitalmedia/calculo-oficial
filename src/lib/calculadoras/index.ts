@@ -12,6 +12,7 @@ import { AMORTIZACAO } from './amortizacao'
 import { AMORTIZACAO_EXTRA } from './amortizacao-extra'
 import { AVISO_PREVIO } from './aviso-previo'
 import { BANCO_DE_HORAS } from './banco-de-horas'
+import { BOTIJAO } from './botijao'
 import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
 import { CDB } from './cdb'
@@ -21,6 +22,8 @@ import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CORRECAO_POR_INDICE } from './correcao-por-indice'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { CUSTO_DO_CARRO } from './custo-do-carro'
+import { DIVIDENDOS } from './dividendos'
+import { ELETRICO_VS_COMBUSTAO } from './eletrico-vs-combustao'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
 import { FINANCIAMENTO_IMOBILIARIO } from './financiamento-imobiliario'
@@ -89,11 +92,13 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   CDB,
   COMPARADOR_INVESTIMENTOS,
   TESOURO_IPCA,
+  DIVIDENDOS,
   RESERVA_DE_EMERGENCIA,
   INDEPENDENCIA,
   PRECIFICACAO,
   ORCAMENTO,
   ENERGIA,
+  BOTIJAO,
   CORRECAO_POR_INDICE,
   PODER_DE_COMPRA,
   CAMBIO,
@@ -105,6 +110,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   COMBUSTIVEL,
   VIAGEM,
   CUSTO_DO_CARRO,
+  ELETRICO_VS_COMBUSTAO,
 ]
 
 export function porSlug(slug: string): DefinicaoCalculadora | undefined {

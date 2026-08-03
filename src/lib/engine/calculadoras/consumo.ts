@@ -35,6 +35,12 @@ const BP_INTEIRO = 10_000
 
 const POLITICA = 'meio_para_cima' as const
 
+/** Base de mensalização de despesa diária. Convenção declarada, não medição. */
+const DIAS_NO_MES_PADRAO = 30
+
+/** Um centésimo de quilo são dez gramas. Definição de unidade. */
+const GRAMAS_POR_CENTESIMO_DE_KG = 10
+
 /** Formata centésimos como "1.234,56", só para compor `formula`. */
 function numero(valor: Centavos): string {
   const abs = Math.abs(valor)
@@ -302,3 +308,124 @@ export function calcularOrcamento(
 }
 
 export { ZERO }
+
+// ---------------------------------------------------------------------------
+// CALC-068 — Duração e custo do botijão de gás
+// ---------------------------------------------------------------------------
+
+/**
+ * A conta parte da **duração observada**, e não de potência de fogão.
+ *
+ * A alternativa seria estimar o consumo a partir da potência dos queimadores em
+ * kcal/h e do tempo de uso — dados que quase ninguém tem e que ninguém mede. A
+ * duração do último botijão, essa a pessoa sabe. É a mesma escolha de CALC-057
+ * com o IPVA: pedir o dado que o usuário possui, em vez do que o produto
+ * gostaria de ter.
+ */
+export interface EntradaBotijao {
+  readonly precoDoBotijao: Centavos
+  /** Quantos dias o botijão durou. */
+  readonly duracaoDias: number
+  /** Massa do botijão em quilos, em centésimos: 13 kg é `1300`. */
+  readonly massaKg: number
+}
+
+export interface SaidaBotijao {
+  readonly custoPorDia: Centavos
+  readonly custoPorMes: Centavos
+  readonly custoPorAno: Centavos
+  readonly custoPorKg: Centavos
+  /** Consumo médio diário, em gramas. */
+  readonly gramasPorDia: number
+}
+
+export function calcularBotijao(
+  entrada: EntradaBotijao,
+  dataReferencia: DataISO,
+): Resultado<SaidaBotijao> {
+  if (entrada.precoDoBotijao <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe quanto você pagou no botijão para ver o resultado.',
+    }
+  }
+  if (entrada.duracaoDias <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe quantos dias o botijão durou para ver o resultado.',
+    }
+  }
+  if (entrada.massaKg <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_invalida',
+      detalhe: 'A massa do botijão precisa ser maior que zero.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  const custoPorDia = proporcao(entrada.precoDoBotijao, 1, entrada.duracaoDias, POLITICA)
+  etapas.push({
+    rotulo: 'Custo por dia',
+    formula: `${reais(entrada.precoDoBotijao)} ÷ ${entrada.duracaoDias} dias`,
+    resultado: custoPorDia,
+  })
+
+  /**
+   * O mês de trinta dias é convenção declarada, e não medição.
+   *
+   * O consumo de gás não segue o calendário — o que se quer aqui é uma base
+   * comparável com as outras despesas mensais da casa, e trinta é a base que o
+   * resto do produto usa quando mensaliza algo diário.
+   */
+  const custoPorMes = multiplicarPorInteiro(custoPorDia, DIAS_NO_MES_PADRAO)
+  etapas.push({
+    rotulo: 'Custo por mês',
+    formula: `${reais(custoPorDia)} × 30 dias`,
+    resultado: custoPorMes,
+  })
+
+  const custoPorAno = multiplicarPorInteiro(custoPorMes, MESES_NO_ANO)
+  etapas.push({
+    rotulo: 'Custo em doze meses',
+    formula: `${reais(custoPorMes)} × 12`,
+    resultado: custoPorAno,
+  })
+
+  /**
+   * O custo por quilo é o número que compara revendas.
+   *
+   * Botijões de tamanhos diferentes não se comparam pelo preço: um de 8 kg mais
+   * barato pode custar mais por quilo que um de 13 kg. É o mesmo raciocínio da
+   * cotação efetiva em CALC-062.
+   */
+  const custoPorKg = proporcao(
+    entrada.precoDoBotijao,
+    CENTESIMOS_POR_UNIDADE,
+    entrada.massaKg,
+    POLITICA,
+  )
+  etapas.push({
+    rotulo: 'Custo por quilo de gás',
+    formula: `${reais(entrada.precoDoBotijao)} ÷ ${numero(centavos(entrada.massaKg))} kg`,
+    resultado: custoPorKg,
+    justificativa:
+      'É o número que compara revendas e tamanhos diferentes. Botijão menor costuma sair mais ' +
+      'caro por quilo, mesmo custando menos no total.',
+  })
+
+  // Gramas por dia: a massa em centésimos de quilo vira gramas ao multiplicar
+  // por dez, e o resultado se divide pelos dias.
+  const gramasPorDia = Math.round((entrada.massaKg * GRAMAS_POR_CENTESIMO_DE_KG) / entrada.duracaoDias)
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return {
+    ok: true,
+    valores: { custoPorDia, custoPorMes, custoPorAno, custoPorKg, gramasPorDia },
+    traco,
+  }
+}

@@ -31,6 +31,42 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-046, CALC-058 e CALC-068
+
+Três do bloco A, e as três com o mesmo cuidado: **declarar o recorte em vez de
+fingir cobertura**.
+
+**CALC-046 · dividend yield.** A armadilha aqui é de leitura, não de conta: o
+yield olha para trás — divide o que já foi pago pelo preço de hoje — e **sobe
+quando a ação cai**. Um produto que apresentasse o número como renda garantida
+induziria justamente o erro que a métrica provoca. A página nomeia o que ele é
+em todo lugar em que ele aparece, e um caso-ouro trava que preço menor com o
+mesmo provento eleva o yield.
+
+O arredondamento da renda alvo é **para cima**, de propósito: para baixo, a
+quantidade de ações devolvida renderia menos que a renda pedida — errada
+exatamente no sentido que decepciona. Caso-ouro sobre três alvos.
+
+**CALC-058 · elétrico ou combustão.** Compara **energia por quilômetro, e só
+isso**. Manutenção, seguro e perda de valor diferem entre os dois e ficam fora —
+os dois primeiros o usuário informa em CALC-057, para cada carro, e o terceiro
+não tem série pública confiável no mercado brasileiro. Incluir estimativa dos
+três daria ao resultado uma aparência de completude que ele não teria.
+
+A unidade do elétrico é **km/kWh**, e a ajuda do campo traz a conversão: as duas
+formas circulam, e trocá-las erra por um fator de cem. E a calculadora admite
+que o elétrico pode sair mais caro — com energia cara e consumo ruim o sinal
+inverte, e há caso-ouro para isso.
+
+**CALC-068 · botijão de gás.** Parte da **duração observada**, e não da potência
+do fogão: a alternativa exigiria kcal/h dos queimadores, dado que ninguém mede.
+Quanto durou o último botijão, essa a pessoa sabe — mesma escolha de CALC-057
+com o IPVA.
+
+O número que dá utilidade à página é o **custo por quilo**, porque botijões de
+tamanhos diferentes não se comparam pelo preço: o de 8 kg mais barato costuma
+sair mais caro por quilo. Caso-ouro verifica com os dois preços informados.
+
 ### Adicionado · CALC-062 · conversor de moeda — e a fonte que não resolveu
 
 **A alíquota de IOF não entrou em `lib/params/`, e não foi por falta de

@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **48** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **51** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.014 de unidade · 450 ponta a ponta · 3 de vazamento |
+| Testes | 1.037 de unidade · 470 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -38,12 +38,12 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar
-- **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · comparador de aplicações
+- **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
-- **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho
-- **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro
+- **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás
+- **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão
 - **Utilitárias:** porcentagem · regra de três
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
@@ -139,10 +139,10 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 27 de 75
+## 4. Calculadoras pendentes — 24 de 75
 
-Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-034, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-065,
-CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060 a CALC-064, CALC-064, CALC-069, CALC-070 e
+Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-034, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-058, CALC-065,
+CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060 a CALC-064, CALC-064, CALC-068, CALC-069, CALC-070 e
 CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
@@ -180,7 +180,7 @@ externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 
 ### 4.3 v3 — 18 pendentes de 28
 
-Publicadas: **CALC-035, CALC-036, CALC-043, CALC-044, CALC-055, CALC-057, CALC-065
+Publicadas: **CALC-035, CALC-036, CALC-043, CALC-044, CALC-055, CALC-057, CALC-058, CALC-065
 e CALC-071** — a fila do bloco A, aberta porque o v2 esgotou o que dava para fazer
 sem dependência externa. As linhas delas saíram da tabela, e **CALC-069**, que é
 do v4, entrou junto por ser do mesmo bloco de consumo doméstico.
@@ -1190,10 +1190,18 @@ O que sobrou, em ordem:
    projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
    **CALC-019 está bloqueada pela mesma fonte** — `docs/18` registra que ela "é
    CALC-017 rodado duas vezes".
-4. **CALC-028 · plano de quitação (bola de neve vs. avalanche).** Sem parâmetro
-   legal, reaproveita `financeira.ts`. O obstáculo é de molde, não de fonte: ela
-   precisa de uma LISTA de dívidas, e `Campo` não modela grupo repetido — decidir
-   entre campos fixos para N dívidas ou fazer o contrato crescer.
+4. **O campo de LISTA — e agora ele é o maior desbloqueio que resta.** `Campo`
+   modela um valor por campo, e **três** calculadoras publicáveis dependem de
+   grupo repetido: CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N
+   notas). §7.4 diz que duas que precisam é medida e uma é palpite — com três,
+   fazer o contrato crescer deixou de ser decisão adiável.
+
+   > **O desenho não é trivial, e é por isso que ele merece sessão própria.** As
+   > três precisam de lista de **registros**, não de escalares: CALC-028 pede
+   > trios (saldo, taxa, parcela), CALC-075 pede pares (nota, peso). E o valor
+   > precisa continuar serializável para a URL (`RF-006`) e validável por campo.
+   > Tocar `tipos.ts`, `campos.tsx`, `Calculadora.tsx` e `url-state.ts` de uma
+   > vez é o tipo de mudança que não se faz no fim de uma sessão longa.
 
    > **Correção de um erro deste documento.** Uma versão anterior desta seção
    > dizia que CALC-040 também precisava do campo de lista, e citava §7.29 como
