@@ -708,6 +708,20 @@ E para reexecutar só o deploy, sem commit novo:
 gh run rerun --job "$(gh run view "$(gh run list --branch main --limit 1 --json databaseId --jq '.[0].databaseId')" --json jobs --jq '.jobs[] | select(.name=="Implantar") | .databaseId')"
 ```
 
+**Aconteceu de novo em 02/08/2026, e o comportamento novo funcionou.** O deploy
+do commit de `ADR-006` respondeu HTTP 000 nas **três** tentativas e o job caiu —
+corretamente, com a mensagem certa. A imagem tinha sido publicada; só a
+implantação não disparou.
+
+E ele se resolveu sozinho no push seguinte: a corrida de CALC-060, oito minutos
+depois, disparou o webhook com sucesso, e como o EasyPanel puxa a imagem mais
+recente, **os dois commits subiram juntos**. Vale saber disso antes de reexecutar
+o job à mão: se houver outro push logo atrás, ele carrega o anterior.
+
+**O intervalo entre o webhook responder 200 e produção servir o build novo é de
+cerca de um minuto**, medido: a rota de CALC-060 respondeu 404 às 08:16 e 200 às
+08:17. Conferir imediatamente depois do deploy dá falso negativo.
+
 > **A verificação de saúde não teria pego.** Ela só roda quando o disparo dá
 > certo. E mesmo rodando, `/api/health` responde igual em toda versão — ela
 > aprova o contêiner ANTIGO. Expor o hash do commit em `rev` e comparar continua
