@@ -80,6 +80,46 @@ página se recusa a dizer é que ela é sempre a melhor escolha: a bola de neve
 entrega uma dívida a menos na lista mais cedo, e desistir no meio custa mais que
 a diferença de juros.
 
+### Adicionado · CALC-047 e CALC-052 — o MEI, e a transição que quase passou batido
+
+As duas leem o mesmo artigo — o 18-A da LC 123/2006 — e a leitura dele **não se
+resolve só nele**.
+
+**CALC-047 · DAS-MEI.** O valor é a soma de parcelas FIXAS, e faturar mil ou seis
+mil no mês não muda a guia. A página não tem campo de faturamento de propósito:
+ele sugeriria uma relação que não existe, e um caso-ouro trava a decisão. O que
+ela explica, e quase nenhuma página explica, é por que a guia sobe todo ano — a
+maior parcela dela é percentual do salário mínimo.
+
+**CALC-052 · limite do MEI.** A pergunta que traz gente é "estourei, e agora?", e
+a lei tem dois desfechos separados por uma linha de 20%: até lá o
+desenquadramento vale do ano seguinte; acima, ele RETROAGE ao começo do ano e a
+tributação inteira é refeita. Casos-ouro travam as três fronteiras no centavo.
+
+O segundo engano mais comum é o limite proporcional: quem abre em outubro não tem
+o teto cheio, e a lei conta fração de mês como mês inteiro.
+
+**A transição da reforma tributária.** As alíneas com R$ 1,00 de ICMS e R$ 5,00
+de ISS carregam a marca "(Vide Lei Complementar nº 214, de 2025)", e o texto
+consolidado não diz o que muda nem quando. A LC 214 substitui essas alíneas por
+remissões a um Anexo VII — e é o próprio Anexo que declara a vigência de cada
+linha, a primeira começando em **1º/1/2027**. Os valores atuais valem até
+31/12/2026.
+
+A tabela inteira entrou, até 2033: as vigências têm fim declarado, e quando o
+salário mínimo de 2027 for cadastrado a calculadora atravessa a transição
+sozinha.
+
+**Dois detalhes que mereciam errar e não erraram:**
+
+O Anexo discrimina CBS de R$ 0,994 e IBS de R$ 0,006 — três casas decimais, que
+não cabem no invariante de centavos. A soma é exatamente R$ 1,00, e é ela que se
+paga; a divisão entre os dois é repartição entre entes federativos.
+
+E a alínea que fixa o INSS do MEI diz **R$ 45,65**, valor de 2008 que ninguém
+paga. É o § 11 que manda reajustá-lo mantendo equivalência com os 5% sobre o
+limite mínimo — cadastrado o percentual, e não o valor.
+
 ### Corrigido · CALC-050 negava o fundamento legal que usa
 
 Ela foi ao ar calculando certo e exibindo, abaixo do resultado, o aviso de *"esta

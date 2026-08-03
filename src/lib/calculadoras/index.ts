@@ -6,6 +6,7 @@
  * (`ADR-008` E-1).
  */
 
+import { DAS_MEI } from './das-mei'
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
 import { ALUGAR_OU_COMPRAR } from './alugar-ou-comprar'
 import { AMORTIZACAO } from './amortizacao'
@@ -41,6 +42,7 @@ import { INSS_AUTONOMO } from './inss-autonomo'
 import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
+import { LIMITE_DO_MEI } from './limite-do-mei'
 import { LOCACAO } from './locacao'
 import { MEDIA_PONDERADA } from './media-ponderada'
 import { ORCAMENTO } from './orcamento'
@@ -110,6 +112,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RESERVA_DE_EMERGENCIA,
   INDEPENDENCIA,
   PRECIFICACAO,
+  DAS_MEI,
+  LIMITE_DO_MEI,
   ORCAMENTO,
   ENERGIA,
   BOTIJAO,

@@ -25,10 +25,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **61** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **63** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.205 de unidade · 545 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 61 vigências, **0 divergências** (03/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 1.230 de unidade · 557 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 85 vigências, **0 divergências** (03/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -39,7 +39,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
-- **Autônomo:** precificação de hora · INSS do autônomo e do facultativo
+- **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 14 de 75
+## 4. Calculadoras pendentes — 12 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 14 que faltam, e o que trava cada uma
+### 4.3 As 12 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -193,10 +193,8 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
 | CALC-027 | Empréstimo consignado — margem | A margem consignável é legal e mudou mais de uma vez; exige fonte confirmada |
 | CALC-038 | Financiamento de reforma | Nada. É uma variação de CALC-024 com destino declarado |
-| CALC-047 | DAS-MEI — valor mensal | Anexos da LC 123/2006 (D-3 de `docs/18`) |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | D-3, mais premissas que precisam ficar visíveis |
 | CALC-051 | Pró-labore e encargos do sócio | Pesquisa em norma |
-| CALC-052 | Faturamento máximo do MEI | Limite e regra de desenquadramento — LC 123/2006 |
 | CALC-053 | Carnê-leão | Pesquisa em norma |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 | CALC-072 | Dias úteis entre datas | D-5: o calendário de feriados |
@@ -1332,6 +1330,62 @@ A correção tem duas partes, e a segunda é a que importa:
 > **O padrão.** Toda vez que o produto escolhe uma FRASE conforme o estado do
 > cálculo, essa escolha precisa de teste. O número tem casos-ouro; o texto ao
 > lado dele não tinha nenhum, e é ele que o usuário lê para decidir se confia.
+
+### 7.45 A norma manda ler OUTRA norma — e o "Vide" é o aviso
+
+O art. 18-A da LC 123/2006 traz os valores fixos do MEI: R$ 1,00 de ICMS, R$ 5,00
+de ISS. Copiá-los e publicar teria sido rápido, e teria sido errado — as alíneas
+carregam a marca **"(Vide Lei Complementar nº 214, de 2025)"**, e o texto
+consolidado não diz o que ela muda nem quando.
+
+A LC 214/2025 é a regulamentação da reforma tributária. O art. 516 dela substitui
+as alíneas por remissões a um **Anexo VII**, com ICMS, ISS, CBS e IBS ano a ano.
+Se ela já estivesse em vigor para o MEI, publicar R$ 1,00 e R$ 5,00 seria
+publicar valor revogado com fonte oficial correta.
+
+**Quem resolveu foi o próprio Anexo VII**, que declara a vigência de cada linha —
+a primeira começa em **1º/1/2027**. Os valores atuais valem até 31/12/2026, e por
+isso as vigências cadastradas têm FIM declarado em vez de ficarem abertas. A
+tabela inteira, até 2033, entrou junto: quando o salário mínimo de 2027 for
+cadastrado, a calculadora atravessa a transição sozinha.
+
+> **O padrão.** "Vide" no texto consolidado não é nota de rodapé: é a norma
+> avisando que ela sozinha não responde. Toda vez que ele aparecer sobre um valor
+> que se pretende cadastrar, a lei citada precisa ser lida — inclusive a cláusula
+> de vigência dela, que é onde a resposta costuma estar.
+
+### 7.46 Dois valores legais que não cabem no invariante de centavos
+
+O Anexo VII discrimina, para 2027-2028, **CBS de R$ 0,994 e IBS de R$ 0,006** —
+três casas decimais, contra as duas de `ADR-004` A-1.
+
+A soma é exatamente R$ 1,00, e é ela que sai do bolso do MEI: a divisão entre os
+dois tributos é repartição de receita entre entes federativos, não valor a pagar.
+Foi cadastrado o que se paga, com a decomposição na `observacao` da vigência —
+somar dois números exatos não é simplificar.
+
+**O que isso indica para o futuro.** A reforma tributária vai trazer mais
+coeficientes com três ou mais casas, e nem todos vão somar redondo. Quando
+aparecer o primeiro que não some, o caminho já existe e está no contrato: o tipo
+`fracao` de `ValorParametro`, criado por `ADR-007` exatamente para "coeficiente
+que não cabe em basis points, registrado como a norma o expressa".
+
+### 7.47 O texto da lei diz R$ 45,65, e ninguém paga isso
+
+A alínea "a" do art. 18-A, § 3º, V fixa a parcela de INSS do MEI em **R$ 45,65**
+— valor de 2008. Cadastrá-lo como está seria copiar a lei corretamente e errar o
+número em quase quarenta reais.
+
+O § 11 do mesmo artigo é que resolve: manda reajustar o valor "de forma a manter
+equivalência com a contribuição de que trata o § 2º do art. 21 da Lei nº 8.212" —
+os 5% sobre o limite mínimo, que este projeto já tinha cadastrado por CALC-050 no
+dia anterior. Por isso o parâmetro do MEI é um **percentual**, não um valor: é o
+percentual que a norma determina, e o valor em reais é consequência.
+
+> **Valor nominal antigo com regra de atualização ao lado é armadilha comum na
+> legislação tributária.** Antes de cadastrar qualquer valor em reais escrito numa
+> lei antiga, vale procurar o parágrafo que manda reajustá-lo — ele costuma estar
+> no mesmo artigo, e é ele que vale.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

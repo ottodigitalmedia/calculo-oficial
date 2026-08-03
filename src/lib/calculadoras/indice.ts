@@ -255,6 +255,16 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto cobrar por hora para fechar a sua conta — com hora não faturável dentro.',
   },
   {
+    slug: 'das-mei',
+    nome: 'DAS-MEI — valor mensal',
+    linhaDeContexto: 'Quanto o MEI paga por mês — valor fixo, que não muda com o faturamento.',
+  },
+  {
+    slug: 'limite-do-mei',
+    nome: 'Limite de faturamento do MEI',
+    linhaDeContexto: 'Quanto ainda cabe no ano — e o que muda se você passar do teto.',
+  },
+  {
     slug: 'orcamento-domestico',
     nome: 'Orçamento doméstico 50/30/20',
     linhaDeContexto: 'Como dividir a renda do mês — com os percentuais no seu controle, não fixos.',

@@ -28,6 +28,7 @@ import { EMPREGADOR } from './empregador'
 import { INSS } from './inss'
 import { INSS_INDIVIDUAL } from './inss-individual'
 import { IRRF } from './irrf'
+import { MEI } from './mei'
 import { RENDA_FIXA } from './renda-fixa'
 import { SEGURO_DESEMPREGO } from './seguro-desemprego'
 import { TRABALHISTA } from './trabalhista'
@@ -37,6 +38,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   INSS,
   INSS_INDIVIDUAL,
   IRRF,
+  MEI,
   TRABALHISTA,
   CREDITO,
   SEGURO_DESEMPREGO,
