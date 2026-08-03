@@ -31,6 +31,47 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-034 · alugar ou comprar
+
+A mais composta do catálogo, e a que mais depende de premissa — **três chutes
+sobre o futuro** entram nela: valorização do imóvel, rendimento da carteira e
+reajuste do aluguel. Nenhum vem embutido, e o texto diz que são do usuário.
+
+**O que se compara não é prestação contra aluguel** — essa é a comparação que
+engana. Ela ignora que quem compra constrói patrimônio a cada amortização, e que
+quem aluga tem a entrada e os custos de aquisição rendendo desde o primeiro mês.
+O modelo compara **patrimônio ao fim do prazo**, e a diferença mensal anda nos
+**dois sentidos**: entra na carteira de quem aluga quando o aluguel é mais
+barato, sai dela quando é mais caro. Modelar só um sentido daria vantagem
+sistemática ao aluguel, que é o viés clássico deste tipo de conta.
+
+**O número em destaque é a valorização de equilíbrio** — quanto o imóvel
+precisaria valorizar ao ano para as duas pontas empatarem. Ele troca uma pergunta
+que depende de três premissas por uma que depende de uma só, sobre a qual a
+pessoa tem opinião. Um caso-ouro roda a comparação **com** essa valorização e
+exige empate; sem isso o destaque seria decorativo.
+
+### Corrigido · a afirmação sobre prazo estava errada, e foi a segunda do dia
+
+O FAQ e a ajuda do campo diziam que *"prazos curtos costumam favorecer alugar,
+por causa dos custos de aquisição"*. É o que se repete sobre o assunto, e como
+afirmação geral é falso.
+
+**Medido:** com a carteira rendendo 10% ao ano e o imóvel valorizando 4%, alugar
+ganha em **3, 5, 10, 20 e 30 anos** — e a vantagem **cresce** com o prazo, porque
+a diferença entre as duas taxas é composta. O prazo não inverte nada ali.
+
+O efeito dos custos de aquisição é real e é de **segunda ordem**: ele só decide
+quando as duas taxas são próximas. Com ambas a 6%, alugar sai à frente aos três
+anos e comprar assume aos dez — e é esse caso, isolado, que o caso-ouro agora
+trava.
+
+**É o segundo texto corrigido por medição no mesmo dia**, depois da nota de
+CALC-039 sobre isento contra tributado. Os dois erros têm a mesma forma: uma
+intuição plausível sobre composição de taxas, escrita sem rodar a conta. Vale
+como padrão — **afirmação sobre o mundo, neste projeto, se mede antes de
+publicar**.
+
 ### Adicionado · CALC-040 · Tesouro Selic, CDB ou poupança
 
 Nenhum motor novo: as três pernas saem de `calcularRendaFixa` e

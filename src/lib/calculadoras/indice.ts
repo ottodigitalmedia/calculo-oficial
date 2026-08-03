@@ -177,6 +177,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto o imóvel rende de verdade — depois da vacância, do IPTU e da taxa.',
   },
   {
+    slug: 'alugar-ou-comprar',
+    nome: 'Alugar ou comprar',
+    linhaDeContexto:
+      'Qual constrói mais patrimônio no seu prazo — e quanto o imóvel teria que valorizar para empatar.',
+  },
+  {
     slug: 'quanto-rende-por-mes',
     nome: 'Quanto rende por mês',
     linhaDeContexto: 'Quanto um valor investido paga por mês — com o imposto dentro da conta.',

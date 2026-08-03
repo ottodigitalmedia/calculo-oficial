@@ -7,6 +7,7 @@
  */
 
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
+import { ALUGAR_OU_COMPRAR } from './alugar-ou-comprar'
 import { AMORTIZACAO } from './amortizacao'
 import { AMORTIZACAO_EXTRA } from './amortizacao-extra'
 import { AVISO_PREVIO } from './aviso-previo'
@@ -81,6 +82,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   QUITACAO_ANTECIPADA,
   AMORTIZACAO_EXTRA,
   LOCACAO,
+  ALUGAR_OU_COMPRAR,
   RENDA_MENSAL,
   POUPANCA,
   CDB,
