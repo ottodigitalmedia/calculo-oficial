@@ -168,7 +168,7 @@ externa antes, e a fila do bloco A do v3 (§4.3) continua inteira ao lado.
 |---|---|---|
 | CALC-017 | Restituição estimada do IRPF anual | A tabela ANUAL do ano-calendário 2025 não foi localizada — ver §8, item 2 |
 | CALC-039 | CDB/LCI/LCA — rendimento líquido com IR | Série do Banco Central (`ADR-006`, §6.1) |
-| CALC-040 | Comparador: Tesouro Selic vs. CDB vs. Poupança | Série do Banco Central — **e** campo de lista, como CALC-028 (§7.29) |
+| CALC-040 | Comparador: Tesouro Selic vs. CDB vs. Poupança | Série do Banco Central |
 | CALC-041 | Rendimento da poupança | Série do Banco Central |
 | CALC-047 | DAS-MEI — valor mensal por atividade | D-3 de `docs/18`: anexos da LC 123/2006 |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | D-3, mais premissas que precisam ficar visíveis, não embutidas |
@@ -1103,12 +1103,30 @@ fila do bloco A: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
 O que sobrou, em ordem:
 
 1. ~~**Implementar `ADR-006`**~~ ✅ **feito em 02/08/2026.** A coleta está no
-   pipeline, o cache é versionado, o plano de falha foi exercitado de verdade
-   (§7.32), e CALC-060 já usa a série. **As onze restantes que ele destrava estão
-   livres**: CALC-061 e CALC-063 reaproveitam o motor de CALC-060 quase inteiro;
-   CALC-037 (reajuste de aluguel) é ele com texto de contrato; CALC-039 a
-   CALC-042 e CALC-045 precisam da Selic, que já está em cache. **Selic e TR na
-   correção continuam pendentes** de uma decisão: as duas são séries diárias na
+   pipeline, o cache é versionado, o plano de falha foi exercitado de verdade, e
+   **seis das doze que ele destrava já estão no ar**: CALC-060, CALC-061,
+   CALC-063, CALC-037, CALC-042 e CALC-041.
+
+   **Faltam seis, e três delas já têm o caminho aberto:**
+
+   | ID | Calculadora | O que falta |
+   |---|---|---|
+   | CALC-064 | Valor futuro corrigido | Projeção sobre taxa informada. Só trabalho |
+   | CALC-045 | Tesouro IPCA+ | IPCA em cache + taxa real digitada. Só trabalho |
+   | CALC-039 | CDB/LCI/LCA líquido | Selic em cache + o motor de IR de CALC-018. Só trabalho |
+   | CALC-040 | Comparador de três produtos | Herda de CALC-041 o caminho que evita a norma: comparar pelas taxas **publicadas**, sem reimplementar a regra de remuneração |
+   | CALC-034 | Alugar vs. comprar | A mais composta do bloco; junta financiamento, locação e rendimento |
+   | CALC-062 | Moeda com IOF | ⚠️ **A única bloqueada.** A alíquota de IOF é parâmetro legal e exige pesquisa em fonte oficial, com vigência |
+
+   > **O padrão que CALC-041 abriu vale para as próximas.** A regra de
+   > remuneração da poupança está em lei, e transcrevê-la criaria constante legal
+   > fora de `lib/params/`. Em vez disso, a calculadora usa a taxa que o Banco
+   > Central **já publica apurada**. Antes de cadastrar parâmetro para uma
+   > calculadora de investimento, verifique se a série não entrega o número
+   > pronto.
+
+   **Selic e TR na correção por índice continuam pendentes** de uma decisão: as
+   duas são séries diárias na
    origem, e virar fator mensal é convenção a definir — estão declaradas como
    "Em breve" no campo, e não escondidas.
 2. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
@@ -1126,10 +1144,14 @@ O que sobrou, em ordem:
 4. **CALC-028 · plano de quitação (bola de neve vs. avalanche).** Sem parâmetro
    legal, reaproveita `financeira.ts`. O obstáculo é de molde, não de fonte: ela
    precisa de uma LISTA de dívidas, e `Campo` não modela grupo repetido — decidir
-   entre campos fixos para N dívidas ou fazer o contrato crescer. **A segunda
-   calculadora que precisa disso já tem nome:** CALC-040, do v2, que o `ADR-006`
-   destrava. Duas que precisam é a "necessidade medida" de §7.4 — quando as duas
-   estiverem na mesa, fazer o contrato crescer deixa de ser palpite.
+   entre campos fixos para N dívidas ou fazer o contrato crescer.
+
+   > **Correção de um erro deste documento.** Uma versão anterior desta seção
+   > dizia que CALC-040 também precisava do campo de lista, e citava §7.29 como
+   > apoio. **Não precisa**, e §7.29 não diz isso: `docs/18` §7 lista quatro
+   > calculadoras com essa necessidade — CALC-028, CALC-073, CALC-075 e, em menor
+   > grau, CALC-074 —, e CALC-040 não está entre elas. Ela compara três produtos
+   > fixos. O erro mantinha uma calculadora na fila errada.
 5. **`/api/health` que responde igual em toda versão.** O passo de verificação
    do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
    constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto
