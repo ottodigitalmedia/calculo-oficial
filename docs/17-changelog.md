@@ -80,6 +80,29 @@ página se recusa a dizer é que ela é sempre a melhor escolha: a bola de neve
 entrega uma dívida a menos na lista mais cedo, e desistir no meio custa mais que
 a diferença de juros.
 
+### Corrigido · CALC-050 negava o fundamento legal que usa
+
+Ela foi ao ar calculando certo e exibindo, abaixo do resultado, o aviso de *"esta
+calculadora não consulta parâmetro legal com vigência"*. Consulta quatro.
+
+O registro do servidor — o que resolve a cobertura de vigências — era montado com
+os conjuntos enumerados à mão dentro da página, e o conjunto novo não estava lá.
+Sem cobertura resolvida, o componente escolhe a redação de calculadora sem
+fundamento legal.
+
+`Calculadora.tsx` já registrava ter corrigido duas vezes o erro INVERSO — alegar
+parâmetro legal onde não havia. Este é o mesmo dano na direção oposta, e passou
+por toda a suíte porque os casos-ouro conferem o número, não a frase ao lado
+dele.
+
+Encontrado rodando a calculadora em produção, que é o passo 7 do roteiro de
+parâmetro legal.
+
+A lista virou uma só, em `params/data/todos.ts`, e um teste novo cobra que toda
+calculadora com `parametrosRequeridos` tenha cobertura resolvível e que todo
+conjunto em disco esteja na lista. Ele foi verificado reprovando antes de ser
+aceito.
+
 ### Adicionado · CALC-050 · INSS do autônomo e do facultativo
 
 **A primeira calculadora do projeto que exigiu pesquisa em norma desde o

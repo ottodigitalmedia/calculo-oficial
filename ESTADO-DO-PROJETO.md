@@ -27,7 +27,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras no ar | **61** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.182 de unidade · 539 ponta a ponta · 3 de vazamento |
+| Testes | 1.205 de unidade · 545 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 61 vigências, **0 divergências** (03/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -1298,6 +1298,40 @@ juros moratórios do art. 5º, § 3º, da Lei nº 9.430/1996: eles dependem da S
 acumulada da competência a ser complementada até o recolhimento. Exibir a
 diferença de alíquota chamando-a de "valor a pagar" erraria para menos — então
 ela é exibida com o nome do que é, e a nota explica que o valor real é maior.
+
+### 7.44 Negar fundamento legal onde há é tão grave quanto alegá-lo onde não há
+
+CALC-050 foi ao ar calculando **certo** e exibindo, abaixo do resultado, o aviso
+de *"esta calculadora não consulta parâmetro legal com vigência"*. Ela consulta
+quatro.
+
+A causa foi outra lista escrita à mão — a mesma classe de §7.41. O registro do
+**servidor**, que resolve a cobertura de vigências, era montado dentro da página
+com os conjuntos enumerados um a um. Conjunto novo que não fosse acrescentado ali
+não tinha cobertura resolvida, e sem cobertura o componente escolhe a redação de
+calculadora sem fundamento legal.
+
+**O que torna este defeito pior do que parece.** `Calculadora.tsx` já registrava
+ter corrigido DUAS vezes o erro inverso — alegar parâmetro legal onde não havia.
+Este é o mesmo dano na direção oposta, num produto cuja tese inteira é a
+auditabilidade, e ele passou por toda a suíte: os casos-ouro conferem o número,
+não a frase ao lado dele.
+
+Encontrado rodando a calculadora **em produção**, que é o passo 7 do roteiro de
+parâmetro legal em `CLAUDE.md`. O roteiro existe por isto.
+
+A correção tem duas partes, e a segunda é a que importa:
+
+1. `src/lib/params/data/todos.ts` — uma lista só, e a página monta o registro com
+   `construirRegistro(...TODOS_OS_CONJUNTOS)`.
+2. `tests/unit/parametros-do-servidor.test.ts` — para toda calculadora que
+   declara `parametrosRequeridos`, a cobertura combinada tem de resolver; e todo
+   conjunto em disco tem de estar na lista. Verificado que ele **reprova** com um
+   conjunto removido, antes de ser aceito (§7.5).
+
+> **O padrão.** Toda vez que o produto escolhe uma FRASE conforme o estado do
+> cálculo, essa escolha precisa de teste. O número tem casos-ouro; o texto ao
+> lado dele não tinha nenhum, e é ele que o usuário lê para decidir se confia.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

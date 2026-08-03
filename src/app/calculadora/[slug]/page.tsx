@@ -12,15 +12,7 @@ import {
 import { IconeSeta } from '@/components/Marca'
 import { CALCULADORAS, porSlug } from '@/lib/calculadoras'
 import { formularioDe } from '@/lib/calculadoras/tipos'
-import { BANCO_DE_HORAS } from '@/lib/params/data/banco-de-horas'
-import { CREDITO } from '@/lib/params/data/credito'
-import { DOMESTICO } from '@/lib/params/data/domestico'
-import { EMPREGADOR } from '@/lib/params/data/empregador'
-import { INSS } from '@/lib/params/data/inss'
-import { IRRF } from '@/lib/params/data/irrf'
-import { RENDA_FIXA } from '@/lib/params/data/renda-fixa'
-import { SEGURO_DESEMPREGO } from '@/lib/params/data/seguro-desemprego'
-import { TRABALHISTA } from '@/lib/params/data/trabalhista'
+import { TODOS_OS_CONJUNTOS } from '@/lib/params/data/todos'
 import { construirRegistro } from '@/lib/params/registry'
 import { aplicarSugestao } from '@/lib/series/sugestao'
 import { guiasDaCalculadora } from '@/lib/guias'
@@ -44,8 +36,13 @@ import { guiasDaCalculadora } from '@/lib/guias'
  * formulário exibe. Antes o componente de cliente o construía, e com isso as
  * tabelas de INSS, IRRF e trabalhistas entravam no pacote estático de toda
  * rota de calculadora — para produzir dois dados serializáveis.
+ *
+ * **Completo, e não a dedo.** A lista era escrita à mão aqui, e publicar um
+ * conjunto novo sem acrescentá-lo fazia a calculadora NEGAR o fundamento legal
+ * que ela usa — aconteceu com CALC-050. A lista única está em `data/todos.ts`,
+ * com teste que a compara com os arquivos do diretório.
  */
-const registro = construirRegistro(INSS, IRRF, TRABALHISTA, CREDITO, SEGURO_DESEMPREGO, EMPREGADOR, DOMESTICO, RENDA_FIXA, BANCO_DE_HORAS)
+const registro = construirRegistro(...TODOS_OS_CONJUNTOS)
 
 export function generateStaticParams() {
   return CALCULADORAS.map((c) => ({ slug: c.slug }))
