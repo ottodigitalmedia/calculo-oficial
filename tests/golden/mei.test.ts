@@ -125,21 +125,18 @@ describe('CALC-047 · a composição da guia', () => {
   })
 
   /**
-   * A transição da reforma tributária já está cadastrada, e o Anexo VII declara
-   * a vigência de cada linha. Em 2027 o total sobe R$ 1,00.
+   * As vigências do Anexo VII (2027 a 2033) foram cadastradas e removidas — ver
+   * a nota de topo de `params/data/mei.ts` e §7.48. Enquanto o salário mínimo
+   * dos anos correspondentes não existir, o seletor não pode oferecê-los: ele
+   * abria em 2033 e calculava o INSS com o mínimo de 2026.
+   *
+   * Este caso trava a decisão: o seletor de período não oferece ano além de
+   * 2026, que é até onde o salário mínimo vai.
    */
-  it('em 2027 entram IBS e CBS, pelo Anexo VII', () => {
-    const v = das('comercio-e-servicos', '2027-06-15' as DataISO)
-    expect(v.ibsCbs).toBe(100)
-    expect(v.icms).toBe(100)
-    expect(v.iss).toBe(500)
-  })
-
-  it('em 2033 o ICMS e o ISS somem, e sobram IBS e CBS', () => {
-    const v = das('comercio-e-servicos', '2033-06-15' as DataISO)
-    expect(v.icms).toBe(0)
-    expect(v.iss).toBe(0)
-    expect(v.ibsCbs).toBe(300)
+  it('o seletor não oferece ano além da cobertura do salário mínimo', () => {
+    const anos = registro.anosDisponiveis([...DAS_MEI.parametrosRequeridos])
+    expect(Math.max(...anos)).toBe(2026)
+    expect(anos).toContain(2025)
   })
 
   it('a memória cita a vigência de cada parcela', () => {

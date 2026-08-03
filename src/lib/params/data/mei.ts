@@ -28,14 +28,25 @@
  *
  * **Quem resolve é o próprio Anexo VII**, que declara a vigência de cada linha:
  * a primeira começa em **1º/1/2027**. Até 31/12/2026 valem os valores das
- * alíneas "b" e "c", e é por isso que as vigências abaixo têm fim declarado em
- * vez de ficarem abertas.
+ * alíneas "b" e "c".
+ *
+ * **As vigências de 2027 em diante foram cadastradas e depois REMOVIDAS.**
+ * Parecia virtude — a lei já fixou a tabela até 2033, por que não registrá-la?
+ * Porque o seletor de período de uma calculadora é derivado das vigências dos
+ * parâmetros que ela usa, e cadastrar o futuro de UM parâmetro passou a oferecer
+ * os anos de 2027 a 2033 numa página cujo outro parâmetro — o salário mínimo —
+ * só existe até 2026. O resultado, medido em produção: a página abria em 2033,
+ * anunciava "parâmetros legais vigentes em 15/06/2033" e calculava o INSS com o
+ * salário mínimo de 2026, silenciosamente. É a extrapolação que `RN-003` existe
+ * para impedir, entrando pela porta dos fundos.
+ *
+ * Elas voltam quando o salário mínimo dos anos correspondentes existir — o mesmo
+ * critério de `RN-003`. Ver `ESTADO-DO-PROJETO` §7.48.
  *
  * O Anexo discrimina, em 2027-2028, CBS de R$ 0,994 e IBS de R$ 0,006 — três
  * casas decimais, que não cabem no invariante de centavos (`ADR-004` A-1). A
- * soma é exatamente R$ 1,00, e é ela que sai do bolso: a divisão entre os dois
- * tributos é repartição de receita entre entes federativos, não valor a pagar.
- * Cadastrado o que se paga, com a decomposição na `observacao` de cada vigência.
+ * soma é exatamente R$ 1,00, e é ela que sairia do bolso: a divisão entre os
+ * dois tributos é repartição de receita entre entes federativos.
  *
  * POR QUE NÃO HÁ VIGÊNCIA ANTERIOR A 2025
  *
@@ -137,7 +148,7 @@ export const MEI: ConjuntoDeParametros = {
       parametroId: 'mei-icms-valor-fixo',
       fonteId: 'lc-123-2006-art-18a-v',
       inicio: '2025-01-01',
-      fim: '2026-12-31',
+      fim: null,
       valor: { tipo: 'valor_monetario', centavos: 100 },
     },
     {
@@ -145,7 +156,7 @@ export const MEI: ConjuntoDeParametros = {
       parametroId: 'mei-iss-valor-fixo',
       fonteId: 'lc-123-2006-art-18a-v',
       inicio: '2025-01-01',
-      fim: '2026-12-31',
+      fim: null,
       valor: { tipo: 'valor_monetario', centavos: 500 },
     },
     {
@@ -153,71 +164,10 @@ export const MEI: ConjuntoDeParametros = {
       parametroId: 'mei-ibs-cbs-valor-fixo',
       fonteId: 'lc-214-2025-anexo-vii',
       inicio: '2025-01-01',
-      fim: '2026-12-31',
+      fim: null,
       valor: { tipo: 'valor_monetario', centavos: 0 },
       observacao:
-        'O Anexo VII começa a valer em 1º/1/2027. Antes disso não há IBS nem CBS no valor fixo do MEI.',
-    },
-
-    { id: 'mei-icms-2027', parametroId: 'mei-icms-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2027-01-01', fim: '2028-12-31', valor: { tipo: 'valor_monetario', centavos: 100 } },
-    { id: 'mei-iss-2027', parametroId: 'mei-iss-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2027-01-01', fim: '2028-12-31', valor: { tipo: 'valor_monetario', centavos: 500 } },
-    {
-      id: 'mei-ibs-cbs-2027',
-      parametroId: 'mei-ibs-cbs-valor-fixo',
-      fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2027-01-01',
-      fim: '2028-12-31',
-      valor: { tipo: 'valor_monetario', centavos: 100 },
-      observacao:
-        'O Anexo discrimina CBS de R$ 0,994 e IBS de R$ 0,006 — três casas, que não cabem no invariante de centavos. A soma é exatamente R$ 1,00, e é ela que se paga; a divisão entre os dois é repartição entre entes.',
-    },
-
-    { id: 'mei-icms-2029', parametroId: 'mei-icms-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2029-01-01', fim: '2029-12-31', valor: { tipo: 'valor_monetario', centavos: 90 } },
-    { id: 'mei-iss-2029', parametroId: 'mei-iss-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2029-01-01', fim: '2029-12-31', valor: { tipo: 'valor_monetario', centavos: 450 } },
-    { id: 'mei-ibs-cbs-2029', parametroId: 'mei-ibs-cbs-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2029-01-01', fim: '2029-12-31', valor: { tipo: 'valor_monetario', centavos: 120 } },
-
-    { id: 'mei-icms-2030', parametroId: 'mei-icms-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2030-01-01', fim: '2030-12-31', valor: { tipo: 'valor_monetario', centavos: 80 } },
-    { id: 'mei-iss-2030', parametroId: 'mei-iss-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2030-01-01', fim: '2030-12-31', valor: { tipo: 'valor_monetario', centavos: 400 } },
-    { id: 'mei-ibs-cbs-2030', parametroId: 'mei-ibs-cbs-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2030-01-01', fim: '2030-12-31', valor: { tipo: 'valor_monetario', centavos: 140 } },
-
-    { id: 'mei-icms-2031', parametroId: 'mei-icms-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2031-01-01', fim: '2031-12-31', valor: { tipo: 'valor_monetario', centavos: 70 } },
-    { id: 'mei-iss-2031', parametroId: 'mei-iss-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2031-01-01', fim: '2031-12-31', valor: { tipo: 'valor_monetario', centavos: 350 } },
-    { id: 'mei-ibs-cbs-2031', parametroId: 'mei-ibs-cbs-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2031-01-01', fim: '2031-12-31', valor: { tipo: 'valor_monetario', centavos: 160 } },
-
-    { id: 'mei-icms-2032', parametroId: 'mei-icms-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2032-01-01', fim: '2032-12-31', valor: { tipo: 'valor_monetario', centavos: 60 } },
-    { id: 'mei-iss-2032', parametroId: 'mei-iss-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2032-01-01', fim: '2032-12-31', valor: { tipo: 'valor_monetario', centavos: 300 } },
-    { id: 'mei-ibs-cbs-2032', parametroId: 'mei-ibs-cbs-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2032-01-01', fim: '2032-12-31', valor: { tipo: 'valor_monetario', centavos: 180 } },
-
-    /**
-     * A partir de 2033 o Anexo VII não traz mais ICMS nem ISS: eles são
-     * substituídos por IBS e CBS, e o total cai para R$ 3,00.
-     */
-    { id: 'mei-icms-2033', parametroId: 'mei-icms-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2033-01-01', fim: null, valor: { tipo: 'valor_monetario', centavos: 0 } },
-    { id: 'mei-iss-2033', parametroId: 'mei-iss-valor-fixo', fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2033-01-01', fim: null, valor: { tipo: 'valor_monetario', centavos: 0 } },
-    {
-      id: 'mei-ibs-cbs-2033',
-      parametroId: 'mei-ibs-cbs-valor-fixo',
-      fonteId: 'lc-214-2025-anexo-vii',
-      inicio: '2033-01-01',
-      fim: null,
-      valor: { tipo: 'valor_monetario', centavos: 300 },
-      observacao: 'CBS de R$ 1,00 e IBS de R$ 2,00. ICMS e ISS deixam de existir no valor fixo.',
+        'O Anexo VII da LC 214/2025 começa a valer em 1º/1/2027 e passa a incluir IBS e CBS. As vigências dele NÃO foram cadastradas — ver a nota de topo deste arquivo.',
     },
 
     // -----------------------------------------------------------------------

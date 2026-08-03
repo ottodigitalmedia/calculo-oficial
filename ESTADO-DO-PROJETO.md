@@ -27,8 +27,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras no ar | **63** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.230 de unidade · 557 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 85 vigências, **0 divergências** (03/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 1.229 de unidade · 539 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 68 vigências, **0 divergências** (03/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -1344,10 +1344,10 @@ Se ela já estivesse em vigor para o MEI, publicar R$ 1,00 e R$ 5,00 seria
 publicar valor revogado com fonte oficial correta.
 
 **Quem resolveu foi o próprio Anexo VII**, que declara a vigência de cada linha —
-a primeira começa em **1º/1/2027**. Os valores atuais valem até 31/12/2026, e por
-isso as vigências cadastradas têm FIM declarado em vez de ficarem abertas. A
-tabela inteira, até 2033, entrou junto: quando o salário mínimo de 2027 for
-cadastrado, a calculadora atravessa a transição sozinha.
+a primeira começa em **1º/1/2027**. Os valores atuais valem até 31/12/2026.
+
+A tabela inteira até 2033 chegou a ser cadastrada, e foi **removida** pelo motivo
+de §7.48. Ela volta quando o salário mínimo dos anos correspondentes existir.
 
 > **O padrão.** "Vide" no texto consolidado não é nota de rodapé: é a norma
 > avisando que ela sozinha não responde. Toda vez que ele aparecer sobre um valor
@@ -1386,6 +1386,38 @@ percentual que a norma determina, e o valor em reais é consequência.
 > legislação tributária.** Antes de cadastrar qualquer valor em reais escrito numa
 > lei antiga, vale procurar o parágrafo que manda reajustá-lo — ele costuma estar
 > no mesmo artigo, e é ele que vale.
+
+### 7.48 Cadastrar vigência futura de UM parâmetro estraga o seletor de todos
+
+A LC 214/2025 fixa os valores do MEI ano a ano até 2033. Cadastrar a tabela
+inteira parecia virtude: a lei já está publicada, e a calculadora atravessaria a
+transição sozinha.
+
+**Medido em produção, o efeito foi outro.** O seletor de período de uma
+calculadora é derivado das vigências dos parâmetros que ela usa. Com ICMS e ISS
+cadastrados até 2033 e o salário mínimo existindo só até 2026, a página do
+DAS-MEI abria em **2033**, anunciava "parâmetros legais vigentes em 15/06/2033" e
+calculava o INSS com o salário mínimo de **2026** — porque a vigência de 2026 é
+aberta, e vigência aberta resolve qualquer data futura.
+
+É a extrapolação que `RN-003` existe para impedir, entrando pela porta dos
+fundos: nenhuma regra foi violada, e mesmo assim a página afirmou um ano e usou
+outro.
+
+> **A regra de julgamento.** Não cadastre vigência futura de um parâmetro se os
+> outros parâmetros da mesma calculadora não a têm. Vigência aberta significa
+> "vale até segunda ordem", não "valerá em 2033" — e a diferença só aparece
+> quando alguém oferece 2033 na tela.
+
+**Por que não escrevi um teste para isto.** Tentei, e as invariantes que testei
+reprovariam calculadoras corretas: um parâmetro perene (a alíquota de FGTS, de
+1990) ao lado de um anual limitaria o seletor a 1990. Distinguir "parâmetro que
+reajusta todo ano" de "parâmetro perene" é conhecimento de domínio, não estrutura
+— e um verificador com heurística frágil ensina a ignorá-lo (§7.5).
+
+O que ficou no lugar é um caso-ouro específico: o seletor do DAS-MEI não oferece
+ano além de 2026. É menos do que eu queria, e é o que dá para afirmar com
+honestidade.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

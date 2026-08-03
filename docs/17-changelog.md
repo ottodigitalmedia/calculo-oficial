@@ -106,9 +106,8 @@ remissões a um Anexo VII — e é o próprio Anexo que declara a vigência de c
 linha, a primeira começando em **1º/1/2027**. Os valores atuais valem até
 31/12/2026.
 
-A tabela inteira entrou, até 2033: as vigências têm fim declarado, e quando o
-salário mínimo de 2027 for cadastrado a calculadora atravessa a transição
-sozinha.
+A tabela inteira até 2033 chegou a ser cadastrada, e foi **removida** antes de
+esta entrada ser escrita — ver a correção abaixo.
 
 **Dois detalhes que mereciam errar e não erraram:**
 
@@ -119,6 +118,22 @@ paga; a divisão entre os dois é repartição entre entes federativos.
 E a alínea que fixa o INSS do MEI diz **R$ 45,65**, valor de 2008 que ninguém
 paga. É o § 11 que manda reajustá-lo mantendo equivalência com os 5% sobre o
 limite mínimo — cadastrado o percentual, e não o valor.
+
+### Corrigido · o DAS-MEI abria em 2033 e calculava com o mínimo de 2026
+
+As vigências do Anexo VII da LC 214/2025, de 2027 a 2033, tinham sido
+cadastradas. O seletor de período de uma calculadora é derivado das vigências dos
+parâmetros que ela usa — e com ICMS e ISS até 2033 e o salário mínimo até 2026, a
+página abria em 2033, anunciava "parâmetros legais vigentes em 15/06/2033" e
+calculava o INSS com o mínimo de 2026, porque vigência aberta resolve qualquer
+data futura.
+
+Nenhuma regra foi violada, e mesmo assim a página afirmou um ano e usou outro. É
+a extrapolação que `RN-003` impede, entrando pela porta dos fundos.
+
+As vigências futuras saíram e voltam quando o salário mínimo dos anos
+correspondentes existir. Encontrado rodando a calculadora em produção, pelo
+segundo dia seguido.
 
 ### Corrigido · CALC-050 negava o fundamento legal que usa
 
