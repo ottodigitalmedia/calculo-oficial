@@ -12,6 +12,7 @@ import { AMORTIZACAO_EXTRA } from './amortizacao-extra'
 import { AVISO_PREVIO } from './aviso-previo'
 import { BANCO_DE_HORAS } from './banco-de-horas'
 import { CAPACIDADE } from './capacidade'
+import { CDB } from './cdb'
 import { CET } from './cet'
 import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CORRECAO_POR_INDICE } from './correcao-por-indice'
@@ -81,6 +82,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   LOCACAO,
   RENDA_MENSAL,
   POUPANCA,
+  CDB,
   TESOURO_IPCA,
   RESERVA_DE_EMERGENCIA,
   INDEPENDENCIA,

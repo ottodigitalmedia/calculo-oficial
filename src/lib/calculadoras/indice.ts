@@ -187,6 +187,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto a poupança rende no prazo — pela taxa que o Banco Central publicou.',
   },
   {
+    slug: 'cdb-lci-lca',
+    nome: 'CDB, LCI e LCA — rendimento líquido',
+    linhaDeContexto: 'Quanto sobra de "110% do CDI" depois do imposto — e quando o isento ganha.',
+  },
+  {
     slug: 'tesouro-ipca-mais',
     nome: 'Tesouro IPCA+ — ganho real',
     linhaDeContexto: 'Quanto sobra de ganho real depois do imposto — que morde a correção também.',

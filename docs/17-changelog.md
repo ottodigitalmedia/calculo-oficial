@@ -31,6 +31,35 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-039 · CDB, LCI e LCA
+
+**Nenhum motor novo, e nenhuma tabela nova.** O imposto é o de CALC-018, cujos
+parâmetros já estão em `lib/params/` com vigência e fonte. O que ela acrescenta é
+a porta de entrada que o mercado de fato usa: ninguém oferece "um CDB a 15,56% ao
+ano" — oferece **"110% do CDI"**, e converter isso em rendimento é o atrito que a
+página remove. O CDI abre sugerido pela Selic (`RF-012`), com a aproximação
+declarada em vez de tratada como identidade.
+
+### Corrigido · a nota sobre isento contra tributado estava errada
+
+A nota dizia que um título isento a 95% do CDI supera um tributado a 105% **"em
+prazo curto, quando a alíquota é a mais alta"**, e mandava o usuário procurar o
+ponto de virada. A frase é a intuição comum do assunto, e ela é falsa.
+
+**Medido, com CDI a 10% ao ano:** o isento ganha em 3, 6, 12, 24, 48 **e 120
+meses**, e a vantagem dele **cresce** em reais ao longo de todo esse intervalo. A
+virada só aparece entre dez e vinte anos.
+
+O erro é de raciocínio, e vale registrar qual: a alíquota do imposto de fato cai
+com o prazo, e a intuição para aí. O que ela esquece é que a **base** sobre a
+qual o imposto incide cresce mais rápido do que a alíquota cai — então a mordida
+em reais aumenta, e com ela a distância entre os dois.
+
+Foi um caso-ouro que pegou. A primeira versão dele afirmava o mesmo que a nota,
+falhou, e a medição corrigiu **os dois** — o teste e o texto de tela. É a régua
+de `CLAUDE.md`: quando o teste e o produto discordam, descubra qual dos dois está
+errado antes de mexer em qualquer um; aqui os dois estavam.
+
 ### Adicionado · CALC-064 e CALC-045 · as duas primeiras que PROJETAM
 
 **São as primeiras do catálogo cujo resultado não é verificável contra nada.**
