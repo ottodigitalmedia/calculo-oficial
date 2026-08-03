@@ -19,7 +19,7 @@
 import { corrigirPorIndice } from '../engine/calculadoras/indices'
 import { centavos } from '../engine/types'
 import { formatarPercentual, formatarReal } from '../format/moeda'
-import { SERIES_COMPACTAS } from '../series/dados/compacto'
+import { indiceEscolhido, mesDe, OPCOES_DE_INDICE, serieDoIndice } from './indices-comuns'
 import {
   numero,
   texto,
@@ -27,32 +27,22 @@ import {
   type FuncaoCalculo,
 } from './tipos'
 
-const INDICES: Readonly<Record<string, { readonly serie: string; readonly nome: string }>> = {
-  ipca: { serie: 'ipca-mensal', nome: 'IPCA' },
-  inpc: { serie: 'inpc-mensal', nome: 'INPC' },
-  igpm: { serie: 'igpm-mensal', nome: 'IGP-M' },
-}
-
-const VAZIA = { inicio: '', valores: [] as readonly number[] }
-
 /** Exportação de topo — ver a nota em `salario-liquido.ts`. */
 export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
-  const escolhido = INDICES[texto(valores, 'indice')] ?? INDICES.ipca
-  if (!escolhido) {
-    return { ok: false, motivo: 'entrada_invalida', detalhe: 'Escolha um índice.' }
-  }
+  const chave = texto(valores, 'indice')
+  const escolhido = indiceEscolhido(chave)
 
   // O campo de data entrega `AAAA-MM-DD`; a série é mensal, e o dia não existe
   // nela. Recortar aqui evita fingir uma precisão que o índice não tem.
-  const de = texto(valores, 'de').slice(0, 7)
-  const ate = texto(valores, 'ate').slice(0, 7)
+  const de = mesDe(texto(valores, 'de'))
+  const ate = mesDe(texto(valores, 'ate'))
 
   const r = corrigirPorIndice(
     {
       valorOriginal: centavos(numero(valores, 'valorOriginal')),
       de,
       ate,
-      serie: SERIES_COMPACTAS[escolhido.serie] ?? VAZIA,
+      serie: serieDoIndice(chave),
       nomeDoIndice: escolhido.nome,
     },
     dataReferencia,
@@ -120,13 +110,7 @@ export const CORRECAO_POR_INDICE: DefinicaoCalculadora = {
       rotulo: 'Índice',
       tipo: 'selecao',
       padrao: 'ipca',
-      opcoes: [
-        { valor: 'ipca', rotulo: 'IPCA — a inflação oficial' },
-        { valor: 'inpc', rotulo: 'INPC — usado em reajuste salarial' },
-        { valor: 'igpm', rotulo: 'IGP-M — usado em aluguel' },
-        { valor: 'selic', rotulo: 'Selic', indisponivel: true },
-        { valor: 'tr', rotulo: 'TR', indisponivel: true },
-      ],
+      opcoes: OPCOES_DE_INDICE,
       ajuda: 'O IPCA é o índice oficial de inflação. O INPC mede famílias de renda mais baixa; o IGP-M é o mais usado em contrato de aluguel.',
     },
     {

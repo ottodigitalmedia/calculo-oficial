@@ -234,6 +234,24 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './correcao-por-indice'
     ).then((m) => m.calcular),
+  'poder-de-compra': () =>
+    import(
+      /* webpackChunkName: "calc-poder-de-compra" */
+      /* webpackExports: ["calcular"] */
+      './poder-de-compra'
+    ).then((m) => m.calcular),
+  'reajuste-de-salario': () =>
+    import(
+      /* webpackChunkName: "calc-reajuste-salarial" */
+      /* webpackExports: ["calcular"] */
+      './reajuste-salarial'
+    ).then((m) => m.calcular),
+  'reajuste-de-aluguel': () =>
+    import(
+      /* webpackChunkName: "calc-reajuste-aluguel" */
+      /* webpackExports: ["calcular"] */
+      './reajuste-aluguel'
+    ).then((m) => m.calcular),
   porcentagem: () =>
     import(
       /* webpackChunkName: "calc-porcentagem" */

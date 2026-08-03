@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **37** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, a primeira de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **40** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 905 de unidade · 384 ponta a ponta · 3 de vazamento |
+| Testes | 922 de unidade · 402 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -40,7 +40,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel
 - **Investimentos:** reserva de emergência · meta de independência financeira
 - **Autônomo:** precificação de hora
-- **Índices:** correção de valor por índice
+- **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro
 - **Utilitárias:** porcentagem · regra de três
@@ -138,10 +138,11 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 38 de 75
+## 4. Calculadoras pendentes — 35 de 75
 
 Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-065,
-CALC-049, CALC-060, CALC-069, CALC-070 e CALC-071**.
+CALC-037, CALC-049, CALC-060, CALC-061, CALC-063, CALC-069, CALC-070 e
+CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 

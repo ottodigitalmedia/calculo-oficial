@@ -103,6 +103,12 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
    * produto (§7.10).
    */
   'correcao-por-indice': '?valorOriginal=100000&indice=ipca&de=2015-01-01&ate=2020-01-01',
+  // As três abaixo caem no mesmo caso: o mês final válido depende do índice
+  // escolhido, e o preenchedor usa uma data fixa que costuma estar à frente do
+  // último mês publicado.
+  'poder-de-compra': '?valor=100000&indice=ipca&de=2010-01-01&ate=2020-01-01',
+  'reajuste-de-salario': '?salario=300000&indice=inpc&de=2023-01-01&ate=2024-01-01',
+  'reajuste-de-aluguel': '?aluguel=200000&indice=igpm&de=2023-01-01&ate=2024-01-01',
 }
 
 for (const c of CALCULADORAS) {

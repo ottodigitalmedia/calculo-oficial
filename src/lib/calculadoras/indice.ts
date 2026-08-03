@@ -209,6 +209,23 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC ou IGP-M, mês a mês.',
   },
   {
+    slug: 'poder-de-compra',
+    nome: 'Poder de compra ao longo do tempo',
+    linhaDeContexto:
+      'Quanto o dinheiro perdeu — e quanto seria preciso hoje para comprar o mesmo.',
+  },
+  {
+    slug: 'reajuste-de-salario',
+    nome: 'Reajuste de salário pela inflação',
+    linhaDeContexto:
+      'Quanto o salário precisaria ser para manter o poder de compra — e o que a proposta representa.',
+  },
+  {
+    slug: 'reajuste-de-aluguel',
+    nome: 'Reajuste de aluguel',
+    linhaDeContexto: 'Quanto o aluguel passa a ser pelo índice do contrato — com a conta à mostra.',
+  },
+  {
     slug: 'porcentagem',
     nome: 'Porcentagem',
     linhaDeContexto:

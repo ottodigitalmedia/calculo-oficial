@@ -68,6 +68,19 @@ export interface SaidaCorrecao {
   readonly valorCorrigido: Centavos
   readonly correcao: Centavos
   readonly variacaoBp: BasisPoints
+  /**
+   * O mesmo valor lido na direção contrária: quanto ele COMPRARIA na moeda do
+   * mês inicial.
+   *
+   * Corrigir e deflacionar são a mesma conta, e é por isso que as duas saem
+   * daqui em vez de virarem dois motores. `R$ 1.000,00` de 2015 equivalem a
+   * `R$ 1.600,00` hoje — e `R$ 1.000,00` de hoje compram o que `R$ 625,00`
+   * compravam em 2015. Os dois números respondem perguntas diferentes e
+   * confundi-los é o erro clássico deste assunto.
+   */
+  readonly valorDeflacionado: Centavos
+  /** Quanto do poder de compra se perdeu no período. */
+  readonly perdaDePoderBp: BasisPoints
   readonly mesesAplicados: number
   readonly primeiroMesAplicado: string
   readonly ultimoMesAplicado: string
@@ -179,6 +192,21 @@ export function corrigirPorIndice(
   const correcao = subtrair(valorCorrigido, entrada.valorOriginal)
   const variacaoBp = Number(((fator - ESCALA) * BP_INTEIRO) / ESCALA) as BasisPoints
 
+  /**
+   * A leitura inversa: dividir em vez de multiplicar.
+   *
+   * Com fator zero ou negativo — hipótese que só a deflação extrema produziria
+   * — a divisão não teria sentido, e o valor deflacionado fica igual ao
+   * original em vez de virar um número absurdo.
+   */
+  const valorDeflacionado =
+    fator > 0n
+      ? centavos(Number((BigInt(entrada.valorOriginal) * ESCALA) / fator))
+      : entrada.valorOriginal
+  const perdaDePoderBp = (
+    fator > 0n ? Number(((fator - ESCALA) * BP_INTEIRO) / fator) : 0
+  ) as BasisPoints
+
   if (mesesAplicados === 0) {
     etapas.push({
       rotulo: 'Nenhum mês a aplicar',
@@ -221,6 +249,8 @@ export function corrigirPorIndice(
       valorCorrigido,
       correcao,
       variacaoBp,
+      valorDeflacionado,
+      perdaDePoderBp,
       mesesAplicados,
       primeiroMesAplicado,
       ultimoMesAplicado,

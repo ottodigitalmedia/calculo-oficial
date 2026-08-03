@@ -29,8 +29,11 @@ import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { LOCACAO } from './locacao'
 import { ORCAMENTO } from './orcamento'
+import { PODER_DE_COMPRA } from './poder-de-compra'
 import { PORCENTAGEM } from './porcentagem'
 import { PRECIFICACAO } from './precificacao'
+import { REAJUSTE_ALUGUEL } from './reajuste-aluguel'
+import { REAJUSTE_SALARIAL } from './reajuste-salarial'
 import { REGRA_DE_TRES } from './regra-de-tres'
 import { RENDA_FIXA } from './renda-fixa'
 import { RESERVA_DE_EMERGENCIA } from './reserva'
@@ -78,6 +81,9 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   ORCAMENTO,
   ENERGIA,
   CORRECAO_POR_INDICE,
+  PODER_DE_COMPRA,
+  REAJUSTE_SALARIAL,
+  REAJUSTE_ALUGUEL,
   PORCENTAGEM,
   REGRA_DE_TRES,
   COMBUSTIVEL,

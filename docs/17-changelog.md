@@ -31,6 +31,40 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-061, CALC-063 e CALC-037 · o bloco de índices
+
+As três primeiras que o `ADR-006` destravou depois de CALC-060, e as três
+reaproveitam `corrigirPorIndice` inteiro. O que cada uma acrescenta é o recorte,
+e é nele que está o valor.
+
+**CALC-061 · poder de compra.** Ela existe para desfazer uma confusão, e por isso
+mostra os **dois sentidos juntos**: R$ 1.000,00 de 2015 *equivalem a* R$ 1.600,00
+hoje, e R$ 1.000,00 de hoje *compram o que* R$ 625,00 compravam em 2015. Os dois
+números saem do mesmo fator — um multiplica, o outro divide — e trocá-los é o
+erro clássico do assunto.
+
+**E a perda de poder de compra não é o simétrico da inflação:** 60% de inflação
+são **37,5%** de perda, porque o poder de compra vira um dividido por 1,6. Um
+caso-ouro trava exatamente esse número.
+
+**CALC-063 · reajuste de salário.** O risco aqui é de linguagem, não de conta:
+`RN-028` proíbe dizer a alguém a que tem direito, e reajuste se negocia. O texto
+diz o que a conta é — a medida do salário que manteria o poder de compra — e o
+que ela não é. O campo do reajuste oferecido é o que a torna útil na conversa, e
+**a comparação é feita em reais**: comparar percentuais direto ("ofereceram 4%,
+a inflação foi 5%") sugere uma perda de 1% que não é a real.
+
+**CALC-037 · reajuste de aluguel.** A primeira com correspondente no projeto
+irmão — `reajuste-aluguel`, no ar lá desde 26/07/2026. `ESTADO-DO-PROJETO` §6.4
+já decidiu construir assim mesmo, e a decisão segue sujeita ao que os 90 dias de
+MR-2 mostrarem. O índice é o do **contrato**, e o texto diz isso em vez de
+sugerir que existe um "correto": o IGP-M é o padrão histórico e é o padrão do
+campo, mas contratos migraram para IPCA em massa depois de 2020.
+
+**O mapa de índices vive num lugar só** (`indices-comuns.ts`). Quatro
+calculadoras montando a própria lista seriam quatro listas do mesmo conjunto — e
+`indice.ts` é o registro vivo de que duas listas do mesmo conjunto divergem.
+
 ### Adicionado · CALC-060 · correção de valor por índice
 
 A primeira que consome série econômica, e a que estabelece o padrão para as
