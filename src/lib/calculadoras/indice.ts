@@ -254,6 +254,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto o gás pesa por mês — e quanto você paga por quilo, que é o que compara.',
   },
   {
+    slug: 'conta-de-agua',
+    nome: 'Conta de água',
+    linhaDeContexto: 'Quanto a água custa com a tarifa progressiva — e quanto custa o próximo m³.',
+  },
+  {
     slug: 'correcao-por-indice',
     nome: 'Correção de valor por índice',
     linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC ou IGP-M, mês a mês.',
@@ -318,6 +323,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto cada um custa por quilômetro — pela sua tarifa e pelo seu consumo.',
   },
   {
+    slug: 'depreciacao-de-veiculo',
+    nome: 'Depreciação de veículo',
+    linhaDeContexto:
+      'Quanto o carro perde por mês — o custo que não tem boleto — e quanto valerá.',
+  },
+  {
     slug: 'divisao-de-conta',
     nome: 'Divisão de conta',
     linhaDeContexto:
@@ -327,5 +338,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     slug: 'media-ponderada',
     nome: 'Média ponderada e média escolar',
     linhaDeContexto: 'Qual é a sua média com os pesos — e quanto falta tirar no que resta.',
+  },
+  {
+    slug: 'conversor-de-unidades',
+    nome: 'Conversor de unidades',
+    linhaDeContexto:
+      'Comprimento, massa, volume, área, temperatura e mais — com a conta à mostra.',
   },
 ]

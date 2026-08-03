@@ -22,9 +22,16 @@
  * produto pode publicar.
  */
 
-import { dividirPorInteiro, multiplicarPorInteiro, proporcao, somar, subtrair } from '../money'
-import { reais, type Etapa, type Resultado, type Traco } from '../traco'
-import { ZERO, centavos, type Centavos } from '../types'
+import {
+  aliquotaEfetiva,
+  dividirPorInteiro,
+  multiplicarPorInteiro,
+  proporcao,
+  somar,
+  subtrair,
+} from '../money'
+import { percentual, reais, type Etapa, type Resultado, type Traco } from '../traco'
+import { ZERO, centavos, type BasisPoints, type Centavos } from '../types'
 import type { DataISO } from '../../params/tipos'
 
 const MESES_NO_ANO = 12
@@ -510,6 +517,227 @@ export function compararEletricoVsCombustao(
       custoPorKmCombustao,
       custoPorKmEletrico,
       mesesParaPagarADiferenca,
+    },
+    traco,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CALC-059 — Depreciação de veículo
+// ---------------------------------------------------------------------------
+
+/**
+ * **Esta calculadora NÃO pergunta a taxa de depreciação — ela a descobre.**
+ *
+ * O levantamento (`docs/18` §8) registrava a dúvida sobre se ela deveria
+ * existir: sem a tabela FIPE, que tem licenciamento restrito, o caminho fácil
+ * seria pedir ao usuário a curva de perda — ou seja, pedir a resposta. Um
+ * produto que faz isso não calcula nada.
+ *
+ * A saída é pedir dois dados que o dono do carro **tem**: quanto pagou e quanto
+ * o carro vale hoje — este último de consulta pública e gratuita na própria
+ * FIPE. Deles sai a taxa REAL de depreciação daquele carro, que é melhor do que
+ * qualquer média de mercado, e com ela a projeção para a frente.
+ *
+ * **O número que a página existe para mostrar é a perda por mês.** Ela costuma
+ * ser maior que o combustível e não aparece em lugar nenhum — não tem boleto,
+ * não tem fatura, e por isso quase ninguém a soma ao custo de ter um carro.
+ */
+
+/** Escala interna da capitalização — precisão sem estourar o inteiro grande. */
+// eslint-disable-next-line no-restricted-syntax -- escala interna, não parâmetro legal
+const ESCALA_DA_QUEDA = 1_000_000_000_000n
+/** Cem por cento em basis points, do lado do inteiro grande. */
+// eslint-disable-next-line no-restricted-syntax -- unidade de basis points (ADR-004 A-2)
+const BP_INTEIRO_GRANDE = 10_000n
+/** Teto da busca: 50% ao mês cobre qualquer perda plausível com folga. */
+// eslint-disable-next-line no-restricted-syntax -- teto da busca, não parâmetro legal
+const TETO_DA_BUSCA = 5_000
+
+export interface EntradaDepreciacao {
+  readonly valorDeCompra: Centavos
+  readonly valorHoje: Centavos
+  /** Há quantos meses o carro é seu. */
+  readonly mesesDePosse: number
+  /** Quantos anos projetar para a frente. */
+  readonly anosDeProjecao: number
+}
+
+export interface AnoProjetado {
+  readonly ano: number
+  readonly valor: Centavos
+  readonly perdaNoAno: Centavos
+}
+
+export interface SaidaDepreciacao {
+  readonly perdaAcumulada: Centavos
+  readonly perdaPorMes: Centavos
+  readonly perdaPercentualBp: BasisPoints
+  readonly taxaMensalBp: BasisPoints
+  readonly taxaAnualBp: BasisPoints
+  readonly valorProjetado: Centavos
+  readonly projecao: readonly AnoProjetado[]
+  /** Verdadeiro quando o carro não perdeu valor — acontece, e a página diz. */
+  readonly valorizou: boolean
+}
+
+/**
+ * Aplica uma queda percentual composta por `periodos` períodos.
+ *
+ * Inteiro grande com escala fixa, e não ponto flutuante: a capitalização
+ * repetida é exatamente onde o erro de flutuante se acumula, e o mesmo padrão
+ * já está em `fatorDeCapitalizacao`, em `financeira.ts`.
+ */
+function aplicarQueda(valor: Centavos, taxaBp: number, periodos: number): Centavos {
+  let acumulado = BigInt(valor) * ESCALA_DA_QUEDA
+  const fator = BP_INTEIRO_GRANDE - BigInt(taxaBp)
+  for (let i = 0; i < periodos; i += 1) {
+    acumulado = (acumulado * fator) / BP_INTEIRO_GRANDE
+  }
+  return centavos(Number((acumulado * 2n) / ESCALA_DA_QUEDA / 2n))
+}
+
+/**
+ * A taxa MENSAL de perda que leva do valor de compra ao valor de hoje.
+ *
+ * Bisseção sobre inteiros em basis points, pelo mesmo motivo de
+ * `taxaInternaMensal`: é monótona, termina sempre, e o passo mínimo é a
+ * precisão exibida. Newton dependeria de chute inicial e poderia divergir num
+ * caso degenerado — devolvendo um número errado com aparência de certo.
+ */
+function taxaMensalDeQueda(
+  valorDeCompra: Centavos,
+  valorHoje: Centavos,
+  meses: number,
+): BasisPoints {
+  let piso = 0
+  let teto = TETO_DA_BUSCA
+
+  for (let passo = 0; passo < 64; passo += 1) {
+    if (teto - piso <= 1) break
+    const meio = Math.trunc((piso + teto) / 2)
+    if (aplicarQueda(valorDeCompra, meio, meses) > valorHoje) piso = meio
+    else teto = meio
+  }
+
+  // Entre os dois vizinhos, fica o que erra menos — o padrão de `financeira.ts`.
+  const noPiso = aplicarQueda(valorDeCompra, piso, meses)
+  const noTeto = aplicarQueda(valorDeCompra, teto, meses)
+  return (Math.abs(noPiso - valorHoje) <= Math.abs(noTeto - valorHoje)
+    ? piso
+    : teto) as BasisPoints
+}
+
+export function calcularDepreciacao(
+  entrada: EntradaDepreciacao,
+  dataReferencia: DataISO,
+): Resultado<SaidaDepreciacao> {
+  if (entrada.valorDeCompra <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe quanto você pagou no carro para ver o resultado.',
+    }
+  }
+  if (entrada.valorHoje <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe quanto o carro vale hoje para ver o resultado.',
+    }
+  }
+  if (entrada.mesesDePosse <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe há quantos meses o carro é seu para ver o resultado.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  const perdaAcumulada = subtrair(entrada.valorDeCompra, entrada.valorHoje)
+  const valorizou = perdaAcumulada <= 0
+
+  etapas.push({
+    rotulo: 'Quanto o carro já perdeu',
+    formula: `${reais(entrada.valorDeCompra)} de compra − ${reais(entrada.valorHoje)} de hoje`,
+    resultado: perdaAcumulada,
+  })
+
+  const perdaPorMes = dividirPorInteiro(perdaAcumulada, entrada.mesesDePosse, POLITICA)
+  etapas.push({
+    rotulo: 'Perda por mês',
+    formula: `${reais(perdaAcumulada)} ÷ ${entrada.mesesDePosse} meses`,
+    resultado: perdaPorMes,
+    justificativa:
+      'É o custo que não tem boleto. Ele costuma ser maior que o combustível, e quase ninguém o ' +
+      'soma ao custo de ter um carro — porque nunca sai da conta corrente de uma vez.',
+  })
+
+  const perdaPercentualBp = aliquotaEfetiva(perdaAcumulada, entrada.valorDeCompra, POLITICA)
+
+  /**
+   * Sem perda não há taxa a descobrir, e forçar a busca devolveria zero de
+   * qualquer jeito. Sair antes deixa o caso explícito em vez de escondido.
+   */
+  const taxaMensalBp = valorizou
+    ? (0 as BasisPoints)
+    : taxaMensalDeQueda(entrada.valorDeCompra, entrada.valorHoje, entrada.mesesDePosse)
+
+  const valorEmDozeMeses = aplicarQueda(entrada.valorHoje, taxaMensalBp, MESES_NO_ANO)
+  const taxaAnualBp = valorizou
+    ? (0 as BasisPoints)
+    : aliquotaEfetiva(subtrair(entrada.valorHoje, valorEmDozeMeses), entrada.valorHoje, POLITICA)
+
+  if (!valorizou) {
+    etapas.push({
+      rotulo: 'Taxa de depreciação ao ano',
+      formula: `a perda de ${percentual(perdaPercentualBp)} em ${entrada.mesesDePosse} meses, ao ano`,
+      resultado: centavos(taxaAnualBp),
+      unidade: 'percentual',
+      justificativa:
+        'A taxa sai do SEU carro, e não de uma média de mercado: é a que leva do que você pagou ' +
+        'ao que ele vale hoje. Depreciação é composta — incide sobre o valor que sobrou, e não ' +
+        'sobre o valor de compra —, e por isso a perda em reais diminui a cada ano.',
+    })
+  }
+
+  const projecao: AnoProjetado[] = []
+  let anterior = entrada.valorHoje
+  for (let ano = 1; ano <= entrada.anosDeProjecao; ano += 1) {
+    const valor = aplicarQueda(entrada.valorHoje, taxaMensalBp, ano * MESES_NO_ANO)
+    projecao.push({ ano, valor, perdaNoAno: subtrair(anterior, valor) })
+    anterior = valor
+  }
+
+  const valorProjetado = projecao[projecao.length - 1]?.valor ?? entrada.valorHoje
+
+  if (projecao.length > 0 && !valorizou) {
+    etapas.push({
+      rotulo: `Valor projetado em ${entrada.anosDeProjecao} ${entrada.anosDeProjecao === 1 ? 'ano' : 'anos'}`,
+      formula: `${reais(entrada.valorHoje)} caindo ${percentual(taxaAnualBp)} ao ano`,
+      resultado: valorProjetado,
+      justificativa:
+        'A projeção supõe que o carro continua perdendo valor no mesmo ritmo. É a hipótese mais ' +
+        'simples, e ela ignora o que o mercado faz: modelo descontinuado, recall, mudança de ' +
+        'câmbio e escassez de peças mexem na curva.',
+    })
+  }
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return {
+    ok: true,
+    valores: {
+      perdaAcumulada,
+      perdaPorMes,
+      perdaPercentualBp,
+      taxaMensalBp,
+      taxaAnualBp,
+      valorProjetado,
+      projecao,
+      valorizou,
     },
     traco,
   }

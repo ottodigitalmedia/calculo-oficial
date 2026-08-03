@@ -306,5 +306,9 @@ decisão seja tomada de propósito, e não sob pressão de entrega.
   corrigi-la, e a ordem do §6 deve ser revista quando isso acontecer.
 - **A sobreposição com o projeto irmão.** Decidida em `ESTADO-DO-PROJETO` §6.4
   para CALC-002. CALC-037 e CALC-060 herdam a decisão e devem ser reavaliadas.
-- **CALC-059 (depreciação de veículo).** Sem tabela FIPE, o produto pede ao
-  usuário o dado que ele foi buscar. Vale decidir se existe.
+- ~~**CALC-059 (depreciação de veículo).** Sem tabela FIPE, o produto pede ao
+  usuário o dado que ele foi buscar. Vale decidir se existe.~~ ✅ **Decidido em
+  03/08/2026: existe, e não pede a resposta.** Ela pergunta quanto a pessoa
+  pagou, quanto o carro vale hoje — consulta pública e gratuita na FIPE — e há
+  quanto tempo, e DESCOBRE a taxa de depreciação daquele carro. Ver
+  `ESTADO-DO-PROJETO` §7.39.

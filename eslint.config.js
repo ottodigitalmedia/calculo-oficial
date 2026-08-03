@@ -195,6 +195,20 @@ export default tseslint.config(
   },
 
   // ------------------------------------------------------------------------
+  // src/lib/unidades/ — as razões entre unidades físicas. Mesma exceção de
+  // params/, e pelo mesmo motivo: os números grandes SÃO o conteúdo do módulo.
+  // Não são constante legal — a polegada é 25,4 mm por acordo internacional, não
+  // por norma com vigência —, e por isso não cabem em params/. BV-11 continua
+  // valendo: as razões são frações de inteiros, nunca decimais.
+  // ------------------------------------------------------------------------
+  {
+    files: ['src/lib/unidades/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': ['error', ...ARITMETICA_EM_CENTAVOS],
+    },
+  },
+
+  // ------------------------------------------------------------------------
   // Apresentação — BV-11 continua valendo. Formatar é converter, não recalcular.
   // ------------------------------------------------------------------------
   {

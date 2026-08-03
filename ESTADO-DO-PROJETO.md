@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **54** de 75 — v1 completo, o bloco de desligamento fechado, seis de crédito, quatro de imóveis, três de veículos, duas de consumo, **quatro utilitárias**, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **57** de 75 — v1 completo, o bloco de desligamento fechado, seis de crédito, quatro de imóveis, **quatro de veículos**, **quatro de consumo**, **cinco utilitárias**, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.080 de unidade · 485 ponta a ponta · 3 de vazamento |
+| Testes | 1.125 de unidade · 503 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -42,9 +42,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Autônomo:** precificação de hora
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
-- **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás
-- **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão
-- **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada
+- **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
+- **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão · depreciação
+- **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada · conversor de unidades
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -139,11 +139,11 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 21 de 75
+## 4. Calculadoras pendentes — 18 de 75
 
 Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-034, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-058, CALC-065,
 CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060 a CALC-064, CALC-064, CALC-068, CALC-069, CALC-070,
-CALC-071, CALC-028, CALC-073 e CALC-075**.
+CALC-071, CALC-028, CALC-073, CALC-075, CALC-059, CALC-067 e CALC-074**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -185,11 +185,12 @@ e CALC-071** — a fila do bloco A, aberta porque o v2 esgotou o que dava para f
 sem dependência externa. As linhas delas saíram da tabela, e **CALC-069**, que é
 do v4, entrou junto por ser do mesmo bloco de consumo doméstico.
 
-**Sobram dois do bloco A no v3:** CALC-066 (retorno de energia solar, que depende
-de irradiação e por isso vira campo do usuário) e CALC-072 (dias úteis entre datas,
-bloqueada por D-5 — o calendário de feriados). No v4 sobram CALC-059, CALC-067 e
-CALC-074. **O campo de lista que §7.29 registrava como bloqueio saiu do caminho em
-03/08/2026** — ele existe, e as três que dependiam dele estão no ar.
+**O bloco A ACABOU.** Sobram dois nomes nele, e os dois têm impedimento próprio:
+CALC-066 (retorno de energia solar, que depende de irradiação e por isso vira campo
+do usuário) e CALC-072 (dias úteis entre datas, bloqueada por D-5 — o calendário de
+feriados). **O campo de lista que §7.29 registrava como bloqueio saiu do caminho em
+03/08/2026**, e as três que dependiam dele estão no ar, junto com CALC-074,
+CALC-067 e CALC-059 — estas na mesma data.
 
 > **A fila do bloco A é o caminho padrão daqui em diante**, enquanto `ADR-006` e
 > a tabela anual do IRPF não se resolverem. `docs/18` §3 lista o conjunto inteiro
@@ -234,13 +235,10 @@ CALC-074. **O campo de lista que §7.29 registrava como bloqueio saiu do caminho
 | CALC-052 | Faturamento máximo do MEI e desenquadramento | AUT |
 | CALC-053 | Carnê-leão — recolhimento mensal do autônomo | AUT |
 | CALC-058 | Carro elétrico vs. combustão — custo por km | VEI |
-| CALC-059 | Depreciação de veículo | VEI |
 | CALC-063 | Reajuste de salário por inflação acumulada | IDX |
 | CALC-064 | Valor futuro corrigido — projeção por índice | IDX |
-| CALC-067 | Conta de água — consumo estimado | CSM |
 | CALC-068 | Duração e custo do botijão de gás | CSM |
 | CALC-069 | Orçamento doméstico — regra 50/30/20 | CSM |
-| CALC-074 | Conversor de unidades | UTI |
 
 ### 4.5 Fora do catálogo, em definitivo
 
@@ -1179,6 +1177,70 @@ que é a resposta útil, e a única honesta.
 > **O padrão, para a próxima simulação iterativa.** Teto de iterações protege
 > contra laço infinito, não contra divergência. Quem itera sobre juros precisa de
 > uma medida de progresso do próprio saldo.
+
+### 7.37 Duas casas decimais são a resposta certa para dinheiro e a errada para medida
+
+Todo valor do sistema é inteiro escalado por cem, e para real isso é exato — não
+existe terceira casa. CALC-074 quebrou a premissa sem quebrar a regra:
+**conversão de unidade atravessa doze ordens de grandeza**. Um milímetro em
+quilômetros é 0,000001, e com duas casas a página imprimiria **0,00** para uma
+pergunta legítima.
+
+A saída foi `SaidaCalculadora.casasDecimais`: a escala continua **declarada**, e
+a diferença é que agora quem declara é o cálculo, e não o tipo. `Centavos` segue
+protegendo o que sempre protegeu — inteiro, seguro, sem zero negativo.
+
+**A regra de escolha da escala importa mais que o campo.** A primeira versão
+usava "casas suficientes para quatro algarismos", e ela mostrava a libra como
+453,59 g — escondendo cinco algarismos que a definição da unidade garante. A
+regra certa é: **mostrar o número que a conversão TEM**. Se a fração termina em
+cinco casas, são cinco casas; quando ela não termina — 500 GB em GiB não
+terminam —, aí sim a régua passa a ser legibilidade.
+
+E há uma armadilha no formatador: **escala e casas exibidas são coisas
+diferentes**. Um resultado inteiro — 100 TB em bytes — chega com escala zero, e
+tratar a escala como se fosse o mínimo de casas exibidas dividiria o número por
+cem.
+
+### 7.38 Onde os números grandes podem morar
+
+`BV-10` reprova literal ≥ 100 dentro de `engine/`, porque número grande ali quase
+sempre é constante legal disfarçada. A tabela de unidades de CALC-074 tem
+quarenta deles — 40.468.564.224 centímetros quadrados no acre —, e desativar a
+regra quarenta vezes é o caminho para desativá-la uma vez a mais onde ela
+importava (§7.5).
+
+A saída já existia no projeto e bastava reconhecê-la: `lib/params/` é isento de
+`BV-10` porque as constantes **são o conteúdo do módulo**. As razões entre
+unidades também são, e por isso foram para `src/lib/unidades/`, com a mesma
+isenção declarada na configuração — onde é revisável — e não espalhada em
+comentários.
+
+**Elas não são parâmetro legal, e por isso não cabiam em `params/`:** a polegada
+é 25,4 mm por acordo internacional de 1959, não por norma com vigência. Não
+expiram, não mudam por decreto e não têm fonte oficial brasileira. O que varia
+por região está no RÓTULO — alqueire paulista e mineiro são áreas diferentes com
+o mesmo nome, e aparecem separados.
+
+`BV-11` continua valendo no módulo novo: as razões são frações de inteiros, nunca
+decimais.
+
+### 7.39 A calculadora que não devia pedir a resposta
+
+`docs/18` §8 registrava a dúvida sobre CALC-059 existir: sem a tabela FIPE, que
+tem licenciamento restrito, o caminho fácil seria pedir ao usuário a taxa de
+depreciação. Um produto que faz isso não calcula nada — ele devolve o que
+recebeu com outra roupa.
+
+A saída é pedir o que o dono do carro **tem**: quanto pagou, quanto o carro vale
+hoje (consulta pública e gratuita na FIPE) e há quanto tempo. Desses três a
+bisseção descobre a taxa real daquele carro, que vale mais que qualquer média de
+mercado.
+
+**O padrão vale para o que vier.** Antes de concluir que uma calculadora depende
+de fonte inacessível, vale perguntar qual dado o usuário já tem em mãos e o que
+se pode derivar dele. Foi o mesmo movimento de CALC-068 com a duração do botijão
+e de CALC-057 com o IPVA.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

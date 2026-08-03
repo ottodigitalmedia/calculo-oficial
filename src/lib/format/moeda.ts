@@ -31,6 +31,31 @@ export function formatarNumero(centesimos: number): string {
   })
 }
 
+/**
+ * Inteiro escalado por `10^casas` para texto, com as casas que ele carrega.
+ *
+ * Existe desde CALC-074, e a razão está em `SaidaCalculadora.casasDecimais`:
+ * conversão de unidade atravessa ordens de grandeza que duas casas apagam.
+ *
+ * O mínimo continua sendo duas — "1.609,34" e não "1.609,344" para um número
+ * que só precisava de duas —, e o máximo é o que o cálculo declarou. Zeros à
+ * direita além da segunda casa não aparecem: `Intl` os corta, e mostrar
+ * "2,500000" sugeriria uma precisão que a conta não tem.
+ */
+export function formatarComCasas(valor: number, casas: number): string {
+  /**
+   * A escala e as casas exibidas são coisas diferentes, e confundi-las divide o
+   * número por cem: um resultado que chega sem casa decimal — `100 TB` em bytes
+   * é inteiro — precisa ser dividido por 1, e ainda assim aparecer com as duas
+   * casas de sempre.
+   */
+  const escala = Math.min(Math.max(Math.trunc(casas), 0), 20)
+  return (valor / 10 ** escala).toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: Math.max(escala, 2),
+  })
+}
+
 /** Basis points para "7,50", sem o símbolo. Para dentro de campo de entrada. */
 export function formatarTaxa(bp: number): string {
   return (bp / 100).toLocaleString('pt-BR', {

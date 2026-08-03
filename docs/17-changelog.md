@@ -80,6 +80,68 @@ página se recusa a dizer é que ela é sempre a melhor escolha: a bola de neve
 entrega uma dívida a menos na lista mais cedo, e desistir no meio custa mais que
 a diferença de juros.
 
+### Adicionado · CALC-074, CALC-067 e CALC-059 — e o bloco A acabou
+
+Com estas três, **nenhuma calculadora do bloco A continua pendente por falta de
+código**: as duas que sobram no nome do bloco têm impedimento próprio e
+declarado.
+
+**CALC-074 · conversor de unidades.** Cada unidade é declarada por uma fração de
+inteiros — a polegada é 254 ÷ 10 mm, exatos, por acordo internacional de 1959 —,
+e a conversão é feita com aritmética de inteiro grande. Decimal aproximado
+acumularia erro numa cadeia de multiplicações e divisões por fatores como
+453,59237.
+
+Temperatura tem caminho próprio, porque não é fator: zero grau Celsius não é zero
+Fahrenheit. A tela mostra o que a maioria dos conversores confunde — 1 °C de
+LEITURA são 33,8 °F, mas 1 °C de VARIAÇÃO são 1,8 °F.
+
+As unidades e as suas razões foram para `src/lib/unidades/`, fora do motor. Não
+são parâmetro legal e por isso não cabiam em `lib/params/`; são quarenta números
+grandes e por isso não cabiam sob `BV-10`. O que varia por região está no rótulo:
+o alqueire paulista e o mineiro são áreas diferentes com o mesmo nome.
+
+**CALC-067 · conta de água.** A tarifa é progressiva por faixa, como o INSS, e a
+conta que a maioria faz — consumo × tarifa — cobra a mais, com a diferença
+crescendo junto com o consumo. As faixas são campo do usuário, pela premissa do
+catálogo §14: tarifa de água varia por concessionária e por município, e o
+produto não estima tarifa por região.
+
+O número que muda comportamento não é o custo médio: é **quanto custa o próximo
+metro cúbico**, que é o que a economia devolve. Numa tarifa progressiva ele é
+sempre o da faixa mais alta alcançada, com o esgoto por cima. Os dois aparecem
+lado a lado.
+
+O consumo mínimo faturado existe como campo porque é ele que explica a conta não
+zerar de quem viajou o mês inteiro.
+
+**CALC-059 · depreciação de veículo.** O levantamento registrava a dúvida sobre
+ela existir: sem a tabela FIPE, o caminho fácil seria pedir ao usuário a taxa de
+depreciação — ou seja, pedir a resposta.
+
+Ela não pede. Pergunta quanto a pessoa pagou, quanto o carro vale hoje (consulta
+gratuita na própria FIPE) e há quanto tempo, e **descobre a taxa real daquele
+carro** por bisseção — melhor que qualquer média de mercado, porque é a dele. O
+destaque principal é a perda por mês: o custo que não tem boleto, costuma ser
+maior que o combustível, e por isso quase ninguém o soma.
+
+### Alterado · a escala do resultado passou a ser declarada pelo cálculo
+
+Todo valor do sistema é inteiro escalado por cem, e para dinheiro isso é exato.
+Conversão de unidade não cabe nessa premissa: um milímetro em quilômetros é
+0,000001, e com duas casas fixas a página imprimiria **0,00** para uma pergunta
+legítima — zero é a forma mais convincente de estar errado.
+
+`SaidaCalculadora` ganhou `casasDecimais`. A escala continua declarada; a
+diferença é que agora quem declara é o cálculo, e não o tipo.
+
+A regra de escolha da escala foi corrigida durante a construção. A primeira
+versão usava "casas suficientes para quatro algarismos" e mostrava a libra como
+453,59 g, escondendo cinco algarismos que a definição da unidade garante. A regra
+publicada mostra o número que a conversão **tem**: se a fração termina em cinco
+casas, são cinco casas; quando não termina, aí sim a régua passa a ser
+legibilidade.
+
 ### Corrigido · `Number()` aceitava o que a tela nunca produz
 
 O leitor da lista usava `Number(celula)` com teste de finitude e sinal. Não

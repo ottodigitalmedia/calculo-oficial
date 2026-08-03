@@ -354,6 +354,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './eletrico-vs-combustao'
     ).then((m) => m.calcular),
+  'depreciacao-de-veiculo': () =>
+    import(
+      /* webpackChunkName: "calc-depreciacao-de-veiculo" */
+      /* webpackExports: ["calcular"] */
+      './depreciacao-de-veiculo'
+    ).then((m) => m.calcular),
   'divisao-de-conta': () =>
     import(
       /* webpackChunkName: "calc-divisao-de-conta" */
@@ -365,6 +371,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-media-ponderada" */
       /* webpackExports: ["calcular"] */
       './media-ponderada'
+    ).then((m) => m.calcular),
+  'conta-de-agua': () =>
+    import(
+      /* webpackChunkName: "calc-conta-de-agua" */
+      /* webpackExports: ["calcular"] */
+      './conta-de-agua'
+    ).then((m) => m.calcular),
+  'conversor-de-unidades': () =>
+    import(
+      /* webpackChunkName: "calc-conversor-de-unidades" */
+      /* webpackExports: ["calcular"] */
+      './conversor-de-unidades'
     ).then((m) => m.calcular),
 }
 

@@ -429,3 +429,224 @@ export function calcularBotijao(
     traco,
   }
 }
+
+// ---------------------------------------------------------------------------
+// CALC-067 — Conta de água
+// ---------------------------------------------------------------------------
+
+/**
+ * **A tarifa da água é progressiva por faixa, e é isso que a página existe para
+ * mostrar.** Quem consome 25 m³ não paga 25 vezes a tarifa da primeira faixa:
+ * paga a primeira faixa pelo preço dela e o excedente pelo preço do excedente,
+ * exatamente como o INSS cobra contribuição. A conta "consumo × tarifa" — que é
+ * a que a maioria faz de cabeça — erra sempre para menos, e erra mais quanto
+ * mais se consome.
+ *
+ * **As faixas são campo do usuário**, pela premissa do catálogo §14: tarifa de
+ * água varia por concessionária e por categoria de imóvel, e o produto não
+ * estima tarifa por região. Elas estão na fatura, e a ajuda do campo diz onde.
+ *
+ * **O número que muda comportamento é o custo do PRÓXIMO metro cúbico**, não o
+ * custo médio. Numa tarifa progressiva, economizar um m³ devolve o preço da
+ * faixa mais alta alcançada, que costuma ser bem maior que a média.
+ */
+
+export interface EntradaAgua {
+  /** Uma linha por faixa: limite superior em centésimos de m³, tarifa em centavos por m³. */
+  readonly faixas: readonly (readonly number[])[]
+  /** Consumo do mês, em centésimos de metro cúbico. */
+  readonly consumo: number
+  /** Consumo mínimo faturado, em centésimos de m³. Zero quando não há. */
+  readonly consumoMinimo: number
+  /** Esgoto como percentual do valor da água. */
+  readonly esgotoBp: BasisPoints
+  /** Tarifa fixa de disponibilidade, quando a fatura cobra uma. */
+  readonly taxaFixa: Centavos
+}
+
+export interface FaixaDaConta {
+  readonly rotulo: string
+  readonly volume: number
+  readonly tarifa: Centavos
+  readonly valor: Centavos
+}
+
+export interface SaidaAgua {
+  readonly consumoFaturado: number
+  readonly agua: Centavos
+  readonly esgoto: Centavos
+  readonly total: Centavos
+  readonly faixasAplicadas: readonly FaixaDaConta[]
+  /** Quanto sai por metro cúbico, na média. */
+  readonly custoMedioPorM3: Centavos
+  /** Quanto custa o PRÓXIMO metro cúbico — o que a economia devolve. */
+  readonly custoDoProximoM3: Centavos
+  readonly custoPorDia: Centavos
+}
+
+/** Aplica a tarifa progressiva e devolve o valor da água, faixa a faixa. */
+function aplicarFaixasDeAgua(
+  consumo: number,
+  faixas: readonly (readonly number[])[],
+): { valor: Centavos; aplicadas: FaixaDaConta[]; tarifaMarginal: Centavos } {
+  const aplicadas: FaixaDaConta[] = []
+  let restante = consumo
+  let anterior = 0
+  let total = ZERO
+  let tarifaMarginal = ZERO
+
+  for (let i = 0; i < faixas.length && restante > 0; i += 1) {
+    const linha = faixas[i] ?? []
+    const limite = linha[0] ?? 0
+    const tarifa = centavos(linha[1] ?? 0)
+    const ultima = i === faixas.length - 1
+
+    /**
+     * A última faixa vale para tudo o que passar do limite anterior. É assim que
+     * a fatura escreve — "acima de 20 m³" —, e é o que evita a página cobrar
+     * zero de quem consome mais do que a tabela previu.
+     */
+    const largura = ultima ? restante : Math.max(0, limite - anterior)
+    const volume = Math.min(restante, largura)
+    if (volume <= 0) {
+      anterior = limite
+      continue
+    }
+
+    const valor = proporcao(tarifa, volume, CENTESIMOS_POR_UNIDADE, POLITICA)
+    aplicadas.push({
+      rotulo: ultima
+        ? `Acima de ${numero(centavos(anterior))} m³`
+        : `Até ${numero(centavos(limite))} m³`,
+      volume,
+      tarifa,
+      valor,
+    })
+
+    total = somar(total, valor)
+    tarifaMarginal = tarifa
+    restante -= volume
+    anterior = limite
+  }
+
+  return { valor: total, aplicadas, tarifaMarginal }
+}
+
+export function calcularContaDeAgua(
+  entrada: EntradaAgua,
+  dataReferencia: DataISO,
+): Resultado<SaidaAgua> {
+  const faixas = entrada.faixas.filter((f) => (f[1] ?? 0) > 0)
+
+  if (faixas.length === 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe:
+        'Informe ao menos uma faixa de tarifa, como está na sua fatura, para ver o resultado.',
+    }
+  }
+  if (entrada.consumo <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe o consumo do mês, em metros cúbicos, para ver o resultado.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  /**
+   * O consumo mínimo faturado é cobrado mesmo de quem consome menos, e ignorá-lo
+   * faria a conta de quem gasta pouco sair abaixo do que a fatura traz — o erro
+   * mais provável nesta página, porque é o caso da casa vazia e de quem viajou.
+   */
+  const consumoFaturado = Math.max(entrada.consumo, entrada.consumoMinimo)
+  if (consumoFaturado > entrada.consumo) {
+    etapas.push({
+      rotulo: 'Consumo faturado',
+      formula:
+        `mínimo de ${numero(centavos(entrada.consumoMinimo))} m³, acima do consumo de ` +
+        `${numero(centavos(entrada.consumo))} m³`,
+      resultado: centavos(consumoFaturado),
+      unidade: 'numero',
+      justificativa:
+        'A concessionária cobra o mínimo mesmo de quem consome menos. Quem viajou o mês inteiro ' +
+        'paga o mínimo, e é por isso que a conta não chega a zero.',
+    })
+  }
+
+  const { valor: agua, aplicadas, tarifaMarginal } = aplicarFaixasDeAgua(consumoFaturado, faixas)
+
+  for (const faixa of aplicadas) {
+    etapas.push({
+      rotulo: `Água — ${faixa.rotulo}`,
+      formula: `${numero(centavos(faixa.volume))} m³ × ${reais(faixa.tarifa)} por m³`,
+      resultado: faixa.valor,
+    })
+  }
+
+  if (aplicadas.length > 1) {
+    etapas.push({
+      rotulo: 'Água — soma das faixas',
+      formula: aplicadas.map((f) => reais(f.valor)).join(' + '),
+      resultado: agua,
+      justificativa:
+        'A tarifa é progressiva: cada metro cúbico é cobrado pelo preço da faixa em que ele cai, ' +
+        'e não pelo preço da faixa mais alta alcançada. Multiplicar o consumo inteiro pela ' +
+        'tarifa da última faixa cobraria a mais.',
+    })
+  }
+
+  const esgoto = aplicarAliquota(agua, entrada.esgotoBp, POLITICA)
+  if (esgoto > 0) {
+    etapas.push({
+      rotulo: 'Esgoto',
+      formula: `${reais(agua)} × ${percentual(entrada.esgotoBp)}`,
+      resultado: esgoto,
+      justificativa:
+        'O esgoto é cobrado como percentual da água, e não medido: presume-se que o que entra ' +
+        'sai. O percentual está na fatura, e não é o mesmo em todo lugar.',
+    })
+  }
+
+  const total = somar(agua, esgoto, entrada.taxaFixa)
+  etapas.push({
+    rotulo: 'Total da conta',
+    formula:
+      `${reais(agua)} de água + ${reais(esgoto)} de esgoto` +
+      (entrada.taxaFixa > 0 ? ` + ${reais(entrada.taxaFixa)} de taxa fixa` : ''),
+    resultado: total,
+  })
+
+  const custoMedioPorM3 = proporcao(total, CENTESIMOS_POR_UNIDADE, consumoFaturado, POLITICA)
+
+  /**
+   * O próximo metro cúbico custa a tarifa da faixa alcançada mais o esgoto que
+   * incide sobre ela. É o valor que economizar um m³ devolve — e ele costuma ser
+   * bem maior que o custo médio, que é o número que as pessoas usam.
+   */
+  const custoDoProximoM3 = somar(
+    tarifaMarginal,
+    aplicarAliquota(tarifaMarginal, entrada.esgotoBp, POLITICA),
+  )
+
+  const custoPorDia = proporcao(total, 1, DIAS_NO_MES_PADRAO, POLITICA)
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return {
+    ok: true,
+    valores: {
+      consumoFaturado,
+      agua,
+      esgoto,
+      total,
+      faixasAplicadas: aplicadas,
+      custoMedioPorM3,
+      custoDoProximoM3,
+      custoPorDia,
+    },
+    traco,
+  }
+}

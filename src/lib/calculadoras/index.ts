@@ -19,9 +19,12 @@ import { CDB } from './cdb'
 import { COMPARADOR_INVESTIMENTOS } from './comparador-investimentos'
 import { CET } from './cet'
 import { CHEQUE_ESPECIAL } from './cheque-especial'
+import { CONTA_DE_AGUA } from './conta-de-agua'
+import { CONVERSOR_DE_UNIDADES } from './conversor-de-unidades'
 import { CORRECAO_POR_INDICE } from './correcao-por-indice'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { CUSTO_DO_CARRO } from './custo-do-carro'
+import { DEPRECIACAO_DE_VEICULO } from './depreciacao-de-veiculo'
 import { DIVIDENDOS } from './dividendos'
 import { DIVISAO_DE_CONTA } from './divisao-de-conta'
 import { ELETRICO_VS_COMBUSTAO } from './eletrico-vs-combustao'
@@ -103,6 +106,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   ORCAMENTO,
   ENERGIA,
   BOTIJAO,
+  CONTA_DE_AGUA,
   CORRECAO_POR_INDICE,
   PODER_DE_COMPRA,
   CAMBIO,
@@ -115,8 +119,10 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   VIAGEM,
   CUSTO_DO_CARRO,
   ELETRICO_VS_COMBUSTAO,
+  DEPRECIACAO_DE_VEICULO,
   DIVISAO_DE_CONTA,
   MEDIA_PONDERADA,
+  CONVERSOR_DE_UNIDADES,
 ]
 
 export function porSlug(slug: string): DefinicaoCalculadora | undefined {

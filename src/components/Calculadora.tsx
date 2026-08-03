@@ -17,6 +17,7 @@ import {
 } from '@/lib/calculadoras/tipos'
 import type { Resultado, Unidade } from '@/lib/engine/traco'
 import {
+  formatarComCasas,
   formatarData,
   formatarNumero,
   formatarPercentual,
@@ -320,9 +321,15 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
  * Sem `unidade` é moeda, que é o caso de doze das quinze calculadoras — e o
  * caso de todas até CALC-054.
  */
-function formatarValor(valor: number, unidade: Unidade | undefined): string {
+function formatarValor(
+  valor: number,
+  unidade: Unidade | undefined,
+  casas?: number,
+): string {
   if (unidade === 'percentual') return formatarPercentual(valor)
-  if (unidade === 'numero') return formatarNumero(valor)
+  if (unidade === 'numero') {
+    return casas === undefined ? formatarNumero(valor) : formatarComCasas(valor, casas)
+  }
   return formatarReal(valor)
 }
 
@@ -398,7 +405,7 @@ function Resultado({
         <p className="text-sm text-[var(--color-text-secondary)]">{rotulo}</p>
         {/* O maior elemento da página: o resultado é o herói (princípio 1). */}
         <p className="tabular mt-1 text-4xl font-semibold tracking-tight">
-          {formatarValor(r.valores.principal, r.valores.unidade)}
+          {formatarValor(r.valores.principal, r.valores.unidade, r.valores.casasDecimais)}
         </p>
 
         <dl className="mt-5 space-y-2 border-t border-[var(--color-border)] pt-4">
@@ -427,7 +434,7 @@ function Resultado({
                     : linha.sinal === 'credito'
                       ? '+ '
                       : ''}
-                {formatarValor(linha.valor, r.valores.unidade)}
+                {formatarValor(linha.valor, r.valores.unidade, r.valores.casasDecimais)}
               </dd>
             </div>
           ))}
@@ -517,7 +524,7 @@ function Resultado({
                   </th>
                   {linha.valores.map((v, i) => (
                     <td key={i} className="tabular px-4 py-2 text-right">
-                      {formatarValor(v, r.valores.unidade)}
+                      {formatarValor(v, r.valores.unidade, r.valores.casasDecimais)}
                     </td>
                   ))}
                 </tr>

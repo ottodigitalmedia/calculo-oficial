@@ -261,6 +261,25 @@ export interface SaidaCalculadora {
    * calculadora.
    */
   readonly unidade?: Unidade
+  /**
+   * Quantas casas decimais `principal` carrega. Ausente = duas.
+   *
+   * **Cresceu por CALC-074, e por um defeito visível.** Todo valor do sistema é
+   * inteiro escalado por cem, e para dinheiro isso é a resposta certa — real não
+   * tem terceira casa. Conversão de unidade atravessa doze ordens de grandeza:
+   * um milímetro em quilômetros é 0,000001, e em duas casas a página imprimiria
+   * **0,00** para uma pergunta legítima. Zero é a forma mais convincente de
+   * estar errado.
+   *
+   * A escala continua declarada, não adivinhada — a diferença é que agora quem
+   * declara é o cálculo, e não o tipo. `Centavos` segue protegendo o que sempre
+   * protegeu: inteiro, seguro, sem zero negativo.
+   *
+   * Vale para `principal`, `detalhamento` e `tabela`, que compartilham a
+   * unidade. Quando um resultado precisa de escalas diferentes na mesma tela, o
+   * lugar é `destaques`, que a definição formata como quiser.
+   */
+  readonly casasDecimais?: number
   readonly detalhamento: readonly LinhaDetalhamento[]
   readonly destaques?: readonly Destaque[]
   readonly tabela?: TabelaResultado

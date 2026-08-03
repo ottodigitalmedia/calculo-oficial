@@ -120,6 +120,12 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   'media-ponderada': '?notas=800,100;600,300',
   // A taxa vai em basis points e a parcela mínima em centavos, como na URL real.
   'plano-de-quitacao': '?dividas=500000,1200,25000;100000,300,10000&extraMensal=50000',
+  /**
+   * As faixas de tarifa são lista obrigatória, e valores redondos de propósito:
+   * o produto não publica tarifa de concessionária real (`00-catalogo` §14), e um
+   * teste com tabela real daria a impressão contrária.
+   */
+  'conta-de-agua': '?consumo=2500&faixas=1000,500;2000,1000;0,2000&esgoto=8000',
 }
 
 for (const c of CALCULADORAS) {
