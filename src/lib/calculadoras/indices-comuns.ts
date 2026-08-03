@@ -53,6 +53,40 @@ export const OPCOES_DE_INDICE: readonly OpcaoSelecao[] = [
   { valor: 'tr', rotulo: 'TR', indisponivel: true },
 ]
 
+/**
+ * O acumulado dos últimos `n` meses publicados de um índice, em basis points.
+ *
+ * Serve de **referência** para as calculadoras de projeção, que pedem ao usuário
+ * uma inflação futura: mostrar quanto o índice de fato acumulou nos últimos doze
+ * meses dá lastro à premissa sem transformá-la em previsão do produto.
+ *
+ * Devolve `null` quando não há série — e nesse caso a referência simplesmente
+ * não aparece, como manda `06-api-spec` §4.2.
+ */
+export function acumuladoDosUltimos(chave: string, n: number): number | null {
+  const serie = serieDoIndice(chave)
+  if (serie.valores.length === 0) return null
+
+  const janela = serie.valores.slice(-n)
+  if (janela.length === 0) return null
+
+  // Mesma escala e mesma composição do motor: os índices se multiplicam.
+  let fator = 1_000_000_000_000n
+  for (const valor of janela) {
+    fator = (fator * (1_000_000n + BigInt(valor))) / 1_000_000n
+  }
+  return Number(((fator - 1_000_000_000_000n) * 10_000n) / 1_000_000_000_000n)
+}
+
+/** O último mês publicado do índice, em `AAAA-MM`. */
+export function ultimoMesDoIndice(chave: string): string | null {
+  const serie = serieDoIndice(chave)
+  if (serie.valores.length === 0 || serie.inicio === '') return null
+  const [ano, mes] = serie.inicio.split('-').map(Number) as [number, number]
+  const total = ano * 12 + (mes - 1) + serie.valores.length - 1
+  return `${Math.floor(total / 12)}-${String((total % 12) + 1).padStart(2, '0')}`
+}
+
 /** O mês (`AAAA-MM`) de um campo de data, que chega em `AAAA-MM-DD`. */
 export function mesDe(valor: string): string {
   return valor.slice(0, 7)

@@ -187,6 +187,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto a poupança rende no prazo — pela taxa que o Banco Central publicou.',
   },
   {
+    slug: 'tesouro-ipca-mais',
+    nome: 'Tesouro IPCA+ — ganho real',
+    linhaDeContexto: 'Quanto sobra de ganho real depois do imposto — que morde a correção também.',
+  },
+  {
     slug: 'reserva-de-emergencia',
     nome: 'Reserva de emergência',
     linhaDeContexto:
@@ -223,6 +228,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     nome: 'Poder de compra ao longo do tempo',
     linhaDeContexto:
       'Quanto o dinheiro perdeu — e quanto seria preciso hoje para comprar o mesmo.',
+  },
+  {
+    slug: 'valor-futuro-corrigido',
+    nome: 'Valor futuro corrigido pela inflação',
+    linhaDeContexto: 'Quanto será preciso ter lá na frente — e o que o dinheiro parado comprará.',
   },
   {
     slug: 'reajuste-de-salario',

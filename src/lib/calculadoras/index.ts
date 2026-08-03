@@ -38,6 +38,8 @@ import { REAJUSTE_SALARIAL } from './reajuste-salarial'
 import { REGRA_DE_TRES } from './regra-de-tres'
 import { RENDA_FIXA } from './renda-fixa'
 import { RENDA_MENSAL } from './renda-mensal'
+import { TESOURO_IPCA } from './tesouro-ipca'
+import { VALOR_FUTURO } from './valor-futuro'
 import { RESERVA_DE_EMERGENCIA } from './reserva'
 import { VIAGEM } from './viagem'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
@@ -79,6 +81,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   LOCACAO,
   RENDA_MENSAL,
   POUPANCA,
+  TESOURO_IPCA,
   RESERVA_DE_EMERGENCIA,
   INDEPENDENCIA,
   PRECIFICACAO,
@@ -86,6 +89,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   ENERGIA,
   CORRECAO_POR_INDICE,
   PODER_DE_COMPRA,
+  VALOR_FUTURO,
   REAJUSTE_SALARIAL,
   REAJUSTE_ALUGUEL,
   PORCENTAGEM,

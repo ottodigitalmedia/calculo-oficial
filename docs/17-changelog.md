@@ -31,6 +31,46 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-064 e CALC-045 · as duas primeiras que PROJETAM
+
+**São as primeiras do catálogo cujo resultado não é verificável contra nada.**
+Não existe fonte para o futuro, e isso mudou o texto antes de mudar o código: a
+inflação é premissa do usuário, e a página diz isso em vez de deixar o número
+parecer medição. O que a série entrega é **referência** — quanto o índice de
+fato acumulou nos últimos doze meses, com o mês ao lado —, exibida junto da
+premissa sem virar previsão do produto.
+
+Motor separado de `corrigirPorIndice` de propósito. Aquele aplica índices
+**publicados** e recusa mês que ainda não saiu, porque o passado é dado; aqui a
+taxa é hipótese. Juntá-los faria a projeção herdar a aparência de lastro que só
+a correção tem.
+
+**CALC-064 · valor futuro.** Dois números, e a diferença entre eles é o assunto:
+quanto será preciso TER lá na frente, e o que a mesma quantia COMPRARÁ se ficar
+parada. Dez anos a 4,5% não somam 45%, dão 55,3%.
+
+**CALC-045 · Tesouro IPCA+.** O que ela existe para mostrar cabe em uma frase: o
+imposto incide sobre o rendimento **nominal**, inclusive sobre a parte que apenas
+repôs a inflação — dinheiro que não é ganho, e sim manutenção de poder de compra.
+Quem olha "IPCA + 6%" e imagina 6% de ganho real depois do imposto erra, e erra
+mais quanto maior a inflação. O resultado separa as duas parcelas e um caso-ouro
+trava que inflação maior corrói mais o ganho real **só quando há imposto**.
+
+E a taxa nominal não é a soma: inflação de 10% com juro real de 10% dão 21%, e
+não 20%.
+
+### Corrigido · o ganho real líquido saía um centésimo abaixo
+
+A bisseção que resolve a taxa anual equivalente convergia para o maior inteiro
+cujo fator ainda é **menor** que o alvo. Quando o alvo cai exatamente sobre um
+inteiro — o caso trivial de 10% de juro real sem imposto —, aquele inteiro ia
+para o teto e o piso ficava um abaixo: a tela mostrava **9,99%** onde a resposta
+é 10,00%, num campo cuja função é justamente ser comparado com a taxa contratada.
+
+Passou a escolher, entre os dois vizinhos, o que erra menos — que é o que
+`taxaInternaMensal` já fazia em `financeira.ts`. Pego por caso-ouro antes de ir
+ao ar.
+
 ### Adicionado · CALC-042 e CALC-041 · as duas de investimento com série
 
 **CALC-042 · quanto rende por mês.** A pergunta que a categoria mais recebe, e a

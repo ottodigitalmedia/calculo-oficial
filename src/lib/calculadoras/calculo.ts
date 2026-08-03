@@ -210,6 +210,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './poupanca'
     ).then((m) => m.calcular),
+  'tesouro-ipca-mais': () =>
+    import(
+      /* webpackChunkName: "calc-tesouro-ipca" */
+      /* webpackExports: ["calcular"] */
+      './tesouro-ipca'
+    ).then((m) => m.calcular),
   'reserva-de-emergencia': () =>
     import(
       /* webpackChunkName: "calc-reserva" */
@@ -251,6 +257,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackChunkName: "calc-poder-de-compra" */
       /* webpackExports: ["calcular"] */
       './poder-de-compra'
+    ).then((m) => m.calcular),
+  'valor-futuro-corrigido': () =>
+    import(
+      /* webpackChunkName: "calc-valor-futuro" */
+      /* webpackExports: ["calcular"] */
+      './valor-futuro'
     ).then((m) => m.calcular),
   'reajuste-de-salario': () =>
     import(
