@@ -50,7 +50,26 @@ const ARQUIVO_COMPACTO = join('src', 'lib', 'series', 'dados', 'compacto.ts')
  * A forma compacta troca 240 objetos por um mês inicial e um vetor de inteiros.
  * O conteúdo é o mesmo; o que muda é não repetir a chave e a data em cada ponto.
  */
-const COMPACTAS: readonly SerieId[] = ['ipca-mensal', 'inpc-mensal', 'igpm-mensal']
+const COMPACTAS: readonly SerieId[] = [
+  'ipca-mensal',
+  'inpc-mensal',
+  'igpm-mensal',
+]
+
+/**
+ * Séries de que o navegador precisa apenas do **último ponto**.
+ *
+ * A poupança entrou aqui em CALC-040, depois de uma tentativa errada: ela foi
+ * primeiro posta na lista acima, e a guarda de calendário do gerador a recusou
+ * na hora — *"buraco no calendário: esperava 2026-08, veio 2026-07-10"*. Estava
+ * certa. A série 195 é **diária**, e um vetor posicional por mês não a
+ * representa.
+ *
+ * O que CALC-040 precisa dela é um número só: a taxa corrente. Ela não é oferta
+ * de ninguém — não existe "poupança a 110% de nada" —, então não é campo do
+ * usuário, e sim dado com data.
+ */
+const ULTIMO_PONTO: readonly SerieId[] = ['poupanca-mensal']
 
 /** §4.2: tempo limite de 3 segundos. */
 const TEMPO_LIMITE_MS = 3_000
@@ -292,6 +311,17 @@ function escreverCompacto(cache: CacheDeSeries): void {
     blocos.push(`  '${id}': { inicio: '${inicio}', valores: [${valores.join(', ')}] },`)
   }
 
+  const ultimos: string[] = []
+  for (const id of ULTIMO_PONTO) {
+    const serie = cache.series.find((s) => s.id === id)
+    const ponto = serie?.pontos[serie.pontos.length - 1]
+    if (!ponto) {
+      avisar(`${id}: sem ponto; último ponto ficará ausente`)
+      continue
+    }
+    ultimos.push(`  '${id}': { data: '${ponto.data}', valor: ${ponto.valor} },`)
+  }
+
   const conteudo = `/**
  * GERADO POR \`npm run fetch:serie\` — NÃO EDITAR À MÃO.
  *
@@ -311,6 +341,16 @@ export interface SerieCompacta {
 
 export const SERIES_COMPACTAS: Readonly<Record<string, SerieCompacta>> = {
 ${blocos.join(QUEBRA)}
+}
+
+export interface UltimoPonto {
+  readonly data: string
+  readonly valor: number
+}
+
+/** Séries de que o navegador precisa apenas do último ponto publicado. */
+export const ULTIMAS_TAXAS: Readonly<Record<string, UltimoPonto>> = {
+${ultimos.join(QUEBRA)}
 }
 `
 

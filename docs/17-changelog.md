@@ -31,6 +31,24 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-040 · Tesouro Selic, CDB ou poupança
+
+Nenhum motor novo: as três pernas saem de `calcularRendaFixa` e
+`calcularJurosCompostos`. O que ela acrescenta é a comparação, feita pelo valor
+**líquido** — comparar percentual do CDI com rendimento da poupança é comparar
+coisas diferentes, e é assim que a poupança costuma parecer melhor do que é.
+
+**A poupança não é campo, e isso é modelagem.** As outras duas são ofertas:
+existe CDB a 98% e a 112% do CDI, e o usuário sabe qual recebeu. Poupança não tem
+oferta — rende o mesmo em qualquer banco. Um campo ali fingiria uma escolha que
+não existe, então ela entra como dado, com a data da publicação ao lado.
+
+**A guarda do gerador compacto trabalhou.** A poupança foi primeiro posta na
+lista das séries mensais, e o gerador a recusou na hora: *"buraco no calendário —
+esperava 2026-08, veio 2026-07-10"*. Estava certo, a série 195 é **diária**, e um
+vetor posicional por mês não a representa. Entrou pela forma certa, `ULTIMAS_TAXAS`,
+que carrega um ponto só — que é tudo de que a comparação precisa.
+
 ### Adicionado · CALC-039 · CDB, LCI e LCA
 
 **Nenhum motor novo, e nenhuma tabela nova.** O imposto é o de CALC-018, cujos

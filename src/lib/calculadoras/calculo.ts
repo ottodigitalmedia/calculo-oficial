@@ -216,6 +216,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './cdb'
     ).then((m) => m.calcular),
+  'onde-render-mais': () =>
+    import(
+      /* webpackChunkName: "calc-comparador-investimentos" */
+      /* webpackExports: ["calcular"] */
+      './comparador-investimentos'
+    ).then((m) => m.calcular),
   'tesouro-ipca-mais': () =>
     import(
       /* webpackChunkName: "calc-tesouro-ipca" */

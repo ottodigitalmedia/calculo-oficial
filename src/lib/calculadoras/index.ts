@@ -13,6 +13,7 @@ import { AVISO_PREVIO } from './aviso-previo'
 import { BANCO_DE_HORAS } from './banco-de-horas'
 import { CAPACIDADE } from './capacidade'
 import { CDB } from './cdb'
+import { COMPARADOR_INVESTIMENTOS } from './comparador-investimentos'
 import { CET } from './cet'
 import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CORRECAO_POR_INDICE } from './correcao-por-indice'
@@ -83,6 +84,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RENDA_MENSAL,
   POUPANCA,
   CDB,
+  COMPARADOR_INVESTIMENTOS,
   TESOURO_IPCA,
   RESERVA_DE_EMERGENCIA,
   INDEPENDENCIA,

@@ -192,6 +192,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto sobra de "110% do CDI" depois do imposto — e quando o isento ganha.',
   },
   {
+    slug: 'onde-render-mais',
+    nome: 'Tesouro Selic, CDB ou poupança',
+    linhaDeContexto:
+      'Qual das três entrega mais no seu prazo — comparadas pelo líquido, não pela taxa.',
+  },
+  {
     slug: 'tesouro-ipca-mais',
     nome: 'Tesouro IPCA+ — ganho real',
     linhaDeContexto: 'Quanto sobra de ganho real depois do imposto — que morde a correção também.',

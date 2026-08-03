@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **45** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **46** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 970 de unidade · 432 ponta a ponta · 3 de vazamento |
+| Testes | 981 de unidade · 438 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -38,7 +38,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel
-- **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA
+- **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · comparador de aplicações
 - **Autônomo:** precificação de hora
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho
@@ -138,10 +138,10 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 30 de 75
+## 4. Calculadoras pendentes — 29 de 75
 
 Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-065,
-CALC-037, CALC-039, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060, CALC-061, CALC-063, CALC-064, CALC-069, CALC-070 e
+CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060, CALC-061, CALC-063, CALC-064, CALC-069, CALC-070 e
 CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
@@ -1104,14 +1104,14 @@ O que sobrou, em ordem:
 
 1. ~~**Implementar `ADR-006`**~~ ✅ **feito em 02/08/2026.** A coleta está no
    pipeline, o cache é versionado, o plano de falha foi exercitado de verdade, e
-   **nove das doze que ele destrava já estão no ar**: CALC-060, CALC-061,
-   CALC-063, CALC-037, CALC-042, CALC-041, CALC-064, CALC-045 e CALC-039.
+   **dez das doze que ele destrava já estão no ar**: CALC-060, CALC-061,
+   CALC-063, CALC-037, CALC-042, CALC-041, CALC-064, CALC-045, CALC-039 e
+   CALC-040.
 
-   **Faltam três:**
+   **Faltam duas:**
 
    | ID | Calculadora | O que falta |
    |---|---|---|
-   | CALC-040 | Comparador de três produtos | Herda de CALC-041 o caminho que evita a norma: comparar pelas taxas **publicadas**, sem reimplementar a regra de remuneração |
    | CALC-034 | Alugar vs. comprar | A mais composta do bloco; junta financiamento, locação e rendimento |
    | CALC-062 | Moeda com IOF | ⚠️ **A única bloqueada.** A alíquota de IOF é parâmetro legal e exige pesquisa em fonte oficial, com vigência |
 
