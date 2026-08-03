@@ -25,10 +25,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **60** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **61** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.157 de unidade · 521 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 1.182 de unidade · 539 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 61 vigências, **0 divergências** (03/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -39,7 +39,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
-- **Autônomo:** precificação de hora
+- **Autônomo:** precificação de hora · INSS do autônomo e do facultativo
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 15 de 75
+## 4. Calculadoras pendentes — 14 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 15 que faltam, e o que trava cada uma
+### 4.3 As 14 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -195,7 +195,6 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-038 | Financiamento de reforma | Nada. É uma variação de CALC-024 com destino declarado |
 | CALC-047 | DAS-MEI — valor mensal | Anexos da LC 123/2006 (D-3 de `docs/18`) |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | D-3, mais premissas que precisam ficar visíveis |
-| CALC-050 | INSS do contribuinte individual | Alíquotas de 20%, 11% e 5% — pesquisa em norma |
 | CALC-051 | Pró-labore e encargos do sócio | Pesquisa em norma |
 | CALC-052 | Faturamento máximo do MEI | Limite e regra de desenquadramento — LC 123/2006 |
 | CALC-053 | Carnê-leão | Pesquisa em norma |
@@ -206,6 +205,12 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 catálogo que dizia haver 33 calculadoras sem dependência valia quando foi
 escrito; elas foram construídas. O que restou é, quase todo, tributário e
 previdenciário — e o próximo passo do projeto deixou de ser código.
+
+> **CALC-050 saiu desta lista em 03/08/2026, e mostrou que a barreira é
+> menor do que parece.** A pesquisa foi de uma tarde: o texto consolidado da
+> Lei nº 8.212/1991 no Planalto traz o art. 21 inteiro, e as três alíquotas
+> saíram de lá com dispositivo e vigência. O que exige cuidado é ler a redação
+> CERTA — ver §7.42.
 
 ### 4.5 Fora do catálogo, em definitivo
 
@@ -1254,6 +1259,45 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 > **O padrão, para qualquer contagem neste documento.** Se um número pode ser
 > derivado do código, ou ele é derivado na hora de usar, ou ele vai divergir. Não
 > existe terceira opção — e documento não tem suíte de testes.
+
+### 7.42 O texto consolidado empilha redações — e a vigente é a última
+
+O Planalto publica os textos consolidados com as redações sucessivas **uma
+abaixo da outra**, sem riscar as revogadas. No art. 21 da Lei nº 8.212/1991 o
+`§ 2º` aparece **quatro vezes** na mesma página: a redação original da LC
+123/2006, a da MP 529/2011, e a da Lei 12.470/2011 — e ainda o caput em duas
+versões, uma delas falando de "segurados empresários, facultativo, trabalhador
+autônomo", categorias que a Lei 9.876/1999 substituiu por "contribuinte
+individual".
+
+Quem lê de cima para baixo e para na primeira ocorrência cadastra uma alíquota
+revogada com fonte oficial correta — o pior tipo de erro possível aqui, porque
+ele passa em toda conferência de procedência.
+
+**A regra: na página consolidada, a redação vigente é a ÚLTIMA de cada
+dispositivo**, e a nota entre parênteses diz qual lei a deu. Confira sempre a
+lei citada na nota, e confira nela a cláusula de vigência — a Lei 12.470/2011
+tem art. 5º com efeitos escalonados: 1º/05/2011 para uns dispositivos, a data da
+publicação para os demais.
+
+### 7.43 A calculadora que existe para desfazer uma confusão
+
+CALC-050 não é uma variação de CALC-016. A tabela progressiva de 7,5% a 14% é a
+do segurado **empregado**; quem recolhe por conta própria paga **alíquota
+única** — e a base dos planos reduzidos é fixa no salário mínimo, por lei.
+
+Isso produz um comportamento que parece defeito e não é: **no plano simplificado,
+mudar a renda não muda o valor a pagar.** O § 2º manda a alíquota incidir "sobre
+o limite mínimo mensal do salário de contribuição", e ponto. A página diz isso em
+três lugares — na ajuda do campo, na justificativa da etapa e na primeira nota —
+porque é a dúvida que traz a pessoa até aqui, e um caso-ouro trava a propriedade
+contra alguém "consertar" a conta no futuro.
+
+**O que ela recusa a fazer, e por quê.** A complementação do § 3º sai sem os
+juros moratórios do art. 5º, § 3º, da Lei nº 9.430/1996: eles dependem da Selic
+acumulada da competência a ser complementada até o recolhimento. Exibir a
+diferença de alíquota chamando-a de "valor a pagar" erraria para menos — então
+ela é exibida com o nome do que é, e a nota explica que o valor real é maior.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

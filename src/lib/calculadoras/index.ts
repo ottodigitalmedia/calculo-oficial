@@ -37,6 +37,7 @@ import { FGTS } from './fgts'
 import { ENERGIA } from './energia'
 import { HORAS_EXTRAS } from './horas-extras'
 import { INDEPENDENCIA } from './independencia'
+import { INSS_AUTONOMO } from './inss-autonomo'
 import { INSS_MENSAL } from './inss'
 import { IRRF_MENSAL } from './irrf'
 import { JUROS_COMPOSTOS } from './juros-compostos'
@@ -83,6 +84,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   BANCO_DE_HORAS,
   FGTS,
   INSS_MENSAL,
+  INSS_AUTONOMO,
   IRRF_MENSAL,
   RENDA_FIXA,
   JUROS_COMPOSTOS,

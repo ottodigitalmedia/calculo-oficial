@@ -110,6 +110,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto é descontado de contribuição previdenciária — faixa a faixa, com a alíquota efetiva.',
   },
   {
+    slug: 'inss-autonomo-e-facultativo',
+    nome: 'INSS do autônomo e do facultativo',
+    linhaDeContexto:
+      'Quanto recolher por conta própria — e por que a tabela do empregado não vale.',
+  },
+  {
     slug: 'irrf',
     nome: 'Imposto de Renda na fonte',
     linhaDeContexto:

@@ -80,6 +80,41 @@ página se recusa a dizer é que ela é sempre a melhor escolha: a bola de neve
 entrega uma dívida a menos na lista mais cedo, e desistir no meio custa mais que
 a diferença de juros.
 
+### Adicionado · CALC-050 · INSS do autônomo e do facultativo
+
+**A primeira calculadora do projeto que exigiu pesquisa em norma desde o
+lançamento**, e a pesquisa foi de uma tarde: o texto consolidado da Lei nº
+8.212/1991 no Planalto traz o art. 21 inteiro, com as três alíquotas.
+
+Cadastrados quatro parâmetros novos, com dispositivo e vigência:
+
+| Parâmetro | Valor | Dispositivo | Vigência desde |
+|---|---|---|---|
+| Plano completo | 20% sobre o declarado | Art. 21, caput | 1º/03/2000 |
+| Plano simplificado | 11% sobre o mínimo | Art. 21, § 2º, I | 1º/09/2011 |
+| Facultativo de baixa renda | 5% sobre o mínimo | Art. 21, § 2º, II, "b" | 1º/09/2011 |
+| Complementação | diferença até 20% | Art. 21, § 3º | 1º/09/2011 |
+
+As datas de início vêm das cláusulas de vigência das próprias leis: a Lei nº
+12.470/2011 tem art. 5º com efeitos escalonados, e a Lei nº 9.876/1999 manda
+contar os efeitos de majoração de contribuição do primeiro dia do mês seguinte
+ao nonagésimo dia da publicação.
+
+**A confusão que a página desfaz:** a tabela progressiva de 7,5% a 14% é a do
+segurado EMPREGADO. Quem recolhe por conta própria paga alíquota única, e nos
+planos reduzidos a base é fixa no salário mínimo — não acompanha a renda. Isso
+produz um comportamento que parece defeito: no plano simplificado, mudar a renda
+não muda o valor a pagar. A página afirma isso em três lugares, e um caso-ouro
+trava a propriedade.
+
+**O que ela recusa a fazer.** A complementação do § 3º sai SEM os juros
+moratórios, que dependem da Selic acumulada da competência. Exibir a diferença de
+alíquota chamando-a de valor a pagar erraria para menos — ela é exibida com o
+nome do que é.
+
+O teto não foi cadastrado de novo: é o limite superior da última faixa da tabela
+que já vive em `inss.ts`, e duplicá-lo seria convidar os dois a divergirem.
+
 ### Adicionado · CALC-056, CALC-029 e CALC-033 — e o que sobra deixou de ser código
 
 Três de crédito e imóvel, todas sem parâmetro legal, todas sobre o motor de taxa

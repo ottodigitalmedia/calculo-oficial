@@ -132,6 +132,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './inss'
     ).then((m) => m.calcular),
+  'inss-autonomo-e-facultativo': () =>
+    import(
+      /* webpackChunkName: "calc-inss-autonomo" */
+      /* webpackExports: ["calcular"] */
+      './inss-autonomo'
+    ).then((m) => m.calcular),
   irrf: () =>
     import(
       /* webpackChunkName: "calc-irrf" */
