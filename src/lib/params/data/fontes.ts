@@ -193,6 +193,71 @@ export const LEI_8212_ART_28_LIMITES: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * O MEI — CALC-047 e CALC-052.
+ *
+ * Conferidas no texto consolidado da LC 123/2006 e no texto da LC 214/2025, no
+ * Planalto, em 03/08/2026. **A leitura do art. 18-A não se resolve só na LC
+ * 123:** as alíneas do § 3º, V trazem a marca "(Vide Lei Complementar nº 214, de
+ * 2025)", e é preciso ir até lá para saber o que muda e quando.
+ */
+export const LC123_ART_18A_V: Fonte = {
+  id: 'lc-123-2006-art-18a-v',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006',
+  dispositivo: 'Art. 18-A, § 3º, V, alíneas "a", "b" e "c"',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * A regra que transforma "R$ 45,65" em "5% do salário mínimo".
+ *
+ * O texto da alínea "a" traz um valor NOMINAL de 2008. É o § 11 que manda
+ * reajustá-lo "de forma a manter equivalência com a contribuição de que trata o
+ * § 2º do art. 21 da Lei nº 8.212" — e é por essa equivalência que o valor
+ * praticado é 5% do salário mínimo, e não os R$ 45,65 escritos.
+ */
+export const LC123_ART_18A_P11: Fonte = {
+  id: 'lc-123-2006-art-18a-p11',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006',
+  dispositivo: 'Art. 18-A, § 11',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LC123_ART_18A_LIMITES: Fonte = {
+  id: 'lc-123-2006-art-18a-limites',
+  norma:
+    'Lei Complementar nº 123, de 14 de dezembro de 2006, com as redações das Leis Complementares nº 155, de 2016, e nº 188, de 2021',
+  dispositivo: 'Art. 18-A, §§ 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LC123_ART_18A_P7: Fonte = {
+  id: 'lc-123-2006-art-18a-p7',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006',
+  dispositivo: 'Art. 18-A, § 7º, incisos III e IV, e § 10',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * A tabela que substitui os valores fixos a partir de 2027.
+ *
+ * O art. 516 da LC 214/2025 troca as alíneas "b" e "c" do art. 18-A, § 3º, V
+ * por remissões ao Anexo VII — e o próprio Anexo declara a vigência de cada
+ * linha, começando em 1º/1/2027. **É isso que garante que os R$ 1,00 e R$ 5,00
+ * continuam valendo até 31/12/2026.**
+ */
+export const LC214_ANEXO_VII: Fonte = {
+  id: 'lc-214-2025-anexo-vii',
+  norma: 'Lei Complementar nº 214, de 16 de janeiro de 2025',
+  dispositivo: 'Anexo VII — Valores fixos do Microempreendedor Individual (MEI)',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const RPS_ART_216: Fonte = {
   id: 'decreto-3048-1999-art-216',
   norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',
