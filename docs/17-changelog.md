@@ -31,6 +31,42 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-062 · conversor de moeda — e a fonte que não resolveu
+
+**A alíquota de IOF não entrou em `lib/params/`, e não foi por falta de
+pesquisa.** §7.20 já registrava que a fonte oficial precisa ser a versão
+**consolidada**. Esta calculadora encontrou o caso seguinte: a consolidada também
+pode não responder.
+
+O texto do art. 15-B do Decreto nº 6.306/2007 no Planalto, lido em 03/08/2026,
+exibe **ao mesmo tempo** a redação do Decreto nº 12.499/2025 marcada como
+*sustada* pelo Decreto Legislativo nº 176/2025, a redação anterior marcada como
+*restabelecida* pelo mesmo ato, e um *Vide ADC nº 96*. O Congresso sustou o
+decreto do Executivo, o Executivo levou ao Supremo, e a página oficial mostra as
+três camadas sem dizer qual vige. Não é ambiguidade de leitura — é disputa em
+curso.
+
+**O IOF virou campo**, pelo caminho que `00-catalogo` §14 prescreve para dado que
+o produto não pode fundamentar — o mesmo de CALC-011 com terceiros e de CALC-057
+com o IPVA. O FAQ explica a disputa citando exatamente o que o texto consolidado
+mostra, e não afirma alíquota nenhuma. Um caso-ouro trava isso: a etapa do
+imposto não pode ter `parametro`, e o traço não aplica vigência.
+
+E há um segundo motivo que sobreviveria mesmo sem a disputa: a alíquota não é a
+mesma para espécie, cartão, transferência e remessa. Número único para todas
+seria errado de qualquer jeito.
+
+**A página continua útil sem o valor**, e é isso que autoriza publicá-la: o que
+ela existe para mostrar é a **cotação efetiva** — quanto se pagou de fato por
+dólar, com spread, imposto e tarifa dentro —, e esse número não depende de qual
+alíquota vige. É comum a casa com a melhor cotação de tela ter a pior efetiva.
+
+**Ela também não usa série econômica**, e isso ficou declarado em §7.34: cotação
+é preço, e a máquina de séries é feita para percentual. Medido no mesmo dia, o
+dólar vem com quatro casas decimais e o euro com **sete** — o normalizador
+recusaria o segundo, corretamente. Encaixar preço ali é ampliação de contrato, e
+§7.8 manda esperar a segunda calculadora que precise.
+
 ### Adicionado · CALC-034 · alugar ou comprar
 
 A mais composta do catálogo, e a que mais depende de premissa — **três chutes

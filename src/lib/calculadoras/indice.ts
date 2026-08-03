@@ -247,6 +247,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto o dinheiro perdeu — e quanto seria preciso hoje para comprar o mesmo.',
   },
   {
+    slug: 'conversor-de-moeda',
+    nome: 'Conversor de moeda com IOF',
+    linhaDeContexto:
+      'Quanto você paga de verdade por dólar ou euro — com spread, IOF e tarifa dentro.',
+  },
+  {
     slug: 'valor-futuro-corrigido',
     nome: 'Valor futuro corrigido pela inflação',
     linhaDeContexto: 'Quanto será preciso ter lá na frente — e o que o dinheiro parado comprará.',

@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **47** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **48** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 998 de unidade · 444 ponta a ponta · 3 de vazamento |
+| Testes | 1.014 de unidade · 450 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -40,6 +40,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · comparador de aplicações
 - **Autônomo:** precificação de hora
+- **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro
@@ -138,10 +139,10 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 28 de 75
+## 4. Calculadoras pendentes — 27 de 75
 
 Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-034, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-065,
-CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060, CALC-061, CALC-063, CALC-064, CALC-069, CALC-070 e
+CALC-037, CALC-039, CALC-040, CALC-041, CALC-042, CALC-045, CALC-049, CALC-060 a CALC-064, CALC-064, CALC-069, CALC-070 e
 CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
@@ -1084,6 +1085,58 @@ estrutural e não estimado.
 > procurando um problema que não existe. Quando escrever recorte, ancore no que a
 > estrutura garante, não no tamanho que ela tem hoje.
 
+### 7.33 A fonte oficial que **não resolve** — e o que fazer então
+
+§7.20 registrou que a fonte oficial precisa ser a versão **consolidada**, porque
+o texto original não mostra o que foi revogado depois. CALC-062 encontrou o caso
+seguinte: **a consolidada também pode não responder.**
+
+O art. 15-B do Decreto nº 6.306/2007 fixa a alíquota de IOF sobre câmbio. O texto
+consolidado no Planalto, lido em 03/08/2026, exibe ao mesmo tempo:
+
+| O que aparece | Marca |
+|---|---|
+| Redação do Decreto nº 12.499/2025 | **Sustado pelo Decreto Legislativo nº 176/2025** |
+| Redação anterior, do Decreto nº 8.325/2014 | **Restabelecido pelo Decreto Legislativo nº 176/2025** |
+| Redação do Decreto nº 12.499/2025, de novo | **Vide Decreto Legislativo nº 176/2025** · **Vide ADC nº 96** |
+
+Ou seja: o Congresso sustou o decreto do Executivo, o Executivo levou a questão
+ao Supremo, e a página oficial mostra as três camadas lado a lado sem dizer qual
+vige. **Não é ambiguidade de leitura — é disputa em curso.**
+
+**O que foi feito.** Nenhuma alíquota entrou em `lib/params/`. A calculadora foi
+publicada com o IOF como **campo**, seguindo o que `00-catalogo` §14 prescreve
+para dado que o produto não pode fundamentar — o mesmo caminho de CALC-011 com
+terceiros e de CALC-057 com o IPVA. O FAQ explica a disputa citando exatamente o
+que o texto consolidado mostra, e não afirma alíquota nenhuma.
+
+**E há um segundo motivo, que sobreviveria mesmo sem a disputa:** a alíquota não
+é a mesma para espécie, cartão, transferência e remessa. Um número único para
+todas seria errado de qualquer jeito.
+
+> **A régua que isto fixa.** Quando a fonte oficial não resolve, há três saídas,
+> e só duas são aceitáveis. Publicar um número escolhido entre as versões é a
+> inaceitável. As outras são **não publicar a calculadora** ou **publicá-la sem o
+> valor, dizendo por quê** — e a segunda só vale quando a página continua útil
+> sem ele, que é o caso aqui: a cotação efetiva, que é o que a página existe para
+> mostrar, não depende de qual alíquota vige.
+
+### 7.34 Preço não cabe na máquina de séries, e isso ficou declarado
+
+CALC-062 seria a candidata natural a puxar a cotação do dólar da série 1 do BCB,
+que existe e foi medida. Não puxa, e o motivo é de contrato: a máquina de séries
+deste projeto é feita para **percentual** — escala fixa de quatro casas e
+conversão para basis points. Cotação é **preço**.
+
+A medição de 03/08/2026 tornou isso concreto: o dólar (série 1) vem com quatro
+casas decimais e o euro (série 21619) com **sete**. O normalizador recusaria a
+segunda, corretamente, por exceder a escala declarada.
+
+Encaixar preço ali exigiria escala por série e um tipo não percentual. É
+ampliação de contrato, e §7.8 manda que ela venha de **necessidade medida**: uma
+calculadora que precisa é palpite. Fica registrado para quando a segunda
+aparecer.
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -1104,15 +1157,15 @@ O que sobrou, em ordem:
 
 1. ~~**Implementar `ADR-006`**~~ ✅ **feito em 02/08/2026.** A coleta está no
    pipeline, o cache é versionado, o plano de falha foi exercitado de verdade, e
-   **onze das doze que ele destrava já estão no ar**: CALC-060, CALC-061,
-   CALC-063, CALC-037, CALC-042, CALC-041, CALC-064, CALC-045, CALC-039, CALC-040 e
-   CALC-034.
+   **as doze que ele destrava estão no ar**: CALC-060, CALC-061,
+   CALC-063, CALC-037, CALC-042, CALC-041, CALC-064, CALC-045, CALC-039, CALC-040,
+   CALC-034 e CALC-062 — esta última **sem** a alíquota de IOF, pela razão em
+   §7.33.
 
-   **Falta uma:**
+   **Nenhuma falta.**
 
    | ID | Calculadora | O que falta |
    |---|---|---|
-   | CALC-062 | Moeda com IOF | ⚠️ **A única bloqueada.** A alíquota de IOF é parâmetro legal e exige pesquisa em fonte oficial, com vigência |
 
    > **O padrão que CALC-041 abriu vale para as próximas.** A regra de
    > remuneração da poupança está em lei, e transcrevê-la criaria constante legal

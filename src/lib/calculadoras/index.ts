@@ -12,6 +12,7 @@ import { AMORTIZACAO } from './amortizacao'
 import { AMORTIZACAO_EXTRA } from './amortizacao-extra'
 import { AVISO_PREVIO } from './aviso-previo'
 import { BANCO_DE_HORAS } from './banco-de-horas'
+import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
 import { CDB } from './cdb'
 import { COMPARADOR_INVESTIMENTOS } from './comparador-investimentos'
@@ -95,6 +96,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   ENERGIA,
   CORRECAO_POR_INDICE,
   PODER_DE_COMPRA,
+  CAMBIO,
   VALOR_FUTURO,
   REAJUSTE_SALARIAL,
   REAJUSTE_ALUGUEL,

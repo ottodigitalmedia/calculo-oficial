@@ -276,6 +276,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './poder-de-compra'
     ).then((m) => m.calcular),
+  'conversor-de-moeda': () =>
+    import(
+      /* webpackChunkName: "calc-cambio" */
+      /* webpackExports: ["calcular"] */
+      './cambio'
+    ).then((m) => m.calcular),
   'valor-futuro-corrigido': () =>
     import(
       /* webpackChunkName: "calc-valor-futuro" */
