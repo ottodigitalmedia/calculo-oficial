@@ -153,6 +153,46 @@ export const LEI_8212_ART_28: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * As três alíquotas do contribuinte individual e do facultativo — CALC-050.
+ *
+ * Conferidas no texto CONSOLIDADO do Planalto em 03/08/2026, que traz as
+ * redações sucessivas empilhadas. A leitura exige cuidado: o mesmo `§ 2º`
+ * aparece quatro vezes na página, com as redações da LC 123/2006, da MP
+ * 529/2011 e da Lei 12.470/2011 uma abaixo da outra. **A vigente é a última.**
+ */
+export const LEI_8212_ART_21_CAPUT: Fonte = {
+  id: 'lei-8212-1991-art-21-caput',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991, com a redação da Lei nº 9.876, de 1999',
+  dispositivo: 'Art. 21, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_8212_ART_21_P2: Fonte = {
+  id: 'lei-8212-1991-art-21-p2',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991, com a redação da Lei nº 12.470, de 2011',
+  dispositivo: 'Art. 21, § 2º, incisos I e II',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_8212_ART_21_P3: Fonte = {
+  id: 'lei-8212-1991-art-21-p3',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991, com a redação da Lei nº 12.470, de 2011',
+  dispositivo: 'Art. 21, § 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_8212_ART_28_LIMITES: Fonte = {
+  id: 'lei-8212-1991-art-28-limites',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991',
+  dispositivo: 'Art. 28, III e IV, e §§ 3º e 5º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const RPS_ART_216: Fonte = {
   id: 'decreto-3048-1999-art-216',
   norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',
