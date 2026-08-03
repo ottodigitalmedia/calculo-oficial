@@ -22,6 +22,7 @@ import { RENDA_FIXA } from '@/lib/params/data/renda-fixa'
 import { SEGURO_DESEMPREGO } from '@/lib/params/data/seguro-desemprego'
 import { TRABALHISTA } from '@/lib/params/data/trabalhista'
 import { construirRegistro } from '@/lib/params/registry'
+import { aplicarSugestao } from '@/lib/series/sugestao'
 import { guiasDaCalculadora } from '@/lib/guias'
 
 /**
@@ -130,7 +131,7 @@ export default async function PaginaCalculadora({
           FAQ e dos motores de todas as calculadoras. Ver
           `calculadoras/tipos.ts`, `FormularioCalculadora`. */}
       <section className="mt-8">
-        <Calculadora formulario={formularioDe(definicao, registro)} />
+        <Calculadora formulario={aplicarSugestao(formularioDe(definicao, registro), definicao)} />
       </section>
 
       {/* O slot de anúncio ficaria AQUI: abaixo do resultado e da memória,

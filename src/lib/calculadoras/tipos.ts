@@ -205,6 +205,22 @@ export type FuncaoCalculo = (
  * e traz o motor junto. O usuário precisa digitar antes de haver o que
  * calcular, e é nessa folga que o pedaço chega.
  */
+/**
+ * Sugestão vinda de série econômica, já resolvida pelo servidor.
+ *
+ * **Inteiramente serializável, e minúscula de propósito.** O cache de séries
+ * tem dezenas de quilobytes de histórico e nunca atravessa para o navegador —
+ * o que cruza é um valor, uma data e um aviso. Mesma disciplina de
+ * `anosDisponiveis`, e pelo mesmo motivo (`RNF-004`).
+ */
+export interface SugestaoDoFormulario {
+  readonly campo: string
+  readonly valor: number
+  readonly rotulo: string
+  readonly dataDoDado: DataISO
+  readonly desatualizada: boolean
+}
+
 export interface FormularioCalculadora {
   readonly slug: string
   readonly campos: readonly Campo[]
@@ -214,6 +230,8 @@ export interface FormularioCalculadora {
   readonly anosDisponiveis: readonly number[]
   /** Intervalo coberto, para a frase sob o seletor de período. */
   readonly cobertura: { readonly inicio: DataISO; readonly fim: DataISO | null } | null
+  /** Presente quando a calculadora declara `sugestaoDeSerie` e há dado em cache. */
+  readonly sugestao?: SugestaoDoFormulario
 }
 
 export interface DefinicaoCalculadora {
@@ -243,6 +261,15 @@ export interface DefinicaoCalculadora {
   readonly relacionadas: readonly string[]
   /** Aviso adicional ao de estimativa. Ex.: o de FGTS (`RN-023`). */
   readonly avisoAdicional?: string
+  /**
+   * Campo a pré-preencher com o último valor de uma série econômica (`RF-012`).
+   *
+   * Declarativo, e resolvido **no servidor** — `aplicarSugestao`, em
+   * `lib/series/sugestao.ts`. Não é resolvido aqui de propósito: este módulo
+   * está no pacote do navegador, e importar o cache de séries traria dezenas de
+   * quilobytes de histórico para toda rota de calculadora.
+   */
+  readonly sugestaoDeSerie?: { readonly campo: string; readonly serie: string }
 }
 
 /**

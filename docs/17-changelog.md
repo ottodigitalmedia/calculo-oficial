@@ -31,6 +31,67 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · `ADR-006` implementado · a série econômica do Banco Central
+
+A dependência de maior alcance que restava no projeto. **Uma implementação
+destrava doze calculadoras** — CALC-034, CALC-037, CALC-039 a CALC-042, CALC-045
+e CALC-060 a CALC-064.
+
+**O endpoint foi medido, e não copiado.** `06-api-spec` §4.1 exige isso em letras
+maiúsculas, e `ESTADO-DO-PROJETO` §6.0 registra que a ficha do projeto irmão é
+ponteiro, nunca fonte. A medição de 02/08/2026 está em `docs/20-fonte-bcb-sgs.md`
+e resultou em: três armadilhas da ficha **confirmadas**, uma **corrigida** e
+**duas novas**.
+
+| # | Armadilha | Situação |
+|---|---|---|
+| 1 | `valor` é string com ponto decimal | ✅ confirmada |
+| 2 | `data` em `dd/MM/aaaa` | ✅ confirmada |
+| 3 | Defasagem de ~1 mês | ✅ confirmada — e **desigual entre séries** |
+| 4 | **A ordem difere por série** | ⚠️ nova |
+| 5 | **O schema não é uniforme** (`dataFim`) | ⚠️ nova |
+| 6 | "Janela de 10 anos" | ❌ **errada como regra geral** |
+
+**A quarta é a que teria custado um defeito em produção.** As séries `4189` e
+`433` voltam em ordens **opostas** na mesma chamada `ultimos/N`. Ler o último
+item do array como "o mais recente" acerta numa e erra na outra — devolvendo o
+valor de um mês vizinho, plausível e errado. O coletor ordena por data antes de
+gravar, e um caso-ouro roda as duas capturas reais.
+
+**A sexta derrubou a primeira execução do coletor**, com 400 nas seis séries: o
+`ultimos/N` tem teto de vinte, e o serviço diz isso em texto no corpo do erro. Em
+compensação, o endpoint por intervalo aceitou **20 anos** de série mensal sem
+reclamar — 246 pontos numa requisição. O limite acompanha a quantidade de
+pontos, não a de anos.
+
+**A escala não é basis point, e isso é decisão.** A TR e a poupança são
+divulgadas com quatro casas — 0,1729% —, e arredondá-las a basis point mudaria o
+valor em até 3%. É o mesmo problema de §7.30, com a saída que aquele caso não
+permitia: como a grandeza é **publicada** e não digitada, a escala pode
+acompanhar a publicação. O valor é o percentual vezes 10.000, e `paraBasisPoints`
+converte com política declarada.
+
+**O que o plano de falha entregou, verificado na prática:** quando as seis séries
+falharam com 400, o script registrou aviso, manteve o cache e **encerrou com
+código zero**. Foi a regra R-3 funcionando antes de alguém precisar dela.
+
+### Corrigido · a sugestão de série quase tirou uma calculadora do índice
+
+`RF-012` faz a taxa de juros compostos abrir preenchida com a Selic corrente. O
+valor **não** está em `campo.padrao` — é resolvido no servidor a cada build —, e
+`escreverNaUrl` comparava só com o padrão declarado. Com isso a página nasceria
+com `?taxa=1415`, e query implica `noindex`.
+
+A calculadora sairia do índice **sozinha e em silêncio**, no único canal de
+aquisição que o produto tem. É a mesma classe de defeito que §7.2 registra sobre
+o `ref=`, por um caminho novo — e por isso ganhou um teste irmão em
+`permalink.spec.ts`, que também verifica que o campo está de fato preenchido: um
+teste que passasse por não haver sugestão nenhuma seria a forma mais fácil de
+mentir aqui.
+
+`escreverNaUrl` passou a receber o estado com que o formulário abriu, e a omitir
+o que não mudou em relação a ele.
+
 Três calculadoras — CALC-043, CALC-065 e CALC-069 — e a correção de um limite do
 próprio verificador de orçamento.
 

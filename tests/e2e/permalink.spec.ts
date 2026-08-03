@@ -70,3 +70,34 @@ test('o período padrão NÃO entra na URL — se entrasse, toda calculadora fic
   await page.getByLabel('Período de referência').selectOption({ label: '2025' })
   await expect(page).toHaveURL(/ref=2025/)
 })
+
+/**
+ * O campo pré-preenchido por série econômica NÃO pode dar query à página.
+ *
+ * `RF-012` faz a taxa de juros compostos abrir com a Selic corrente. O valor
+ * não está em `campo.padrao` — é resolvido no servidor a cada build —, e a
+ * primeira versão de `escreverNaUrl` comparava só com o padrão declarado. Com
+ * isso a página nascia com `?taxa=1415`, e query implica `noindex`: a
+ * calculadora sairia do índice sozinha, em silêncio, no único canal de
+ * aquisição que o produto tem.
+ *
+ * É a mesma classe de defeito que o teste do período acima trava, por um
+ * caminho novo — e por isso ele ganhou um irmão em vez de uma asserção a mais.
+ */
+test('a sugestão de série não tira a calculadora do índice', async ({ page }) => {
+  await page.goto('/calculadora/juros-compostos')
+
+  await expect(page).not.toHaveURL(/\?/)
+  await expect(page.locator('meta[name="robots"][data-query]')).toHaveCount(0)
+
+  // E o campo está de fato preenchido — senão o teste passaria por não haver
+  // sugestão nenhuma, que é o modo mais fácil de um teste mentir.
+  await expect(page.getByLabel('Taxa de juros')).not.toHaveValue('')
+
+  // `ADR-006` S-5: o valor sugerido nunca aparece sem a data a que se refere.
+  await expect(page.getByText(/Sugerimos .*Selic/)).toBeVisible()
+
+  // Mexer no campo, aí sim, escreve na URL.
+  await page.getByLabel('Taxa de juros').fill('987')
+  await expect(page).toHaveURL(/taxa=987/)
+})

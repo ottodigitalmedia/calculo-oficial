@@ -82,13 +82,26 @@ export function escreverNaUrl(
   valores: ValoresFormulario,
   referencia: string | null,
   referenciaPadrao: string | null = null,
+  iniciais: ValoresFormulario = {},
 ): string {
   const params = new URLSearchParams()
 
   for (const campo of campos) {
     const v = valores[campo.id]
     if (v === undefined) continue
-    const padrao = campo.padrao ?? (campoEhTexto(campo.tipo) ? '' : 0)
+    /**
+     * O padrão efetivo pode não ser o declarado no campo.
+     *
+     * Desde `RF-012` um campo pode abrir preenchido com o último valor de uma
+     * série econômica, e esse valor não está em `campo.padrao` — ele é
+     * resolvido no servidor a cada build. Comparar só com `campo.padrao`
+     * escreveria `?taxa=1415` numa página que ninguém tocou, e **query implica
+     * `noindex`** (§7.2 de `ESTADO-DO-PROJETO`): a calculadora sairia do índice
+     * sozinha, em silêncio, e busca orgânica é o único canal de aquisição.
+     *
+     * `iniciais` é exatamente o estado com que o formulário abriu.
+     */
+    const padrao = iniciais[campo.id] ?? campo.padrao ?? (campoEhTexto(campo.tipo) ? '' : 0)
     if (v === padrao) continue
     if (v === 0 || v === '') continue
     params.set(campo.id, String(v))

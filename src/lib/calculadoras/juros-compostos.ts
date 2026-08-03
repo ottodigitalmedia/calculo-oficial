@@ -130,6 +130,20 @@ export const JUROS_COMPOSTOS: DefinicaoCalculadora = {
   // Nenhum. A taxa é digitada; não há constante legal envolvida.
   parametrosRequeridos: [],
 
+  /**
+   * `RF-012` — a taxa abre sugerida pela Selic corrente, e não vazia.
+   *
+   * **Sugestão, e não parâmetro.** `ADR-006` separa as duas coisas com todas as
+   * letras: indicador econômico errado produz sugestão imprecisa que o usuário
+   * sobrescreve; parâmetro legal errado produz dano. Por isso o valor entra por
+   * aqui, o campo continua editável, e a procedência aparece na tela com a data
+   * do dado (`S-5`).
+   *
+   * O período padrão da taxa já é "ao ano", que é a unidade em que a Selic é
+   * divulgada — as duas coisas precisam continuar casadas.
+   */
+  sugestaoDeSerie: { campo: 'taxa', serie: 'selic-ao-ano' },
+
   rotuloResultado: 'Montante final',
 
   calcular,

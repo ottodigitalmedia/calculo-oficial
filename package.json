@@ -22,7 +22,8 @@
     "test:leak": "playwright test --config=playwright.leak.config.ts",
     "audit:deps": "npm audit --audit-level=high",
     "check": "npm run validate:params && npm run typecheck && npm run lint && npm run test:coverage && npm run audit:deps && npm run build && npm run check:orcamento && npm run test:e2e && npm run test:leak",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "fetch:serie": "tsx scripts/coletar-series.ts"
   },
   "//overrides": "Versões transitivas fixadas para eliminar vulnerabilidade conhecida sem downgrade de framework (07-security §8). Cada entrada é uma correção publicada dentro da mesma major — não é supressão de alerta. Reavaliar a cada `npm run audit:deps`: quando o pacote pai passar a resolver a versão corrigida sozinho, a entrada sai daqui.",
   "overrides": {

@@ -118,12 +118,26 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
   const dataInicial =
     cobertura && candidata < cobertura.inicio ? cobertura.inicio : candidata
 
-  const [dataReferencia, setDataReferencia] = useState(dataInicial)
-  const [valores, setValores] = useState<ValoresFormulario>(() =>
-    Object.fromEntries(
+  /**
+   * O estado com que o formulário abre — padrão de cada campo MAIS a sugestão
+   * de série, quando há (`RF-012`).
+   *
+   * Calculado uma vez e usado em dois lugares: para inicializar o estado e para
+   * decidir o que entra na URL. O segundo uso é o que impede que uma página
+   * recém-aberta ganhe query por causa de um campo pré-preenchido — ver a nota
+   * em `escreverNaUrl`.
+   */
+  const valoresIniciais = useMemo<ValoresFormulario>(() => {
+    const base = Object.fromEntries(
       formulario.campos.map((c) => [c.id, c.padrao ?? (campoEhTexto(c.tipo) ? '' : 0)]),
-    ),
-  )
+    )
+    const sugestao = formulario.sugestao
+    if (sugestao && sugestao.campo in base) base[sugestao.campo] = sugestao.valor
+    return base
+  }, [formulario])
+
+  const [dataReferencia, setDataReferencia] = useState(dataInicial)
+  const [valores, setValores] = useState<ValoresFormulario>(valoresIniciais)
 
   /**
    * Hidrata o formulário a partir da URL, uma única vez (`RF-006`).
@@ -146,14 +160,20 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
    * no histórico, e o botão "voltar" deixaria de voltar para a página anterior.
    */
   useEffect(() => {
-    const query = escreverNaUrl(formulario.campos, valores, dataReferencia, dataInicial)
+    const query = escreverNaUrl(
+      formulario.campos,
+      valores,
+      dataReferencia,
+      dataInicial,
+      valoresIniciais,
+    )
     const alvo = `${window.location.pathname}${query}`
     if (alvo !== `${window.location.pathname}${window.location.search}`) {
       window.history.replaceState(null, '', alvo)
     }
     // 07-security §4.3: a query carrega salário e dados de contrato.
     ajustarIndexacao(query !== '')
-  }, [formulario, valores, dataReferencia, dataInicial])
+  }, [formulario, valores, dataReferencia, dataInicial, valoresIniciais])
 
   const camposVisiveis = useMemo(
     () => formulario.campos.filter((c) => campoVisivel(c, valores)),
@@ -238,6 +258,23 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
           <p className="text-sm text-[var(--color-text-secondary)]">
             Temos os parâmetros legais de {formatarData(cobertura.inicio)}
             {cobertura.fim ? ` a ${formatarData(cobertura.fim)}` : ' em diante'}.
+          </p>
+        ) : null}
+
+        {/* `S-5` de `ADR-006`: o valor sugerido NUNCA aparece sem a data a que
+            se refere. Um indicador sem data é afirmação sem lastro, e num
+            produto cuja tese é a auditabilidade isso é pior que campo vazio.
+            `S-6`/`RN-033` acrescentam o aviso quando o dado passa de 30 dias. */}
+        {formulario.sugestao ? (
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            Sugerimos {formulario.sugestao.rotulo}, de{' '}
+            {formatarData(formulario.sugestao.dataDoDado)}. Você pode alterar.
+            {formulario.sugestao.desatualizada ? (
+              <span className="text-[var(--color-negative)]">
+                {' '}
+                Este indicador pode estar desatualizado.
+              </span>
+            ) : null}
           </p>
         ) : null}
 
