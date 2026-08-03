@@ -31,6 +31,40 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-060 · correção de valor por índice
+
+A primeira que consome série econômica, e a que estabelece o padrão para as
+outras de índice — CALC-061, CALC-063, CALC-064 e CALC-037.
+
+**O orçamento foi o problema de desenho, e não a conta.** A correção calcula no
+NAVEGADOR, sobre o intervalo que o usuário escolhe: não há como resolvê-la no
+servidor como se faz com a sugestão de taxa. E o cache completo tem 60 kB de
+objetos `{data, valor}`, o que sozinho estouraria os 30 kB de parte variável que
+`RNF-004` permite a uma rota.
+
+A saída foi uma **segunda forma da mesma série**, gerada pelo coletor: um mês
+inicial e um vetor posicional de inteiros. As três séries mensais couberam em
+5,2 kB de fonte, e a rota fechou em **115,3 kB — 2,4 kB de parte variável**, com
+vinte anos de IPCA, INPC e IGP-M dentro. O gerador percorre o calendário e
+**recusa gravar** se a origem pular um mês: vetor posicional com buraco sairia
+deslocado, errado por um número plausível.
+
+**A convenção da janela está declarada porque muda o resultado.** Corrigir de
+março para julho aplica os índices de abril a julho — quatro meses, não cinco. O
+índice de março mede a variação ocorrida *durante* março, que já está no valor de
+março. A memória nomeia o primeiro e o último mês aplicados e diz quantos foram,
+para que a conferência não dependa de acreditar na nota.
+
+**Selic e TR aparecem desabilitadas, com "Em breve".** As duas são séries diárias
+na origem, e convertê-las em fator mensal exige uma decisão de convenção que
+ainda não foi tomada. `OpcaoSelecao.indisponivel` existe para isto: declarar o
+que falta em vez de sugerir cobertura que não há.
+
+Os casos-ouro usam série **sintética**, de meses de 1% exatos. Índice real muda a
+cada coleta, e caso-ouro que dependesse dele falharia sozinho todo mês — o que
+ensina a ignorar vermelho. O dado real é coberto à parte, por invariantes que não
+fixam valor nenhum.
+
 ### Adicionado · `ADR-006` implementado · a série econômica do Banco Central
 
 A dependência de maior alcance que restava no projeto. **Uma implementação

@@ -204,6 +204,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto cada aparelho pesa na conta de luz — pela sua tarifa, não por média.',
   },
   {
+    slug: 'correcao-por-indice',
+    nome: 'Correção de valor por índice',
+    linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC ou IGP-M, mês a mês.',
+  },
+  {
     slug: 'porcentagem',
     nome: 'Porcentagem',
     linhaDeContexto:

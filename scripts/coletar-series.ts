@@ -28,6 +28,7 @@ import { normalizar } from '../src/lib/series/normalizar'
 import {
   SERIES,
   VERSAO_DO_CACHE,
+  type SerieId,
   type CacheDeSeries,
   type DefinicaoDeSerie,
   type SerieEmCache,
@@ -35,6 +36,21 @@ import {
 import type { DataISO } from '../src/lib/params/tipos'
 
 const ARQUIVO = join('src', 'lib', 'series', 'dados', 'cache.json')
+const ARQUIVO_COMPACTO = join('src', 'lib', 'series', 'dados', 'compacto.ts')
+
+/**
+ * As séries que precisam rodar **no navegador**, e por isso ganham uma segunda
+ * forma, compacta.
+ *
+ * A correção por índice calcula no cliente, sobre o intervalo que o usuário
+ * escolhe — não há como resolver isso no servidor como se faz com a sugestão de
+ * taxa. E o cache completo tem 60 kB de objetos `{data, valor}`, o que sozinho
+ * estouraria os 30 kB de parte variável que `RNF-004` permite a uma rota.
+ *
+ * A forma compacta troca 240 objetos por um mês inicial e um vetor de inteiros.
+ * O conteúdo é o mesmo; o que muda é não repetir a chave e a data em cada ponto.
+ */
+const COMPACTAS: readonly SerieId[] = ['ipca-mensal', 'inpc-mensal', 'igpm-mensal']
 
 /** §4.2: tempo limite de 3 segundos. */
 const TEMPO_LIMITE_MS = 3_000
@@ -215,12 +231,91 @@ async function main(): Promise<void> {
   const novo: CacheDeSeries = { versao: VERSAO_DO_CACHE, series: atualizadas }
   mkdirSync(dirname(ARQUIVO), { recursive: true })
   writeFileSync(ARQUIVO, `${JSON.stringify(novo, null, 2)}\n`, 'utf8')
+  escreverCompacto(novo)
 
   if (falhas > 0) {
     avisar(`${falhas} de ${SERIES.length} série(s) não atualizadas. O build prossegue (R-3).`)
   } else {
     console.log(`[series] ${SERIES.length} séries atualizadas.`)
   }
+}
+
+/**
+ * Gera a forma compacta das séries mensais, para o pacote do navegador.
+ *
+ * **Sem buraco de mês.** O vetor é posicional: a posição `k` é o mês `inicio +
+ * k`. Se a origem pular um mês, a posição deixaria de corresponder à data, e a
+ * correção de um intervalo longo sairia deslocada — errada por um número
+ * plausível, que é a forma cara de errar. O gerador percorre o calendário e
+ * **falha alto** se encontrar falta, em vez de compactar um vetor torto.
+ */
+function escreverCompacto(cache: CacheDeSeries): void {
+  const QUEBRA = String.fromCharCode(10)
+  const blocos: string[] = []
+
+  for (const id of COMPACTAS) {
+    const serie = cache.series.find((s) => s.id === id)
+    if (!serie || serie.pontos.length === 0) {
+      avisar(`${id}: sem pontos; forma compacta ficará vazia`)
+      blocos.push(`  '${id}': { inicio: '', valores: [] },`)
+      continue
+    }
+
+    const primeiro = serie.pontos[0]
+    if (!primeiro) continue
+    const inicio = primeiro.data.slice(0, 7)
+
+    const valores: number[] = []
+    let [ano, mes] = inicio.split('-').map(Number) as [number, number]
+    let saudavel = true
+
+    for (const ponto of serie.pontos) {
+      const esperado = `${ano}-${String(mes).padStart(2, '0')}`
+      if (ponto.data.slice(0, 7) !== esperado) {
+        avisar(`${id}: buraco no calendário — esperava ${esperado}, veio ${ponto.data}`)
+        saudavel = false
+        break
+      }
+      valores.push(ponto.valor)
+      mes += 1
+      if (mes > 12) {
+        mes = 1
+        ano += 1
+      }
+    }
+
+    if (!saudavel) {
+      avisar(`${id}: forma compacta não regravada; o pacote segue com a anterior`)
+      return
+    }
+
+    blocos.push(`  '${id}': { inicio: '${inicio}', valores: [${valores.join(', ')}] },`)
+  }
+
+  const conteudo = `/**
+ * GERADO POR \`npm run fetch:serie\` — NÃO EDITAR À MÃO.
+ *
+ * Forma compacta das séries mensais, para o pacote do navegador. O cache
+ * completo (\`cache.json\`) fica no servidor; aqui o que existe é um mês inicial
+ * e um vetor posicional de valores, na escala de \`PercentualEscalado\`.
+ *
+ * A posição \`k\` do vetor é o mês \`inicio + k\`, sem buraco: o gerador percorre
+ * o calendário e recusa gravar se a origem pular um mês.
+ */
+
+export interface SerieCompacta {
+  /** Primeiro mês, em \`AAAA-MM\`. */
+  readonly inicio: string
+  readonly valores: readonly number[]
+}
+
+export const SERIES_COMPACTAS: Readonly<Record<string, SerieCompacta>> = {
+${blocos.join(QUEBRA)}
+}
+`
+
+  writeFileSync(ARQUIVO_COMPACTO, conteudo, 'utf8')
+  console.log(`[series] forma compacta gravada para ${COMPACTAS.length} séries`)
 }
 
 /**

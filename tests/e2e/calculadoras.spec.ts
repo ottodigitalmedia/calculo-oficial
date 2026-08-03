@@ -94,6 +94,15 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   // Exige crédito OU débito, e os dois campos são opcionais isoladamente —
   // exigir um deles bloquearia quem só tem horas do outro tipo.
   'banco-de-horas': '?salario=220000&horasPositivas=1000&jornadaSemanal=44',
+  /**
+   * O mês final válido depende do ÍNDICE escolhido, e nenhum preenchedor
+   * genérico sabe disso: cada índice é publicado no seu próprio calendário, com
+   * defasagem de cerca de um mês, e o preenchedor usa uma data fixa no futuro.
+   * A calculadora recusa com razão — recusar mês não publicado é o
+   * comportamento correto, e afrouxá-lo para caber no teste seria distorcer o
+   * produto (§7.10).
+   */
+  'correcao-por-indice': '?valorOriginal=100000&indice=ipca&de=2015-01-01&ate=2020-01-01',
 }
 
 for (const c of CALCULADORAS) {

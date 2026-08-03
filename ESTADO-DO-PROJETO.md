@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **36** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo e a primeira do lado do empregador |
+| Calculadoras no ar | **37** de 75 — v1 completo, o bloco de desligamento fechado, cinco de crédito, quatro de imóveis, três de veículos, duas de consumo, duas utilitárias, duas de investimentos, a primeira de autônomo, a primeira de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 830 de unidade · 376 ponta a ponta · 3 de vazamento |
+| Testes | 905 de unidade · 384 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 42 vigências abertas, **0 divergências** (01/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -40,6 +40,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel
 - **Investimentos:** reserva de emergência · meta de independência financeira
 - **Autônomo:** precificação de hora
+- **Índices:** correção de valor por índice
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro
 - **Utilitárias:** porcentagem · regra de três
@@ -137,10 +138,10 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 39 de 75
+## 4. Calculadoras pendentes — 38 de 75
 
 Publicadas: **CALC-001 a CALC-013, CALC-015, CALC-016, CALC-018, CALC-022 a CALC-026, CALC-030 a CALC-032, CALC-035, CALC-036, CALC-043, CALC-044, CALC-054, CALC-055, CALC-057, CALC-065,
-CALC-049, CALC-069, CALC-070 e CALC-071**.
+CALC-049, CALC-060, CALC-069, CALC-070 e CALC-071**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -1086,14 +1087,15 @@ fila do bloco A: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
 
 O que sobrou, em ordem:
 
-1. **Implementar `ADR-006` — a coleta da série do Banco Central no build.**
-   Subiu para o primeiro lugar porque virou a dependência de maior alcance que
-   restou: libera **doze** calculadoras (CALC-039 a CALC-041 do v2 e mais nove do
-   v3), e é a única pendência cuja resolução destrava mais de uma fase. O
-   endpoint e as **seis armadilhas** já estão medidos em §6.1 — o que falta é
-   implementação, não pesquisa. Atenção à regra R-3: falha na coleta não
-   interrompe o pipeline, e a calculadora funciona com o último valor em cache,
-   **exibindo a data do dado**.
+1. ~~**Implementar `ADR-006`**~~ ✅ **feito em 02/08/2026.** A coleta está no
+   pipeline, o cache é versionado, o plano de falha foi exercitado de verdade
+   (§7.32), e CALC-060 já usa a série. **As onze restantes que ele destrava estão
+   livres**: CALC-061 e CALC-063 reaproveitam o motor de CALC-060 quase inteiro;
+   CALC-037 (reajuste de aluguel) é ele com texto de contrato; CALC-039 a
+   CALC-042 e CALC-045 precisam da Selic, que já está em cache. **Selic e TR na
+   correção continuam pendentes** de uma decisão: as duas são séries diárias na
+   origem, e virar fator mensal é convenção a definir — estão declaradas como
+   "Em breve" no campo, e não escondidas.
 2. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
    do projeto que toca a tese do produto, e ela ficou aberta com uma calculadora
    publicada em cima.

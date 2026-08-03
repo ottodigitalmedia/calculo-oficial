@@ -228,6 +228,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './energia'
     ).then((m) => m.calcular),
+  'correcao-por-indice': () =>
+    import(
+      /* webpackChunkName: "calc-correcao-por-indice" */
+      /* webpackExports: ["calcular"] */
+      './correcao-por-indice'
+    ).then((m) => m.calcular),
   porcentagem: () =>
     import(
       /* webpackChunkName: "calc-porcentagem" */

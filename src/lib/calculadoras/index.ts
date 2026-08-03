@@ -14,6 +14,7 @@ import { BANCO_DE_HORAS } from './banco-de-horas'
 import { CAPACIDADE } from './capacidade'
 import { CET } from './cet'
 import { CHEQUE_ESPECIAL } from './cheque-especial'
+import { CORRECAO_POR_INDICE } from './correcao-por-indice'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { CUSTO_DO_CARRO } from './custo-do-carro'
 import { COMBUSTIVEL } from './combustivel'
@@ -76,6 +77,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   PRECIFICACAO,
   ORCAMENTO,
   ENERGIA,
+  CORRECAO_POR_INDICE,
   PORCENTAGEM,
   REGRA_DE_TRES,
   COMBUSTIVEL,
