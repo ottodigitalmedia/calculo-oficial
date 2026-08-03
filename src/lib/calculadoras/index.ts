@@ -31,11 +31,13 @@ import { LOCACAO } from './locacao'
 import { ORCAMENTO } from './orcamento'
 import { PODER_DE_COMPRA } from './poder-de-compra'
 import { PORCENTAGEM } from './porcentagem'
+import { POUPANCA } from './poupanca'
 import { PRECIFICACAO } from './precificacao'
 import { REAJUSTE_ALUGUEL } from './reajuste-aluguel'
 import { REAJUSTE_SALARIAL } from './reajuste-salarial'
 import { REGRA_DE_TRES } from './regra-de-tres'
 import { RENDA_FIXA } from './renda-fixa'
+import { RENDA_MENSAL } from './renda-mensal'
 import { RESERVA_DE_EMERGENCIA } from './reserva'
 import { VIAGEM } from './viagem'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
@@ -75,6 +77,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   QUITACAO_ANTECIPADA,
   AMORTIZACAO_EXTRA,
   LOCACAO,
+  RENDA_MENSAL,
+  POUPANCA,
   RESERVA_DE_EMERGENCIA,
   INDEPENDENCIA,
   PRECIFICACAO,

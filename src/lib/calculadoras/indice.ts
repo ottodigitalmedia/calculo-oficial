@@ -177,6 +177,16 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto o imóvel rende de verdade — depois da vacância, do IPTU e da taxa.',
   },
   {
+    slug: 'quanto-rende-por-mes',
+    nome: 'Quanto rende por mês',
+    linhaDeContexto: 'Quanto um valor investido paga por mês — com o imposto dentro da conta.',
+  },
+  {
+    slug: 'rendimento-da-poupanca',
+    nome: 'Rendimento da poupança',
+    linhaDeContexto: 'Quanto a poupança rende no prazo — pela taxa que o Banco Central publicou.',
+  },
+  {
     slug: 'reserva-de-emergencia',
     nome: 'Reserva de emergência',
     linhaDeContexto:

@@ -66,6 +66,19 @@ export interface SaidaJurosCompostos {
  * uma taxa em outra taxa. `(1 + i)^(1/12) − 1` não tem forma racional exata,
  * e fingir que tem seria pior que declarar a aproximação.
  */
+/**
+ * A taxa mensal equivalente, em basis points.
+ *
+ * **Exportada de propósito.** CALC-042 precisa da mesma conversão, e reescrevê-la
+ * lá criaria duas verdades sobre a aproximação declarada acima — que divergiriam
+ * na primeira vez que alguém mexesse em uma delas. A decisão sobre onde o ponto
+ * flutuante entra e por quê é uma só, e mora aqui.
+ */
+export function taxaMensalEquivalente(taxa: BasisPoints, aoAno: boolean): BasisPoints {
+  const numerador = numeradorDaTaxaMensal(taxa, aoAno)
+  return basisPoints(Math.round((numerador / PRECISAO) * BP_POR_INTEIRO))
+}
+
 function numeradorDaTaxaMensal(taxa: BasisPoints, aoAno: boolean): number {
   if (!aoAno) {
     // Basis points já são /10.000; reescalados para /1e9 sem perda.

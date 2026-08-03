@@ -198,6 +198,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './locacao'
     ).then((m) => m.calcular),
+  'quanto-rende-por-mes': () =>
+    import(
+      /* webpackChunkName: "calc-renda-mensal" */
+      /* webpackExports: ["calcular"] */
+      './renda-mensal'
+    ).then((m) => m.calcular),
+  'rendimento-da-poupanca': () =>
+    import(
+      /* webpackChunkName: "calc-poupanca" */
+      /* webpackExports: ["calcular"] */
+      './poupanca'
+    ).then((m) => m.calcular),
   'reserva-de-emergencia': () =>
     import(
       /* webpackChunkName: "calc-reserva" */

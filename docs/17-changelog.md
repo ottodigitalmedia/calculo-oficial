@@ -31,6 +31,36 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 02/08/2026
 
+### Adicionado · CALC-042 e CALC-041 · as duas de investimento com série
+
+**CALC-042 · quanto rende por mês.** A pergunta que a categoria mais recebe, e a
+que mais é respondida errado — de duas formas, e a calculadora ataca as duas.
+Dividir a taxa anual por doze superestima: 12% ao ano são **0,95% ao mês**, não
+1,00%, porque o rendimento de cada mês rende nos seguintes. E projetar pelo bruto
+superestima de novo, porque renda fixa é tributada.
+
+A conversão **não foi reescrita**: `taxaMensalEquivalente` passou a ser exportada
+de `juros-compostos.ts`. Refazê-la aqui criaria duas verdades sobre a
+aproximação em ponto flutuante que aquele motor declara — e elas divergiriam na
+primeira vez que alguém mexesse em uma.
+
+A alíquota é campo, e o motivo está no motor: quem apura a tabela regressiva é
+CALC-018, que já tem os parâmetros cadastrados com vigência. Duplicar a tabela
+aqui seria uma segunda cópia de constante legal, que a regra 1 impede.
+
+**CALC-041 · rendimento da poupança.** Ela **não reimplementa a regra de
+remuneração**, e isso é decisão: a fórmula que combina Selic e TR está em lei, e
+transcrevê-la criaria constante legal fora de `lib/params/`. O caminho tomado é
+mais forte — o Banco Central **publica a taxa já apurada**, mês a mês, na série
+195, e é ela que abre no campo, com a data ao lado.
+
+A consequência honesta disso está no texto: o que a conta projeta é o rendimento
+**se a taxa se repetir**, e ela muda quando a taxa básica muda.
+
+Nenhum motor novo: é `calcularJurosCompostos` com a taxa vinda da série. As duas
+usam `sugestaoDeSerie`, que era o caso de uso original de `RF-012` e agora serve
+três calculadoras.
+
 ### Adicionado · CALC-061, CALC-063 e CALC-037 · o bloco de índices
 
 As três primeiras que o `ADR-006` destravou depois de CALC-060, e as três
