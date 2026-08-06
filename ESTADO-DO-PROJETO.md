@@ -2425,6 +2425,59 @@ cobra o bloqueio de 2026 nominalmente.
 > artigo, a resposta quase nunca é "cadastrar o número novo" — é estudar a
 > estrutura nova, ou parar na fronteira e dizer por quê.
 
+### 7.67 A home mentia havia semanas, e o teste olhava para o outro lado
+
+**Encontrado pelo mantenedor olhando a tela**, não por teste, não por revisão:
+a home anunciava **cinco calculadoras publicadas como "Em breve"** — rescisão sem
+justa causa, férias, 13º, horas extras e FGTS. As cinco são do v1, estão no ar
+desde 31/07/2026, e são as de maior busca do catálogo.
+
+A lista estava escrita à mão em `app/page.tsx`, e o comentário dela dizia:
+
+> *"Esta lista precisa encolher conforme elas entram — uma calculadora publicada
+> que continua marcada 'em breve' seria a mesma desonestidade ao contrário."*
+
+**O comentário previu o defeito e não o impediu.** Ele pedia disciplina, e §7.5 já
+tinha registrado o que disciplina vale: nada, sem verificador.
+
+**E existia verificador — para o lugar errado.** O teste
+`o rodapé não anuncia como "em breve" calculadora já publicada` nasceu do mesmo
+defeito no rodapé, no T-105, e foi escrito olhando `getByRole('contentinfo')`.
+A home ficou de fora do escopo dele por anos.
+
+> **A lição é sobre o RECORTE do teste.** Quando um defeito aparece numa região
+> da página, o reflexo é testar aquela região. Mas o defeito não era "o rodapé
+> mente" — era **"o site mente"**. Um teste recortado na região erra o alvo por
+> construção, e o silêncio dele é indistinguível de correção.
+>
+> O teste agora verifica a página inteira: `getByText('em breve')` com contagem
+> zero na home, sem escopo de região.
+
+**Como o defeito nasceu.** A lista foi escrita no lançamento, quando quatro
+calculadoras existiam e prometer as próximas era honesto. Depois vieram setenta,
+e ninguém voltou nela — porque nada obrigava.
+
+### 7.68 O rodapé derivado escalou mal, e a correção é de exibição
+
+Encontrado na mesma olhada: o rodapé listava **as 74 calculadoras e os 10 guias**,
+em toda página do site.
+
+Ele estava certo em princípio — a lista vem do registro, e foi assim que ele
+deixou de mentir no T-105. O que ninguém previu foi a escala: com quatro
+calculadoras a lista completa era um índice útil; com setenta e quatro, é uma
+parede de links que empurra o rodapé para fora da tela.
+
+**A correção preserva a propriedade e corta a exibição:** o rodapé mostra as oito
+primeiras do registro e uma chamada para o catálogo. O corte é `slice`, não uma
+segunda lista — e o número na chamada é `CALCULADORAS.length`, não uma constante.
+Se fosse constante, envelheceria, que é exatamente o defeito de §7.67 uma casa ao
+lado.
+
+> **Derivar do registro resolve "a lista mente". Não resolve "a lista cresceu".**
+> São problemas diferentes, e o segundo só aparece com o tempo. Vale reler
+> qualquer lugar que renderize `CALCULADORAS` inteiro perguntando o que acontece
+> na centésima.
+
 ### 7.66 Dois erros que se confirmam são um só, com testemunha
 
 **O pior defeito que este projeto teve até agora**, e ele durou horas porque o

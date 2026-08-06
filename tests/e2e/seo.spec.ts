@@ -222,11 +222,51 @@ test('a calculadora leva aos guias que a explicam', async ({ page }) => {
   await expect(page.locator('a[href="/guia/como-o-inss-e-calculado"]').first()).toBeVisible()
 })
 
-test('o rodapé não anuncia como "em breve" calculadora já publicada', async ({ page }) => {
+/*
+ * A PROPRIEDADE É "O SITE NÃO MENTE", e ela já foi violada dos dois lados.
+ *
+ * Até o T-105 o rodapé trazia três calculadoras publicadas marcadas "em breve".
+ * O teste que nasceu daí verificava o rodapé — e só ele. Em 06/08/2026
+ * descobriu-se que a HOME anunciava CINCO publicadas como "Em breve", numa
+ * lista escrita à mão que ninguém encolheu conforme elas entravam. O próprio
+ * comentário daquela lista previa o defeito e pedia que ela fosse mantida à
+ * mão; foi exatamente isso que falhou.
+ *
+ * Agora a verificação é da PÁGINA INTEIRA, não de uma região dela.
+ */
+test('a home não anuncia como "em breve" nada que já esteja publicado', async ({ page }) => {
+  await page.goto('/')
+  // Nenhuma promessa de futuro em lugar nenhum da home — o catálogo é a lista.
+  await expect(page.getByText('em breve', { exact: false })).toHaveCount(0)
+})
+
+/*
+ * O rodapé mostra uma AMOSTRA, e aponta para o catálogo.
+ *
+ * Ele listava as 74, o que era honesto e virou uma parede de links repetida em
+ * toda página do site. O corte é de exibição: a lista continua derivada do
+ * registro, e o número da chamada também — se fosse escrito à mão, envelheceria.
+ */
+test('o rodapé mostra uma amostra e leva ao catálogo completo', async ({ page }) => {
   await page.goto('/')
   const rodape = page.getByRole('contentinfo')
-  for (const slug of CALCULADORAS) {
-    await expect(rodape.locator(`a[href="/calculadora/${slug}"]`)).toBeVisible()
-  }
+
   await expect(rodape.getByText('em breve', { exact: false })).toHaveCount(0)
+
+  const links = rodape.locator('a[href^="/calculadora/"]')
+  const quantos = await links.count()
+  expect(quantos).toBeGreaterThan(0)
+  expect(quantos).toBeLessThan(CALCULADORAS.length)
+
+  // Todo link do rodapé aponta para calculadora que existe de verdade.
+  for (let i = 0; i < quantos; i += 1) {
+    const href = await links.nth(i).getAttribute('href')
+    const slug = href?.replace('/calculadora/', '') ?? ''
+    expect(CALCULADORAS).toContain(slug)
+  }
+
+  // A contagem é derivada: some uma calculadora e este texto muda sozinho.
+  await expect(
+    rodape.getByRole('link', { name: `Ver todas as ${CALCULADORAS.length} calculadoras` }),
+  ).toBeVisible()
 })

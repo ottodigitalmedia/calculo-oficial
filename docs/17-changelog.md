@@ -31,6 +31,36 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Corrigido · a home anunciava cinco calculadoras publicadas como "Em breve"
+
+Rescisão sem justa causa, férias, 13º salário, horas extras e FGTS — as cinco do
+v1, no ar desde 31/07/2026, e as de maior busca do catálogo — apareciam na home
+dentro de um bloco "Em breve", em cartões desabilitados.
+
+A lista estava escrita à mão em `app/page.tsx`, com um comentário que pedia para
+mantê-la encolhendo conforme as calculadoras entrassem. Ninguém encolheu, porque
+nada obrigava.
+
+**Havia teste para exatamente isso, e ele olhava para o outro lado.** O
+verificador nasceu do mesmo defeito no rodapé, no T-105, e foi escrito com escopo
+`getByRole('contentinfo')` — a home nunca esteve no alcance dele. O defeito não
+era "o rodapé mente", era "o site mente", e um teste recortado na região erra o
+alvo por construção.
+
+A lista saiu — o catálogo com busca, logo abaixo, já mostrava tudo — e o teste
+passou a verificar a **página inteira**, sem escopo de região.
+
+### Alterado · o rodapé deixou de listar as 74 calculadoras
+
+Ele listava todas, mais os dez guias, em toda página do site. Estava correto e
+era derivado do registro; o que ninguém previu foi a escala. Com quatro
+calculadoras a lista completa era um índice; com setenta e quatro, uma parede.
+
+Passou a mostrar as oito primeiras e uma chamada para o catálogo. O corte é de
+exibição: a lista continua vindo do registro, e a contagem do texto — "Ver todas
+as 74 calculadoras" — é `CALCULADORAS.length`, não um número escrito. Fosse
+escrito, envelheceria, que é o defeito da entrada acima uma casa ao lado.
+
 ### Adicionado · CALC-066 · energia solar, com o Fio B que faltava
 
 O catálogo marcava a calculadora sem fonte, e ela ficou parada mesmo assim: o

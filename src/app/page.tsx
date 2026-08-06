@@ -74,22 +74,6 @@ const PASSOS = [
   { n: 4, titulo: 'Confira na norma', texto: 'Siga o link e leia a fonte oficial.' },
 ]
 
-/**
- * As próximas, na ordem de `11-roadmap` §5.
- *
- * Declaradas em vez de omitidas: dizer o que ainda não existe é mais honesto
- * que sugerir cobertura que não temos. Esta lista precisa encolher conforme
- * elas entram — uma calculadora publicada que continua marcada "em breve"
- * seria a mesma desonestia ao contrário.
- */
-const EM_BREVE = [
-  { nome: 'Rescisão sem justa causa', texto: 'Verbas rescisórias, com as incidências separadas.' },
-  { nome: 'Férias', texto: 'Integrais, proporcionais, abono e o terço constitucional.' },
-  { nome: '13º salário', texto: 'As duas parcelas e onde os descontos incidem.' },
-  { nome: 'Horas extras', texto: 'Adicionais, hora noturna e reflexo no descanso.' },
-  { nome: 'FGTS', texto: 'Depósitos estimados e multa rescisória.' },
-]
-
 const PROMESSAS = [
   'Passo a passo de cada conta',
   'Norma e vigência em cada valor',
@@ -205,22 +189,6 @@ export default function Home() {
           <BuscaCatalogo />
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Declarado como "em breve" em vez de omitido: dizer o que ainda
-              não existe é mais honesto que sugerir cobertura que não temos. */}
-          {EM_BREVE.map((c) => (
-            <div
-              key={c.nome}
-              className="rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-6"
-            >
-              <h3 className="font-semibold text-[var(--color-text-muted)]">{c.nome}</h3>
-              <p className="mt-1 text-sm text-[var(--color-text-muted)]">{c.texto}</p>
-              <span className="mt-4 inline-block text-sm font-medium text-[var(--color-text-muted)]">
-                Em breve
-              </span>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* -------------------------------------------------------- guias -- */}

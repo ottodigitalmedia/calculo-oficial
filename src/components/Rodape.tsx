@@ -18,10 +18,23 @@ import { GUIAS } from '@/lib/guias'
  *
  * **As listas vêm dos registros, não são escritas aqui.** Até o T-105 este
  * arquivo trazia INSS, Imposto de Renda e juros compostos marcados "em breve"
- * — as três já publicadas no T-104. É a desonestia que o comentário da home
- * descreve, ao contrário: esconder o que existe, em vez de prometer o que não
- * existe. Derivar do registro remove a possibilidade de a divergência voltar.
+ * — as três já publicadas no T-104. É a desonestia que a home cometeu ao
+ * contrário: esconder o que existe, em vez de prometer o que não existe.
+ * Derivar do registro remove a possibilidade de a divergência voltar.
+ *
+ * **Mas derivar tudo escala mal, e escalou mal.** Com quatro calculadoras a
+ * lista completa cabia; com setenta e quatro o rodapé virou uma parede de
+ * links em toda página do site. Em 06/08/2026 ele passou a mostrar as
+ * primeiras `NO_RODAPE` e a apontar para o catálogo.
+ *
+ * O corte é **na exibição, não na fonte**: a lista continua vindo do registro,
+ * e o número na chamada é `CALCULADORAS.length`, não uma constante escrita
+ * aqui. Se fosse escrito, envelheceria — que é o defeito que este arquivo
+ * inteiro existe para não repetir.
  */
+
+/** Quantas cabem sem o rodapé virar índice. Exibição, não conteúdo. */
+const NO_RODAPE = 8
 const LEGAIS = [
   { href: '/aviso-legal', rotulo: 'Aviso legal' },
   { href: '/privacidade', rotulo: 'Privacidade' },
@@ -49,13 +62,18 @@ export function Rodape() {
         <div>
           <h2 className="text-sm font-semibold">Calculadoras</h2>
           <ul className="mt-3 space-y-2 text-sm opacity-75">
-            {CALCULADORAS.map((c) => (
+            {CALCULADORAS.slice(0, NO_RODAPE).map((c) => (
               <li key={c.slug}>
                 <Link href={`/calculadora/${c.slug}`} className="inline-block py-1 hover:underline">
                   {c.nome}
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/#calculadoras" className="inline-block py-1 font-medium hover:underline">
+                Ver todas as {CALCULADORAS.length} calculadoras
+              </Link>
+            </li>
           </ul>
         </div>
 
