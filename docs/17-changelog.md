@@ -29,7 +29,27 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
-## Ciclo de 03/08/2026
+## Ciclo de 06/08/2026
+
+### Corrigido · a data deste ciclo estava três dias adiantada
+
+Todo o trabalho deste ciclo foi datado **03/08/2026** na documentação e em duas
+mensagens de commit de parâmetro. A data real é **06/08/2026** — a de 03/08 é a
+do ciclo anterior, e foi assumida por continuidade em vez de conferida.
+
+Parece detalhe, e não é: `Verificado contra: textos do Planalto lidos em <data>`
+é uma afirmação de trilha de auditoria, e o histórico do Git é a única trilha que
+este projeto tem (`05-data-model` §5). Quem for reconstituir de onde veio uma
+alíquota precisa da data certa.
+
+As datas na documentação foram corrigidas. **As duas mensagens de commit não** —
+`params(inss-individual-aliquotas)` e `params(mei)` seguem dizendo 03/08/2026, e
+reescrever histórico empurrado é destrutivo (`RB-06`: corrija para a frente).
+Esta entrada é a correção, e é ela que vale.
+
+Duas passagens NÃO foram alteradas, porque estavam certas: a medição do dólar em
+§7.34 e a leitura do art. 15-B do Decreto nº 6.306/2007 aconteceram mesmo em
+03/08/2026, no ciclo anterior.
 
 ### Adicionado · o campo de LISTA · CALC-073, CALC-075 e CALC-028
 

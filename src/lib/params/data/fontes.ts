@@ -156,7 +156,7 @@ export const LEI_8212_ART_28: Fonte = {
 /**
  * As três alíquotas do contribuinte individual e do facultativo — CALC-050.
  *
- * Conferidas no texto CONSOLIDADO do Planalto em 03/08/2026, que traz as
+ * Conferidas no texto CONSOLIDADO do Planalto em 06/08/2026, que traz as
  * redações sucessivas empilhadas. A leitura exige cuidado: o mesmo `§ 2º`
  * aparece quatro vezes na página, com as redações da LC 123/2006, da MP
  * 529/2011 e da Lei 12.470/2011 uma abaixo da outra. **A vigente é a última.**
@@ -197,7 +197,7 @@ export const LEI_8212_ART_28_LIMITES: Fonte = {
  * O MEI — CALC-047 e CALC-052.
  *
  * Conferidas no texto consolidado da LC 123/2006 e no texto da LC 214/2025, no
- * Planalto, em 03/08/2026. **A leitura do art. 18-A não se resolve só na LC
+ * Planalto, em 06/08/2026. **A leitura do art. 18-A não se resolve só na LC
  * 123:** as alíneas do § 3º, V trazem a marca "(Vide Lei Complementar nº 214, de
  * 2025)", e é preciso ir até lá para saber o que muda e quando.
  */

@@ -4,7 +4,7 @@
  * ORIGEM DOS VALORES ESPERADOS, DECLARADA
  *
  * Texto consolidado da LC nº 123/2006 e texto da LC nº 214/2025, no Planalto,
- * lidos em 03/08/2026.
+ * lidos em 06/08/2026.
  *
  *   Art. 18-A, § 3º, V — "o MEI [...] recolherá [...] valor fixo mensal
  *   correspondente à soma das seguintes parcelas: a) R$ 45,65 [...]; b) R$ 1,00

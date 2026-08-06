@@ -4,7 +4,7 @@
  * ORIGEM DOS VALORES ESPERADOS, DECLARADA
  *
  * As alíquotas vêm do texto CONSOLIDADO da Lei nº 8.212/1991 no Planalto,
- * conferido em 03/08/2026:
+ * conferido em 06/08/2026:
  *
  *   Art. 21, caput (redação da Lei nº 9.876/1999)
  *     "A alíquota de contribuição dos segurados contribuinte individual e

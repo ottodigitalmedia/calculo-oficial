@@ -28,7 +28,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Calculadoras no ar | **63** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
 | Testes | 1.229 de unidade · 539 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 68 vigências, **0 divergências** (03/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Auditoria de parâmetros | 68 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -153,7 +153,7 @@ primária, e continua servindo a toda trabalhista que vier.
 
 **O próximo bloco é o v2** — §4.2. E `docs/18-levantamento-calculadoras.md`
 mostrava que **33 das restantes não dependiam de nada** — nem de pesquisa em
-norma, nem de série externa. Isso valia quando foi escrito, e em 03/08/2026
+norma, nem de série externa. Isso valia quando foi escrito, e em 06/08/2026
 deixou de valer: **elas foram construídas**. Das 15 que sobram, só CALC-038
 dispensa pesquisa em norma.
 
@@ -204,7 +204,7 @@ catálogo que dizia haver 33 calculadoras sem dependência valia quando foi
 escrito; elas foram construídas. O que restou é, quase todo, tributário e
 previdenciário — e o próximo passo do projeto deixou de ser código.
 
-> **CALC-050 saiu desta lista em 03/08/2026, e mostrou que a barreira é
+> **CALC-050 saiu desta lista em 06/08/2026, e mostrou que a barreira é
 > menor do que parece.** A pesquisa foi de uma tarde: o texto consolidado da
 > Lei nº 8.212/1991 no Planalto traz o art. 21 inteiro, e as três alíquotas
 > saíram de lá com dispositivo e vigência. O que exige cuidado é ler a redação
@@ -1006,7 +1006,7 @@ As duas saídas, quando chegar a hora:
 Como §7.4 registra, o molde cresce por **necessidade medida**. Duas calculadoras
 que precisam é medida; uma é palpite.
 
-> **Resolvido em 03/08/2026, pela saída 2.** Três calculadoras precisavam —
+> **Resolvido em 06/08/2026, pela saída 2.** Três calculadoras precisavam —
 > CALC-028, CALC-073 e CALC-075 —, e o contrato cresceu: `TipoCampo` ganhou
 > `'lista'`, `Campo` ganhou `colunas`, `linhasIniciais` e `maximoDeLinhas`, e o
 > valor continua sendo **uma string serializável para a URL** (`RF-006`), no
@@ -1233,7 +1233,7 @@ como responder.
 **O que destrava:** confirmar em fonte oficial o cronograma da Lei 14.300/2022 e
 cadastrá-lo em `lib/params/` com vigência, como qualquer parâmetro legal. É
 trabalho de leitura, não de código — e é por isso que ela ficou fora do lote de
-03/08/2026, junto com as outras que dependem de norma.
+06/08/2026, junto com as outras que dependem de norma.
 
 ### 7.41 Duas listas do mesmo conjunto divergem — inclusive as minhas
 
@@ -1243,7 +1243,7 @@ estava escrita no código desde 31/07/2026, e este documento a violava em três
 lugares ao mesmo tempo: §4, §4.2 e §4.3 mantinham contagens paralelas das
 calculadoras pendentes, atualizadas à mão.
 
-O resultado foi previsível. Em 03/08/2026 as tabelas listavam CALC-011, CALC-012,
+O resultado foi previsível. Em 06/08/2026 as tabelas listavam CALC-011, CALC-012,
 CALC-013, CALC-039, CALC-040 e CALC-041 como pendentes — **todas publicadas**, as
 três primeiras havia dias. Eu li a tabela, acreditei nela e informei ao mantenedor
 uma fila de trabalho que não existia.
@@ -1472,7 +1472,7 @@ O que sobrou, em ordem:
    projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
    **CALC-019 está bloqueada pela mesma fonte** — `docs/18` registra que ela "é
    CALC-017 rodado duas vezes".
-4. ~~**O campo de LISTA**~~ ✅ **feito em 03/08/2026.** `Campo` modelava um valor
+4. ~~**O campo de LISTA**~~ ✅ **feito em 06/08/2026.** `Campo` modelava um valor
    por campo, e **três** calculadoras publicáveis dependiam de grupo repetido:
    CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N notas). §7.4 diz que
    duas que precisam é medida e uma é palpite — com três, o contrato cresceu, e
