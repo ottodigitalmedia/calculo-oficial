@@ -349,6 +349,25 @@ export const LEI_9093_1995: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * A margem consignável do empregado CLT — CALC-027.
+ *
+ * **O art. 2º, § 2º, I é onde a margem está, e o inciso VIII é onde está a
+ * base.** "Remuneração disponível" é definida como "os vencimentos, subsídios,
+ * soldos, salários ou remunerações, DESCONTADAS AS CONSIGNAÇÕES COMPULSÓRIAS" —
+ * o líquido, não o bruto. É o erro mais comum de quem estima a própria margem.
+ *
+ * A alínea que separava 5% para cartão de crédito foi REVOGADA pela Lei nº
+ * 14.431/2022: hoje o limite é único, de 40%.
+ */
+export const LEI_10820_ART_2: Fonte = {
+  id: 'lei-10820-2003-art-2',
+  norma: 'Lei nº 10.820, de 17 de dezembro de 2003, com a redação da Lei nº 14.431, de 2022',
+  dispositivo: 'Art. 2º, § 2º, I, e art. 2º, VIII',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/2003/l10.820.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const RPS_ART_216: Fonte = {
   id: 'decreto-3048-1999-art-216',
   norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',

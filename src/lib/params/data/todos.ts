@@ -22,6 +22,7 @@
  */
 
 import { BANCO_DE_HORAS } from './banco-de-horas'
+import { CONSIGNADO } from './consignado'
 import { CREDITO } from './credito'
 import { DOMESTICO } from './domestico'
 import { EMPREGADOR } from './empregador'
@@ -42,6 +43,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   MEI,
   TRABALHISTA,
   CREDITO,
+  CONSIGNADO,
   SEGURO_DESEMPREGO,
   EMPREGADOR,
   FERIADOS,
