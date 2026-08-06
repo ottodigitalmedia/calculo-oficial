@@ -31,6 +31,73 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · os sete guias que faltavam — `03-functional-spec` §4 fechou
+
+Rescisão sem justa causa, pedido de demissão, férias, 13º salário, horas extras,
+FGTS e juros compostos. Com os três do lançamento, são dez de dez.
+
+A regra G-1 — nenhum valor legal na prosa — obriga o guia a explicar o
+**mecanismo**, não a magnitude: por que a segunda parcela do 13º é menor, e não
+quanto ela é. O que precisa de número entra por bloco que lê `lib/params/` e
+aparece com norma, vigência e link ao lado.
+
+**Um defeito silencioso foi encontrado no caminho.** `components/Guia.tsx`
+montava o registro de parâmetros com uma lista escrita à mão — só INSS e IRRF —,
+e o teste montava outra igual. Um guia que citasse a alíquota do depósito do
+FGTS não acharia o parâmetro, e o bloco **sumiria da página sem erro e sem teste
+vermelho**. É a mesma forma do defeito que derrubou CALC-050. As duas listas
+viraram uma: `TODOS_OS_CONJUNTOS`.
+
+### Corrigido · a lista de guias dos testes de ponta a ponta era fixa
+
+`seo.spec.ts` e `acessibilidade.spec.ts` traziam os três guias do T-106 escritos
+à mão. Os sete novos teriam entrado sem cobertura de sitemap, de canônica e de
+acessibilidade — sem nada ficar vermelho, que é exatamente como seis
+calculadoras ficaram sem cobertura entre o T-104 e 31/07/2026.
+
+Em `seo.spec.ts` a lista passou a ser derivada do registro. Em
+`acessibilidade.spec.ts` ela continua sendo amostra, porque varrer dez páginas do
+mesmo molde com a ferramenta custa minutos — mas agora está **declarada** como
+amostra, com o motivo e o apontamento de onde mora a cobertura completa.
+
+### Corrigido · uma asserção de ausência media a página inteira
+
+O teste da busca verificava que "Juros compostos" não aparecia após buscar
+"holerite". A home também lista os guias, e o guia de juros compostos tem o nome
+da calculadora no título — como `getByRole` casa nome acessível por subcadeia, a
+asserção passou a reprovar apontando para a busca, que estava certa.
+
+Asserção de ausência precisa dizer **onde** a coisa não pode estar. A verificação
+foi escopada à lista de resultados, que ganhou nome acessível
+(`aria-label="Resultados da busca"`) — o que também diz a quem navega por lista
+em qual das três listas da página ele está.
+
+### Auditoria · a portaria do seguro-desemprego não existe, e a fonte ficou mais forte
+
+**Nenhum valor mudou.** O que mudou foi o que sustenta os valores publicados.
+
+O projeto carregava como pendência mais grave a ausência do ato normativo que
+formalizaria a tabela de 2026. Três buscas anteriores falharam. A Resolução
+CODEFAT nº 957/2022 explica por quê: o art. 19 manda reajustar pelo INPC
+acumulado em doze meses, e o § 1º atribui a **divulgação** dos valores à
+Secretaria. Não há portaria anual — a publicação do órgão é o ato que a norma
+determina.
+
+A conferência que entrou no lugar é mais forte do que a portaria seria:
+
+- **Resolução CODEFAT nº 957/2022**, arts. 17 e 19, cadastrada como fonte. Traz
+  o método e os valores-base de 2022.
+- **Anexo SEI nº 4274391** (Processo nº 19965.200004/2025-82), assinado em
+  10/01/2025 pelo Coordenador-Geral do Seguro-Desemprego, com a tabela de 2025.
+  Documento assinado, não notícia.
+- **Reprodução aritmética**: aplicando o INPC de 3,90% aos quatro valores do
+  anexo assinado, os quatro resultados de 2026 batem ao centavo.
+
+**O que continua aberto**, agora com tamanho conhecido: a vigência de 2025 não
+foi cadastrada porque o anexo diz "período: ano de 2025" sem o dia, e as tabelas
+de 2024 e de 2026 valem a partir de 11 de janeiro. Data de vigência é valor
+legal; inferi-la por analogia seria publicar número não confirmado.
+
 ### Adicionado · CALC-020 · ganho de capital, com os fatores que quase ninguém aplica
 
 Os fatores de redução do art. 40 da Lei nº 11.196/2005 são a parte que quase

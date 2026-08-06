@@ -26,10 +26,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras no ar | **70** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
-| Guias no ar | 3 de 10 |
-| Testes | 1.371 de unidade · 575 ponta a ponta · 3 de vazamento |
+| Guias no ar | **10 de 10** — `03-functional-spec` §4 fechou em 06/08/2026 |
+| Testes | 1.443 de unidade · 595 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 85 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
-| Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
+| Orçamento de JavaScript | 134,3 kB de **150** na pior rota — e **18,5 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -45,7 +45,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão · depreciação · financiamento
 - **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada · conversor de unidades · dias úteis
-- `/guias` e os três guias
+- `/guias` e os **dez** guias de `03-functional-spec` §4
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
 
@@ -141,9 +141,14 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ## 4. Calculadoras pendentes — 5 de 75
 
-**Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
+**Setenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
 vale é o que as definições dizem, e o comando que as lê está em §4.3.
+
+> **Este parágrafo já mentiu.** Dizia "Sessenta publicadas" em 06/08/2026, com
+> setenta no ar — porque contagem escrita à mão envelhece mesmo dentro da seção
+> que existe para denunciar contagens escritas à mão. O número acima vale para a
+> data do último commit; **o comando de §4.3 vale sempre**.
 
 ### 4.1 O v1 fechou em 31/07/2026
 
@@ -192,7 +197,7 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 
-**Nenhuma das dez dispensa pesquisa em norma.** O trecho do catálogo que dizia
+**Nenhuma das cinco dispensa pesquisa em norma.** O trecho do catálogo que dizia
 haver 33 calculadoras sem dependência valia quando foi escrito; elas foram
 construídas, e CALC-038 — a última delas — saiu em 06/08/2026. O que restou é
 tributário, previdenciário ou preso a um calendário, e **o próximo passo do
@@ -210,11 +215,27 @@ Saúde · jurídico-documental · hiperlocal (dado municipal) · tributário
 empresarial complexo · ruído. Motivos em `docs/00-catalogo-calculadoras.md` §14.
 **Não reabrir sem reverter aquela seção conscientemente.**
 
-### 4.6 Guias pendentes — 7 de 10
+### 4.6 Guias — ✅ 10 de 10, em 06/08/2026
 
-Rescisão sem justa causa · pedido de demissão · férias · 13º salário · horas
-extras · FGTS · juros compostos. Cada um vinculado à calculadora correspondente
-(`docs/03-functional-spec.md` §4).
+Os sete que faltavam foram publicados de uma vez: rescisão sem justa causa ·
+pedido de demissão · férias · 13º salário · horas extras · FGTS · juros
+compostos. Com os três do T-106, `03-functional-spec` §4 fechou.
+
+Duas coisas que a publicação em bloco revelou, e que valem para quem escrever o
+próximo guia:
+
+1. **`components/Guia.tsx` montava o registro de parâmetros com uma lista
+   própria** — `INSS, IRRF` —, e `tests/unit/guias.test.ts` montava outra igual.
+   Um guia que citasse a alíquota do depósito do FGTS não acharia o parâmetro, e
+   o bloco **sumiria da página em silêncio**, porque o componente devolve `null`
+   para parâmetro ausente. É §7.41 outra vez, e as duas listas viraram
+   `TODOS_OS_CONJUNTOS`. Não custa pacote: `CorpoDoGuia` é componente de
+   servidor.
+2. **A regra G-1 é mais dura do que parece na hora de escrever.** Sem número na
+   prosa, o guia tem de explicar o *mecanismo* — por que a segunda parcela do
+   13º é menor, não quanto ela é. O resultado ficou melhor que a alternativa, e é
+   a voz que os três guias do T-106 já tinham. O que não cabe em prosa entra por
+   bloco `valorVigente`, que traz norma, vigência e link junto.
 
 ---
 
@@ -230,7 +251,8 @@ esta lista é só o resumo.
 | **Vale-transporte (`RN-027`)** em CALC-001 | O percentual legal não foi localizado em fonte oficial. O campo **não existe** na calculadora — não foi estimado. Resolver antes de anunciar CALC-001 como completa |
 | **Incidência de INSS e IRRF sobre verbas rescisórias** | Pré-requisito de CALC-002 a CALC-005. Ver §6.2 |
 | **`RN-006`** — arredondamento da faixa intermediária do redutor | Indeterminado. Só afeta rendimentos entre R$ 5.000,01 e R$ 7.350,00 |
-| **A portaria da tabela do seguro-desemprego de 2026** | ⚠️ **A fonte mais fraca do projeto.** Os valores estão no portal do próprio MTE, publicados em 13/01/2026 com vigência declarada a partir de 11/01/2026 — mas o ato normativo que os formaliza não foi localizado. Foram tentados a busca do DOU por período e por órgão, o JSON diário de 09 a 14/01/2026 e a página de serviço do MTE. **Trocar pela norma na próxima auditoria**, como foi feito com o INSS em 31/07/2026. Ver a nota em `MTE_TABELA_SEGURO_DESEMPREGO` |
+| ~~**A portaria da tabela do seguro-desemprego de 2026**~~ | ✅ **Resolvida em 06/08/2026 — e a pergunta é que estava errada.** Ver §5.5 |
+| **A vigência de 2025 do seguro-desemprego** | O que sobrou daquela pendência, e é bem menor. Os valores estão num anexo assinado; falta o **dia** em que passaram a valer, e ele não foi inferido por analogia. Ver §5.5 |
 
 ### 5.2 Citação de fonte — ✅ resolvido em 31/07/2026
 
@@ -270,6 +292,61 @@ Banco Central.
 **reprova no dia em que qualquer um deles entrar**. É deliberado: quem
 introduzir análise ou anúncio precisa escrever TC-042 e TC-043 no mesmo commit.
 A mensagem de falha diz isso.
+
+### 5.5 A portaria do seguro-desemprego não existe — e isso é a resposta
+
+Era a pendência que este documento chamava de mais grave, porque tocava a tese
+do produto: uma calculadora publicada sobre valores cuja norma ninguém achava.
+Três buscas anteriores falharam — DOU por período, DOU por órgão, JSON diário de
+janeiro. Em 06/08/2026 a busca mudou de objeto, e a resposta apareceu na
+**Resolução CODEFAT nº 957/2022**, que já era citada de passagem:
+
+> **Art. 19.** O reajuste das três faixas salariais [...] observará a variação
+> do Índice Nacional de Preços ao Consumidor - INPC [...] acumulada nos doze
+> meses anteriores ao mês de reajuste.
+>
+> **§ 1º** A divulgação dos valores das três faixas salariais reajustadas [...]
+> caberá à Secretaria de Trabalho do Ministério do Trabalho e Previdência.
+
+**Não há ato anual a localizar.** O reajuste é comandado pela própria resolução,
+e o que a norma põe no lugar de uma portaria nova é a *divulgação* pela
+Secretaria. A publicação no portal do MTE não era um substituto precário do ato:
+ela **é** o ato que o § 1º determina. Três sessões procuraram um documento que a
+norma nunca mandou existir.
+
+**A conferência ficou mais forte do que uma portaria daria.** Foram achados dois
+documentos e feita uma verificação:
+
+| O quê | Onde |
+|---|---|
+| A norma, com o método e os valores-base de 2022 | Resolução CODEFAT nº 957/2022, arts. 17 e 19 — PDF no `portalfat.mte.gov.br` |
+| A divulgação de 2025, **assinada** | Anexo SEI nº 4274391, Processo nº 19965.200004/2025-82, assinado em 10/01/2025 pelo Coordenador-Geral do Seguro-Desemprego, com código verificador |
+| A reprodução | Aplicando o INPC de 3,90% aos quatro valores do anexo de 2025, os quatro resultados batem com os de 2026 **ao centavo** — limite da 1ª faixa, limite da 2ª, parcela a somar e teto |
+
+A terceira linha é a que muda a natureza da coisa. Os números deixaram de ser
+"o que a página diz" e passaram a ser **deriváveis** de um documento assinado
+pela regra que a norma manda aplicar. Para um erro de transcrição passar agora,
+ele teria de ser um erro que a fórmula do art. 19 reproduz.
+
+> **A parcela a somar não segue o INPC, e isso quase virou um erro.** Ela é
+> `0,8 × limite da 1ª faixa`, arredondado: 2024 → 2025 pelo índice daria
+> R$ 1.711,00, e o anexo diz R$ 1.711,01. O centavo vem do fator, não do
+> reajuste. `seguro-desemprego.ts` já registrava isso como regra F-2 — a norma
+> decide o arredondamento, não nós —, e foi essa nota que impediu de "corrigir"
+> um valor certo.
+
+**O que sobrou, e por que não foi feito.** Falta cadastrar a vigência de 2025
+como exercício anterior — hoje o conjunto tem só 2026, abaixo dos dois exercícios
+que `CLAUDE.md` pede. O anexo assinado tem os valores, mas declara *"período: ano
+de 2025"* sem o dia, e as tabelas de 2024 e de 2026 valem **a partir de 11 de
+janeiro**, não de 1º. As páginas de notícia do `gov.br` que trazem a data pedem
+autenticação e não foram lidas.
+
+Inferir 11/01/2025 por analogia seria publicar valor legal não confirmado, que é
+o item que `CLAUDE.md` reserva ao mantenedor. **Data de vigência é valor legal**:
+o dia certo decide qual tabela se aplica a quem foi dispensado na primeira semana
+de janeiro. Fica registrado em `MTE_ANEXO_SEGURO_DESEMPREGO_2025` para a próxima
+sessão achar o documento sem repetir a busca.
 
 ---
 
@@ -1874,9 +1951,15 @@ O que sobrou, em ordem:
    duas são séries diárias na
    origem, e virar fator mensal é convenção a definir — estão declaradas como
    "Em breve" no campo, e não escondidas.
-2. **Fechar a fonte da tabela do seguro-desemprego** (§5.1). É a única pendência
-   do projeto que toca a tese do produto, e ela ficou aberta com uma calculadora
-   publicada em cima.
+2. ~~**Fechar a fonte da tabela do seguro-desemprego**~~ ✅ **feito em
+   06/08/2026, e o resultado foi que não havia portaria a achar** — §5.5. A
+   Resolução CODEFAT nº 957/2022 manda reajustar e atribui a *divulgação* à
+   Secretaria; a publicação do órgão é o ato. Entraram a resolução como fonte, o
+   anexo assinado de 2025 e a conferência por reprodução, que fecha ao centavo.
+
+   **Sobrou um pedaço, e ele é pequeno:** cadastrar a vigência de 2025, que
+   depende de ler o dia de início em fonte oficial. Não foi inferido por
+   analogia — o porquê está em §5.5.
 3. **CALC-017 · restituição estimada do IRPF anual.** ⚠️ **Sondada e adiada em
    01/08/2026, por fonte.** A página de tabelas da Receita traz a progressiva
    ANUAL do ano-calendário **2026** — e a declaração que se entrega hoje é a do
@@ -1910,11 +1993,32 @@ O que sobrou, em ordem:
    do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
    constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto
    irmão já faz assim.
+
+   > ⚠️ **Este item colide com uma decisão já registrada, e a colisão não tinha
+   > sido notada.** `06-api-spec` §EP-016 diz, sobre esta rota: *"Não devolve
+   > versão, ambiente nem configuração — a rota é pública, e enumerar o que roda
+   > aqui só orienta quem procura o que atacar."* A mesma frase está no
+   > cabeçalho de `app/api/health/route.ts`.
+   >
+   > Publicar o hash do commit é exatamente devolver versão. **Não dá para fazer
+   > este item sem rever aquela decisão**, e rever decisão registrada de
+   > segurança é o que `CLAUDE.md` reserva ao mantenedor.
+   >
+   > As saídas possíveis, para quando ele decidir:
+   >
+   > | Caminho | O que custa |
+   > |---|---|
+   > | Publicar `rev` no corpo | Revê §EP-016. O repositório é público, então o hash mapeia para o código-fonte exato |
+   > | Responder `rev` só com segredo no cabeçalho | Preserva a resposta pública intacta; custa um segredo novo e um caminho a mais na única rota dinâmica |
+   > | Não fazer | O passo de saúde continua podendo aprovar o contêiner velho. Nunca causou incidente registrado |
+   >
+   > Enquanto não houver decisão, o item fica **parado por escolha**, e não por
+   > esquecimento.
 6. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
    tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
    faz. Não está no catálogo com ID; exige decisão do mantenedor.
 7. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
-8. **Os 7 guias restantes** (§4.6).
+8. ~~**Os 7 guias restantes**~~ ✅ **feitos em 06/08/2026** — §4.6. Dez de dez.
 
 > **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
 > variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o
