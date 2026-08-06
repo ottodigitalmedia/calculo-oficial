@@ -189,7 +189,7 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-014 | Rescisão — contrato intermitente | Pesquisa em norma: art. 452-A e a forma de apurar média |
 | CALC-017 | Restituição estimada do IRPF anual | A tabela ANUAL do ano-calendário 2025 não foi localizada — §8, item 3 |
 | CALC-019 | Comparador simplificado vs. completo | Mesma fonte de CALC-017 |
-| CALC-020 | IR sobre ganho de capital em imóvel | Alíquotas progressivas, isenções e fatores de redução — pesquisa em norma |
+| CALC-020 | IR sobre ganho de capital em imóvel | **Pesquisa CONCLUÍDA em 06/08/2026 — ver §9.** Falta construir |
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
@@ -1633,6 +1633,80 @@ alteração por MP, e que servidor público segue regulamento do próprio ente.
 > eficácia imediata e prazo de conversão — ela pode cair. Publicar um número que
 > pode deixar de valer antes de a página ser lida é o mesmo risco do IOF em
 > §7.33, e a resposta é a mesma: o campo não existe, e o motivo fica escrito.
+
+## 9. CALC-020 — a pesquisa já está feita
+
+**Esta seção existe para a próxima sessão começar construindo, não pesquisando.**
+Os quatro dispositivos abaixo foram lidos no Planalto em 06/08/2026 e conferidos
+um a um. O que falta é código.
+
+Ela ficou de fora do lote de 06/08/2026 por decisão de escopo: é a calculadora
+tributária mais complexa das que restam — fatores de redução com exponenciação,
+três isenções que interagem e uma tabela progressiva nova — e começá-la no fim de
+uma sessão longa é exatamente a situação em que se publica um número errado com
+aparência de certo.
+
+### 9.1 As alíquotas — progressivas por faixa
+
+**Lei nº 8.981/1995, art. 21, com a redação da Lei nº 13.259, de 2016:**
+
+| Faixa do ganho | Alíquota |
+|---|---|
+| até R$ 5.000.000,00 | 15% |
+| de R$ 5.000.000,01 a R$ 10.000.000,00 | 17,5% |
+| de R$ 10.000.000,01 a R$ 30.000.000,00 | 20% |
+| acima de R$ 30.000.000,00 | 22,5% |
+
+O texto diz "sobre a parcela dos ganhos que…" — é **progressiva por faixa**, como
+o INSS, e cabe no tipo `tabela_faixas` que já existe. `somarAliquotasPorFaixa`
+resolve.
+
+> **Armadilha de leitura, e é a de §7.42.** O art. 21 aparece com três redações
+> empilhadas. A da **MP nº 692/2015** traz faixas completamente diferentes —
+> 15%/20%/25%/30% com corte em R$ 1 milhão — e ela NÃO é a vigente: a Lei nº
+> 13.259/2016 a substituiu. Quem parar na primeira ocorrência cadastra alíquota
+> que nunca valeu.
+
+### 9.2 As isenções
+
+**Imóvel único — Lei nº 9.250/1995, art. 23:** isento o ganho na alienação "do
+único imóvel que o titular possua, cujo valor de alienação seja de até
+R$ 440.000,00 [...] desde que não tenha sido realizada qualquer outra alienação
+nos últimos cinco anos". Texto original, sem marcador de MP.
+
+**Reinvestimento — Lei nº 11.196/2005, art. 39:** isento o ganho na venda de
+imóveis residenciais se o produto for aplicado, em **180 dias**, na aquisição de
+imóveis residenciais no País. Três regras que a calculadora precisa respeitar:
+
+- § 2º — aplicação PARCIAL tributa proporcionalmente à parcela não aplicada;
+- § 3º — na compra de mais de um imóvel, a isenção alcança só a parcela empregada
+  em residenciais;
+- § 5º — o benefício vale **uma vez a cada cinco anos**.
+
+### 9.3 Os fatores de redução — o que quase nenhuma calculadora faz
+
+**Lei nº 11.196/2005, art. 40.** A base é o ganho multiplicado por dois fatores:
+
+    FR1 = 1 / 1,0060^m1
+    FR2 = 1 / 1,0035^m2
+
+`m1` são os meses entre a aquisição e o mês da publicação da lei; `m2`, os meses
+entre o mês seguinte ao da publicação (ou o da aquisição, se posterior) e o da
+alienação. O § 2º manda aplicar o FR1 a partir de 1º/01/1996 para imóveis
+adquiridos até 31/12/1995.
+
+**O caminho técnico já existe no projeto:** `fatorDeCapitalizacao`, em
+`financeira.ts`, calcula (1+i)^n com `BigInt` e escala — 0,60% e 0,35% são 60 e
+35 basis points. Os fatores são o inverso dele, e não há ponto flutuante em
+lugar nenhum.
+
+### 9.4 O que ainda precisa ser decidido
+
+- **A data de publicação da Lei nº 11.196/2005** não foi extraída do texto e é
+  necessária para `m1` e `m2`. É a única lacuna da pesquisa.
+- **Custo de aquisição** — para imóveis antigos há regras de correção que este
+  levantamento não cobriu. Vale decidir se entram ou se o custo é campo do
+  usuário, declarado.
 
 ## 8. Sugestão de ordem para a próxima sessão
 
