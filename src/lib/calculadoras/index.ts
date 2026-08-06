@@ -28,6 +28,7 @@ import { CUSTO_DE_AQUISICAO } from './custo-de-aquisicao'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
 import { CUSTO_DO_CARRO } from './custo-do-carro'
 import { DEPRECIACAO_DE_VEICULO } from './depreciacao-de-veiculo'
+import { DIAS_UTEIS } from './dias-uteis'
 import { DIVIDENDOS } from './dividendos'
 import { DIVISAO_DE_CONTA } from './divisao-de-conta'
 import { ELETRICO_VS_COMBUSTAO } from './eletrico-vs-combustao'
@@ -130,6 +131,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   REAJUSTE_ALUGUEL,
   PORCENTAGEM,
   REGRA_DE_TRES,
+  DIAS_UTEIS,
   COMBUSTIVEL,
   VIAGEM,
   CUSTO_DO_CARRO,

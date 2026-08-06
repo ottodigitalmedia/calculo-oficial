@@ -55,7 +55,7 @@ duas primeiras libera 24.
 | D-2 | **`ADR-006` — coleta de série do BCB no build** | 12 | Implementação. Endpoint e armadilhas já mapeados (§5) | ❌ Adiado por `ADR-008` |
 | D-3 | **Tabelas do Simples Nacional / anexos do MEI** | 6 (AUT) | Pesquisa em LC 123/2006 e anexos | ❌ Pendente |
 | D-4 | **Tabela regressiva de IR sobre aplicações** | 4 (TRI/INV) | Pesquisa. Tabela pequena e estável | ❌ Pendente |
-| D-5 | **Calendário de feriados nacionais** | 1 (CALC-072) | Lei 662/1949 e Lei 9.093/1995 | ❌ Pendente |
+| D-5 | **Calendário de feriados nacionais** | 1 (CALC-072) | Lei 662/1949 e Lei 9.093/1995 | ✅ Resolvido em 06/08/2026 — as fontes já estavam certas aqui, e eram só três leis. Ver `ESTADO-DO-PROJETO` §7.51 |
 
 > **D-1 é o gargalo real do v1.** Não é volume de trabalho — é risco. As regras
 > de incidência sobre cada verba rescisória são onde as calculadoras
@@ -198,7 +198,7 @@ pesquisa normativa.
 |---|---|---|---|---|
 | CALC-027 | Consignado — margem e parcela | CRD | v3 | Margem consignável tem percentual legal por categoria (INSS, servidor, CLT). Pesquisa pequena |
 | CALC-033 | Custo total de aquisição de imóvel | IMV | v3 | ITBI e cartório **variam por município** — `§14` exclui hiperlocal. Entram como campo digitado, com instrução |
-| CALC-072 | Dias úteis entre datas | UTI | v3 | D-5. Feriados **móveis** (Carnaval, Corpus Christi) exigem cálculo da Páscoa. Feriado estadual e municipal ficam fora |
+| CALC-072 | Dias úteis entre datas | UTI | v3 | ✅ Publicada em 06/08/2026. A Páscoa é aritmética, não fonte; e Carnaval, Sexta-feira Santa e Corpus Christi **não são feriados nacionais** — entram por escolha, com a natureza declarada |
 
 ---
 

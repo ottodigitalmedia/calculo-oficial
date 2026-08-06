@@ -37,21 +37,24 @@ export function formatarNumero(centesimos: number): string {
  * Existe desde CALC-074, e a razão está em `SaidaCalculadora.casasDecimais`:
  * conversão de unidade atravessa ordens de grandeza que duas casas apagam.
  *
- * O mínimo continua sendo duas — "1.609,34" e não "1.609,344" para um número
- * que só precisava de duas —, e o máximo é o que o cálculo declarou. Zeros à
- * direita além da segunda casa não aparecem: `Intl` os corta, e mostrar
- * "2,500000" sugeriria uma precisão que a conta não tem.
+ * O máximo é o que o cálculo declarou, e zeros à direita além da segunda casa
+ * não aparecem: `Intl` os corta, e mostrar "2,500000" sugeriria uma precisão
+ * que a conta não tem.
  */
 export function formatarComCasas(valor: number, casas: number): string {
   /**
-   * A escala e as casas exibidas são coisas diferentes, e confundi-las divide o
-   * número por cem: um resultado que chega sem casa decimal — `100 TB` em bytes
-   * é inteiro — precisa ser dividido por 1, e ainda assim aparecer com as duas
-   * casas de sempre.
+   * **A escala e as casas exibidas são coisas diferentes.** Confundi-las divide
+   * o número por cem: um resultado que chega sem casa decimal precisa ser
+   * dividido por 1, não por 100.
+   *
+   * O mínimo de casas ACOMPANHA a escala, até duas. Escala zero é a CONTAGEM —
+   * dias úteis, em CALC-072 —, e "22,00 dias" seria ruído: o valor não tem
+   * parte fracionária nenhuma a mostrar. Escala dois ou mais volta ao mínimo de
+   * duas casas, que é o de sempre.
    */
   const escala = Math.min(Math.max(Math.trunc(casas), 0), 20)
   return (valor / 10 ** escala).toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
+    minimumFractionDigits: Math.min(escala, 2),
     maximumFractionDigits: Math.max(escala, 2),
   })
 }

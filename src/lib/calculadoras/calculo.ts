@@ -372,6 +372,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './regra-de-tres'
     ).then((m) => m.calcular),
+  'dias-uteis-entre-datas': () =>
+    import(
+      /* webpackChunkName: "calc-dias-uteis" */
+      /* webpackExports: ["calcular"] */
+      './dias-uteis'
+    ).then((m) => m.calcular),
   'alcool-ou-gasolina': () =>
     import(
       /* webpackChunkName: "calc-combustivel" */

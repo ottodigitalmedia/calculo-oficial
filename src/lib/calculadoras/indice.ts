@@ -341,6 +341,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Simples ou composta, direta ou inversa — com a proporção aberta ao lado.',
   },
   {
+    slug: 'dias-uteis-entre-datas',
+    nome: 'Dias úteis entre datas',
+    linhaDeContexto: 'Quantos dias úteis há no período — com os feriados nacionais de verdade.',
+  },
+  {
     slug: 'alcool-ou-gasolina',
     nome: 'Álcool ou gasolina',
     linhaDeContexto: 'Qual compensa no seu carro — pelo consumo real, não pela regra dos 70%.',

@@ -25,6 +25,7 @@ import { BANCO_DE_HORAS } from './banco-de-horas'
 import { CREDITO } from './credito'
 import { DOMESTICO } from './domestico'
 import { EMPREGADOR } from './empregador'
+import { FERIADOS } from './feriados'
 import { INSS } from './inss'
 import { INSS_INDIVIDUAL } from './inss-individual'
 import { IRRF } from './irrf'
@@ -43,6 +44,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   CREDITO,
   SEGURO_DESEMPREGO,
   EMPREGADOR,
+  FERIADOS,
   DOMESTICO,
   RENDA_FIXA,
   BANCO_DE_HORAS,

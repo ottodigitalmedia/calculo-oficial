@@ -31,6 +31,35 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-072 · dias úteis, com os feriados nacionais de verdade
+
+O bloqueio "D-5: o calendário de feriados" sugeria uma fonte de dados a obter e
+manter. Não havia: os feriados nacionais estão em **três leis federais** e são
+nove, e os móveis derivam da Páscoa — cômputo gregoriano, aritmética pura, sem
+fonte a citar.
+
+**O que o bloqueio escondia era uma questão de produto.** Carnaval, Sexta-feira
+Santa e Corpus Christi NÃO são feriados nacionais: a Lei nº 9.093/1995 diz que
+feriados civis são os declarados em lei federal, e que a Sexta-Feira da Paixão é
+feriado RELIGIOSO de lei MUNICIPAL, dentro de um limite de quatro. Os outros dois
+são ponto facultativo.
+
+Quase toda calculadora do gênero os soma como nacionais. Somá-los erra para quem
+trabalha onde não são feriado; ignorá-los erra para quem trabalha onde são. Eles
+entram **por escolha, com a natureza declarada no rótulo**.
+
+**`ValorParametro` ganhou `data_fixa`.** Codificar um feriado como inteiro
+(`421` para 21 de abril) caberia no contrato atual, e seria o encoding que este
+projeto já registrou como caminho errado. Feriado precisa de vigência: três dos
+nove entraram depois — 21/4 e 2/11 em 2002, 20/11 em 2023 — e contar 2020 com o
+feriado de 2023 seria errado.
+
+**Os feriados são resolvidos na data de CADA DIA contado**, e não na data de
+referência da calculadora: os dias úteis de 2020 se contam com os feriados de
+2020, mesmo perguntando hoje. Uma versão intermediária resolvia por ano com
+cache, e os testes pegaram o erro na fronteira — as três leis foram publicadas em
+dezembro, e o cache por ano tornava 20/11/2023 feriado retroativo.
+
 ### Adicionado · CALC-038 · financiamento de reforma — e o fim do bloco sem pesquisa
 
 Era a última calculadora do catálogo que não dependia de pesquisa em norma, e a

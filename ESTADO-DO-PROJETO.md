@@ -25,10 +25,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **65** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **66** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.264 de unidade · 551 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 68 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 1.289 de unidade · 557 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 77 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -44,7 +44,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão · depreciação · financiamento
-- **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada · conversor de unidades
+- **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada · conversor de unidades · dias úteis
 - `/guias` e os três guias
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 10 de 75
+## 4. Calculadoras pendentes — 9 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 10 que faltam, e o que trava cada uma
+### 4.3 As 9 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -195,7 +195,6 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-051 | Pró-labore e encargos do sócio | Pesquisa em norma |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
-| CALC-072 | Dias úteis entre datas | D-5: o calendário de feriados |
 
 **Nenhuma das dez dispensa pesquisa em norma.** O trecho do catálogo que dizia
 haver 33 calculadoras sem dependência valia quando foi escrito; elas foram
@@ -1486,6 +1485,79 @@ financiar, mas é o cenário que o usuário controla e que a tela declara.
 > **O teste que vale para a próxima "calculadora óbvia".** Se a resposta a "por
 > que isto não é a calculadora X que já existe?" for uma diferença de rótulo,
 > não é calculadora nova. Se for uma diferença de PERGUNTA, é.
+
+### 7.51 O bloqueio D-5 não era o calendário de feriados
+
+`docs/18` registrava CALC-072 como bloqueada por "D-5: o calendário de
+feriados", e a leitura natural era que faltava uma fonte de dados — alguma
+tabela de feriados a obter e manter.
+
+**Não faltava.** Os feriados nacionais estão em três leis federais, e são nove:
+
+| Data | Lei |
+|---|---|
+| 1º/1, 1º/5, 7/9, 15/11, 25/12 | Lei nº 662/1949, art. 1º |
+| 21/4 e 2/11 | mesma lei, redação da Lei nº 10.607/2002 |
+| 12/10 | Lei nº 6.802/1980 |
+| 20/11 | Lei nº 14.759/2023 |
+
+E os móveis não precisam de tabela nenhuma: derivam da Páscoa, que é o cômputo
+gregoriano — aritmética pura, sem fonte a citar, como o ano bissexto que
+`datas.ts` já implementa.
+
+**O que o bloqueio realmente escondia era uma questão de produto**, e ela é mais
+interessante que o dado: **Carnaval, Sexta-feira Santa e Corpus Christi não são
+feriados nacionais.** A Lei nº 9.093/1995 diz que feriados civis são os
+declarados em lei federal (art. 1º) e que a Sexta-Feira da Paixão é feriado
+RELIGIOSO, declarado em lei MUNICIPAL, dentro de um limite de quatro (art. 2º).
+Os outros dois são ponto facultativo.
+
+Quase toda calculadora de dias úteis os soma como se fossem nacionais. Somá-los
+erra para quem trabalha em cidade que não os declara; ignorá-los erra para quem
+trabalha em cidade que declara. A saída foi **oferecê-los por escolha, com a
+natureza declarada no próprio rótulo** — e é isso que a página tem de próprio.
+
+### 7.52 A data de referência não servia, e a correção mudou a pergunta
+
+O molde tem UMA data de referência por cálculo: "com que regras eu calculo".
+Aqui as regras dependem de **cada dia do período**, e não da data em que se
+consulta — os dias úteis de 2020 se contam com os feriados de 2020, mesmo que a
+pergunta seja feita hoje.
+
+A primeira versão resolvia os nove feriados na data de referência. Duas
+consequências, as duas ruins:
+
+1. O seletor de período ofereceria **2023** como único ano, porque
+   `anosDisponiveis` deriva dos anos de início das vigências — e a última é a da
+   Lei nº 14.759/2023.
+2. Contar um período de 2020 aplicaria a lista de hoje, incluindo um feriado que
+   não existia. É a extrapolação de `RN-003` com o sinal trocado.
+
+A correção foi passar a resolver **na data de cada dia contado**. E ela teve uma
+etapa intermediária errada que os testes pegaram: resolver por ANO, com cache,
+usando 31 de dezembro. Como as três leis que ampliaram a lista foram publicadas
+em dezembro, o cache por ano transformava 20/11/2023 em feriado retroativo — o
+dia é anterior à publicação da lei, em 22/12/2023.
+
+> **A pergunta certa era por dia, e a resposta também.** Quando o custo de uma
+> otimização é mudar a granularidade da pergunta, ela deixou de ser otimização.
+
+### 7.53 Um tipo novo de valor legal: a data que se repete
+
+`ValorParametro` ganhou `data_fixa`, e a decisão merece registro porque a
+alternativa parecia mais barata.
+
+Codificar um feriado como inteiro — `421` para 21 de abril — teria cabido no
+contrato atual sem tocar em nada. Seria o encoding que §7.30 já registrou como
+caminho errado: o dado deixa de ser legível, a validação de faixa deixa de
+valer, e quem lê o arquivo precisa saber decodificar.
+
+**E feriado PRECISA da máquina de vigências**, que é o que o distingue das
+razões entre unidades físicas de §7.38: aquelas não expiram, estas mudaram três
+vezes em setenta anos. Sem vigência, contar 2020 com o feriado de 2023 seria
+impossível de impedir.
+
+Nove parâmetros que precisam — bem acima da necessidade medida de §7.8.
 
 ## 8. Sugestão de ordem para a próxima sessão
 
