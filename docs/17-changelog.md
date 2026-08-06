@@ -68,6 +68,18 @@ points ficou só para exibição. Quem revelou foi um caso-ouro que pedia quatro
 casas decimais e falhava por 7×10⁻⁵: a leitura preguiçosa seria afrouxar a
 tolerância, e a certa foi perguntar por que o número não era exato.
 
+### Corrigido · a memória de cálculo mostrava um passo que não se reproduzia
+
+A memória da CALC-020 dizia `R$ 800.000,00 × 65,78% = R$ 526.297,54`, e quem
+conferisse na calculadora chegava a R$ 526.240,00 — cinquenta e sete reais de
+diferença dentro da tela que existe para o usuário conferir.
+
+Nenhum número estava errado: o fator exibido é arredondado a quatro casas, e o
+aplicado é a divisão exata. Os dois estão certos e não se multiplicam um pelo
+outro. O passo passou a ser escrito como a lei o escreve — `÷ 1,0060^70` — e o
+caso-ouro que guarda isso refaz a conta do jeito que alguém faria numa
+calculadora comum.
+
 ### Adicionado · CALC-027 · consignado, com a margem sobre a base certa
 
 Todo mundo cita os 40%, e quase ninguém cita sobre o quê. A lei diz "40% da

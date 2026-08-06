@@ -110,6 +110,23 @@ export interface SaidaGanhoDeCapital {
   readonly temReducaoNaoAplicada: boolean
 }
 
+/**
+ * A base composta do fator, escrita como a lei a escreve: `1,0060`, `1,0035`.
+ *
+ * **É ela que aparece na memória de cálculo, e não o percentual.** O fator é
+ * aplicado com a divisão exata; o percentual é arredondado a quatro casas para
+ * caber na tela. Escrever `× 65,78%` no passo daria um número que não bate
+ * quando alguém confere na calculadora — 57 reais de diferença num ganho de
+ * oitocentos mil. Numa memória de cálculo auditável, um passo que não se
+ * reproduz é pior que passo nenhum.
+ *
+ * A montagem é textual de propósito: `1,` mais os basis points com zeros à
+ * esquerda. Nenhuma divisão em ponto flutuante para exibir.
+ */
+function baseComposta(aliquotaBp: number): string {
+  return `1,${String(aliquotaBp).padStart(4, '0')}`
+}
+
 /** Meses-calendário decorridos entre dois marcos, nunca negativo. */
 function mesesEntre(de: DataCivil, ate: DataCivil): number {
   const bruto = (ate.ano - de.ano) * 12 + (ate.mes - de.mes)
@@ -289,20 +306,24 @@ export function calcularGanhoDeCapital(
   if (meses1 > 0) {
     traco.passoComParametro(
       `FR1 — ${meses1} meses até a publicação da lei`,
-      `${reais(ganhoBruto)} × ${percentual(fr1Bp)}`,
+      `${reais(ganhoBruto)} ÷ ${baseComposta(fr1.resolvida.vigencia.valor.aliquotaBp)}^${meses1}`,
       aposFr1,
       fr1.resolvida,
-      'O fator é 1 dividido por 1,0060 elevado ao número de meses. Quanto mais antigo o imóvel, ' +
-        'menor a base — e é a parte que quase nenhuma calculadora do mercado aplica.',
+      `O fator é 1 dividido por ${baseComposta(fr1.resolvida.vigencia.valor.aliquotaBp)} elevado ao ` +
+        `número de meses, e aqui dá ${percentual(fr1Bp)}. A conta é feita pela divisão, sem ` +
+        'arredondar o fator. Quanto mais antigo o imóvel, menor a base — e é a parte que quase ' +
+        'nenhuma calculadora do mercado aplica.',
     )
   }
 
   if (meses2 > 0) {
     traco.passoComParametro(
       `FR2 — ${meses2} meses de dezembro de 2005 até a venda`,
-      `${reais(aposFr1)} × ${percentual(fr2Bp)}`,
+      `${reais(aposFr1)} ÷ ${baseComposta(fr2.resolvida.vigencia.valor.aliquotaBp)}^${meses2}`,
       ganhoReduzido,
       fr2.resolvida,
+      `O fator aqui dá ${percentual(fr2Bp)}, e vale a mesma observação: a divisão é feita com o ` +
+        'valor exato.',
     )
   }
 

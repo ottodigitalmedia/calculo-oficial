@@ -27,7 +27,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras no ar | **69** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.356 de unidade · 575 ponta a ponta · 3 de vazamento |
+| Testes | 1.357 de unidade · 575 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 85 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -1737,6 +1737,35 @@ tela**. A base passou a bater ao centavo com a conta de referência.
 > O teste final ficou dividido em dois: a BASE é conferida ao centavo, e o
 > fator EXIBIDO à resolução que ele de fato tem. Cobrar do rótulo o que só a
 > conta tem é outra forma de teste errado.
+
+### 7.60 Um passo da memória que não se reproduz é pior que passo nenhum
+
+A CALC-020 passou nos 1.356 testes, subiu, e em produção a memória de cálculo
+dizia:
+
+    R$ 800.000,00 × 65,78% = R$ 526.297,54
+
+Quem conferisse na calculadora do celular chegaria a R$ 526.240,00. **Cinquenta
+e sete reais de diferença, dentro da memória auditável** — a tela que existe
+justamente para o usuário conferir.
+
+Nenhum número estava errado. O fator EXIBIDO é arredondado a quatro casas; o
+APLICADO é a divisão exata em inteiro grande, que §7.58 acabara de corrigir. Os
+dois estão certos e não se multiplicam um pelo outro.
+
+A correção foi escrever o passo como a lei o escreve, na forma que se reproduz:
+
+    R$ 800.000,00 ÷ 1,0060^70 = R$ 526.297,54
+
+E o caso-ouro que guarda isso não compara strings por comparar: ele **refaz a
+conta em ponto flutuante**, do jeito que alguém faria numa calculadora comum, e
+exige que dê o centavo exibido. É a única forma de o teste medir a promessa —
+que a memória se reproduz — em vez de medir o texto.
+
+> **O defeito de novo passou pela suíte inteira e apareceu ao abrir a página**,
+> como em §7.44. E de novo porque caso-ouro confere o número, não a frase ao
+> lado dele. O passo 7 do roteiro de parâmetros — rodar em produção — pagou
+> sozinho o terceiro defeito desta sessão.
 
 ### 7.59 Marcos de data não são parâmetros
 

@@ -268,6 +268,33 @@ describe('CALC-020 · o que a calculadora recusa e o que declara', () => {
     expect(calc({ dataDeAquisicao: '1990-01-01' as DataISO }).temReducaoNaoAplicada).toBe(false)
   })
 
+  /**
+   * **O passo do fator precisa se REPRODUZIR na calculadora de quem confere.**
+   *
+   * A primeira versão escrevia `R$ 800.000,00 × 65,78%`, e quem multiplicasse
+   * chegava a R$ 526.240,00 — 57 reais abaixo do que o passo diz dar. O fator
+   * exibido é arredondado; o aplicado não é. Num produto cuja tese é a memória
+   * auditável, um passo que não se reproduz é pior que passo nenhum.
+   *
+   * Este caso mede a reprodução: dividir o ganho pela base composta elevada aos
+   * meses, com a precisão de uma calculadora comum, tem que dar o valor exibido.
+   */
+  it('o passo do fator se reproduz na calculadora de quem confere', () => {
+    const r = calcularGanhoDeCapital(BASE, REF, registro)
+    if (!r.ok) throw new Error('esperado sucesso')
+
+    const fr1 = r.traco.etapas.find((e) => e.rotulo.startsWith('FR1'))
+    expect(fr1?.formula).toBe('R$ 800.000,00 ÷ 1,0060^70')
+
+    const conferencia = Math.round((800_000 / 1.006 ** 70) * 100)
+    expect(fr1?.resultado).toBe(conferencia)
+    expect(conferencia).toBe(52_629_754)
+
+    const fr2 = r.traco.etapas.find((e) => e.rotulo.startsWith('FR2'))
+    expect(fr2?.formula).toBe('R$ 526.297,54 ÷ 1,0035^246')
+    expect(fr2?.resultado).toBe(Math.round((526_297.54 / 1.0035 ** 246) * 100))
+  })
+
   it('a memória cita a lei em cada etapa com parâmetro', () => {
     const r = calcularGanhoDeCapital(BASE, REF, registro)
     if (!r.ok) throw new Error('esperado sucesso')
