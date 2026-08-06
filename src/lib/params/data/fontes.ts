@@ -185,6 +185,34 @@ export const LEI_8212_ART_21_P3: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * O pró-labore — CALC-051. Os 11% que a empresa desconta do sócio NÃO estão
+ * escritos em lugar nenhum: são o resultado de 20% menos a dedução do § 4º.
+ */
+export const LEI_8212_ART_22_III: Fonte = {
+  id: 'lei-8212-1991-art-22-iii',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991, com a redação da Lei nº 9.876, de 1999',
+  dispositivo: 'Art. 22, III',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_8212_ART_30_P4: Fonte = {
+  id: 'lei-8212-1991-art-30-p4',
+  norma: 'Lei nº 8.212, de 24 de julho de 1991, com a redação da Lei nº 9.876, de 1999',
+  dispositivo: 'Art. 30, § 4º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8212cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_10666_ART_4: Fonte = {
+  id: 'lei-10666-2003-art-4',
+  norma: 'Lei nº 10.666, de 8 de maio de 2003, com a redação da Lei nº 11.933, de 2009',
+  dispositivo: 'Art. 4º, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/2003/l10.666.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const LEI_8212_ART_28_LIMITES: Fonte = {
   id: 'lei-8212-1991-art-28-limites',
   norma: 'Lei nº 8.212, de 24 de julho de 1991',

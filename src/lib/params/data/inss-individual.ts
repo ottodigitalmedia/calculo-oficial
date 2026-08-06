@@ -1,5 +1,6 @@
 /**
- * Contribuição do segurado contribuinte individual e do facultativo — CALC-050.
+ * Contribuição do segurado contribuinte individual e do facultativo — CALC-050,
+ * e a do sócio que recebe pró-labore — CALC-051.
  *
  * **Aqui não há tabela progressiva.** A do empregado, em `inss.ts`, cobra
  * 7,5% a 14% por faixa. A do contribuinte individual é **alíquota única**, e o
@@ -39,6 +40,19 @@
  * própria não há piso de categoria). O limite máximo é o teto, que já vive em
  * `inss.ts` como o limite superior da última faixa: duplicá-lo aqui seria
  * convidar os dois a divergirem.
+ *
+ * OS 11% DO PRÓ-LABORE NÃO ESTÃO ESCRITOS EM LUGAR NENHUM
+ *
+ * A empresa desconta 11% do pró-labore do sócio, e nenhuma norma diz "11%". O
+ * número é o resultado de duas regras: o art. 22, III manda a empresa recolher
+ * 20% sobre a remuneração paga a contribuinte individual, e o art. 30, § 4º
+ * permite ao segurado deduzir 45% dessa contribuição da sua própria, "limitada
+ * a dedução a nove por cento do respectivo salário-de-contribuição".
+ *
+ * Com a patronal em 20%, 45% dela são exatamente 9% — o teto é alcançado, e a
+ * contribuição do sócio cai de 20% para 11%. Por isso os dois parâmetros
+ * cadastrados são a patronal e o TETO DA DEDUÇÃO; a subtração é feita no motor,
+ * à vista, e aparece na memória de cálculo.
  */
 
 import type { ConjuntoDeParametros } from '../tipos'
@@ -46,10 +60,18 @@ import {
   LEI_8212_ART_21_CAPUT,
   LEI_8212_ART_21_P2,
   LEI_8212_ART_21_P3,
+  LEI_8212_ART_22_III,
+  LEI_8212_ART_30_P4,
 } from './fontes'
 
 export const INSS_INDIVIDUAL: ConjuntoDeParametros = {
-  fontes: [LEI_8212_ART_21_CAPUT, LEI_8212_ART_21_P2, LEI_8212_ART_21_P3],
+  fontes: [
+    LEI_8212_ART_21_CAPUT,
+    LEI_8212_ART_21_P2,
+    LEI_8212_ART_21_P3,
+    LEI_8212_ART_22_III,
+    LEI_8212_ART_30_P4,
+  ],
 
   parametros: [
     {
@@ -71,6 +93,20 @@ export const INSS_INDIVIDUAL: ConjuntoDeParametros = {
       nome: 'Alíquota do facultativo de baixa renda',
       descricao:
         'Alíquota sobre o limite mínimo, para o facultativo sem renda própria dedicado ao trabalho doméstico na própria residência, em família de baixa renda.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'inss-patronal-contribuinte-individual',
+      nome: 'Contribuição patronal sobre o pró-labore',
+      descricao:
+        'Alíquota que a empresa recolhe sobre a remuneração paga a contribuinte individual que lhe presta serviço.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'inss-individual-deducao-maxima',
+      nome: 'Teto da dedução da contribuição da empresa',
+      descricao:
+        'Limite da dedução de 45% da contribuição patronal, expresso como percentual do salário-de-contribuição.',
       tipo: 'percentual',
     },
     {
@@ -118,6 +154,32 @@ export const INSS_INDIVIDUAL: ConjuntoDeParametros = {
       valor: { tipo: 'percentual', aliquotaBp: 500 },
     },
 
+    // -----------------------------------------------------------------------
+    // Art. 22, III — a patronal de 20% sobre o pró-labore.
+    // Art. 30, § 4º — a dedução de 45% dela, limitada a 9%.
+    //
+    // **Os 11% que a empresa desconta do sócio não estão escritos em lugar
+    // nenhum**: são 20% do caput menos os 9% de teto da dedução. O motor faz
+    // essa subtração à vista, e a memória de cálculo a mostra.
+    // -----------------------------------------------------------------------
+    {
+      id: 'inss-patronal-individual-1999',
+      parametroId: 'inss-patronal-contribuinte-individual',
+      fonteId: 'lei-8212-1991-art-22-iii',
+      inicio: '2000-03-01',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 2_000 },
+    },
+    {
+      id: 'inss-individual-deducao-maxima-1999',
+      parametroId: 'inss-individual-deducao-maxima',
+      fonteId: 'lei-8212-1991-art-30-p4',
+      inicio: '2000-03-01',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 900 },
+      observacao:
+        'O § 4º manda deduzir 45% da contribuição da empresa, "limitada a dedução a nove por cento do respectivo salário-de-contribuição". Com a patronal em 20%, 45% dela são exatamente 9% — o limite é alcançado, e a contribuição do sócio cai de 20% para 11%.',
+    },
     // -----------------------------------------------------------------------
     // Art. 21, § 3º — a complementação é a DIFERENÇA entre o percentual pago e
     // os 20%. Cadastrada como os 20% de destino: a diferença é derivada, e
