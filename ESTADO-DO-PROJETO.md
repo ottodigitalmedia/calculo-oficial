@@ -497,12 +497,124 @@ pela mesma busca. Tomada acima.
 
 ### 6.5 Fontes de lá sem uso aqui
 
+> **Corrigido em 06/08/2026:** CALC-065 saiu do v3 e está no ar desde 01/08 —
+> construída **sem** ANEEL, com tarifa como campo do usuário. A frase abaixo
+> valia quando foi escrita. O que ANEEL ainda toca é CALC-066, e o que ela
+> resolve **não** é o que bloqueia a calculadora: ver §6.7.
+
 ANEEL (tarifas de energia) só interessa a CALC-065 e CALC-066, ambas no v3.
 ANS, CMED, Hórus, DataJud, PNCP, Querido Diário, SICONFI, PGFN, DOU, CNPJ,
 Compras.gov e TransfereGov **não** têm correspondência no nosso catálogo — e
 várias caem nas categorias que `§14` excluiu em definitivo.
 
----
+> **O DOU está nesta lista por um motivo, e sai dela por outro.** Como *fonte de
+> produto* ele realmente não tem correspondência aqui — não vamos construir
+> calculadora sobre o Diário Oficial. Como **ferramenta de pesquisa**, ele é o
+> item mais valioso do projeto irmão para nós. Ver §6.6.
+
+### 6.6 As credenciais de lá — o inventário, e a única que importa
+
+Levantado em 06/08/2026, a pedido do mantenedor. **Nenhum valor de credencial
+foi copiado, e nenhum aparece aqui**: o `.env` de lá tem 86 variáveis
+preenchidas, e o que segue é o que elas *são*, não o que valem.
+
+| Credencial de lá | Serve aqui? |
+|---|---|
+| `INLABS_USER` + `INLABS_PASSWORD` (DOU) | ★ **Sim, e muda a pesquisa de norma.** §6.6.1 |
+| `TRANSPARENCIA_API_KEY` (Portal da Transparência) | Não. O portal não publica parâmetro legal de cálculo |
+| `DATAJUD_API_KEY` (CNJ) | Não. Processo judicial não é fonte de parâmetro |
+| Supabase, Stripe, Resend, Redis, Sentry, PostHog | **Não, por decisão.** `ADR-002` (sem banco, sem autenticação, sem sessão) e `ADR-008` (sem análise, sem pagamento). Não são "ainda não usados" — são a arquitetura que este projeto recusou |
+| 30 pares `*_DATABASE_URL` | Idem. Um por app de lá; aqui não há aplicação com estado |
+
+**As fontes que este projeto usa ou pode usar não pedem chave nenhuma.** BCB SGS
+(já em uso por `ADR-006`), ANEEL, Planalto, Receita, portalfat, `in.gov.br` de
+leitura: todas abertas. A ausência de chave é a razão de `ADR-006` caber num
+passo de build sem segredo.
+
+#### 6.6.1 INLABS — a busca no DOU que faltou três vezes
+
+O projeto irmão tem conta institucional no INLABS e um conector de 190 linhas em
+`packages/datasources/src/gov/dou/connector.ts`, com o mecanismo medido:
+
+```
+POST https://inlabs.in.gov.br/logar.php   (form: email, password)
+  → 302 + Set-Cookie: inlabs_session_cookie=…; Max-Age=1800
+GET  /index.php?p=YYYY-MM-DD&dl=YYYY-MM-DD-DO{1,2,3}.zip   (com o cookie)
+```
+
+Medido lá: edição de uma seção = **1 MB de zip, 766 XMLs, 1,1 s de download e
+0,04 s de parse**. Cobertura **livre e gratuita desde 01/01/2020**. Sessão de 30
+minutos; expirada, devolve HTML de login no lugar do zip — detectar pelo
+`content-type`.
+
+**Por que isso importa aqui.** Três pendências deste projeto são da mesma
+natureza: *"o ato existe, mas não foi localizado"*. A busca do `in.gov.br` foi
+tentada e falhou nas três. O INLABS não é busca — é o **texto integral das
+edições**, que se baixa e se varre localmente.
+
+| Pendência | O que a varredura resolveria |
+|---|---|
+| **CALC-017 / CALC-019** (§8, item 3) | A tabela ANUAL do IRPF do ano-calendário 2025 sai em Instrução Normativa da RFB, publicada na Seção 1 em fevereiro. São ~20 edições a varrer — busca fechada, não agulha em palheiro. **Destrava as duas calculadoras mais pendentes do catálogo** |
+| **Vigência de 2025 do seguro-desemprego** (§5.5) | Falta o dia de início. Se houver ato no DOU, ele tem data de publicação |
+| **Auditoria anual** (`RB-*`) | Portaria do INSS, salário mínimo, tabelas do IRRF: hoje cada uma é caçada à mão no ano seguinte |
+
+**Três limites, para não prometer o que ele não faz:**
+
+1. **Não é API de busca.** Para achar ato de data desconhecida, baixa-se o
+   intervalo e varre-se localmente. Serve para janela conhecida (fevereiro, para
+   o IRPF); não serve para "procurar em 2020–2026".
+2. **Nem todo ato oficial passa pelo DOU.** A divulgação do seguro-desemprego de
+   §5.5, por exemplo, é do portal do MTE por determinação do art. 19, § 1º — pode
+   simplesmente não estar lá. Ausência no DOU **não** prova ausência de norma.
+3. **É credencial, e este repositório é público.** Se entrar, entra por variável
+   de ambiente e segredo do repositório, nunca versionada. E entra em
+   **script de pesquisa**, não na aplicação: `ADR-008` mantém o produto sem
+   dependência externa em execução, e nada disso muda.
+
+**Decisão pendente do mantenedor:** usar a conta institucional do outro projeto
+aqui. É credencial dele, o dado é público e a ficha de lá já diz "uma conta para
+todo o ecossistema" — mas autenticar em portal de terceiro a partir deste
+projeto é passo que ele autoriza, não eu.
+
+### 6.7 ANEEL e CALC-066 — o que ela resolve não é o que trava
+
+A tentação é ligar uma coisa na outra e concluir que CALC-066 destravou. **Não
+destravou**, e a confusão vale registrar porque ela é fácil de cometer.
+
+O que trava CALC-066, por §7.40, é o **cronograma do Fio B da Lei nº
+14.300/2022** — o percentual da tarifa de uso da rede que incide sobre a energia
+injetada e que **cresce ano a ano**. Isso é valor legal, está no texto da lei, e
+sai do Planalto: aberto, sem chave, sem API. **A ANEEL não publica esse
+percentual** — ela publica outra coisa.
+
+O que a ANEEL publica, e que seria o *segundo* insumo:
+
+| | |
+|---|---|
+| Conjunto | `componentes-tarifarias-*`, componente **`TUSD_FioB`** |
+| Endpoint | `https://dadosabertos.aneel.gov.br/api/3/action/datastore_search` |
+| Autenticação | nenhuma · latência p50/p95 medida em 314 ms / 744 ms |
+| Licença | **ODbL** — exige atribuição e é *share-alike* sobre base derivada |
+
+**Quatro armadilhas já medidas lá**, cada uma valendo um defeito:
+
+1. O componente chama-se `TUSD_FioB`, **sem espaço**. Buscar "Fio B" devolve
+   zero e faz concluir que a fonte não tem.
+2. A tabela guarda **histórico desde 2015**. Consulta sem filtro de vigência
+   pegou tarifa de 2015 — foi como o app #16 de lá foi ao ar errado.
+3. **Vigências se sobrepõem**: a ANEEL publica resolução retroativa sem retirar
+   a anterior. Atinge 0,04% dos dias, com diferença mediana de 2,08% e máxima de
+   17,99%.
+4. O desempate óbvio está **errado**: ordenar por `vigenciaInicio desc` escolhe a
+   resolução superada, porque a retroativa começa antes. O certo é
+   `vigenciaFim desc`.
+
+> **E provavelmente nada disso é necessário.** CALC-065 foi construída sem
+> ANEEL, com a tarifa como campo do usuário — ela está na conta de luz de quem
+> pergunta. O mesmo caminho serve para CALC-066, e é o precedente de §7.62: onde
+> a norma não responde e o usuário tem o papel na mão, o campo é dele. O que
+> **não** pode virar campo do usuário é o percentual do Fio B, porque ninguém
+> sabe responder — e é só isso que falta ler na lei.
 
 ## 7. Coisas que vão morder quem não souber
 
