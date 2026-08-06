@@ -31,6 +31,48 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-017 e CALC-019 — o ajuste anual, e o recorte que ele obrigou
+
+As duas pendências mais antigas do catálogo, bloqueadas desde 01/08/2026 por
+fonte. O que faltava era a tabela ANUAL do ano-calendário 2025, e ela estava na
+página de tabelas da Receita do ano correspondente — a busca anterior tinha
+parado na página do exercício corrente, que traz a de 2026.
+
+**A anual não é doze vezes a mensal.** Em 2025 a tabela mudou em maio, então o
+ano tem quatro meses de uma e oito de outra, e a isenção anual publicada —
+R$ 28.467,20 — é a mistura: `4 × 2.259,20 + 8 × 2.428,80`. Bate ao centavo, e a
+mesma conferência fecha em 2024, cuja tabela mudou em fevereiro. Quem
+multiplicar a mensal vigente por doze erra a isenção em mais de mil reais.
+
+**A leitura da norma mudou o escopo da entrega.** O art. 10 da Lei nº
+9.250/1995, na redação da Lei nº 15.270/2025, limita o desconto simplificado a
+R$ 16.754,34 *"a partir do ano-calendário de 2015 até o ano-calendário de 2025"*
+— e a mesma lei **revogou o art. 11**, que é onde vive a tabela anual. De 2026 em
+diante a apuração não é a mesma conta com outros números: é outra estrutura, com
+o redutor do art. 3º-A.
+
+Por isso as vigências da tabela anual são **fechadas**, sem nenhuma aberta, e o
+seletor oferece apenas 2024 e 2025. Escolher 2026 devolve o bloqueio de
+`RN-003`, com a razão na tela. Cadastrar só o limite novo faria a calculadora
+oferecer 2026 e calcular por norma revogada — o defeito de `ESTADO-DO-PROJETO`
+§7.48 com consequência pior.
+
+**Um motor para as duas.** `docs/18` dizia que CALC-019 "é CALC-017 rodado duas
+vezes"; não é — a apuração anual já calcula os dois modelos numa passagem, porque
+a lei manda adotar o de menor imposto. O que muda entre as telas é o recorte da
+pergunta: CALC-017 mostra o saldo, CALC-019 mostra a distância entre os modelos.
+CALC-019 nem pede o imposto retido, que desloca os dois modelos igualmente e não
+muda qual compensa.
+
+**O que ficou declarado como ausente**, seguindo o precedente de `RN-027`:
+previdência privada (PGBL), cujo limite legal não foi conferido em fonte oficial
+nesta sessão. Omitir erra para MENOS restituição, e a tela diz isso.
+
+**Uma aproximação declarada:** o teto da despesa com instrução é por pessoa, e o
+campo é um só. A calculadora aplica o limite multiplicado pelo número de pessoas,
+o que coincide com a lei quando ninguém isoladamente ultrapassou o próprio teto.
+A memória de cálculo mostra o limite aplicado em vez de escondê-lo no total.
+
 ### Adicionado · os sete guias que faltavam — `03-functional-spec` §4 fechou
 
 Rescisão sem justa causa, pedido de demissão, férias, 13º salário, horas extras,

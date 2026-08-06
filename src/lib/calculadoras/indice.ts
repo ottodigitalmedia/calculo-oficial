@@ -293,6 +293,16 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto recolher no mês sobre o que você recebeu de pessoas físicas.',
   },
   {
+    slug: 'restituicao-irpf',
+    nome: 'Restituição do Imposto de Renda',
+    linhaDeContexto: 'Se você tem imposto a restituir ou a pagar na declaração anual.',
+  },
+  {
+    slug: 'simplificado-ou-completo',
+    nome: 'Simplificado ou completo',
+    linhaDeContexto: 'Qual modelo de declaração paga menos imposto, com os seus números.',
+  },
+  {
     slug: 'pro-labore',
     nome: 'Pró-labore e encargos do sócio',
     linhaDeContexto:

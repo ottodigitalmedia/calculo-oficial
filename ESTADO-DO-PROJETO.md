@@ -25,13 +25,13 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras **no repositório** | **70** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
-| Calculadoras **em produção** | ⚠️ **69** — CALC-014 está no repositório e **não** está no ar. O pipeline parou de implantar; §7.63 |
+| Calculadoras **no repositório** | **72** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
+| Calculadoras **em produção** | ⚠️ **69** — CALC-014, CALC-017 e CALC-019 estão no repositório e **não** estão no ar. Incidente do GitHub; §7.63 |
 | Guias no repositório | **10 de 10** — `03-functional-spec` §4 fechou em 06/08/2026 |
 | Guias **em produção** | ⚠️ **3** — os sete novos aguardam implantação, pela mesma razão |
-| Testes | 1.443 de unidade · 595 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 85 vigências, **0 divergências** (06/08/2026). A fonte que era a mais fraca deixou de ser — §5.5 |
-| Orçamento de JavaScript | 134,3 kB de **150** na pior rota — e **18,5 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
+| Testes | 1.464 de unidade · 607 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 92 vigências, **0 divergências** (06/08/2026). A fonte que era a mais fraca deixou de ser — §5.5 |
+| Orçamento de JavaScript | 134,7 kB de **150** na pior rota — e **18,7 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -42,6 +42,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição · ganho de capital
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão · pró-labore
+- **Ajuste anual do IRPF:** restituição estimada · simplificado ou completo
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
@@ -147,7 +148,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 5 de 75
+## 4. Calculadoras pendentes — 3 de 75
 
 **Setenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -182,7 +183,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 5 que faltam, e o que trava cada uma
+### 4.3 As 3 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -199,13 +200,13 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 
 | ID | Calculadora | O que trava |
 |---|---|---|
-| CALC-017 | Restituição estimada do IRPF anual | A tabela ANUAL do ano-calendário 2025 não foi localizada — §8, item 3 |
-| CALC-019 | Comparador simplificado vs. completo | Mesma fonte de CALC-017 |
+| ~~CALC-017~~ | ~~Restituição estimada do IRPF anual~~ | ✅ **publicada em 06/08/2026** — a tabela estava na página da Receita do ano-calendário, §6.6.2 |
+| ~~CALC-019~~ | ~~Comparador simplificado vs. completo~~ | ✅ **publicada junto** — mesma conta, outro recorte |
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 
-**Nenhuma das cinco dispensa pesquisa em norma.** O trecho do catálogo que dizia
+**Nenhuma das três dispensa pesquisa em norma.** O trecho do catálogo que dizia
 haver 33 calculadoras sem dependência valia quando foi escrito; elas foram
 construídas, e CALC-038 — a última delas — saiu em 06/08/2026. O que restou é
 tributário, previdenciário ou preso a um calendário, e **o próximo passo do
@@ -2249,6 +2250,63 @@ de §8 tenta fechar, e que colide com `06-api-spec` §EP-016.
 
 ---
 
+### 7.64 A lei que revoga o artigo muda o ESCOPO da entrega, não só um número
+
+§7.11 conta que a norma às vezes muda a estrutura da conta. CALC-017 mostrou o
+grau seguinte: **a norma revoga o artigo inteiro**, e a decisão que sobra não é
+de implementação — é de até onde a calculadora pode ir.
+
+A tabela anual do IRPF vive no art. 11 da Lei nº 9.250/1995. Lendo o art. 10 para
+cadastrar o desconto simplificado, apareceram duas coisas na mesma redação, dada
+pela **Lei nº 15.270/2025**:
+
+```
+IX - R$ 16.754,34 [...] a partir do ano-calendário de 2015 até o
+     ano-calendário de 2025; e
+X  - R$ 17.640,00 [...] a partir do ano-calendário de 2026.
+
+Art. 11. [...]  (Revogado pela Lei nº 15.270, de 2025)
+```
+
+O caminho tentador era cadastrar o inciso X junto — é valor oficial, está lido, e
+"deixa a calculadora pronta para o ano que vem". **Seria o pior defeito
+possível aqui:** com o limite de 2026 cadastrado e a tabela anual só até 2025, o
+seletor passaria a oferecer 2026 e a conta rodaria pela estrutura revogada, sem
+o redutor do art. 3º-A. É §7.48 outra vez, com a diferença de que lá a página
+exibia um ano e usava outro; aqui exibiria o ano certo e aplicaria norma que não
+existe mais.
+
+O que foi feito: **vigências fechadas, nenhuma aberta**, cobertura de 2024 e
+2025, e o bloqueio de `RN-003` para qualquer outro ano — com um caso-ouro que
+cobra o bloqueio de 2026 nominalmente.
+
+> **A régua que fica.** Antes de cadastrar a vigência seguinte de um parâmetro,
+> perguntar se a norma que a criou mexeu em mais alguma coisa. Se ela revogou
+> artigo, a resposta quase nunca é "cadastrar o número novo" — é estudar a
+> estrutura nova, ou parar na fronteira e dizer por quê.
+
+### 7.65 A porta da frente da fonte oficial, antes da máquina
+
+Registrado em §6.6.2 e repetido aqui porque é erro de método, não de domínio.
+
+Para achar a tabela anual do IRPF de 2025, montei acesso autenticado ao Diário
+Oficial: credencial do projeto irmão, conector de login, download de edição,
+varredura de XML. O INLABS guarda ~4 meses e não alcançava março de 2026, e foi
+só então que abri a página de tabelas da Receita **trocando o ano na URL**. A
+tabela estava lá, pública, sem autenticação.
+
+O documento registrava a fonte como "não localizada" desde 01/08/2026 porque a
+sondagem anterior tinha parado na página do exercício corrente — que traz a do
+ano-calendário seguinte, e não a que se declara hoje.
+
+> **Antes de montar ferramenta, esgotar a porta da frente da fonte oficial:**
+> trocar o ano na URL, olhar o índice do portal, procurar a página do exercício
+> anterior. A ferramenta continua útil — para auditoria corrente, o INLABS
+> resolve —, mas ela não era o caminho para este problema, e montá-la primeiro
+> custou a sessão inteira de uma tarde.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -2299,15 +2357,16 @@ O que sobrou, em ordem:
    **Sobrou um pedaço, e ele é pequeno:** cadastrar a vigência de 2025, que
    depende de ler o dia de início em fonte oficial. Não foi inferido por
    analogia — o porquê está em §5.5.
-3. **CALC-017 · restituição estimada do IRPF anual.** ⚠️ **Sondada e adiada em
-   01/08/2026, por fonte.** A página de tabelas da Receita traz a progressiva
-   ANUAL do ano-calendário **2026** — e a declaração que se entrega hoje é a do
-   ano-calendário **2025**, ano em que a tabela mensal mudou em maio. A anual de
-   2025 é, portanto, um conjunto próprio de números, que **não foi localizado**.
-   Construir sobre a tabela do ano errado produziria exatamente o dano que o
-   projeto existe para evitar. Resolver a fonte antes de escrever qualquer linha.
-   **CALC-019 está bloqueada pela mesma fonte** — `docs/18` registra que ela "é
-   CALC-017 rodado duas vezes".
+3. ~~**CALC-017 · restituição estimada do IRPF anual.**~~ ✅ **feita em
+   06/08/2026, com CALC-019 junto.** A tabela do ano-calendário 2025 estava na
+   página de tabelas da Receita do ano correspondente — §6.6.2 conta por que a
+   sondagem anterior não a encontrou, e §7.65 registra o erro de método.
+
+   A leitura da norma encolheu o escopo, e isso foi bom: a Lei nº 15.270/2025
+   revogou o art. 11 da Lei nº 9.250/1995, então **2026 é outra estrutura**. As
+   duas calculadoras cobrem 2024 e 2025, com vigências fechadas e bloqueio
+   declarado para os demais anos — §7.64.
+
 4. ~~**O campo de LISTA**~~ ✅ **feito em 06/08/2026.** `Campo` modelava um valor
    por campo, e **três** calculadoras publicáveis dependiam de grupo repetido:
    CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N notas). §7.4 diz que

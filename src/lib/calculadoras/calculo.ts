@@ -324,6 +324,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './carne-leao'
     ).then((m) => m.calcular),
+  'restituicao-irpf': () =>
+    import(
+      /* webpackChunkName: "calc-restituicao-irpf" */
+      /* webpackExports: ["calcular"] */
+      './restituicao-irpf'
+    ).then((m) => m.calcular),
+  'simplificado-ou-completo': () =>
+    import(
+      /* webpackChunkName: "calc-simplificado-ou-completo" */
+      /* webpackExports: ["calcular"] */
+      './simplificado-ou-completo'
+    ).then((m) => m.calcular),
   'pro-labore': () =>
     import(
       /* webpackChunkName: "calc-pro-labore" */

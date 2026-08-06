@@ -10,10 +10,12 @@
 import { describe, expect, it } from 'vitest'
 
 import { calcularInss, liquidoAposInss } from '../../src/lib/engine/inss'
+import { calcularIrpfAnual } from '../../src/lib/engine/calculadoras/irpf-anual'
 import { calcularIrrf } from '../../src/lib/engine/irrf'
 import { percentual, reais } from '../../src/lib/engine/traco'
 import { basisPoints, centavos } from '../../src/lib/engine/types'
 import { INSS } from '../../src/lib/params/data/inss'
+import { IRPF_ANUAL } from '../../src/lib/params/data/irpf-anual'
 import { IRRF } from '../../src/lib/params/data/irrf'
 import { construirRegistro } from '../../src/lib/params/registry'
 import type { ConjuntoDeParametros } from '../../src/lib/params/tipos'
@@ -205,5 +207,64 @@ describe('tabela de faixas sem teto', () => {
     expect(r.valores.contribuicao).toBe(50_000)
     expect(r.valores.limitadaPeloTeto).toBe(false)
     expect(r.valores.baseAplicada).toBe(300_000)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Ajuste anual — CALC-017 e CALC-019
+// ---------------------------------------------------------------------------
+
+describe('ajuste anual do IRPF · C-M3', () => {
+  const entradaAnual = {
+    rendimentosTributaveis: centavos(6_000_000),
+    inss: centavos(660_000),
+    dependentes: 0,
+    instrucao: centavos(0),
+    medicas: centavos(0),
+    pensao: centavos(0),
+    impostoRetido: centavos(0),
+  }
+  const registroAnual = construirRegistro(IRPF_ANUAL)
+  const EM_2025 = '2025-06-15'
+
+  it.each([
+    ['rendimentos negativos', { rendimentosTributaveis: centavos(-1) }],
+    ['INSS negativo', { inss: centavos(-1) }],
+    ['instrução negativa', { instrucao: centavos(-1) }],
+    ['despesa médica negativa', { medicas: centavos(-1) }],
+    ['pensão negativa', { pensao: centavos(-1) }],
+    ['imposto retido negativo', { impostoRetido: centavos(-1) }],
+  ])('recusa %s', (_nome, campo) => {
+    const r = calcularIrpfAnual({ ...entradaAnual, ...campo }, EM_2025, registroAnual)
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+
+  it.each([
+    ['fracionário', 1.5],
+    ['negativo', -1],
+  ])('recusa número de dependentes %s', (_nome, dependentes) => {
+    const r = calcularIrpfAnual({ ...entradaAnual, dependentes }, EM_2025, registroAnual)
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+
+  /**
+   * A tabela anual cadastrada com o tipo trocado só chega aqui se BV-06 tiver
+   * sido contornado. Devolver imposto zero seria pior que falhar: zero é uma
+   * resposta plausível, e ninguém desconfiaria dela.
+   */
+  it('recusa tabela anual cadastrada com o tipo errado', () => {
+    const tipoTrocado: ConjuntoDeParametros = {
+      ...IRPF_ANUAL,
+      vigencias: IRPF_ANUAL.vigencias.map((v) =>
+        v.parametroId === 'irpf-tabela-anual'
+          ? { ...v, valor: { tipo: 'valor_monetario' as const, centavos: 100 } }
+          : v,
+      ),
+    }
+    const r = calcularIrpfAnual(entradaAnual, EM_2025, construirRegistro(tipoTrocado))
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
   })
 })
