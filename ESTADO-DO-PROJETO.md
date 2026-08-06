@@ -25,10 +25,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **66** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **67** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.289 de unidade · 557 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 77 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 1.310 de unidade · 563 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 79 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -39,7 +39,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade · financiamento de reforma
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
-- **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão
+- **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão · pró-labore
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 9 de 75
+## 4. Calculadoras pendentes — 8 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 9 que faltam, e o que trava cada uma
+### 4.3 As 8 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -193,7 +193,6 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
 | CALC-027 | Empréstimo consignado — margem | A margem consignável é legal e mudou mais de uma vez; exige fonte confirmada |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
-| CALC-051 | Pró-labore e encargos do sócio | Pesquisa em norma |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 
 **Nenhuma das dez dispensa pesquisa em norma.** O trecho do catálogo que dizia
@@ -1558,6 +1557,46 @@ vezes em setenta anos. Sem vigência, contar 2020 com o feriado de 2023 seria
 impossível de impedir.
 
 Nove parâmetros que precisam — bem acima da necessidade medida de §7.8.
+
+### 7.54 O número que ninguém sabe de onde vem
+
+Todo sócio que recebe pró-labore vê **11%** de INSS no recibo, e nenhuma norma
+escreve "11%". O número é o encontro de duas regras:
+
+  Art. 22, III da Lei nº 8.212/1991 — a empresa recolhe **20%** sobre a
+  remuneração paga a contribuinte individual que lhe presta serviço.
+
+  Art. 30, § 4º — o segurado deduz da sua contribuição "quarenta e cinco por
+  cento da contribuição da empresa [...] **limitada a dedução a nove por cento**
+  do respectivo salário-de-contribuição".
+
+Como 45% de 20% dão exatamente 9%, o teto é alcançado e os 20% do caput viram
+11%.
+
+**A tentação era cadastrar 11% e seguir.** Caberia no contrato, passaria em toda
+verificação, e produziria o número certo. O que ela custaria é a única coisa que
+este produto vende: quem abrisse a memória de cálculo veria "11%, art. 21" e não
+teria como conferir — porque o art. 21 diz 20%.
+
+Foram cadastrados **a patronal e o teto da dedução**, e a subtração é feita no
+motor, à vista, com etapa própria na memória. Um caso-ouro exige que a etapa
+exista e cite as duas parcelas.
+
+> **O padrão.** Quando a alíquota praticada é resultado de uma conta entre
+> dispositivos, cadastre os dispositivos e faça a conta. Cadastrar o resultado
+> transforma um cálculo auditável num número mágico — e o produto inteiro existe
+> para não ter números mágicos.
+
+### 7.55 A patronal não tem teto, e o desconto do sócio tem
+
+A diferença que mais surpreende quem compara pró-labore com salário: o INSS
+descontado do sócio para no limite máximo do salário-de-contribuição, e a
+contribuição patronal de 20% incide sobre o **pró-labore inteiro**.
+
+A partir do teto, os dois deixam de crescer juntos: dobrar o pró-labore não muda
+o desconto do sócio e dobra o custo da empresa. É o número que decide entre
+pró-labore e distribuição de lucros — e por isso o destaque "do que a empresa
+gasta, chega ao sócio" existe.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

@@ -31,6 +31,27 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-051 · pró-labore, e os 11% que ninguém sabe de onde vêm
+
+Todo sócio vê 11% de INSS no recibo, e nenhuma norma escreve "11%". É o encontro
+de dois dispositivos: a empresa recolhe 20% sobre a remuneração paga a
+contribuinte individual (art. 22, III da Lei nº 8.212/1991), e o segurado deduz
+45% dessa contribuição da sua, "limitada a dedução a nove por cento do respectivo
+salário-de-contribuição" (art. 30, § 4º). Como 45% de 20% dão exatamente 9%, os
+20% do caput viram 11%.
+
+**Cadastrar 11% direto caberia no contrato e passaria em tudo** — e custaria a
+única coisa que este produto vende. Quem abrisse a memória veria "11%, art. 21" e
+não teria como conferir, porque o art. 21 diz 20%. Foram cadastrados a patronal e
+o teto da dedução, e a subtração aparece na memória com etapa própria.
+
+A página também mostra a diferença que mais surpreende quem compara com salário:
+**o desconto do sócio tem teto e a patronal não**. A partir do limite máximo do
+salário-de-contribuição os dois deixam de crescer juntos.
+
+Se a patronal é recolhida por fora ou está no DAS é campo do usuário: depende do
+anexo do Simples, da atividade e do fator R. Quem sabe é o contador.
+
 ### Adicionado · CALC-072 · dias úteis, com os feriados nacionais de verdade
 
 O bloqueio "D-5: o calendário de feriados" sugeria uma fonte de dados a obter e

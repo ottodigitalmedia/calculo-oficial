@@ -55,6 +55,7 @@ import { PORTABILIDADE_DE_CREDITO } from './portabilidade-de-credito'
 import { PORCENTAGEM } from './porcentagem'
 import { POUPANCA } from './poupanca'
 import { PRECIFICACAO } from './precificacao'
+import { PRO_LABORE } from './pro-labore'
 import { REAJUSTE_ALUGUEL } from './reajuste-aluguel'
 import { REAJUSTE_SALARIAL } from './reajuste-salarial'
 import { REGRA_DE_TRES } from './regra-de-tres'
@@ -119,6 +120,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   DAS_MEI,
   LIMITE_DO_MEI,
   CARNE_LEAO,
+  PRO_LABORE,
   ORCAMENTO,
   ENERGIA,
   BOTIJAO,

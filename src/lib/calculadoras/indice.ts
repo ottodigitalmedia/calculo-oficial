@@ -276,6 +276,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto recolher no mês sobre o que você recebeu de pessoas físicas.',
   },
   {
+    slug: 'pro-labore',
+    nome: 'Pró-labore e encargos do sócio',
+    linhaDeContexto:
+      'Quanto sobra para o sócio e quanto custa para a empresa — com os 11% explicados.',
+  },
+  {
     slug: 'orcamento-domestico',
     nome: 'Orçamento doméstico 50/30/20',
     linhaDeContexto: 'Como dividir a renda do mês — com os percentuais no seu controle, não fixos.',
