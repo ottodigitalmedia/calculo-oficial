@@ -26,6 +26,7 @@ import { CONSIGNADO } from './consignado'
 import { CREDITO } from './credito'
 import { DOMESTICO } from './domestico'
 import { EMPREGADOR } from './empregador'
+import { ENERGIA_DISTRIBUIDA } from './energia-distribuida'
 import { FERIADOS } from './feriados'
 import { GANHO_DE_CAPITAL } from './ganho-de-capital'
 import { INSS } from './inss'
@@ -50,6 +51,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   CONSIGNADO,
   SEGURO_DESEMPREGO,
   EMPREGADOR,
+  ENERGIA_DISTRIBUIDA,
   FERIADOS,
   DOMESTICO,
   RENDA_FIXA,

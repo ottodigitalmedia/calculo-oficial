@@ -182,6 +182,39 @@ export const LEI_9250_ART_10: Fonte = {
  * Publicar os 17,5% teria produzido uma calculadora inteira errada — e a única
  * diferença visível, no texto consolidado, é a marca entre parênteses.
  */
+/**
+ * Lei nº 14.300/2022 — o marco legal da geração distribuída.
+ *
+ * **Art. 27** é o cronograma do chamado Fio B: o percentual das componentes
+ * tarifárias de distribuição que passa a incidir sobre a energia compensada,
+ * crescendo ano a ano — 15% a partir de 2023 até 90% em 2028, e a regra do art.
+ * 17 a partir de 2029.
+ *
+ * **Art. 26** é o que separa dois mundos, e sem ele a calculadora erra metade
+ * dos casos: quem já tinha o sistema na publicação da lei, ou pediu acesso em
+ * até doze meses, **não** entra nesse cronograma até 31/12/2045.
+ *
+ * O art. 27 não foi alterado. A Lei nº 15.269/2025 mexeu na lei — revogou um
+ * dispositivo e deu nova redação ao art. 25 —, e conferir isso fazia parte do
+ * trabalho: §7.45 manda ler o "Vide", e §7.42 manda desconfiar de artigo com
+ * redação empilhada. Aqui não há nenhuma das duas coisas sobre o art. 27.
+ */
+export const LEI_14300_ART_27: Fonte = {
+  id: 'lei-14300-2022-art-27',
+  norma: 'Lei nº 14.300, de 6 de janeiro de 2022',
+  dispositivo: 'Art. 27, incisos I a VI',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/L14300.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_14300_ART_26: Fonte = {
+  id: 'lei-14300-2022-art-26',
+  norma: 'Lei nº 14.300, de 6 de janeiro de 2022',
+  dispositivo: 'Art. 26, incisos I e II',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/L14300.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const LEI_9250_ART_22: Fonte = {
   id: 'lei-9250-1995-art-22',
   norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 11.196, de 2005',
@@ -1203,6 +1236,8 @@ export const FONTES: readonly Fonte[] = [
   LEI_9250_ART_10,
   LEI_9250_ART_22,
   RFB_PR_IRPF_CRIPTOATIVOS,
+  LEI_14300_ART_26,
+  LEI_14300_ART_27,
   LEI_9250_ART_3A,
   LEI_8036_ART_15,
   LEI_8036_ART_18,
