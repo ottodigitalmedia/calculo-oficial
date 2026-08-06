@@ -27,6 +27,7 @@ import { CREDITO } from './credito'
 import { DOMESTICO } from './domestico'
 import { EMPREGADOR } from './empregador'
 import { FERIADOS } from './feriados'
+import { GANHO_DE_CAPITAL } from './ganho-de-capital'
 import { INSS } from './inss'
 import { INSS_INDIVIDUAL } from './inss-individual'
 import { IRRF } from './irrf'
@@ -38,6 +39,7 @@ import type { ConjuntoDeParametros } from '../tipos'
 
 export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   INSS,
+  GANHO_DE_CAPITAL,
   INSS_INDIVIDUAL,
   IRRF,
   MEI,

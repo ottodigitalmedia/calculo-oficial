@@ -368,6 +368,46 @@ export const LEI_10820_ART_2: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * Ganho de capital na venda de imóvel — CALC-020.
+ *
+ * **A armadilha de leitura aqui é a pior do projeto até agora.** O art. 21 da
+ * Lei nº 8.981/1995 aparece com três redações empilhadas, e a da **MP nº
+ * 692/2015** traz faixas completamente diferentes — 15%/20%/25%/30% com corte em
+ * R$ 1 milhão — que não são as vigentes. A vigente é a da Lei nº 13.259/2016.
+ */
+export const LEI_8981_ART_21: Fonte = {
+  id: 'lei-8981-1995-art-21',
+  norma: 'Lei nº 8.981, de 20 de janeiro de 1995, com a redação da Lei nº 13.259, de 2016',
+  dispositivo: 'Art. 21, incisos I a IV',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8981.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_9250_ART_23: Fonte = {
+  id: 'lei-9250-1995-art-23',
+  norma: 'Lei nº 9.250, de 26 de dezembro de 1995',
+  dispositivo: 'Art. 23',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_11196_ART_39: Fonte = {
+  id: 'lei-11196-2005-art-39',
+  norma: 'Lei nº 11.196, de 21 de novembro de 2005',
+  dispositivo: 'Art. 39, caput e §§ 2º, 3º e 5º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2005/lei/l11196.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_11196_ART_40: Fonte = {
+  id: 'lei-11196-2005-art-40',
+  norma: 'Lei nº 11.196, de 21 de novembro de 2005',
+  dispositivo: 'Art. 40, § 1º, incisos I e II, e § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2005/lei/l11196.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const RPS_ART_216: Fonte = {
   id: 'decreto-3048-1999-art-216',
   norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',
