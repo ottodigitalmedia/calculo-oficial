@@ -39,6 +39,7 @@ import { FINANCIAMENTO_DE_REFORMA } from './financiamento-de-reforma'
 import { FINANCIAMENTO_DE_VEICULO } from './financiamento-de-veiculo'
 import { FINANCIAMENTO_IMOBILIARIO } from './financiamento-imobiliario'
 import { FGTS } from './fgts'
+import { GANHO_DE_CAPITAL } from './ganho-de-capital'
 import { ENERGIA } from './energia'
 import { HORAS_EXTRAS } from './horas-extras'
 import { INDEPENDENCIA } from './independencia'
@@ -102,6 +103,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   CAPACIDADE,
   FINANCIAMENTO_IMOBILIARIO,
   CUSTO_DE_AQUISICAO,
+  GANHO_DE_CAPITAL,
   QUITACAO_ANTECIPADA,
   AMORTIZACAO_EXTRA,
   PLANO_DE_QUITACAO,

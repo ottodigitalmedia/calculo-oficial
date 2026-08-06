@@ -26,7 +26,7 @@ import { centavos, type BasisPoints, type Centavos } from './types'
  * décima segunda casa, e mesmo em 600 períodos não alcança o centavo.
  */
 // eslint-disable-next-line no-restricted-syntax -- escala das contas intermediárias, não constante legal
-const ESCALA = 1_000_000_000_000n
+export const ESCALA = 1_000_000_000_000n
 
 /** 100% em basis points, como `BigInt`. */
 // eslint-disable-next-line no-restricted-syntax -- denominador do basis point (ADR-004 A-2)
@@ -49,7 +49,12 @@ function fatorDeDesconto(taxaBp: bigint, n: number): bigint {
 }
 
 /** `(1 + i)^n` escalado. */
-function fatorDeCapitalizacao(taxaBp: bigint, n: number): bigint {
+/**
+ * Exportado desde CALC-020: os fatores de redução do ganho de capital são o
+ * INVERSO de (1+i)^n, e reusá-lo é o que mantém a exponenciação em inteiro
+ * grande num só lugar do sistema.
+ */
+export function fatorDeCapitalizacao(taxaBp: bigint, n: number): bigint {
   let fator = ESCALA
   for (let k = 0; k < n; k += 1) {
     fator = (fator * (BP_INTEIRO + taxaBp)) / BP_INTEIRO

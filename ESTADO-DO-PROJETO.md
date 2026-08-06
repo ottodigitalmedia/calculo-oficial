@@ -25,10 +25,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **68** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **69** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.331 de unidade · 569 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 80 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 1.356 de unidade · 575 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 85 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -37,7 +37,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade · financiamento de reforma · consignado
-- **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
+- **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição · ganho de capital
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão · pró-labore
 - **Câmbio:** conversor de moeda com IOF
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 7 de 75
+## 4. Calculadoras pendentes — 6 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 7 que faltam, e o que trava cada uma
+### 4.3 As 6 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -189,7 +189,6 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-014 | Rescisão — contrato intermitente | Pesquisa em norma: art. 452-A e a forma de apurar média |
 | CALC-017 | Restituição estimada do IRPF anual | A tabela ANUAL do ano-calendário 2025 não foi localizada — §8, item 3 |
 | CALC-019 | Comparador simplificado vs. completo | Mesma fonte de CALC-017 |
-| CALC-020 | IR sobre ganho de capital em imóvel | **Pesquisa CONCLUÍDA em 06/08/2026 — ver §9.** Falta construir |
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
@@ -1634,17 +1633,19 @@ alteração por MP, e que servidor público segue regulamento do próprio ente.
 > pode deixar de valer antes de a página ser lida é o mesmo risco do IOF em
 > §7.33, e a resposta é a mesma: o campo não existe, e o motivo fica escrito.
 
-## 9. CALC-020 — a pesquisa já está feita
+## 9. CALC-020 — construída em 06/08/2026
+
+**A pesquisa desta seção virou código no mesmo dia.** Ela fica aqui como registro
+do que foi conferido, e das duas decisões técnicas que ela obrigou (§7.58 e
+§7.59). As lacunas declaradas foram fechadas: a Lei nº 11.196/2005 foi publicada
+no **DOU de 22/11/2005**, e o custo de aquisição é campo do usuário.
 
 **Esta seção existe para a próxima sessão começar construindo, não pesquisando.**
 Os quatro dispositivos abaixo foram lidos no Planalto em 06/08/2026 e conferidos
 um a um. O que falta é código.
 
-Ela ficou de fora do lote de 06/08/2026 por decisão de escopo: é a calculadora
-tributária mais complexa das que restam — fatores de redução com exponenciação,
-três isenções que interagem e uma tabela progressiva nova — e começá-la no fim de
-uma sessão longa é exatamente a situação em que se publica um número errado com
-aparência de certo.
+Era a calculadora tributária mais complexa das que restavam — fatores de redução
+com exponenciação, três isenções que interagem e uma tabela progressiva nova.
 
 ### 9.1 As alíquotas — progressivas por faixa
 
@@ -1700,13 +1701,58 @@ adquiridos até 31/12/1995.
 35 basis points. Os fatores são o inverso dele, e não há ponto flutuante em
 lugar nenhum.
 
-### 9.4 O que ainda precisa ser decidido
+### 9.4 As duas lacunas, e como foram fechadas
 
-- **A data de publicação da Lei nº 11.196/2005** não foi extraída do texto e é
-  necessária para `m1` e `m2`. É a única lacuna da pesquisa.
-- **Custo de aquisição** — para imóveis antigos há regras de correção que este
-  levantamento não cobriu. Vale decidir se entram ou se o custo é campo do
-  usuário, declarado.
+**A data de publicação da Lei nº 11.196/2005** é o **DOU de 22/11/2005**,
+confirmada no próprio texto. Dela saem os dois marcos: `m1` conta até novembro de
+2005 e `m2` a partir de dezembro.
+
+**O custo de aquisição é campo do usuário**, e a tela diz que benfeitorias
+comprovadas e corretagem podem integrá-lo. O que ficou de fora, declarado na
+página, é a **redução do art. 18 da Lei nº 7.713/1988** para imóveis adquiridos
+até 1988 — o § 2º do art. 40 a preserva expressamente, e não aplicá-la faz o
+imposto sair MAIOR que o devido. A calculadora avisa na tela quando a aquisição é
+anterior a 1989.
+
+### 7.58 Converter para a unidade de exibição ANTES de aplicar custa dinheiro
+
+Os fatores de redução do art. 40 são coeficientes entre zero e um, e a primeira
+versão do motor fazia o óbvio: calculava `1/(1+i)^m`, convertia para basis
+points e aplicava com `proporcao`.
+
+**Basis points têm resolução de 0,0001.** Sobre um ganho de oitocentos mil reais
+isso é mais de cem reais de base — e o imposto sai errado por dezenas de reais,
+num produto cuja tese é a exatidão da conta.
+
+A correção foi separar as duas coisas: os fatores são aplicados **em inteiro
+grande**, dividindo pelo `(1+i)^m` que `fatorDeCapitalizacao` devolve na escala
+de `financeira.ts`, e só depois convertidos para basis points **para aparecer na
+tela**. A base passou a bater ao centavo com a conta de referência.
+
+> **Quem revelou foi um caso-ouro exigente demais.** A asserção pedia quatro
+> casas decimais do fator e falhava por 7×10⁻⁵. A leitura preguiçosa seria
+> afrouxar a tolerância; a leitura certa foi perguntar por que o número não era
+> exato — e a resposta estava na ordem das operações, não no teste.
+>
+> O teste final ficou dividido em dois: a BASE é conferida ao centavo, e o
+> fator EXIBIDO à resolução que ele de fato tem. Cobrar do rótulo o que só a
+> conta tem é outra forma de teste errado.
+
+### 7.59 Marcos de data não são parâmetros
+
+O art. 40 divide a vida do imóvel em dois trechos, usando a publicação da Lei nº
+11.196/2005 como divisor, e o § 2º fixa 1996 como piso do primeiro. Três datas
+dentro do motor — e BV-10 reclamou das três.
+
+**Elas não viraram parâmetros, e a distinção importa.** Um parâmetro é um valor
+que a norma pode trocar mantendo a mesma regra: a alíquota muda, a conta
+continua a mesma. Estas datas são a própria estrutura da regra — trocar
+novembro de 2005 por outra data não é atualizar um parâmetro, é outro artigo.
+
+O que É parâmetro ali são os coeficientes de 0,60% e 0,35%, e esses estão
+cadastrados com vigência a partir da publicação da lei. As datas ficaram no
+motor, com a justificativa ao lado — que é exatamente o que BV-10 pede quando o
+número não é constante legal disfarçada.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

@@ -171,6 +171,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto precisa estar em dinheiro no dia — que não é só a entrada.',
   },
   {
+    slug: 'ganho-de-capital-imovel',
+    nome: 'IR sobre ganho de capital na venda de imóvel',
+    linhaDeContexto:
+      'Quanto de imposto na venda — com os fatores de redução que quase ninguém aplica.',
+  },
+  {
     slug: 'quitacao-antecipada',
     nome: 'Quitação antecipada — economia de juros',
     linhaDeContexto:

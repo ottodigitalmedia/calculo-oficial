@@ -31,6 +31,43 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-020 · ganho de capital, com os fatores que quase ninguém aplica
+
+Os fatores de redução do art. 40 da Lei nº 11.196/2005 são a parte que quase
+nenhuma calculadora do mercado aplica, e num imóvel dos anos 1990 eles derrubam a
+base pela metade ou mais. Ignorá-los produz um imposto muito maior que o devido —
+**errar para mais também é errar**, e um caso-ouro mede que a diferença passa do
+dobro.
+
+O § 2º do artigo tem um detalhe que muda tudo em imóvel antigo: para quem comprou
+até 1995, o primeiro fator conta a partir de **janeiro de 1996**, e não da compra.
+
+A tabela é progressiva por faixa — 15% até R$ 5 milhões, chegando a 22,5% — e o
+art. 21 da Lei nº 8.981/1995 aparece com **três redações empilhadas**. A da MP nº
+692/2015 traz faixas completamente diferentes, com corte em R$ 1 milhão, e não é
+a vigente. Quem para na primeira ocorrência cadastra uma tabela inteira que não
+vale.
+
+As isenções são afirmações do usuário, não deduções da página: ser o único
+imóvel, não ter havido outra alienação em cinco anos, pretender reinvestir. A do
+reinvestimento é **proporcional** ao que for aplicado.
+
+**O que ficou de fora, declarado na tela:** a redução do art. 18 da Lei nº
+7.713/1988, para imóveis adquiridos até 1988. Como não aplicá-la faz o imposto
+sair maior que o devido, a página avisa quando a data de aquisição é anterior a
+1989.
+
+### Corrigido · os fatores perdiam precisão ao virar basis points
+
+A primeira versão do motor calculava o fator, convertia para basis points e
+aplicava. Basis points têm resolução de 0,0001 — sobre um ganho de oitocentos mil
+reais isso é mais de cem reais de base.
+
+Os fatores passaram a ser aplicados em inteiro grande, e a conversão para basis
+points ficou só para exibição. Quem revelou foi um caso-ouro que pedia quatro
+casas decimais e falhava por 7×10⁻⁵: a leitura preguiçosa seria afrouxar a
+tolerância, e a certa foi perguntar por que o número não era exato.
+
 ### Adicionado · CALC-027 · consignado, com a margem sobre a base certa
 
 Todo mundo cita os 40%, e quase ninguém cita sobre o quê. A lei diz "40% da
