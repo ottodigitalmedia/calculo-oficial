@@ -11,10 +11,14 @@
  *
  * Os que decidem o VALOR são reajustados todo ano pelo INPC. O art. 5º fixa o
  * método e expressa os limites em BTN, moeda extinta em 1991; os valores em
- * reais vêm da tabela anual do Ministério do Trabalho e Emprego. É por isso que
- * eles têm vigência de exercício, como as tabelas de INSS e de IRRF — e é por
- * isso que a fonte deles é a mais fraca do projeto, o que está declarado em
- * `MTE_TABELA_SEGURO_DESEMPREGO`.
+ * reais vêm da divulgação anual do Ministério do Trabalho e Emprego. É por isso
+ * que eles têm vigência de exercício, como as tabelas de INSS e de IRRF.
+ *
+ * **Esta era "a fonte mais fraca do projeto", e deixou de ser em 06/08/2026.**
+ * O que faltava não era uma portaria escondida — é que a norma não prevê
+ * nenhuma. A Resolução CODEFAT nº 957/2022 manda reajustar (art. 19) e atribui
+ * a *divulgação* dos valores à Secretaria (§ 1º). A cadeia inteira, com a
+ * reprodução aritmética que a confere, está em `MTE_TABELA_SEGURO_DESEMPREGO`.
  *
  * **O piso não está aqui.** O art. 5º, § 2º, diz que o benefício "não poderá ser
  * inferior ao valor do salário mínimo", e o salário mínimo já é parâmetro do
@@ -23,10 +27,22 @@
  */
 
 import type { ConjuntoDeParametros } from '../tipos'
-import { LEI_7998_ART_4, LEI_7998_ART_5, MTE_TABELA_SEGURO_DESEMPREGO } from './fontes'
+import {
+  LEI_7998_ART_4,
+  LEI_7998_ART_5,
+  MTE_ANEXO_SEGURO_DESEMPREGO_2025,
+  MTE_TABELA_SEGURO_DESEMPREGO,
+  RES_CODEFAT_957,
+} from './fontes'
 
 export const SEGURO_DESEMPREGO: ConjuntoDeParametros = {
-  fontes: [LEI_7998_ART_4, LEI_7998_ART_5, MTE_TABELA_SEGURO_DESEMPREGO],
+  fontes: [
+    LEI_7998_ART_4,
+    LEI_7998_ART_5,
+    RES_CODEFAT_957,
+    MTE_TABELA_SEGURO_DESEMPREGO,
+    MTE_ANEXO_SEGURO_DESEMPREGO_2025,
+  ],
 
   parametros: [
     // --- Número de parcelas: Lei nº 7.998/1990, art. 4º, § 2º ---
@@ -186,7 +202,7 @@ export const SEGURO_DESEMPREGO: ConjuntoDeParametros = {
       fim: null,
       valor: { tipo: 'valor_monetario', centavos: 222_217 },
       observacao:
-        'Reajuste pelo INPC acumulado de 3,90% em 2025, na forma da Resolução CODEFAT nº 957/2022. Valores lidos no portal do MTE em 01/08/2026; a portaria que os formaliza não foi localizada — ver a nota em MTE_TABELA_SEGURO_DESEMPREGO.',
+        'Reajuste pelo INPC acumulado de 3,90%, na forma do art. 19 da Resolução CODEFAT nº 957/2022. Valores lidos no portal do MTE em 01/08/2026 e conferidos em 06/08/2026 por reprodução: os quatro valores saem, ao centavo, do anexo assinado de 2025 (SEI nº 4274391) aplicando esse índice. Não há portaria anual a localizar — o art. 19, § 1º atribui a divulgação à Secretaria, e é ela que sai no portal. Ver a nota em MTE_TABELA_SEGURO_DESEMPREGO.',
     },
     {
       id: 'sd-faixa-2-limite-2026',

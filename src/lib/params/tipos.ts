@@ -60,6 +60,13 @@ export type OrgaoEmissor =
   | 'Superior Tribunal de Justiça'
   | 'Tribunal Superior do Trabalho'
   | 'Banco Central do Brasil'
+  // O CODEFAT entrou em 06/08/2026, com a Resolução nº 957/2022 — a norma que
+  // manda reajustar a tabela do seguro-desemprego e diz a quem cabe divulgá-la.
+  // É conselho deliberativo, não ministério: emite resolução com força própria,
+  // por competência do art. 19 da Lei nº 7.998/1990, e não em nome do MTE.
+  // Registrá-lo como "Ministério do Trabalho e Emprego" apagaria justamente a
+  // procedência que torna a fonte forte.
+  | 'Conselho Deliberativo do Fundo de Amparo ao Trabalhador'
 
 /**
  * Origem normativa de um parâmetro. Nenhum parâmetro existe sem fonte

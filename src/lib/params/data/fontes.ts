@@ -725,36 +725,112 @@ export const LEI_7998_ART_5: Fonte = {
 }
 
 /**
- * A ÚNICA FONTE DESTE PROJETO QUE NÃO É TEXTO NORMATIVO NEM PÁGINA DE TABELA.
+ * A NORMA QUE MANDA REAJUSTAR, E QUE DIZ A QUEM CABE DIVULGAR.
  *
- * O art. 5º da Lei nº 7.998/1990 fixa o MÉTODO — três faixas, fatores 0,8 e
- * 0,5, piso no salário mínimo — mas expressa os limites em BTN, moeda extinta.
- * Os limites em reais são reajustados todo ano pelo INPC, na forma da Resolução
- * CODEFAT nº 957/2022, e divulgados pelo Ministério do Trabalho e Emprego.
+ * Esta fonte respondeu, em 06/08/2026, a pendência que o projeto carregava como
+ * a mais grave da sua tese — e a resposta é que **a pergunta estava errada**.
  *
- * **A portaria que os formaliza não foi localizada.** Foram tentados: a busca do
- * Diário Oficial por período e por órgão, o JSON diário do DOU de 09 a 14/01/2026
- * e a página de serviço do MTE. Nenhum devolveu o ato.
+ * Procurava-se a "portaria anual que formaliza a tabela do seguro-desemprego".
+ * Ela não foi encontrada em busca do DOU por período, por órgão, no JSON diário
+ * de janeiro nem na página de serviço do MTE, e a conclusão registrada era que
+ * a fonte estava abaixo do padrão da casa. O texto da resolução mostra por quê:
  *
- * O que se tem é a divulgação no **portal do próprio órgão emissor** — o Portal
- * do FAT, do MTE —, publicada em 13/01/2026, declarando vigência a partir de
- * 11/01/2026 e citando a lei e a resolução. É fonte oficial para BV-07 e para a
- * convenção deste arquivo, e é mais fraca que todas as outras do projeto.
+ *   Art. 19  "O reajuste das três faixas salariais [...] para os anos
+ *            subsequentes à publicação desta Resolução, observará a variação do
+ *            Índice Nacional de Preços ao Consumidor - INPC, calculado e
+ *            divulgado pela [...] IBGE, acumulada nos doze meses anteriores ao
+ *            mês de reajuste."
+ *   § 1º     "A divulgação dos valores das três faixas salariais reajustadas na
+ *            forma do caput do artigo [...] caberá à Secretaria de Trabalho do
+ *            Ministério do Trabalho e Previdência."
  *
- * **Conferência cruzada que aumenta a confiança:** o piso declarado ali,
- * R$ 1.621,00, coincide com `salario-minimo` de 2026, que foi conferido no PDF
- * da Portaria Interministerial MPS/MF nº 13/2026. Um erro de transcrição na
- * tabela teria de coincidir com outro documento para passar.
+ * **Não existe ato anual a localizar.** O reajuste é comandado pela própria
+ * resolução, e o que a norma prevê no lugar de uma portaria nova é a
+ * *divulgação* dos valores pela Secretaria. A publicação do órgão não é um
+ * substituto precário do ato — ela **é** o ato que o art. 19, § 1º determina.
  *
- * **A fazer na próxima auditoria:** localizar a portaria e trocar esta URL pelo
- * texto com força normativa, como foi feito com o INSS de 2026 em 31/07/2026.
+ * O art. 17 traz as três faixas com os valores de 2022, que são a base da série,
+ * e os fatores 0,8 e 0,5. É por isso que esta fonte entra no conjunto: ela dá
+ * fundamento normativo ao método inteiro, que antes se apoiava só no art. 5º da
+ * lei — cujos limites estão em BTN, moeda extinta em 1991.
+ */
+export const RES_CODEFAT_957: Fonte = {
+  id: 'res-codefat-957-2022',
+  norma: 'Resolução CODEFAT nº 957, de 21 de setembro de 2022',
+  dispositivo: 'Arts. 17 e 19',
+  url: 'https://portalfat.mte.gov.br/wp-content/uploads/2024/01/Resolucao-no-957-de-21-de-setembro-de-2022-Revisao-do-SD.pdf',
+  orgao: 'Conselho Deliberativo do Fundo de Amparo ao Trabalhador',
+}
+
+/**
+ * A DIVULGAÇÃO DO ART. 19, § 1º — e o que a sustenta.
+ *
+ * Esta continuava sendo, até 06/08/2026, "a fonte mais fraca do projeto", com
+ * uma nota pedindo que a próxima auditoria trocasse a URL pela portaria. A nota
+ * saiu: a portaria não existe, pela razão registrada em `RES_CODEFAT_957`.
+ *
+ * O que sustenta os valores de 2026, hoje, são três coisas conferidas:
+ *
+ *   1. **A norma** — `RES_CODEFAT_957`, art. 19: reajuste pelo INPC do IBGE
+ *      acumulado nos doze meses anteriores ao mês do reajuste.
+ *   2. **A divulgação assinada do exercício anterior** — o Anexo SEI nº 4274391
+ *      (Processo nº 19965.200004/2025-82), assinado em 10/01/2025 pelo
+ *      Coordenador-Geral do Seguro-Desemprego, Abono Salarial e Identificação
+ *      Profissional, com código verificador. Documento com assinatura, órgão e
+ *      procedência — não notícia. Traz a tabela de 2025 e declara o INPC de
+ *      4,77% de 2024.
+ *   3. **A reprodução aritmética**, feita em 06/08/2026: aplicando o INPC de
+ *      3,90% divulgado para o reajuste de 2026 aos quatro valores do anexo
+ *      assinado de 2025, os quatro resultados batem com os publicados, ao
+ *      centavo — limite da 1ª faixa, limite da 2ª, parcela a somar e teto.
+ *
+ * A terceira é a que muda a natureza da conferência. Antes, os números vinham de
+ * uma página e não havia como checá-los; agora eles são **deriváveis** de um
+ * documento assinado pela regra que a norma manda aplicar. Um erro de
+ * transcrição na página teria de ser um erro que a fórmula do art. 19 reproduz,
+ * o que é bem diferente de um erro qualquer.
+ *
+ * **Conferência cruzada que já existia, e continua valendo:** o piso declarado,
+ * R$ 1.621,00, coincide com `salario-minimo` de 2026, conferido no PDF da
+ * Portaria Interministerial MPS/MF nº 13/2026.
+ *
+ * **O que falta, e é menor do que parecia:** cadastrar a vigência de 2025 como
+ * exercício anterior. O anexo assinado tem os valores, mas declara "período: ano
+ * de 2025" sem dizer o dia — e as tabelas de 2024 e de 2026 valem a partir de 11
+ * de janeiro, não de 1º. Cadastrar 2025 exige ler a data de início em fonte
+ * oficial; as páginas de notícia do `gov.br` pedem autenticação. **Não foi
+ * inferida por analogia**: data de vigência é valor legal, e o dia certo decide
+ * qual tabela se aplica a quem foi dispensado na primeira semana de janeiro.
  */
 export const MTE_TABELA_SEGURO_DESEMPREGO: Fonte = {
   id: 'mte-tabela-seguro-desemprego-2026',
   norma:
-    'Tabela anual do seguro-desemprego divulgada pelo Ministério do Trabalho e Emprego, na forma do art. 5º da Lei nº 7.998/1990 e da Resolução CODEFAT nº 957, de 2022',
+    'Divulgação das faixas do seguro-desemprego pelo Ministério do Trabalho e Emprego, na forma do art. 19, § 1º, da Resolução CODEFAT nº 957/2022 e do art. 5º da Lei nº 7.998/1990',
   dispositivo: 'Faixas vigentes a partir de 11/01/2026',
   url: 'https://portalfat.mte.gov.br/mte-reajusta-valores-do-beneficio-seguro-desemprego/',
+  orgao: 'Ministério do Trabalho e Emprego',
+}
+
+/**
+ * O anexo assinado de 2025 — a peça que faltava para conferir a série.
+ *
+ * Não sustenta nenhuma vigência cadastrada hoje (a de 2025 ainda não existe, e a
+ * razão está acima). Está aqui porque é a **prova documental** da reprodução
+ * descrita em `MTE_TABELA_SEGURO_DESEMPREGO`, e porque quem for cadastrar 2025
+ * na próxima sessão precisa achá-lo sem repetir a busca.
+ *
+ * O PDF é digitalizado e `pdftotext` devolve vazio nele. Rasterizar funciona —
+ * é a mesma lição da portaria do INSS, registrada em `ESTADO-DO-PROJETO` §5.2:
+ *
+ *   pdftoppm -png -r 150 anexo.pdf pag
+ */
+export const MTE_ANEXO_SEGURO_DESEMPREGO_2025: Fonte = {
+  id: 'mte-anexo-seguro-desemprego-2025',
+  norma:
+    'Anexo "Programa do Seguro-Desemprego — Faixas de salário médio necessárias ao cálculo do benefício", período: ano de 2025, SEI nº 4274391, Processo nº 19965.200004/2025-82',
+  dispositivo:
+    'Secretaria de Proteção ao Trabalhador — assinado em 10/01/2025 pelo Coordenador-Geral do Seguro-Desemprego',
+  url: 'https://www.gov.br/trabalho-e-emprego/pt-br/pdfs/sei_4274391_anexo.pdf',
   orgao: 'Ministério do Trabalho e Emprego',
 }
 
@@ -1004,7 +1080,9 @@ export const FONTES: readonly Fonte[] = [
   RES_CMN_4549,
   LEI_7998_ART_4,
   LEI_7998_ART_5,
+  RES_CODEFAT_957,
   MTE_TABELA_SEGURO_DESEMPREGO,
+  MTE_ANEXO_SEGURO_DESEMPREGO_2025,
   RES_CMN_4765,
   LEI_8212_ART_22,
   STF_TEMA_985,
