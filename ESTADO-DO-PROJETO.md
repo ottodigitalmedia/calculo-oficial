@@ -65,11 +65,10 @@ performance → e2e → vazamento.
 
 ### Deploy
 
-> ⛔ **Interrompido desde 06/08/2026, por motivo fora do código.** O passo
-> `Implantar` deixou de obter executor e, depois, push em `main` deixou de criar
-> execução. O que está descrito abaixo é o desenho, e ele continua correto — o
-> que não acontece hoje é a execução. Diagnóstico, evidência e a regra que
-> sobrou disso em **§7.63**; a decisão é do mantenedor porque envolve conta.
+> ⏸ **Represado em 06/08/2026 por incidente do GitHub** (`qcvjkzcs7j74`, Actions
+> em *major outage*). O desenho abaixo continua correto — o que não acontece é a
+> execução, e não há o que consertar deste lado. Diagnóstico completo, e a regra
+> que sobrou dele, em **§7.63**.
 
 **Automático desde 31/07/2026.** O fluxo é: push em `main` → o pipeline roda as
 verificações → publica a imagem etiquetada com o hash → dispara o webhook do
@@ -291,7 +290,7 @@ Vale para a próxima auditoria: **norma digitalizada não é norma inconferível
 | ~~`Strict-Transport-Security`~~ | ✅ **Ativado em 31/07/2026**, `max-age=31536000; includeSubDomains`. **Sem `preload`** — porta de mão única, e exige `www` servido. Coberto por `tests/e2e/cabecalhos.spec.ts` |
 | ~~`www.calculoficial.com.br`~~ | ✅ **Servido desde 31/07/2026.** O DNS já estava certo — só faltava o domínio no serviço do EasyPanel, que é o que faz o Traefik pedir o certificado. Responde 308 para o ápice, por `next.config.ts` |
 | MCP da Hostinger | A configuração foi corrigida em `~/.claude.json`, mas exige reinício do app para valer. Não verificado |
-| ⛔ **O pipeline parou de rodar** | **06/08/2026.** Nenhum job obtém executor: ficam 15 min na fila e são cancelados (*"The job was not acquired by Runner of type hosted"*). Push deixou de criar execução; o disparo manual cria, mas o job é cancelado igual. É conta ou plataforma, não código — e é do mantenedor. Ver §7.63 |
+| ⏸ **O pipeline parou de rodar** | **06/08/2026 — incidente do GitHub**, `qcvjkzcs7j74`, Actions e Pages em *major outage* desde 15h22 UTC. Não é código nem conta. Nada a consertar: quando fechar, um disparo põe tudo no ar. Ver §7.63 |
 
 ### 5.4 Adiado por `ADR-008`, com teste que cobra
 
@@ -543,9 +542,37 @@ GET  /index.php?p=YYYY-MM-DD&dl=YYYY-MM-DD-DO{1,2,3}.zip   (com o cookie)
 ```
 
 Medido lá: edição de uma seção = **1 MB de zip, 766 XMLs, 1,1 s de download e
-0,04 s de parse**. Cobertura **livre e gratuita desde 01/01/2020**. Sessão de 30
-minutos; expirada, devolve HTML de login no lugar do zip — detectar pelo
-`content-type`.
+0,04 s de parse**. Sessão de 30 minutos; expirada, devolve HTML de login no
+lugar do zip — detectar pelo `content-type`.
+
+> 🚨 **Medido AQUI em 06/08/2026, e derruba metade do que esta seção prometia:
+> o INLABS guarda cerca de QUATRO MESES, não o arquivo desde 2020.**
+>
+> ```
+> 2026-08-05 DO1  ✅ 4,7 MB · 381 XMLs      2026-04-30 DO1  ✅ 2,6 MB · 322 XMLs
+> 2026-07-01 DO1  ✅  32 MB · 491 XMLs      2026-04-15 DO1  ✅ 3,0 MB · 360 XMLs
+> 2026-06-01 DO1  ✅ 2,7 MB · 489 XMLs      2026-04-01 DO1  ❌ sem zip
+> 2026-05-04 DO1  ✅ 2,8 MB · 515 XMLs      2026-03-16 DO1  ❌ sem zip
+> ```
+>
+> O corte fica entre 01 e 15/04/2026 — coerente com uma janela móvel de ~4
+> meses. O "desde 01/01/2020" da ficha do projeto irmão é sobre o **conteúdo do
+> DOU ser livre e gratuito**, não sobre o que o INLABS oferece para download. Eu
+> li a frase como se fosse retenção, e escrevi aqui que ela destravaria a busca
+> da IN do IRPF **de março de 2026** — que está fora da janela. Estava errado.
+>
+> **O que o INLABS serve, então:** ato dos últimos ~4 meses, com texto integral
+> e imediato. Serve para auditoria corrente e para pegar norma recém-publicada.
+> **Não serve** para arqueologia — para ato antigo, o caminho é o
+> `in.gov.br/web/dou/-/{idMateria}`, que é permanente e público.
+
+> **A armadilha que custou uma volta inteira, e que não é do INLABS.** O valor no
+> `.env` do projeto irmão está **entre aspas**, e as aspas são do arquivo, não do
+> valor. Mandá-las junto no formulário produz **exatamente a mesma resposta que
+> uma senha errada** — 302 para `acessar.php`, sem cookie de sessão. Cheguei a
+> concluir que a credencial tinha expirado; o teste de controle com uma senha
+> deliberadamente inventada devolveu resposta idêntica, e foi ele que mostrou que
+> o sintoma não distinguia as duas causas. Quem for reusar: tirar aspas antes.
 
 **Por que isso importa aqui.** Três pendências deste projeto são da mesma
 natureza: *"o ato existe, mas não foi localizado"*. A busca do `in.gov.br` foi
@@ -554,9 +581,9 @@ edições**, que se baixa e se varre localmente.
 
 | Pendência | O que a varredura resolveria |
 |---|---|
-| **CALC-017 / CALC-019** (§8, item 3) | A tabela ANUAL do IRPF do ano-calendário 2025 sai em Instrução Normativa da RFB, publicada na Seção 1 em fevereiro. São ~20 edições a varrer — busca fechada, não agulha em palheiro. **Destrava as duas calculadoras mais pendentes do catálogo** |
-| **Vigência de 2025 do seguro-desemprego** (§5.5) | Falta o dia de início. Se houver ato no DOU, ele tem data de publicação |
-| **Auditoria anual** (`RB-*`) | Portaria do INSS, salário mínimo, tabelas do IRRF: hoje cada uma é caçada à mão no ano seguinte |
+| ~~**CALC-017 / CALC-019**~~ | ❌ **Fora da janela** — a IN é de março de 2026. E não precisou: ver §6.6.2 |
+| **Vigência de 2025 do seguro-desemprego** (§5.5) | ❌ Fora da janela também — janeiro de 2025 |
+| **Auditoria anual** (`RB-*`) | ✅ **É para isto que ele serve.** Portaria do INSS, salário mínimo e tabelas do IRRF saem em dezembro/janeiro; consultar em janeiro cai dentro dos ~4 meses. Fora dessa janela, o `in.gov.br` permanente resolve |
 
 **Três limites, para não prometer o que ele não faz:**
 
@@ -576,6 +603,48 @@ edições**, que se baixa e se varre localmente.
 aqui. É credencial dele, o dado é público e a ficha de lá já diz "uma conta para
 todo o ecossistema" — mas autenticar em portal de terceiro a partir deste
 projeto é passo que ele autoriza, não eu.
+
+#### 6.6.2 A tabela do IRPF estava a uma URL de distância
+
+Montei o acesso ao DOU para achar a tabela ANUAL do IRPF do ano-calendário 2025
+— a fonte que bloqueia **CALC-017 e CALC-019** desde 01/08/2026. O INLABS não
+alcançava março. Aí eu abri a página de tabelas da Receita trocando o ano na
+URL, e ela estava lá:
+
+`gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2025`
+
+| Base de cálculo anual | Alíquota | Parcela a deduzir |
+|---|---|---|
+| Até R$ 28.467,20 | — | — |
+| R$ 28.467,21 a R$ 33.919,80 | 7,5% | R$ 2.135,04 |
+| R$ 33.919,81 a R$ 45.012,60 | 15,0% | R$ 4.679,03 |
+| R$ 45.012,61 a R$ 55.976,16 | 22,5% | R$ 8.054,97 |
+| Acima de R$ 55.976,16 | 27,5% | R$ 10.853,78 |
+
+Dedução anual por dependente R$ 2.275,08 · limite de instrução R$ 3.561,50 ·
+desconto simplificado R$ 16.754,34 · fundamento: **Lei nº 15.191/2025**.
+
+**A conferência que dá confiança nela é aritmética, e fecha.** 2025 teve DUAS
+tabelas mensais — a antiga até abril, a nova de maio em diante —, e é por isso
+que a anual não é doze vezes nada:
+
+```
+4 × 2.259,20  +  8 × 2.428,80  =  9.036,80 + 19.430,40  =  28.467,20  ✅
+4 ×   169,44  +  8 ×   182,16  =    677,76 +  1.457,28  =   2.135,04  ✅
+```
+
+Os limites das faixas superiores (33.919,80 · 45.012,60 · 55.976,16) são doze
+vezes os mensais, que **não** mudaram em maio — só a isenção subiu. Tudo bate.
+
+> **A lição não é sobre o IRPF.** Eu propus uma ferramenta — credencial de outro
+> projeto, conector, corpus do Diário Oficial — para um problema que se resolvia
+> trocando `2026` por `2025` numa URL. O §8 registrava a tabela como "não
+> localizada", e a busca anterior tinha parado na página do ano corrente. **Antes
+> de montar máquina, esgotar a porta da frente da fonte oficial.**
+
+**O que falta para destravar de fato:** transcrever com a página aberta, e não a
+partir deste resumo — regra 10 e `CO-1` valem contra mim também. Feito isso,
+CALC-017 sai, e CALC-019 atrás dela (`docs/18`: "é CALC-017 rodado duas vezes").
 
 ### 6.7 ANEEL e CALC-066 — o que ela resolve não é o que trava
 
@@ -2120,6 +2189,44 @@ A franquia do plano Free é de **2.000 minutos por mês** para repositório priv
 Nada na tela de visão geral diz quantos sobraram — o número está em
 **Billing → Usage, aba `Actions`**, e é ele que decide entre as duas
 explicações que restam: franquia esgotada, ou incidente da plataforma.
+
+#### A resposta: era incidente da plataforma, o tempo todo
+
+`githubstatus.com`, consultado em 06/08/2026 às 19h47:
+
+> **Incident with Actions** — `qcvjkzcs7j74` · impacto **crítico** · aberto em
+> **06/08/2026 15:22 UTC**, ainda em investigação às 19:43 UTC.
+> Componentes **Actions** e **Pages** em *major outage*.
+> *"Capacity remains constrained and jobs may still be delayed or fail while it
+> recovers gradually."*
+
+Isso explica os dois sintomas de uma vez, e **nenhum deles era da conta**:
+
+- job que fica na fila e é cancelado sem executor → capacidade restrita;
+- push que não cria execução → entrega de webhook atrasada, que o próprio
+  comunicado do GitHub cita.
+
+A execução de CALC-014 começou às 16h40 UTC, **dentro da janela do incidente**.
+
+> **A ordem em que eu investiguei estava errada, e isso custou tempo do
+> mantenedor.** Dois sintomas simultâneos e estranhos levaram direto à hipótese
+> de cota, e a tela de faturamento foi a primeira coisa pedida. O painel de
+> status da plataforma é mais barato de consultar que qualquer tela de conta, não
+> exige acesso nenhum, e responde primeiro. **Antes de suspeitar da conta,
+> perguntar se o serviço está de pé.**
+
+**Consequência prática:** não há o que consertar aqui. Quando o incidente fechar,
+um disparo do pipeline põe tudo no ar. O trabalho fica represado, não perdido.
+
+> **Sobre o repositório ter virado público em 06/08/2026.** Foi decisão do
+> mantenedor, tomada quando a hipótese em pé ainda era a de franquia esgotada —
+> repositório público não consome minuto de Actions. O incidente mostrou que
+> **não era necessário para destravar**. O ganho que resta é real e permanente
+> (a franquia de 2.000 minutos deixa de ser gasta por este projeto), e o custo
+> também: código, documentos e pesquisa passaram a ser legíveis por qualquer um.
+> O histórico foi varrido antes — nenhum `.env`, nenhuma chave, nenhum token.
+> **Reverter para privado continua sendo escolha dele**, agora com o diagnóstico
+> certo na mesa.
 
 **Enquanto isso, o caminho manual de `13-deployment` §4 continua existindo** —
 clicar em reimplantar no painel do EasyPanel. Ele publica a última imagem
