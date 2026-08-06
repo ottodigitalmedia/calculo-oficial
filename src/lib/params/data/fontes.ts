@@ -584,6 +584,28 @@ export const LEI_605_ART_7: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * O contrato intermitente — CALC-014.
+ *
+ * **A leitura do texto consolidado aqui é decisiva.** O art. 452-A aparece com
+ * a redação da Lei nº 13.467/2017, depois com a da Medida Provisória nº
+ * 808/2017 e de novo com a da Lei — e a da MP traz a marca **"(Vigência
+ * encerrada)"**. A MP caducou em 23/04/2018 sem ser convertida, e com ela caiu
+ * tudo o que ela criara: os §§ 10 a 15 e os arts. 452-B a 452-H INTEIROS.
+ *
+ * Isso não é detalhe de nota de rodapé. Era no art. 452-E que estava o regime
+ * de rescisão do intermitente — aviso prévio e multa do FGTS pela METADE — e no
+ * art. 452-F a regra de calculá-los pela média dos valores recebidos. **Nada
+ * disso está em vigor.** Ver `ESTADO-DO-PROJETO` §7.61.
+ */
+export const CLT_ART_452A: Fonte = {
+  id: 'clt-art-452-a',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 13.467, de 2017',
+  dispositivo: 'Art. 452-A, caput e §§ 6º, 7º, 8º e 9º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const TST_SUMULA_431: Fonte = {
   id: 'tst-sumula-431',
   norma: 'Súmula 431 do Tribunal Superior do Trabalho',

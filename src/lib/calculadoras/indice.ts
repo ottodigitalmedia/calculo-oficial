@@ -98,6 +98,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto tempo você tem para compensar — e quanto o saldo vale se não compensar.',
   },
   {
+    slug: 'contrato-intermitente',
+    nome: 'Contrato intermitente — o acerto de cada convocação',
+    linhaDeContexto:
+      'Quanto entra a cada chamada, com o 13º e as férias que a lei manda pagar na hora.',
+  },
+  {
     slug: 'fgts',
     nome: 'FGTS — saldo e multa',
     linhaDeContexto:

@@ -68,6 +68,33 @@ points ficou só para exibição. Quem revelou foi um caso-ouro que pedia quatro
 casas decimais e falhava por 7×10⁻⁵: a leitura preguiçosa seria afrouxar a
 tolerância, e a certa foi perguntar por que o número não era exato.
 
+### Adicionado · CALC-014 · contrato intermitente, e a regra que caducou
+
+O catálogo pedia uma calculadora de **rescisão** do contrato intermitente, e a
+pesquisa mostrou que ela não pode existir hoje. O regime de rescisão —
+aviso prévio e multa do FGTS pela metade, calculados pela média dos valores
+recebidos — estava nos arts. 452-B a 452-H, todos criados pela **Medida
+Provisória nº 808/2017 e todos com "(Vigência encerrada)"**. A MP caducou em
+23/04/2018 sem virar lei, e nada a substituiu.
+
+O que ficou em vigor é o § 6º do art. 452-A: o pagamento imediato ao fim de
+**cada** período de prestação — remuneração, férias proporcionais com o terço,
+décimo terceiro proporcional, repouso semanal e adicionais. É a conta que o
+trabalhador intermitente confere toda semana, e é ela que a calculadora faz,
+com o INSS e o imposto verba a verba e o FGTS que o empregador deposita por
+fora.
+
+**O aviso prévio fica de fora, declarado na tela.** Como omiti-lo erra para
+menos, a página diz que o devido tende a ser maior.
+
+**O repouso semanal é campo do usuário**, e também isso é dito: a Lei nº
+605/1949 manda calculá-lo pela "jornada normal de trabalho", e o intermitente
+não tem jornada normal. A norma não responde, e a calculadora não inventa.
+
+O 13º e as férias, ao contrário, são calculados — um avo da remuneração do
+período. A regra dos 15 dias daria zero num período curto e tornaria impossível
+o pagamento que o § 6º manda fazer.
+
 ### Corrigido · a memória de cálculo mostrava um passo que não se reproduzia
 
 A memória da CALC-020 dizia `R$ 800.000,00 × 65,78% = R$ 526.297,54`, e quem
