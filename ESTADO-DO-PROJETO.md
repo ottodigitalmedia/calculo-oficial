@@ -26,9 +26,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras **no repositório** | **74** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
-| Calculadoras **em produção** | ⚠️ **69** — CALC-014, CALC-017, CALC-019, CALC-021 e CALC-066 estão no repositório e **não** estão no ar. Incidente do GitHub; §7.63 |
-| Guias no repositório | **10 de 10** — `03-functional-spec` §4 fechou em 06/08/2026 |
-| Guias **em produção** | ⚠️ **3** — os sete novos aguardam implantação, pela mesma razão |
+| Calculadoras **em produção** | ✅ **74** — implantadas em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. Repositório e produção **em dia** |
+| Guias | **10 de 10** no repositório e **10** em produção |
 | Testes | 1.487 de unidade · 619 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 93 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
 | Orçamento de JavaScript | 134,9 kB de **150** na pior rota — e **18,9 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
@@ -68,10 +67,11 @@ performance → e2e → vazamento.
 
 ### Deploy
 
-> ⏸ **Represado em 06/08/2026 por incidente do GitHub** (`qcvjkzcs7j74`, Actions
-> em *major outage*). O desenho abaixo continua correto — o que não acontece é a
-> execução, e não há o que consertar deste lado. Diagnóstico completo, e a regra
-> que sobrou dele, em **§7.63**.
+> ✅ **Normalizado em 06/08/2026 às 22h40**, depois de ~7h represado pelo
+> incidente `qcvjkzcs7j74` do GitHub. O que destravou foi o **disparo manual**:
+> a recuperação restabeleceu os executores antes dos webhooks de push, e
+> `workflow_dispatch` cria a execução sem passar pelo webhook. Fica como
+> procedimento para a próxima queda — §7.63.
 
 **Automático desde 31/07/2026.** O fluxo é: push em `main` → o pipeline roda as
 verificações → publica a imagem etiquetada com o hash → dispara o webhook do
@@ -293,7 +293,7 @@ Vale para a próxima auditoria: **norma digitalizada não é norma inconferível
 | ~~`Strict-Transport-Security`~~ | ✅ **Ativado em 31/07/2026**, `max-age=31536000; includeSubDomains`. **Sem `preload`** — porta de mão única, e exige `www` servido. Coberto por `tests/e2e/cabecalhos.spec.ts` |
 | ~~`www.calculoficial.com.br`~~ | ✅ **Servido desde 31/07/2026.** O DNS já estava certo — só faltava o domínio no serviço do EasyPanel, que é o que faz o Traefik pedir o certificado. Responde 308 para o ápice, por `next.config.ts` |
 | MCP da Hostinger | A configuração foi corrigida em `~/.claude.json`, mas exige reinício do app para valer. Não verificado |
-| ⏸ **O pipeline parou de rodar** | **06/08/2026 — incidente do GitHub**, `qcvjkzcs7j74`, Actions e Pages em *major outage* desde 15h22 UTC. Não é código nem conta. Nada a consertar: quando fechar, um disparo põe tudo no ar. Ver §7.63 |
+| ~~**O pipeline parou de rodar**~~ | ✅ **Resolvido em 06/08/2026 às 22h40.** Era o incidente `qcvjkzcs7j74` do GitHub. Destravou por disparo manual, que não depende do webhook de push — §7.63 |
 
 ### 5.4 Adiado por `ADR-008`, com teste que cobra
 
@@ -2308,6 +2308,56 @@ A execução de CALC-014 começou às 16h40 UTC, **dentro da janela do incidente
 
 **Consequência prática:** não há o que consertar aqui. Quando o incidente fechar,
 um disparo do pipeline põe tudo no ar. O trabalho fica represado, não perdido.
+
+#### Como destravou, e o procedimento que fica
+
+**22h40 UTC de 06/08/2026**, cerca de sete horas represado. O que destravou não
+foi esperar: foi **disparo manual**.
+
+A recuperação do GitHub veio em duas velocidades, e o comunicado das 22h18 diz as
+duas com todas as letras:
+
+> *"For workflow runs that are starting, success rates have increased
+> significantly and are now at 97%. Standard and larger runners are now draining
+> queued work."*
+>
+> *"Webhook triggers remain throttled to support recovery. Many push and pull
+> request events are not yet triggering new workflow runs."*
+
+Ou seja: **executor já havia; o que ainda faltava era o gatilho**. Push continuava
+sem criar execução, e `workflow_dispatch` cria a execução direto, sem passar pelo
+webhook. A execução `31129047850` pegou executor de imediato, passou nos três
+jobs e implantou.
+
+> **O procedimento, para a próxima queda.** Quando o painel de status disser que
+> os executores voltaram mas os webhooks seguem limitados, não adianta empurrar
+> de novo — `gh workflow run ci.yml --ref main` é o caminho. Ele existe no
+> `ci.yml` desde sempre, documentado como "reimplantar sem commit"; o que faltava
+> era saber que ele contorna exatamente o que estava quebrado.
+
+#### E o deploy verde mentiu de novo, pela terceira vez no dia
+
+O `Implantar` fechou verde, e produção continuou na versão antiga. O log diz por
+quê, em duas linhas:
+
+```
+22:38:25.68  Deploy disparado (HTTP 200) na tentativa 1.
+22:38:26.46  Saudável na tentativa 1.
+```
+
+**Oito décimos de segundo** entre disparar o deploy e declarar sucesso. O webhook
+do EasyPanel devolve 200 porque *aceitou o pedido*; puxar a imagem e reiniciar o
+contêiner leva minutos. A verificação de saúde bateu no contêiner **antigo**, que
+respondeu `ok` como sempre responde.
+
+É o item 5 de §8 acontecendo exatamente como ele previu. A implantação de fato
+completou uns dois minutos depois, e quem confirmou isso foi um `curl` na rota
+nova — não o pipeline.
+
+> **Este é o argumento mais forte que o item 5 vai receber.** Ele já era uma boa
+> ideia; agora tem registro de log mostrando o intervalo entre "verde" e
+> "verdade". Continua exigindo decisão do mantenedor por colidir com
+> `06-api-spec` §EP-016, e as três saídas seguem em §8.
 
 > **Sobre o repositório ter virado público em 06/08/2026.** Foi decisão do
 > mantenedor, tomada quando a hipótese em pé ainda era a de franquia esgotada —
