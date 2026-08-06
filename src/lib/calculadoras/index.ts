@@ -17,6 +17,7 @@ import { BOTIJAO } from './botijao'
 import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
 import { CARNE_LEAO } from './carne-leao'
+import { CRIPTO } from './cripto'
 import { RESTITUICAO_IRPF } from './restituicao-irpf'
 import { SIMPLIFICADO_OU_COMPLETO } from './simplificado-ou-completo'
 import { CDB } from './cdb'
@@ -130,6 +131,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   CARNE_LEAO,
   RESTITUICAO_IRPF,
   SIMPLIFICADO_OU_COMPLETO,
+  CRIPTO,
   PRO_LABORE,
   ORCAMENTO,
   ENERGIA,

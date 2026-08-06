@@ -336,6 +336,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './simplificado-ou-completo'
     ).then((m) => m.calcular),
+  'imposto-sobre-criptoativos': () =>
+    import(
+      /* webpackChunkName: "calc-cripto" */
+      /* webpackExports: ["calcular"] */
+      './cripto'
+    ).then((m) => m.calcular),
   'pro-labore': () =>
     import(
       /* webpackChunkName: "calc-pro-labore" */

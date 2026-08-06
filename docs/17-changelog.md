@@ -31,6 +31,75 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Correção de parâmetro · as faixas do ganho de capital estavam CEM VEZES maiores
+
+**O que estava errado.** As quatro fronteiras da tabela do art. 21 da Lei nº
+8.981/1995 foram cadastradas com duas casas a mais. A lei fixa os cortes em
+R$ 5 milhões, R$ 10 milhões e R$ 30 milhões; o parâmetro trazia R$ 500 milhões,
+R$ 1 bilhão e R$ 3 bilhões.
+
+A causa é de notação. Os valores foram escritos como `500_000_000_00`, que **lê**
+como "R$ 500.000.000 e 00 centavos" e **vale** 50.000.000.000 centavos. Em
+centavos puros, R$ 5.000.000,00 se escreve `500_000_000`.
+
+**Desde quando.** Desde a publicação de CALC-020, em 06/08/2026 — algumas horas.
+
+**Quais calculadoras foram afetadas.** CALC-020 (ganho de capital em imóvel).
+Nenhuma outra usava a tabela; CALC-021, que passa a usá-la, nasceu depois da
+correção.
+
+**Qual era a exposição.** Ganho de capital acima de R$ 5 milhões era tributado a
+15% em vez de 17,5%, 20% ou 22,5% conforme a faixa — imposto **subestimado**.
+Para ganho até R$ 5 milhões, que é a esmagadora maioria das vendas de imóvel, o
+resultado era e continua correto. Um ganho de R$ 8 milhões, por exemplo, saía
+com R$ 1.200.000,00 de imposto quando o devido é R$ 1.275.000,00.
+
+**Por que nenhum teste pegou.** Porque o caso-ouro foi escrito **na mesma unidade
+errada do parâmetro**: ele vendia por `900_000_000_00` e verificava que a base
+ultrapassava `500_000_000_00`. Dois erros que se confirmam não são dois erros —
+são um só, com testemunha. O rótulo do caso dizia "ganho acima de R$ 5 milhões" e
+o cenário tinha R$ 800 milhões.
+
+**A correção.** As seis fronteiras passaram a centavos puros, e os dois
+casos-ouro foram reescritos com os valores que eles diziam testar. Entrou também
+um caso novo que fixa a fronteira exata: ganho de R$ 5.000.000,00 paga 15%
+cheios — R$ 750.000,00 —, e R$ 6.000.000,00 paga R$ 925.000,00, atravessando para
+a segunda faixa. Com as fronteiras antigas, esse caso reprova.
+
+O arquivo de parâmetros ganhou uma nota de unidade no topo, com a regra: valor
+monetário é centavo puro, agrupado de três em três a partir da direita, e número
+com mais de seis dígitos se confere dividindo por cem antes do commit.
+
+### Adicionado · CALC-021 · criptoativos, e a MP que não vingou
+
+O catálogo listava a calculadora como "regra em mudança". A mudança não veio: a
+**Medida Provisória nº 1.303/2025**, que poria alíquota única de 17,5% e acabaria
+com a isenção mensal a partir de 2026, **caducou em 08/10/2025** sem conversão. O
+texto consolidado da Lei nº 9.250/1995 marca as duas remissões a ela — no inciso
+II e no parágrafo único do art. 22 — com *"Vigência encerrada"*.
+
+É a armadilha de `ESTADO-DO-PROJETO` §7.61 no mesmo formato: um regime inteiro,
+coerente e muito noticiado, que nunca chegou a valer.
+
+**Três propriedades que a calculadora trava**, e que quase toda planilha de
+cripto erra:
+
+1. **O teto olha o total vendido, não o lucro.** Quem vendeu R$ 200.000,00 com
+   R$ 1.000,00 de ganho não é isento.
+2. **O teto é degrau, não dedução.** Ultrapassado, o ganho de todas as vendas do
+   mês é tributado — não só a parte acima do limite.
+3. **O conjunto soma tudo:** todos os tipos de criptoativo, e o vendido no Brasil
+   com o vendido no exterior.
+
+A terceira é a razão de existir um campo de vendas no exterior numa calculadora
+que não calcula o imposto delas. Desde 2024 esse regime é o da Lei nº
+14.754/2023, no qual — nas palavras da Receita — *"não há previsão legal de
+isenção"*. O campo entra no teste do teto e a tela declara o resto.
+
+Sem parâmetro novo além do teto de R$ 35.000,00: a tabela é a mesma de CALC-020,
+porque ganho de capital é ganho de capital e a lei não tem tabela própria para
+cripto. Foi ao reaproveitá-la que o defeito acima apareceu.
+
 ### Adicionado · CALC-017 e CALC-019 — o ajuste anual, e o recorte que ele obrigou
 
 As duas pendências mais antigas do catálogo, bloqueadas desde 01/08/2026 por

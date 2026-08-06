@@ -159,6 +159,71 @@ export const LEI_9250_ART_10: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * Art. 22 — a isenção de pequeno valor, e a MP que quase a matou.
+ *
+ * *"Fica isento do imposto de renda o ganho de capital auferido na alienação de
+ * bens e direitos de pequeno valor, cujo preço unitário de alienação, no mês em
+ * que esta se realizar, seja igual ou inferior a: [...] II - R$ 35.000,00
+ * (trinta e cinco mil reais), nos demais casos."*
+ *
+ * E o **parágrafo único**, que é o que faz a regra funcionar na prática:
+ * *"No caso de alienação de diversos bens ou direitos da mesma natureza, será
+ * considerado, para os efeitos deste artigo, o valor do conjunto dos bens
+ * alienados no mês."*
+ *
+ * **A Medida Provisória nº 1.303/2025 revogaria isto para criptoativos**, com
+ * alíquota única de 17,5% a partir de 01/01/2026. O texto consolidado traz
+ * "(Vide Medida Provisória nº 1.303, de 2025)" ao lado do inciso II E do
+ * parágrafo único — os dois marcados com **"Vigência encerrada"**.
+ *
+ * É a assinatura de §7.61: MP que caduca leva a regra inteira com ela. A MP
+ * perdeu vigência em 08/10/2025 sem conversão, e o que vale é o texto de 2005.
+ * Publicar os 17,5% teria produzido uma calculadora inteira errada — e a única
+ * diferença visível, no texto consolidado, é a marca entre parênteses.
+ */
+export const LEI_9250_ART_22: Fonte = {
+  id: 'lei-9250-1995-art-22',
+  norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 11.196, de 2005',
+  dispositivo: 'Art. 22, II, e parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * A aplicação da isenção a criptoativos — quem diz é a Receita, e por escrito.
+ *
+ * O art. 22 fala em "bens e direitos de pequeno valor", sem citar criptoativo.
+ * Quem faz a ponte é a publicação oficial da própria Receita, na resposta 653:
+ *
+ * > *"A isenção relativa às alienações de até R$ 35.000,00 mensais deve observar
+ * > o conjunto de criptoativos alienados no Brasil ou no exterior,
+ * > independentemente de seu tipo (Bitcoin, altcoins, stablecoins, NFTs, entre
+ * > outros). Caso o total alienado no mês ultrapasse esse valor, o ganho de
+ * > capital relativo a todas as alienações estará sujeito à tributação."*
+ *
+ * Três coisas que essa frase decide, e que nenhuma leitura do art. 22 sozinha
+ * entregaria:
+ *
+ *   1. O teste é sobre o **total alienado**, não sobre o ganho.
+ *   2. O conjunto é de **todos os tipos** de criptoativo, somados.
+ *   3. Ultrapassado o teto, **todo** o ganho do mês é tributado — é degrau, não
+ *      dedução.
+ *
+ * A mesma resposta separa o regime dos criptoativos custodiados **no exterior**,
+ * que desde 01/01/2024 seguem a Lei nº 14.754/2023 e para os quais *"não há
+ * previsão legal de isenção"*. Esse regime está fora de CALC-021, e a tela diz
+ * isso.
+ */
+export const RFB_PR_IRPF_CRIPTOATIVOS: Fonte = {
+  id: 'rfb-pr-irpf-2026-cripto',
+  norma:
+    'Receita Federal, "Perguntas e Respostas IRPF 2026", versão 1.00, resposta 653 — Alienação de criptoativos',
+  dispositivo: 'Criptoativos custodiados ou negociados por instituições localizadas no Brasil',
+  url: 'https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/perguntas-e-respostas/dirpf/p-r-irpf-2026-v1-00-2026-04-23.pdf',
+  orgao: 'Receita Federal do Brasil',
+}
+
 export const LEI_9250_ART_3A: Fonte = {
   id: 'lei-9250-1995-art-3a',
   norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 15.270, de 26 de novembro de 2025',
@@ -1136,6 +1201,8 @@ export const FONTES: readonly Fonte[] = [
   RFB_TABELA_ANUAL_2025,
   LEI_9250_ART_8,
   LEI_9250_ART_10,
+  LEI_9250_ART_22,
+  RFB_PR_IRPF_CRIPTOATIVOS,
   LEI_9250_ART_3A,
   LEI_8036_ART_15,
   LEI_8036_ART_18,

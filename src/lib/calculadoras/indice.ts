@@ -303,6 +303,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Qual modelo de declaração paga menos imposto, com os seus números.',
   },
   {
+    slug: 'imposto-sobre-criptoativos',
+    nome: 'Imposto sobre criptoativos',
+    linhaDeContexto: 'Se as suas vendas do mês passaram do teto de isenção, e quanto pagar.',
+  },
+  {
     slug: 'pro-labore',
     nome: 'Pró-labore e encargos do sócio',
     linhaDeContexto:

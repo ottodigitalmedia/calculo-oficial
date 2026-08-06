@@ -25,13 +25,13 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras **no repositório** | **72** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
-| Calculadoras **em produção** | ⚠️ **69** — CALC-014, CALC-017 e CALC-019 estão no repositório e **não** estão no ar. Incidente do GitHub; §7.63 |
+| Calculadoras **no repositório** | **73** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
+| Calculadoras **em produção** | ⚠️ **69** — CALC-014, CALC-017, CALC-019 e CALC-021 estão no repositório e **não** estão no ar. Incidente do GitHub; §7.63 |
 | Guias no repositório | **10 de 10** — `03-functional-spec` §4 fechou em 06/08/2026 |
 | Guias **em produção** | ⚠️ **3** — os sete novos aguardam implantação, pela mesma razão |
-| Testes | 1.464 de unidade · 607 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 92 vigências, **0 divergências** (06/08/2026). A fonte que era a mais fraca deixou de ser — §5.5 |
-| Orçamento de JavaScript | 134,7 kB de **150** na pior rota — e **18,7 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
+| Testes | 1.476 de unidade · 613 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 93 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
+| Orçamento de JavaScript | 134,9 kB de **150** na pior rota — e **18,9 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -43,6 +43,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão · pró-labore
 - **Ajuste anual do IRPF:** restituição estimada · simplificado ou completo
+- **Criptoativos:** imposto sobre venda de criptoativos
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
@@ -148,7 +149,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 3 de 75
+## 4. Calculadoras pendentes — 2 de 75
 
 **Setenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -183,7 +184,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 3 que faltam, e o que trava cada uma
+### 4.3 As 2 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -202,11 +203,11 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 |---|---|---|
 | ~~CALC-017~~ | ~~Restituição estimada do IRPF anual~~ | ✅ **publicada em 06/08/2026** — a tabela estava na página da Receita do ano-calendário, §6.6.2 |
 | ~~CALC-019~~ | ~~Comparador simplificado vs. completo~~ | ✅ **publicada junto** — mesma conta, outro recorte |
-| CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
+| ~~CALC-021~~ | ~~IR sobre criptoativos~~ | ✅ **publicada em 06/08/2026** — a regra não mudou: a MP nº 1.303/2025 caducou, §7.66 |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 
-**Nenhuma das três dispensa pesquisa em norma.** O trecho do catálogo que dizia
+**Nenhuma das duas dispensa pesquisa em norma.** O trecho do catálogo que dizia
 haver 33 calculadoras sem dependência valia quando foi escrito; elas foram
 construídas, e CALC-038 — a última delas — saiu em 06/08/2026. O que restou é
 tributário, previdenciário ou preso a um calendário, e **o próximo passo do
@@ -2284,6 +2285,51 @@ cobra o bloqueio de 2026 nominalmente.
 > perguntar se a norma que a criou mexeu em mais alguma coisa. Se ela revogou
 > artigo, a resposta quase nunca é "cadastrar o número novo" — é estudar a
 > estrutura nova, ou parar na fronteira e dizer por quê.
+
+### 7.66 Dois erros que se confirmam são um só, com testemunha
+
+**O pior defeito que este projeto teve até agora**, e ele durou horas porque o
+teste que deveria pegá-lo foi escrito na mesma unidade errada do parâmetro.
+
+As fronteiras da tabela do ganho de capital entraram como `500_000_000_00`. Isso
+**lê** como "R$ 500.000.000 e 00 centavos" e **vale** 50.000.000.000 centavos —
+R$ 500 milhões, onde a lei diz R$ 5 milhões. Cem vezes.
+
+O caso-ouro:
+
+```ts
+valorDeVenda: centavos(900_000_000_00),      // o rótulo dizia "acima de R$ 5 milhões"
+expect(v.baseTributavel).toBeGreaterThan(500_000_000_00)
+```
+
+Ele passava. Passava porque media a mesma escala errada: um cenário de R$ 900
+milhões conferido contra uma fronteira de R$ 500 milhões produz exatamente a
+propriedade que o teste afirmava — alíquota efetiva entre 15% e 17,5%.
+
+> **A lição não é "revisar melhor".** É que **verificação escrita na mesma
+> unidade do dado verificado não é verificação.** O caso-ouro deste projeto
+> existe para conferir o parâmetro contra a NORMA; quando ele é escrito copiando
+> a escala do parâmetro, ele passa a conferir o parâmetro contra si mesmo.
+>
+> O que teria pegado, e agora existe: um caso ancorado em **valor absoluto lido
+> na lei** — ganho de exatamente R$ 5.000.000,00 paga R$ 750.000,00. Esse número
+> não sai do parâmetro; sai da leitura do art. 21. Com as fronteiras antigas ele
+> reprova.
+
+**Como apareceu.** Não por revisão: por reuso. CALC-021 precisava da mesma tabela,
+e ao calcular à mão os casos-ouro dela — R$ 6.000.000,00 de ganho → R$ 925.000,00
+— o número não bateu com a escala do arquivo. Reaproveitar parâmetro em segunda
+calculadora é uma forma barata de auditoria, e vale considerá-la de propósito.
+
+**Exposição declarada** em `docs/17-changelog.md`, na categoria
+`Correção de parâmetro`: ganho acima de R$ 5 milhões saía com imposto
+subestimado; abaixo disso, nada muda. A tabela ficou publicada assim por algumas
+horas do mesmo dia.
+
+> **A regra de notação que ficou**, no topo de `params/data/ganho-de-capital.ts`:
+> valor monetário é centavo puro, agrupado de três em três a partir da direita.
+> `5_000_000_00` não existe. Número com mais de seis dígitos se confere
+> dividindo por cem antes de commitar.
 
 ### 7.65 A porta da frente da fonte oficial, antes da máquina
 
