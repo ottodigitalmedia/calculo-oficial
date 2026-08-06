@@ -201,6 +201,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'A mesma obra por cada porta de crédito — e quanto custa esperar em vez disso.',
   },
   {
+    slug: 'emprestimo-consignado',
+    nome: 'Empréstimo consignado — margem e parcela',
+    linhaDeContexto: 'Quanto cabe na sua margem — calculada sobre o líquido, como manda a lei.',
+  },
+  {
     slug: 'rentabilidade-de-aluguel',
     nome: 'Rentabilidade de imóvel para locação',
     linhaDeContexto: 'Quanto o imóvel rende de verdade — depois da vacância, do IPTU e da taxa.',

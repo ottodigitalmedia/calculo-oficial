@@ -23,6 +23,7 @@ import { CET } from './cet'
 import { CHEQUE_ESPECIAL } from './cheque-especial'
 import { CONTA_DE_AGUA } from './conta-de-agua'
 import { CONVERSOR_DE_UNIDADES } from './conversor-de-unidades'
+import { CONSIGNADO } from './consignado'
 import { CORRECAO_POR_INDICE } from './correcao-por-indice'
 import { CUSTO_DE_AQUISICAO } from './custo-de-aquisicao'
 import { CUSTO_EMPREGADOR } from './custo-empregador'
@@ -106,6 +107,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   PLANO_DE_QUITACAO,
   PORTABILIDADE_DE_CREDITO,
   FINANCIAMENTO_DE_REFORMA,
+  CONSIGNADO,
   LOCACAO,
   ALUGAR_OU_COMPRAR,
   RENDA_MENSAL,

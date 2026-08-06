@@ -25,10 +25,10 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **67** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **68** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.310 de unidade · 563 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 79 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Testes | 1.331 de unidade · 569 ponta a ponta · 3 de vazamento |
+| Auditoria de parâmetros | 80 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
 
@@ -36,7 +36,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
-- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade · financiamento de reforma
+- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade · financiamento de reforma · consignado
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão · pró-labore
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 8 de 75
+## 4. Calculadoras pendentes — 7 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 8 que faltam, e o que trava cada uma
+### 4.3 As 7 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -191,7 +191,6 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-019 | Comparador simplificado vs. completo | Mesma fonte de CALC-017 |
 | CALC-020 | IR sobre ganho de capital em imóvel | Alíquotas progressivas, isenções e fatores de redução — pesquisa em norma |
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
-| CALC-027 | Empréstimo consignado — margem | A margem consignável é legal e mudou mais de uma vez; exige fonte confirmada |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 
@@ -1597,6 +1596,43 @@ A partir do teto, os dois deixam de crescer juntos: dobrar o pró-labore não mu
 o desconto do sócio e dobra o custo da empresa. É o número que decide entre
 pró-labore e distribuição de lucros — e por isso o destaque "do que a empresa
 gasta, chega ao sócio" existe.
+
+### 7.56 A margem estava na lei; a BASE dela é que quase ninguém lê
+
+A margem consignável é o número que todo mundo cita — 40% — e o que quase
+ninguém cita é sobre o quê. O art. 2º, § 2º, I da Lei nº 10.820/2003, com a
+redação da Lei nº 14.431/2022, diz "40% da **remuneração disponível**". E o
+inciso VIII do mesmo artigo define remuneração disponível como "os vencimentos,
+subsídios, soldos, salários ou remunerações, **descontadas as consignações
+compulsórias**".
+
+É o líquido de INSS e IRRF, não o bruto. E a diferença **cresce com o salário**,
+porque os descontos obrigatórios crescem junto — um caso-ouro trava exatamente
+essa progressão.
+
+A página parte do bruto e deduz, em vez de pedir o líquido. Pedir seria mais
+simples e menos confiável: o usuário informaria o que ACHA que é o líquido.
+Reaproveitar os motores de INSS e IRRF, que já existem e já são conferidos, é o
+que garante que esta página nunca divirja de CALC-015 e CALC-016.
+
+### 7.57 Uma MP em trânsito, e o recorte que ela obrigou
+
+O cabeçalho da Lei nº 10.820/2003 no Planalto traz "(Vide Medida Provisória nº
+1.355, de 2026)". Seguindo §7.45, fui ler: o art. 23 dela altera o **art. 6º** —
+o consignado de aposentados e pensionistas do INSS —, fixando limite global de
+40% com reservas de 5% para cartão consignado e 5% para cartão de benefício, e
+35% para o BPC.
+
+**O art. 2º, que é o do empregado CLT, ela não toca.**
+
+Isso definiu o recorte: a calculadora cobre o CLT, cuja margem está em lei
+firme, e **declara na tela** que aposentados e pensionistas têm regra própria em
+alteração por MP, e que servidor público segue regulamento do próprio ente.
+
+> **Por que não publicar a do INSS com o número da MP.** Medida provisória tem
+> eficácia imediata e prazo de conversão — ela pode cair. Publicar um número que
+> pode deixar de valer antes de a página ser lida é o mesmo risco do IOF em
+> §7.33, e a resposta é a mesma: o campo não existe, e o motivo fica escrito.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

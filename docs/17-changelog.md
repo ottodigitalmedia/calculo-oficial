@@ -31,6 +31,28 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-027 · consignado, com a margem sobre a base certa
+
+Todo mundo cita os 40%, e quase ninguém cita sobre o quê. A lei diz "40% da
+**remuneração disponível**", e define disponível como o salário "descontadas as
+consignações compulsórias" — o líquido de INSS e IRRF, não o bruto. A diferença
+cresce com o salário, porque os descontos obrigatórios crescem junto, e um
+caso-ouro trava essa progressão.
+
+A página parte do bruto e deduz, reaproveitando os motores de INSS e IRRF que já
+existem e já são conferidos — pedir o líquido seria mais simples e menos
+confiável. E mostra os dois números lado a lado, para que o engano fique visível.
+
+O valor do empréstimo sai do valor presente da margem livre: a margem limita a
+PARCELA, não o valor tomado, e por isso prazo maior aumenta o quanto cabe **e** o
+total pago. As duas consequências aparecem juntas.
+
+**Um recorte que a pesquisa obrigou.** O cabeçalho da lei traz "(Vide Medida
+Provisória nº 1.355, de 2026)". Ela altera o artigo dos aposentados e
+pensionistas do INSS — não o do empregado CLT. Como MP pode não ser convertida,
+a calculadora cobre o CLT e declara na tela que as outras categorias têm regra
+própria. Mesmo critério do IOF em CALC-062.
+
 ### Adicionado · CALC-051 · pró-labore, e os 11% que ninguém sabe de onde vêm
 
 Todo sócio vê 11% de INSS no recibo, e nenhuma norma escreve "11%". É o encontro
