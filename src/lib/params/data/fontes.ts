@@ -278,6 +278,49 @@ export const LEI_8134_ART_6: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * Os feriados nacionais — CALC-072.
+ *
+ * **O senso comum erra aqui, e erra na mesma direção.** Carnaval, Sexta-feira
+ * Santa e Corpus Christi NÃO são feriados nacionais. A Lei nº 9.093/1995 é
+ * explícita: feriados civis são os declarados em lei federal (art. 1º), e a
+ * Sexta-Feira da Paixão é feriado RELIGIOSO, declarado em lei MUNICIPAL, dentro
+ * de um limite de quatro (art. 2º). Carnaval e Corpus Christi são ponto
+ * facultativo, não feriado.
+ */
+export const LEI_662_ART_1: Fonte = {
+  id: 'lei-662-1949-art-1',
+  norma: 'Lei nº 662, de 6 de abril de 1949, com a redação da Lei nº 10.607, de 2002',
+  dispositivo: 'Art. 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l0662.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_6802_ART_1: Fonte = {
+  id: 'lei-6802-1980-art-1',
+  norma: 'Lei nº 6.802, de 30 de junho de 1980',
+  dispositivo: 'Art. 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l6802.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_14759_ART_1: Fonte = {
+  id: 'lei-14759-2023-art-1',
+  norma: 'Lei nº 14.759, de 21 de dezembro de 2023',
+  dispositivo: 'Art. 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14759.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/** O fundamento de por que Carnaval e Sexta-feira Santa ficam de fora. */
+export const LEI_9093_1995: Fonte = {
+  id: 'lei-9093-1995',
+  norma: 'Lei nº 9.093, de 12 de setembro de 1995',
+  dispositivo: 'Arts. 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9093.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const RPS_ART_216: Fonte = {
   id: 'decreto-3048-1999-art-216',
   norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',

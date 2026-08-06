@@ -109,13 +109,18 @@ export const valorSchema = z.discriminatedUnion('tipo', [
     denominador: inteiro.refine((n) => n !== 0, 'denominador não pode ser zero'),
   }),
   z.object({ tipo: z.literal('tabela_faixas'), faixas: z.array(faixaSchema).min(1) }),
+  z.object({
+    tipo: z.literal('data_fixa'),
+    mes: inteiro.min(1).max(12),
+    dia: inteiro.min(1).max(31),
+  }),
 ])
 
 export const parametroSchema = z.object({
   id: identificador,
   nome: z.string().min(1),
   descricao: z.string().min(1),
-  tipo: z.enum(['valor_monetario', 'percentual', 'inteiro', 'fracao', 'tabela_faixas']),
+  tipo: z.enum(['valor_monetario', 'percentual', 'inteiro', 'fracao', 'tabela_faixas', 'data_fixa']),
 })
 
 export const vigenciaSchema = z.object({

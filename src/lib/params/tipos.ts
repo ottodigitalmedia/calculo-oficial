@@ -114,6 +114,21 @@ export type ValorParametro =
    */
   | { readonly tipo: 'fracao'; readonly numerador: number; readonly denominador: number }
   | { readonly tipo: 'tabela_faixas'; readonly faixas: readonly Faixa[] }
+  /**
+   * Data que se repete todo ano — o feriado nacional de CALC-072.
+   *
+   * **Por que não coube em nenhum dos tipos acima.** Um feriado não é dinheiro,
+   * alíquota nem faixa, e codificá-lo como inteiro (`421` para 21 de abril)
+   * seria o encoding que §7.30 já registrou como caminho errado: o dado
+   * deixaria de ser legível e a validação deixaria de valer.
+   *
+   * **E ele PRECISA da máquina de vigências**, que é o que o distingue das
+   * razões entre unidades físicas de `lib/unidades/`. Três dos nove feriados
+   * nacionais entraram depois: 21 de abril e 2 de novembro em 2002, e 20 de
+   * novembro em 2023. Contar dias úteis de 2020 com o feriado de 2023 dentro
+   * seria errado — e é exatamente o que `RN-003` existe para impedir.
+   */
+  | { readonly tipo: 'data_fixa'; readonly mes: number; readonly dia: number }
 
 export type TipoParametro = ValorParametro['tipo']
 
