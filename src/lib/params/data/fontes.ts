@@ -73,6 +73,92 @@ export const LEI_15191_2025: Fonte = {
   orgao: 'Receita Federal do Brasil',
 }
 
+/**
+ * A tabela ANUAL — e por que ela tem fonte própria, separada da mensal.
+ *
+ * A anual **não é doze vezes a mensal**, e 2025 é a demonstração: a tabela
+ * mudou em maio, então o ano tem quatro meses de uma e oito de outra. Quem
+ * multiplicar a mensal vigente por doze erra a isenção em mais de mil reais.
+ *
+ * Quem publica a anual apurada é a Receita, na página de tabelas do exercício.
+ * É fonte oficial do órgão que administra o tributo, e **confere por
+ * reprodução** — a mistura das mensais que já estão em `irrf.ts` devolve
+ * exatamente os valores publicados:
+ *
+ *   isenção AC2025   4 × 2.259,20 + 8 × 2.428,80 = 28.467,20  ✅
+ *   deduzir 7,5%     4 ×   169,44 + 8 ×   182,16 =  2.135,04  ✅
+ *   isenção AC2024   1 × 2.112,00 + 11 × 2.259,20 = 26.963,20 ✅
+ *   deduzir 7,5%     1 ×   158,40 + 11 ×   169,44 =  2.022,24 ✅
+ *
+ * Os limites das faixas superiores são doze vezes os mensais, que não mudaram
+ * em nenhuma das duas viradas — só a isenção subiu.
+ */
+export const RFB_TABELA_ANUAL_2024: Fonte = {
+  id: 'rfb-tabela-anual-ac2024',
+  norma:
+    'Tabela progressiva anual do IRPF publicada pela Receita Federal para o exercício de 2025, ano-calendário de 2024, na forma da Lei nº 14.848/2024',
+  dispositivo: 'Exercício 2025 · ano-calendário 2024',
+  url: 'https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/copy_of_2024',
+  orgao: 'Receita Federal do Brasil',
+}
+
+export const RFB_TABELA_ANUAL_2025: Fonte = {
+  id: 'rfb-tabela-anual-ac2025',
+  norma:
+    'Tabela progressiva anual do IRPF publicada pela Receita Federal para o exercício de 2026, ano-calendário de 2025, na forma da Lei nº 15.191/2025',
+  dispositivo: 'Exercício 2026 · ano-calendário 2025',
+  url: 'https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2025',
+  orgao: 'Receita Federal do Brasil',
+}
+
+/**
+ * Art. 8º — as deduções da declaração, e o teto que cada uma tem (ou não tem).
+ *
+ * Lido no texto consolidado do Planalto em 06/08/2026, com o cuidado de §7.42:
+ * dependente e instrução aparecem com **várias redações empilhadas**, e a
+ * vigente é a última — ambas da Lei nº 13.149/2015, "a partir do ano-calendário
+ * de 2015", sem prazo final declarado.
+ *
+ * **Despesa médica não tem teto**, e isso é do texto: a alínea "a" enumera o que
+ * é dedutível e não fixa limite algum, ao contrário da alínea "b", que traz o
+ * valor da instrução. A ausência de teto é conteúdo da norma, não lacuna do
+ * cadastro — por isso não existe parâmetro de limite médico aqui.
+ */
+export const LEI_9250_ART_8: Fonte = {
+  id: 'lei-9250-1995-art-8',
+  norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 13.149, de 2015',
+  dispositivo: 'Art. 8º, II, "b" e "c"',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Art. 10 — o desconto simplificado, e a data que ele carrega.
+ *
+ * *"[...] desconto simplificado, que consistirá em dedução de 20% (vinte por
+ * cento) do valor desses rendimentos, limitada a [...]"*, e o limite está nos
+ * incisos. A última redação, dada pela **Lei nº 15.270, de 2025**, é o que fecha
+ * o recorte desta calculadora:
+ *
+ *   IX - R$ 16.754,34 [...] a partir do ano-calendário de 2015 **até o
+ *        ano-calendário de 2025**; e
+ *   X  - R$ 17.640,00 [...] a partir do ano-calendário de 2026.
+ *
+ * **O inciso X não foi cadastrado, de propósito.** A mesma Lei nº 15.270/2025
+ * **revogou o art. 11**, que é onde vive a tabela anual — ou seja, de 2026 em
+ * diante a conta não é a mesma com outro número: é outra estrutura, com o
+ * redutor do art. 3º-A. Cadastrar só o limite novo deixaria a calculadora
+ * oferecer 2026 e calcular pela estrutura velha, que é o defeito de §7.48 com
+ * consequência pior. Ver a nota em `irpf-anual.ts`.
+ */
+export const LEI_9250_ART_10: Fonte = {
+  id: 'lei-9250-1995-art-10',
+  norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 15.270, de 2025',
+  dispositivo: 'Art. 10, caput e inciso IX',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const LEI_9250_ART_3A: Fonte = {
   id: 'lei-9250-1995-art-3a',
   norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 15.270, de 26 de novembro de 2025',
@@ -1046,6 +1132,10 @@ export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_13_2026,
   LEI_14848_2024,
   LEI_15191_2025,
+  RFB_TABELA_ANUAL_2024,
+  RFB_TABELA_ANUAL_2025,
+  LEI_9250_ART_8,
+  LEI_9250_ART_10,
   LEI_9250_ART_3A,
   LEI_8036_ART_15,
   LEI_8036_ART_18,
