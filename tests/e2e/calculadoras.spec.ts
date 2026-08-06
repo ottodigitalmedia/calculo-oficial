@@ -126,6 +126,13 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
    * teste com tabela real daria a impressão contrária.
    */
   'conta-de-agua': '?consumo=2500&faixas=1000,500;2000,1000;0,2000&esgoto=8000',
+  /**
+   * Exige ao menos UMA taxa de modalidade, e nenhuma delas é obrigatória
+   * isoladamente — é assim de propósito: campo em branco significa "não tenho
+   * essa opção", e tornar uma delas obrigatória inventaria uma porta de crédito
+   * que a pessoa não tem.
+   */
+  'financiamento-de-reforma': '?valorDaObra=3000000&prazoMeses=24&garantiaImovel=120&pessoal=600',
 }
 
 for (const c of CALCULADORAS) {

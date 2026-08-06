@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **64** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **65** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.247 de unidade · 545 ponta a ponta · 3 de vazamento |
+| Testes | 1.264 de unidade · 551 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 68 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -36,7 +36,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 
 - As **10 do v1**: salário líquido · rescisão (sem justa causa e pedido de demissão) · férias · 13º · horas extras · FGTS · INSS · IRRF · juros compostos
 - **Trabalhista do v2:** rescisão por acordo mútuo · rescisão do doméstico · aviso prévio proporcional · seguro-desemprego · custo do funcionário
-- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade
+- **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade · financiamento de reforma
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
 - **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 11 de 75
+## 4. Calculadoras pendentes — 10 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 11 que faltam, e o que trava cada uma
+### 4.3 As 10 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -192,16 +192,16 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-020 | IR sobre ganho de capital em imóvel | Alíquotas progressivas, isenções e fatores de redução — pesquisa em norma |
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
 | CALC-027 | Empréstimo consignado — margem | A margem consignável é legal e mudou mais de uma vez; exige fonte confirmada |
-| CALC-038 | Financiamento de reforma | Nada. É uma variação de CALC-024 com destino declarado |
 | CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-051 | Pró-labore e encargos do sócio | Pesquisa em norma |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 | CALC-072 | Dias úteis entre datas | D-5: o calendário de feriados |
 
-**Só uma delas não depende de pesquisa em norma: CALC-038.** O trecho do
-catálogo que dizia haver 33 calculadoras sem dependência valia quando foi
-escrito; elas foram construídas. O que restou é, quase todo, tributário e
-previdenciário — e o próximo passo do projeto deixou de ser código.
+**Nenhuma das dez dispensa pesquisa em norma.** O trecho do catálogo que dizia
+haver 33 calculadoras sem dependência valia quando foi escrito; elas foram
+construídas, e CALC-038 — a última delas — saiu em 06/08/2026. O que restou é
+tributário, previdenciário ou preso a um calendário, e **o próximo passo do
+projeto deixou de ser código**.
 
 > **CALC-050 saiu desta lista em 06/08/2026, e mostrou que a barreira é
 > menor do que parece.** A pesquisa foi de uma tarde: o texto consolidado da
@@ -1457,6 +1457,35 @@ Três coisas que só aparecem lendo com atenção:
 **O que falta para construí-la**, em ordem: os Anexos III e V do Simples
 Nacional com o fator R, o art. 6º-A acima, e o art. 16-A (que ainda não li). São
 três frentes de pesquisa, e nenhuma delas é código.
+
+### 7.50 A calculadora que corria risco de ser um duplicado
+
+CALC-038 estava no catálogo com "Fonte: —, Manutenção: Nula", e era a última que
+não dependia de pesquisa em norma. Também era a que mais corria risco de não
+merecer existir: financiar uma reforma é tomar crédito, e CALC-024 já calcula o
+custo de tomar crédito. Publicar uma segunda página para a mesma conta canibaliza
+a primeira na busca e não ajuda ninguém.
+
+**O que a salvou foi mudar a pergunta.** O CET simula UMA operação, para quem já
+escolheu onde tomar. Quem vai reformar não está nesse ponto: tem o orçamento na
+mão e várias portas abertas — garantia de imóvel, consignado, pessoal, cartão —
+com taxas que se separam por um fator de cinco. A página compara **as
+modalidades para a mesma obra**, e acrescenta a porta que não aparece na mesa do
+banco: esperar e pagar à vista.
+
+Duas decisões que vieram junto:
+
+**Modalidade em branco não vira linha na tabela.** Campo vazio significa "não
+tenho essa opção" — e uma linha com taxa zero apareceria como a mais barata de
+todas, inventando uma porta que a pessoa não tem. Um caso-ouro trava isso.
+
+**O rendimento da alternativa de esperar começa em zero.** Supor rendimento
+otimista enviesaria a comparação a favor de esperar; zero enviesa a favor de
+financiar, mas é o cenário que o usuário controla e que a tela declara.
+
+> **O teste que vale para a próxima "calculadora óbvia".** Se a resposta a "por
+> que isto não é a calculadora X que já existe?" for uma diferença de rótulo,
+> não é calculadora nova. Se for uma diferença de PERGUNTA, é.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

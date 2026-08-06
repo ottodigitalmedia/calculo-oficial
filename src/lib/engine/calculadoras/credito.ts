@@ -921,4 +921,200 @@ export function calcularPortabilidade(
   }
 }
 
+// ---------------------------------------------------------------------------
+// CALC-038 — Financiamento de reforma
+// ---------------------------------------------------------------------------
+
+/**
+ * **O que impede esta calculadora de ser uma segunda CALC-024.**
+ *
+ * O CET simula UMA operação: o usuário já escolheu onde tomar o crédito e quer
+ * saber quanto custa. Quem vai reformar não está nesse ponto — ele tem o
+ * orçamento da obra na mão e várias portas abertas, com taxas que diferem por um
+ * fator de cinco entre a mais barata e a mais cara.
+ *
+ * Esta página compara **as modalidades disponíveis para a MESMA obra**, e
+ * acrescenta a porta que nenhum banco mostra: **esperar e pagar à vista**.
+ *
+ * **A afirmação que ela faz sobre o mundo, e que os próprios números do usuário
+ * verificam:** a diferença entre modalidades costuma ser maior que qualquer
+ * desconto negociável no material da obra. Quem passa uma tarde pesquisando piso
+ * e assina o crédito mais caro da mesa perdeu dinheiro na conta que não olhou.
+ *
+ * **A alternativa de juntar não supõe rendimento por padrão.** Supor um
+ * rendimento otimista enviesaria a comparação a favor de esperar; supor zero
+ * enviesa a favor de financiar, mas é o cenário que o usuário controla — e a
+ * taxa é campo dele, com zero como padrão declarado.
+ */
+
+export interface ModalidadeDeReforma {
+  /** Como a linha aparece na tabela. */
+  readonly rotulo: string
+  readonly taxaMensalBp: BasisPoints
+  /** Tarifas e tributos embutidos no valor financiado, quando houver. */
+  readonly tarifas: Centavos
+}
+
+export interface LinhaDaModalidade {
+  readonly rotulo: string
+  readonly taxaMensalBp: BasisPoints
+  readonly parcela: Centavos
+  readonly totalPago: Centavos
+  readonly custoDoCredito: Centavos
+  readonly cetMensal: BasisPoints
+}
+
+export interface EntradaReforma {
+  readonly valorDaObra: Centavos
+  readonly prazoMeses: number
+  readonly modalidades: readonly ModalidadeDeReforma[]
+  /** Quanto dá para guardar por mês, para a alternativa de esperar. */
+  readonly guardaPorMes: Centavos
+  /** Rendimento mensal do que for guardado. Zero é o padrão declarado. */
+  readonly rendimentoMensalBp: BasisPoints
+}
+
+export interface SaidaReforma {
+  readonly linhas: readonly LinhaDaModalidade[]
+  readonly maisBarata: LinhaDaModalidade
+  readonly maisCara: LinhaDaModalidade
+  /** Quanto separa a melhor porta da pior, no total pago. */
+  readonly diferencaEntreModalidades: Centavos
+  /** Em quantos meses o valor da obra é juntado. Zero quando não se guarda nada. */
+  readonly mesesParaJuntar: number
+  /** Verdadeiro quando juntar leva mais tempo que o prazo do financiamento. */
+  readonly juntarDemoraMais: boolean
+}
+
+/** Teto da simulação de poupança: vinte anos. Guarda, não otimização. */
+// eslint-disable-next-line no-restricted-syntax -- teto da simulação, não parâmetro legal
+const LIMITE_DE_MESES_JUNTANDO = 240
+
+export function calcularFinanciamentoDeReforma(
+  entrada: EntradaReforma,
+  dataReferencia: DataISO,
+): Resultado<SaidaReforma> {
+  if (entrada.valorDaObra <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe quanto custa a obra para ver o resultado.',
+    }
+  }
+  if (entrada.prazoMeses <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe: 'Informe em quantas parcelas você pretende pagar para ver o resultado.',
+    }
+  }
+
+  const disponiveis = entrada.modalidades.filter((m) => m.taxaMensalBp > 0)
+  if (disponiveis.length === 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_incompleta',
+      detalhe:
+        'Informe a taxa mensal de ao menos uma modalidade de crédito para ver a comparação.',
+    }
+  }
+
+  const etapas: Etapa[] = []
+
+  const linhas: LinhaDaModalidade[] = disponiveis.map((m) => {
+    const financiado = somar(entrada.valorDaObra, m.tarifas)
+    const parcela = parcelaPrice(financiado, entrada.prazoMeses, m.taxaMensalBp)
+    const totalPago = multiplicarPorInteiro(parcela, entrada.prazoMeses)
+    /**
+     * O CET compara o fluxo com o que o tomador recebeu — a obra, e não o valor
+     * com as tarifas dentro. Mesma definição de CALC-024.
+     */
+    const cet = taxaInternaMensal(entrada.valorDaObra, parcela, entrada.prazoMeses)
+    return {
+      rotulo: m.rotulo,
+      taxaMensalBp: m.taxaMensalBp,
+      parcela,
+      totalPago,
+      custoDoCredito: subtrair(totalPago, entrada.valorDaObra),
+      cetMensal: cet ?? basisPoints(0),
+    }
+  })
+
+  const ordenadas = [...linhas].sort((a, b) => a.totalPago - b.totalPago)
+  const maisBarata = ordenadas[0]
+  const maisCara = ordenadas[ordenadas.length - 1]
+
+  if (!maisBarata || !maisCara) {
+    return { ok: false, motivo: 'entrada_invalida', detalhe: 'Nenhuma modalidade calculável.' }
+  }
+
+  for (const linha of linhas) {
+    etapas.push({
+      rotulo: `${linha.rotulo} — ${entrada.prazoMeses}× de ${reais(linha.parcela)}`,
+      formula: `${reais(entrada.valorDaObra)} a ${percentual(linha.taxaMensalBp)} ao mês`,
+      resultado: linha.totalPago,
+      fundamento: fundamentar(RESOLUCAO_CMN_4881),
+    })
+  }
+
+  const diferencaEntreModalidades = subtrair(maisCara.totalPago, maisBarata.totalPago)
+
+  if (linhas.length > 1) {
+    etapas.push({
+      rotulo: 'Diferença entre a porta mais barata e a mais cara',
+      formula: `${reais(maisCara.totalPago)} − ${reais(maisBarata.totalPago)}`,
+      resultado: diferencaEntreModalidades,
+      justificativa:
+        'É a mesma obra, pelo mesmo prazo. A diferença sai inteira da escolha de onde tomar o ' +
+        'crédito — e costuma ser maior que qualquer desconto negociável no material.',
+    })
+  }
+
+  /**
+   * A porta que nenhum banco mostra: guardar e pagar à vista. Sem rendimento
+   * informado a conta é divisão pura, que é o cenário conservador.
+   */
+  let mesesParaJuntar = 0
+  if (entrada.guardaPorMes > 0) {
+    let acumulado = ZERO
+    while (acumulado < entrada.valorDaObra && mesesParaJuntar < LIMITE_DE_MESES_JUNTANDO) {
+      acumulado = somar(
+        acumulado,
+        entrada.guardaPorMes,
+        jurosDoPeriodo(acumulado, entrada.rendimentoMensalBp),
+      )
+      mesesParaJuntar += 1
+    }
+
+    etapas.push({
+      rotulo: 'Meses para juntar o valor da obra',
+      formula:
+        `${reais(entrada.guardaPorMes)} por mês` +
+        (entrada.rendimentoMensalBp > 0
+          ? `, rendendo ${percentual(entrada.rendimentoMensalBp)} ao mês`
+          : ', sem rendimento'),
+      resultado: centavos(mesesParaJuntar * CENTESIMOS_POR_UNIDADE),
+      unidade: 'numero',
+      justificativa:
+        'Esperar é a alternativa que não aparece na mesa do banco. Ela custa tempo, e o que se ' +
+        'economiza é exatamente o custo do crédito da coluna acima.',
+    })
+  }
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+
+  return {
+    ok: true,
+    valores: {
+      linhas,
+      maisBarata,
+      maisCara,
+      diferencaEntreModalidades,
+      mesesParaJuntar,
+      juntarDemoraMais: mesesParaJuntar > entrada.prazoMeses,
+    },
+    traco,
+  }
+}
+
 export { basisPoints, centavos }

@@ -33,6 +33,7 @@ import { DIVISAO_DE_CONTA } from './divisao-de-conta'
 import { ELETRICO_VS_COMBUSTAO } from './eletrico-vs-combustao'
 import { COMBUSTIVEL } from './combustivel'
 import { FERIAS } from './ferias'
+import { FINANCIAMENTO_DE_REFORMA } from './financiamento-de-reforma'
 import { FINANCIAMENTO_DE_VEICULO } from './financiamento-de-veiculo'
 import { FINANCIAMENTO_IMOBILIARIO } from './financiamento-imobiliario'
 import { FGTS } from './fgts'
@@ -102,6 +103,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   AMORTIZACAO_EXTRA,
   PLANO_DE_QUITACAO,
   PORTABILIDADE_DE_CREDITO,
+  FINANCIAMENTO_DE_REFORMA,
   LOCACAO,
   ALUGAR_OU_COMPRAR,
   RENDA_MENSAL,

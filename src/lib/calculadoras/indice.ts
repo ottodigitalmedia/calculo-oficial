@@ -195,6 +195,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Se a proposta compensa de verdade — comparada pelo total, não pela parcela.',
   },
   {
+    slug: 'financiamento-de-reforma',
+    nome: 'Financiamento de reforma',
+    linhaDeContexto:
+      'A mesma obra por cada porta de crédito — e quanto custa esperar em vez disso.',
+  },
+  {
     slug: 'rentabilidade-de-aluguel',
     nome: 'Rentabilidade de imóvel para locação',
     linhaDeContexto: 'Quanto o imóvel rende de verdade — depois da vacância, do IPTU e da taxa.',

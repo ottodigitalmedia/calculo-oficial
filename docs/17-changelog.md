@@ -31,6 +31,27 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-038 · financiamento de reforma — e o fim do bloco sem pesquisa
+
+Era a última calculadora do catálogo que não dependia de pesquisa em norma, e a
+que mais corria risco de não merecer existir: financiar reforma é tomar crédito,
+e CALC-024 já calcula isso.
+
+**O que a salvou foi mudar a pergunta.** O CET simula uma operação, para quem já
+escolheu onde tomar. Quem vai reformar tem o orçamento na mão e várias portas
+abertas, com taxas que se separam por um fator de cinco. A página compara as
+modalidades **para a mesma obra** — garantia de imóvel, consignado, pessoal,
+cartão — e acrescenta a alternativa que não aparece na mesa do banco: esperar e
+pagar à vista.
+
+Modalidade em branco não vira linha: campo vazio significa "não tenho essa
+opção", e uma linha com taxa zero seria a mais barata de todas, inventando uma
+porta inexistente. O rendimento da alternativa de esperar começa em zero, porque
+supor rendimento otimista enviesaria a comparação.
+
+**Com ela, nenhuma das dez pendentes dispensa pesquisa em norma.** O próximo
+passo do projeto deixou de ser código.
+
 ### Adicionado · CALC-053 · carnê-leão
 
 **Sem parâmetro legal novo:** a tabela é a mesma do IRRF mensal, já cadastrada e
