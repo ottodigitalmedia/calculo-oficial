@@ -566,10 +566,11 @@ edições**, que se baixa e se varre localmente.
 2. **Nem todo ato oficial passa pelo DOU.** A divulgação do seguro-desemprego de
    §5.5, por exemplo, é do portal do MTE por determinação do art. 19, § 1º — pode
    simplesmente não estar lá. Ausência no DOU **não** prova ausência de norma.
-3. **É credencial, e este repositório é público.** Se entrar, entra por variável
-   de ambiente e segredo do repositório, nunca versionada. E entra em
-   **script de pesquisa**, não na aplicação: `ADR-008` mantém o produto sem
-   dependência externa em execução, e nada disso muda.
+3. **É credencial.** Se entrar, entra por variável de ambiente e segredo do
+   repositório, nunca versionada — o repositório é privado, e isso **não** muda
+   a regra: credencial em arquivo versionado vaza no dia em que a visibilidade
+   mudar. E entra em **script de pesquisa**, não na aplicação: `ADR-008` mantém
+   o produto sem dependência externa em execução.
 
 **Decisão pendente do mantenedor:** usar a conta institucional do outro projeto
 aqui. É credencial dele, o dado é público e a ficha de lá já diz "uma conta para
@@ -2095,6 +2096,31 @@ da plataforma. Confirmar exige a API de faturamento, que pede escopo `user` que
 a sessão não tem, e resolver mexe em plano ou em limite de gasto: os dois estão
 na coluna "exige decisão do mantenedor" de `CLAUDE.md`.
 
+**O que a tela de faturamento mostrou (06/08/2026), e o fato que ela revelou:**
+
+| | |
+|---|---|
+| Plano | **GitHub Free** |
+| Uso medido em agosto | US$ 6,24 — integralmente coberto pelo desconto incluído |
+| A pagar | nada |
+| Deste repositório | US$ 2,77 · `hub-40apps` US$ 2,33 · os demais, centavos |
+
+**E o dado que explica a conta existir: `calculo-oficial` é PRIVADO.** Repositório
+público não consome minuto de Actions — privado consome a franquia mensal da
+conta. É por isso que um projeto sem tráfego de build aparece medido.
+
+> ⚠️ **Correção de outro erro meu, no mesmo dia.** §8, item 5, dizia "o
+> repositório é público, então o hash mapeia para o código-fonte exato", e usava
+> isso como argumento contra expor `rev` em `/api/health`. **Está errado**, e a
+> correção enfraquece o argumento — num repositório privado o hash identifica a
+> versão sem revelar o que ela contém. O item continua exigindo decisão, mas por
+> `06-api-spec` §EP-016, não por essa premissa falsa.
+
+A franquia do plano Free é de **2.000 minutos por mês** para repositório privado.
+Nada na tela de visão geral diz quantos sobraram — o número está em
+**Billing → Usage, aba `Actions`**, e é ele que decide entre as duas
+explicações que restam: franquia esgotada, ou incidente da plataforma.
+
 **Enquanto isso, o caminho manual de `13-deployment` §4 continua existindo** —
 clicar em reimplantar no painel do EasyPanel. Ele publica a última imagem
 **publicada com sucesso**, que é a de `181490b`; as imagens desta sessão nunca
@@ -2214,7 +2240,7 @@ O que sobrou, em ordem:
    >
    > | Caminho | O que custa |
    > |---|---|
-   > | Publicar `rev` no corpo | Revê §EP-016. O repositório é público, então o hash mapeia para o código-fonte exato |
+   > | Publicar `rev` no corpo | Revê §EP-016. O hash identifica a versão, mas **o repositório é privado** — ele não mapeia para código-fonte que qualquer um possa ler |
    > | Responder `rev` só com segredo no cabeçalho | Preserva a resposta pública intacta; custa um segredo novo e um caminho a mais na única rota dinâmica |
    > | Não fazer | O passo de saúde continua podendo aprovar o contêiner velho. Nunca causou incidente registrado |
    >
