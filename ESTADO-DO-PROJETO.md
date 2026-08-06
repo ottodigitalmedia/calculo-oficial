@@ -25,10 +25,12 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **70** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
-| Guias no ar | **10 de 10** — `03-functional-spec` §4 fechou em 06/08/2026 |
+| Calculadoras **no repositório** | **70** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras **em produção** | ⚠️ **69** — CALC-014 está no repositório e **não** está no ar. O pipeline parou de implantar; §7.63 |
+| Guias no repositório | **10 de 10** — `03-functional-spec` §4 fechou em 06/08/2026 |
+| Guias **em produção** | ⚠️ **3** — os sete novos aguardam implantação, pela mesma razão |
 | Testes | 1.443 de unidade · 595 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 85 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
+| Auditoria de parâmetros | 85 vigências, **0 divergências** (06/08/2026). A fonte que era a mais fraca deixou de ser — §5.5 |
 | Orçamento de JavaScript | 134,3 kB de **150** na pior rota — e **18,5 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
 
@@ -45,7 +47,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
 - **Veículos:** álcool ou gasolina · custo de viagem · custo mensal do carro · elétrico ou combustão · depreciação · financiamento
 - **Utilitárias:** porcentagem · regra de três · divisão de conta · média ponderada · conversor de unidades · dias úteis
-- `/guias` e os **dez** guias de `03-functional-spec` §4
+- `/guias` e os guias de `03-functional-spec` §4 — **dez no repositório, três
+  servidos** enquanto a implantação não voltar (§7.63)
 - `/privacidade` · `/termos` · `/cookies` · `/aviso-legal`
 - `/sitemap.xml` · `/robots.txt` · `/api/health`
 
@@ -61,6 +64,12 @@ testes com cobertura → auditoria de dependências → build → orçamento de
 performance → e2e → vazamento.
 
 ### Deploy
+
+> ⛔ **Interrompido desde 06/08/2026, por motivo fora do código.** O passo
+> `Implantar` deixou de obter executor e, depois, push em `main` deixou de criar
+> execução. O que está descrito abaixo é o desenho, e ele continua correto — o
+> que não acontece hoje é a execução. Diagnóstico, evidência e a regra que
+> sobrou disso em **§7.63**; a decisão é do mantenedor porque envolve conta.
 
 **Automático desde 31/07/2026.** O fluxo é: push em `main` → o pipeline roda as
 verificações → publica a imagem etiquetada com o hash → dispara o webhook do
@@ -282,6 +291,7 @@ Vale para a próxima auditoria: **norma digitalizada não é norma inconferível
 | ~~`Strict-Transport-Security`~~ | ✅ **Ativado em 31/07/2026**, `max-age=31536000; includeSubDomains`. **Sem `preload`** — porta de mão única, e exige `www` servido. Coberto por `tests/e2e/cabecalhos.spec.ts` |
 | ~~`www.calculoficial.com.br`~~ | ✅ **Servido desde 31/07/2026.** O DNS já estava certo — só faltava o domínio no serviço do EasyPanel, que é o que faz o Traefik pedir o certificado. Responde 308 para o ápice, por `next.config.ts` |
 | MCP da Hostinger | A configuração foi corrigida em `~/.claude.json`, mas exige reinício do app para valer. Não verificado |
+| ⛔ **O pipeline parou de rodar** | **06/08/2026.** O `Implantar` de CALC-014 não conseguiu executor (*"The job was not acquired by Runner of type hosted"*) e, a partir dali, **push em `main` deixou de criar execução**. É conta ou plataforma, não código — e é do mantenedor. Ver §7.63 |
 
 ### 5.4 Adiado por `ADR-008`, com teste que cobra
 
@@ -1909,6 +1919,63 @@ calculados: um avo da remuneração do período. A regra dos 15 dias da Lei nº
 tornaria impossível o pagamento que o § 6º manda fazer ao fim de cada período.
 Entre uma leitura que anula o comando expresso e uma que lhe dá efeito, o motor
 segue a segunda, e diz que segue.
+
+### 7.63 O pipeline ficou vermelho por fora, e o código publicado não foi ao ar
+
+§7.14 conta o caso em que o pipeline ficava **verde** sem implantar. Este é o
+oposto pelo mesmo efeito: em 06/08/2026 ele ficou **vermelho por motivo que não
+era do código**, e ninguém reparou que a consequência era idêntica.
+
+A execução de CALC-014 (`1190d0e`) mostra o desenho inteiro:
+
+```
+✓ Verificar        8m24s
+✓ Publicar imagem  4m00s
+✗ Implantar       15m02s   "The job was not acquired by Runner of type hosted
+                            even after multiple attempts"
+```
+
+**A imagem foi publicada; a implantação nunca começou.** Não houve falha de
+teste, de lint, de parâmetro — o passo não conseguiu executor. E como
+`Implantar` é o passo que dispara o webhook, produção ficou na versão anterior.
+
+A conferência que fecha o diagnóstico não é o log do pipeline, é o site:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://calculoficial.com.br/calculadora/contrato-intermitente   # 404
+curl -s -o /dev/null -w "%{http_code}\n" https://calculoficial.com.br/calculadora/ganho-de-capital-imovel  # 200
+```
+
+CALC-020, do commit anterior, estava no ar. CALC-014, do commit que reprovou,
+**não estava** — publicada no repositório, ausente do produto, por uma hora,
+sem nada no projeto dizendo isso.
+
+**E piorou depois.** Os três commits desta sessão foram empurrados às 17h48 e
+`main` remoto passou a apontar para eles — mas **nenhuma execução foi criada**.
+Cinco minutos de sondagem a cada 30 s, e a última execução do repositório
+continuava sendo a de CALC-014. Actions está habilitado
+(`permissions.enabled: true`); o que não acontece é a criação da execução.
+
+Os dois sintomas juntos — job que não obtém executor, e depois push que não
+cria execução — são o quadro clássico de **limite de gasto ou cota de Actions
+da conta**. Confirmar exige a API de faturamento, que pede escopo `user` que a
+sessão não tem, e resolver mexe em plano ou em limite de gasto: os dois estão
+na coluna "exige decisão do mantenedor" de `CLAUDE.md`.
+
+**O que fica como regra, e não depende de qual for a causa:**
+
+> Empurrar não é publicar, e pipeline verde não é publicar. **O que diz se algo
+> está no ar é o ar.** Depois de empurrar, conferir a rota nova em produção
+> custa um `curl` — e é a única verificação que não depende de a plataforma
+> estar contando a verdade.
+
+`13-deployment` §4 descreve a verificação de saúde como a última etapa do
+deploy. Ela responde `{"status":"ok"}` neste exato momento, com três commits
+não implantados — porque a rota diz que o **processo** está de pé, e nunca
+prometeu dizer **qual versão** ele está rodando. É a mesma lacuna que o item 5
+de §8 tenta fechar, e que colide com `06-api-spec` §EP-016.
+
+---
 
 ## 8. Sugestão de ordem para a próxima sessão
 
