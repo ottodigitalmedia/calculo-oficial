@@ -25,9 +25,9 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras no ar | **63** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
+| Calculadoras no ar | **64** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice e a primeira do lado do empregador |
 | Guias no ar | 3 de 10 |
-| Testes | 1.229 de unidade · 539 ponta a ponta · 3 de vazamento |
+| Testes | 1.247 de unidade · 545 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 68 vigências, **0 divergências** (06/08/2026). Uma fonte abaixo do padrão — ver §5.1 |
 | Orçamento de JavaScript | 129,4 kB de **150** na pior rota — e **16,2 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27 |
 | Vulnerabilidades | 0 |
@@ -39,7 +39,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Crédito:** CET · amortização SAC vs. Price · quitação antecipada · rotativo do cartão · cheque especial · plano de quitação · portabilidade
 - **Imóveis:** capacidade de financiamento · financiamento imobiliário completo · amortização extra · rentabilidade de aluguel · alugar ou comprar · custo de aquisição
 - **Investimentos:** reserva de emergência · meta de independência financeira · quanto rende por mês · rendimento da poupança · Tesouro IPCA+ · CDB, LCI e LCA · dividend yield · comparador de aplicações
-- **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI
+- **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
 - **Consumo:** orçamento doméstico 50/30/20 · consumo de energia por aparelho · botijão de gás · conta de água
@@ -139,7 +139,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 12 de 75
+## 4. Calculadoras pendentes — 11 de 75
 
 **Sessenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -169,7 +169,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 As 12 que faltam, e o que trava cada uma
+### 4.3 As 11 que faltam, e o que trava cada uma
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -193,9 +193,8 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | CALC-021 | IR sobre criptoativos | Pesquisa em norma, e regra em mudança |
 | CALC-027 | Empréstimo consignado — margem | A margem consignável é legal e mudou mais de uma vez; exige fonte confirmada |
 | CALC-038 | Financiamento de reforma | Nada. É uma variação de CALC-024 com destino declarado |
-| CALC-048 | Comparador CLT vs. PJ vs. MEI | D-3, mais premissas que precisam ficar visíveis |
+| CALC-048 | Comparador CLT vs. PJ vs. MEI | Anexos III e V do Simples, fator R **e a tributação de dividendos da Lei 15.270/2025** — ver §7.49 |
 | CALC-051 | Pró-labore e encargos do sócio | Pesquisa em norma |
-| CALC-053 | Carnê-leão | Pesquisa em norma |
 | CALC-066 | Retorno de energia solar | A geração vira campo do usuário, mas o Fio B da Lei 14.300/2022 não — ver §7.40 |
 | CALC-072 | Dias úteis entre datas | D-5: o calendário de feriados |
 
@@ -1418,6 +1417,46 @@ reajusta todo ano" de "parâmetro perene" é conhecimento de domínio, não estr
 O que ficou no lugar é um caso-ouro específico: o seletor do DAS-MEI não oferece
 ano além de 2026. É menos do que eu queria, e é o que dá para afirmar com
 honestidade.
+
+### 7.49 A isenção de dividendos acabou — e isso muda CALC-048 inteira
+
+Fui construir CALC-048 (CLT vs. PJ vs. MEI) e comecei pela premissa que todo
+comparador desse tipo usa: **distribuição de lucros é isenta de imposto de
+renda**. Ela era verdadeira desde 1996, pelo art. 10 da Lei nº 9.249/1995.
+
+Não é mais. O art. 10 ganhou nova redação da **Lei nº 15.270/2025** — a mesma
+que este projeto já conhecia pelo desconto simplificado do IRRF — e passou a
+condicionar a não incidência aos arts. 6º-A e 16-A da Lei nº 9.250/1995.
+
+O **art. 6º-A** é curto e pesado:
+
+> A partir do mês de janeiro do ano-calendário de 2026, o pagamento [...] de
+> lucros e dividendos por uma mesma pessoa jurídica a uma mesma pessoa física
+> residente no Brasil em montante superior a R$ 50.000,00 [...] em um mesmo mês
+> fica sujeito à retenção na fonte [...] à alíquota de 10% [...] **sobre o total
+> do valor pago**.
+
+Três coisas que só aparecem lendo com atenção:
+
+1. **Os 10% incidem sobre o TOTAL, não sobre o excedente.** Distribuir
+   R$ 50.000,00 custa zero; distribuir R$ 50.000,01 custa R$ 5.000,00. É um
+   degrau, não uma rampa — e é exatamente o tipo de armadilha que este produto
+   existe para mostrar.
+2. **É por PJ e por sócio**, no mesmo mês. A estrutura societária muda o
+   resultado.
+3. **O § 3º preserva o passado**: resultados apurados até 2025, distribuição
+   aprovada até 31/12/2025 e valores exigíveis nos termos da aprovação ficam
+   fora.
+
+> **Por que isto bloqueia CALC-048 e não a destrava.** Um comparador que trate
+> dividendos como isentos superestima o lado PJ para qualquer sócio que retire
+> mais de R$ 50 mil por mês — e é justamente na faixa alta que a comparação
+> CLT × PJ interessa. Publicá-la com a premissa antiga seria publicar um número
+> errado com aparência de certo, para o público que mais decide com base nele.
+
+**O que falta para construí-la**, em ordem: os Anexos III e V do Simples
+Nacional com o fator R, o art. 6º-A acima, e o art. 16-A (que ainda não li). São
+três frentes de pesquisa, e nenhuma delas é código.
 
 ## 8. Sugestão de ordem para a próxima sessão
 

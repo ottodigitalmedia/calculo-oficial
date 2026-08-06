@@ -31,6 +31,33 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-053 · carnê-leão
+
+**Sem parâmetro legal novo:** a tabela é a mesma do IRRF mensal, já cadastrada e
+conferida, e o motor é o mesmo de CALC-015. Um caso-ouro compara os dois lado a
+lado em oito combinações — se divergirem, um está errado.
+
+O que a página acrescenta é o que o carnê-leão tem de próprio. A primeira coisa
+não é a conta: é o "isto vale para mim?". Ele alcança o que se recebe de outra
+PESSOA FÍSICA ou do exterior — quem atende empresa já tem retenção na fonte, e
+somar os dois faria recolher duas vezes sobre a mesma renda.
+
+E a regra que quase ninguém aproveita, do § 3º do art. 6º da Lei nº 8.134/1990:
+o livro-caixa não pode exceder a receita do mês, **mas o excesso não se perde** —
+ele é computado nos meses seguintes, até dezembro. A calculadora tem campo para o
+excesso vindo de trás e mostra o que sobra para a frente.
+
+### Bloqueado · CALC-048 · a isenção de dividendos acabou em janeiro de 2026
+
+Fui construir o comparador CLT vs. PJ vs. MEI e parei na premissa de partida.
+Distribuição de lucros era isenta desde 1996; a **Lei nº 15.270/2025** mudou o
+art. 10 da Lei nº 9.249/1995 e, pelo art. 6º-A da Lei nº 9.250/1995, dividendos
+acima de R$ 50.000,00 por mês, da mesma empresa ao mesmo sócio, passaram a sofrer
+retenção de 10% **sobre o total** — não sobre o excedente.
+
+Um comparador com a premissa antiga superestima o lado PJ exatamente na faixa em
+que a comparação interessa. Está registrado em §7.49, com o que falta pesquisar.
+
 ### Corrigido · a data deste ciclo estava três dias adiantada
 
 Todo o trabalho deste ciclo foi datado **03/08/2026** na documentação e em duas

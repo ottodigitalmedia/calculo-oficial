@@ -265,6 +265,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto ainda cabe no ano — e o que muda se você passar do teto.',
   },
   {
+    slug: 'carne-leao',
+    nome: 'Carnê-leão',
+    linhaDeContexto: 'Quanto recolher no mês sobre o que você recebeu de pessoas físicas.',
+  },
+  {
     slug: 'orcamento-domestico',
     nome: 'Orçamento doméstico 50/30/20',
     linhaDeContexto: 'Como dividir a renda do mês — com os percentuais no seu controle, não fixos.',

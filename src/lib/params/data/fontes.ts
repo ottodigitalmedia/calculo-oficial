@@ -258,6 +258,26 @@ export const LC214_ANEXO_VII: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * O carnê-leão — CALC-053. Fundamentos, não valores: quem deve recolher e o
+ * que pode ser deduzido. Os números vêm da tabela do IRPF, já cadastrada.
+ */
+export const LEI_7713_ART_8: Fonte = {
+  id: 'lei-7713-1988-art-8',
+  norma: 'Lei nº 7.713, de 22 de dezembro de 1988',
+  dispositivo: 'Art. 8º, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l7713.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LEI_8134_ART_6: Fonte = {
+  id: 'lei-8134-1990-art-6',
+  norma: 'Lei nº 8.134, de 27 de dezembro de 1990',
+  dispositivo: 'Art. 6º, incisos I a III, e §§ 1º e 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8134.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const RPS_ART_216: Fonte = {
   id: 'decreto-3048-1999-art-216',
   norma: 'Decreto nº 3.048, de 6 de maio de 1999 — Regulamento da Previdência Social',

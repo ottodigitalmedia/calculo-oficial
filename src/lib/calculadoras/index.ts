@@ -16,6 +16,7 @@ import { BANCO_DE_HORAS } from './banco-de-horas'
 import { BOTIJAO } from './botijao'
 import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
+import { CARNE_LEAO } from './carne-leao'
 import { CDB } from './cdb'
 import { COMPARADOR_INVESTIMENTOS } from './comparador-investimentos'
 import { CET } from './cet'
@@ -114,6 +115,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   PRECIFICACAO,
   DAS_MEI,
   LIMITE_DO_MEI,
+  CARNE_LEAO,
   ORCAMENTO,
   ENERGIA,
   BOTIJAO,

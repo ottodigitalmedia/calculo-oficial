@@ -294,6 +294,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './limite-do-mei'
     ).then((m) => m.calcular),
+  'carne-leao': () =>
+    import(
+      /* webpackChunkName: "calc-carne-leao" */
+      /* webpackExports: ["calcular"] */
+      './carne-leao'
+    ).then((m) => m.calcular),
   'orcamento-domestico': () =>
     import(
       /* webpackChunkName: "calc-orcamento" */
