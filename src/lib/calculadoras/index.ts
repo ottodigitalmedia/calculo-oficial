@@ -18,6 +18,7 @@ import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
 import { CARNE_LEAO } from './carne-leao'
 import { CRIPTO } from './cripto'
+import { SOLAR } from './solar'
 import { RESTITUICAO_IRPF } from './restituicao-irpf'
 import { SIMPLIFICADO_OU_COMPLETO } from './simplificado-ou-completo'
 import { CDB } from './cdb'
@@ -132,6 +133,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RESTITUICAO_IRPF,
   SIMPLIFICADO_OU_COMPLETO,
   CRIPTO,
+  SOLAR,
   PRO_LABORE,
   ORCAMENTO,
   ENERGIA,

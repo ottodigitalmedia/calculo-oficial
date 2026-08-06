@@ -31,6 +31,39 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-066 · energia solar, com o Fio B que faltava
+
+O catálogo marcava a calculadora sem fonte, e ela ficou parada mesmo assim: o
+percentual do Fio B da Lei nº 14.300/2022 é valor legal, cresce ano a ano, e não
+podia ser inventado nem virar campo do usuário — ninguém sabe responder qual é o
+do próprio ano.
+
+O art. 27 é uma escada: 15% a partir de 2023, 30% em 2024, 45% em 2025, 60% em
+2026, 75% em 2027, 90% em 2028, e a regra do art. 17 a partir de 2029.
+
+**Só 2023 a 2026 foram cadastrados.** Os incisos V e VI existem na lei, e
+cadastrá-los faria a página abrir em 2028 — o defeito de §7.48, que este projeto
+já cometeu no DAS-MEI. Cada vigência fecha no fim do seu ano; 2027 devolve o
+bloqueio de `RN-003` até alguém acrescentar a linha no ano em que ela valer.
+
+**O art. 26 não virou parâmetro, virou campo.** Quem já tinha o sistema quando a
+lei saiu, ou pediu acesso em até doze meses, fica fora do cronograma até 2045.
+Isso não é um valor com vigência — é outro caminho da conta, e um caso-ouro
+prova a diferença: o regime anterior calcula até em 2027, ano que o cronograma
+não cobre.
+
+**Duas armadilhas de proposta comercial que a calculadora desarma:**
+
+- **Gerar mais que o consumo não vira dinheiro.** O excedente vira crédito, que
+  abate consumo futuro e vence em 60 meses. Um caso-ouro fixa isso: gerar 800 kWh
+  com consumo de 600 dá exatamente o mesmo resultado que gerar 600.
+- **A conta não chega a zero.** O mínimo da fatura limita quanto ela pode cair, e
+  entra como campo — o valor está na conta de luz.
+
+O que a estimativa **não** faz, e a tela declara: degradação dos painéis e
+reajuste de tarifa. As duas puxam em direções opostas, e estimar só uma
+enviesaria o resultado para o lado escolhido.
+
 ### Correção de parâmetro · as faixas do ganho de capital estavam CEM VEZES maiores
 
 **O que estava errado.** As quatro fronteiras da tabela do art. 21 da Lei nº

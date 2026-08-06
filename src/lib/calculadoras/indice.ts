@@ -308,6 +308,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Se as suas vendas do mês passaram do teto de isenção, e quanto pagar.',
   },
   {
+    slug: 'retorno-energia-solar',
+    nome: 'Retorno de energia solar',
+    linhaDeContexto: 'Em quanto tempo o sistema se paga, já com a cobrança do Fio B.',
+  },
+  {
     slug: 'pro-labore',
     nome: 'Pró-labore e encargos do sócio',
     linhaDeContexto:
