@@ -31,19 +31,48 @@
 import type { ConjuntoDeParametros } from '../tipos'
 import {
   LEI_8981_ART_21,
+  LEI_9250_ART_22,
   LEI_9250_ART_23,
   LEI_11196_ART_39,
   LEI_11196_ART_40,
+  RFB_PR_IRPF_CRIPTOATIVOS,
 } from './fontes'
 
 /** Publicação da Lei nº 13.259/2016, que deu a redação vigente ao art. 21. */
 const VIGENCIA_DA_TABELA = '2016-03-17'
 
+/*
+ * 🚨 UNIDADE: CENTAVOS, agrupados de três em três — e isto custou um defeito.
+ *
+ * As fronteiras da tabela foram cadastradas em 06/08/2026 como
+ * `500_000_000_00`, que **lê** como "R$ 500.000.000 e 00 centavos" e **vale**
+ * 50.000.000.000 centavos, ou seja R$ 500 milhões. A fronteira da lei é R$ 5
+ * milhões — o valor entrou CEM VEZES maior, e a calculadora cobrou 15% onde
+ * devia cobrar até 22,5%.
+ *
+ * O caso-ouro não pegou porque **foi escrito na mesma unidade errada**: ele
+ * vendia por `900_000_000_00` e verificava que a base passava de
+ * `500_000_000_00`. Dois erros que se confirmam não são dois erros — são um só,
+ * com testemunha.
+ *
+ * A regra que fica: neste arquivo, valor monetário é centavo puro, agrupado de
+ * três em três a partir da direita. `5_000_000_00` não existe; R$ 5.000.000,00
+ * se escreve `500_000_000`. Quando o número tiver mais de seis dígitos, conferir
+ * dividindo por cem antes de commitar.
+ */
+
 /** Publicação da Lei nº 11.196/2005, no DOU de 22/11/2005. */
 const PUBLICACAO_11196 = '2005-11-22'
 
 export const GANHO_DE_CAPITAL: ConjuntoDeParametros = {
-  fontes: [LEI_8981_ART_21, LEI_9250_ART_23, LEI_11196_ART_39, LEI_11196_ART_40],
+  fontes: [
+    LEI_8981_ART_21,
+    LEI_9250_ART_22,
+    LEI_9250_ART_23,
+    LEI_11196_ART_39,
+    LEI_11196_ART_40,
+    RFB_PR_IRPF_CRIPTOATIVOS,
+  ],
 
   parametros: [
     {
@@ -52,6 +81,13 @@ export const GANHO_DE_CAPITAL: ConjuntoDeParametros = {
       descricao:
         'Faixas e alíquotas progressivas do imposto sobre o ganho de capital da pessoa física.',
       tipo: 'tabela_faixas',
+    },
+    {
+      id: 'ganho-capital-isencao-pequeno-valor',
+      nome: 'Teto mensal da isenção de bens de pequeno valor',
+      descricao:
+        'Total de alienações no mês até o qual o ganho de capital é isento. Observa o CONJUNTO de bens da mesma natureza vendidos no mês, e não cada venda.',
+      tipo: 'valor_monetario',
     },
     {
       id: 'ganho-capital-isencao-imovel-unico',
@@ -104,24 +140,24 @@ export const GANHO_DE_CAPITAL: ConjuntoDeParametros = {
           {
             ordem: 1,
             limiteInferiorCentavos: 0,
-            limiteSuperiorCentavos: 500_000_000_00,
+            limiteSuperiorCentavos: 500_000_000,
             aliquotaBp: 1_500,
           },
           {
             ordem: 2,
-            limiteInferiorCentavos: 500_000_000_01,
-            limiteSuperiorCentavos: 1_000_000_000_00,
+            limiteInferiorCentavos: 500_000_001,
+            limiteSuperiorCentavos: 1_000_000_000,
             aliquotaBp: 1_750,
           },
           {
             ordem: 3,
-            limiteInferiorCentavos: 1_000_000_000_01,
-            limiteSuperiorCentavos: 3_000_000_000_00,
+            limiteInferiorCentavos: 1_000_000_001,
+            limiteSuperiorCentavos: 3_000_000_000,
             aliquotaBp: 2_000,
           },
           {
             ordem: 4,
-            limiteInferiorCentavos: 3_000_000_000_01,
+            limiteInferiorCentavos: 3_000_000_001,
             limiteSuperiorCentavos: null,
             aliquotaBp: 2_250,
           },
@@ -129,6 +165,28 @@ export const GANHO_DE_CAPITAL: ConjuntoDeParametros = {
       },
       observacao:
         'Redação da Lei nº 13.259/2016. A redação anterior, da MP nº 692/2015, trazia faixas diferentes — 15/20/25/30% com corte em R$ 1 milhão — e não é a vigente.',
+    },
+
+    // -----------------------------------------------------------------------
+    // Isenção de pequeno valor — art. 22, II, da Lei nº 9.250/1995, com a
+    // redação da Lei nº 11.196/2005.
+    //
+    // É DEGRAU, NÃO DEDUÇÃO. O parágrafo único manda somar o conjunto de bens
+    // da mesma natureza alienados no mês; ultrapassado o teto, o ganho inteiro
+    // é tributado — não só a parte que excedeu.
+    //
+    // A MP nº 1.303/2025 revogaria isto para criptoativos e CADUCOU em
+    // 08/10/2025. Ver a nota em `LEI_9250_ART_22`.
+    // -----------------------------------------------------------------------
+    {
+      id: 'ganho-capital-pequeno-valor-2005',
+      parametroId: 'ganho-capital-isencao-pequeno-valor',
+      fonteId: 'lei-9250-1995-art-22',
+      inicio: PUBLICACAO_11196,
+      fim: null,
+      valor: { tipo: 'valor_monetario', centavos: 3_500_000 },
+      observacao:
+        'Inciso II — "nos demais casos". O inciso I trata de ações negociadas no mercado de balcão, com teto de R$ 20.000,00, e não se aplica a criptoativo.',
     },
 
     // -----------------------------------------------------------------------

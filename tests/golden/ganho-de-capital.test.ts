@@ -138,14 +138,81 @@ describe('CALC-020 · a tabela é progressiva por faixa', () => {
    */
   const recente = { dataDeAquisicao: '2026-01-01' as DataISO, dataDaVenda: '2026-06-10' as DataISO }
 
+  /*
+   * 🚨 ESTES DOIS CASOS ESTAVAM ERRADOS, e é por isso que eles não pegaram o
+   * defeito de 100× nas fronteiras da tabela — ver a nota de unidade em
+   * `params/data/ganho-de-capital.ts`.
+   *
+   * Eles vendiam por `400_000_000_00` centavos, que são R$ 4 BILHÕES, e
+   * diziam no rótulo "dentro da primeira faixa". Escritos na mesma unidade
+   * errada do parâmetro, os dois passavam. Reescritos em centavos de verdade.
+   */
   it('ganho dentro da primeira faixa paga 15%', () => {
+    // Venda de R$ 4.000.000,00, custo de R$ 3.000.000,00 → ganho de R$ 1 mi.
     const v = calc({
       ...recente,
-      valorDeVenda: centavos(400_000_000_00),
-      custoDeAquisicao: centavos(300_000_000_00),
+      valorDeVenda: centavos(400_000_000),
+      custoDeAquisicao: centavos(300_000_000),
     })
+    expect(v.baseTributavel).toBeLessThanOrEqual(500_000_000)
     expect(v.aliquotaEfetivaBp).toBeGreaterThan(1_400)
     expect(v.aliquotaEfetivaBp).toBeLessThanOrEqual(1_500)
+  })
+
+  /*
+   * A FRONTEIRA EXATA da primeira faixa, que é o que o defeito movia.
+   *
+   * Ganho de exatamente R$ 5.000.000,00 paga 15% cheios e nada além. Um centavo
+   * a mais já toca a segunda faixa — e é só nesse centavo que a alíquota
+   * efetiva começa a subir. Com as fronteiras cem vezes maiores, este caso
+   * reprovaria: a efetiva ficaria em 15% dos dois lados.
+   */
+  it('na fronteira de R$ 5 milhões a efetiva é 15%, e passa a subir no centavo seguinte', () => {
+    /*
+     * Compra e venda no MESMO mês, para que os fatores de redução não incidam
+     * e a base tributável seja o ganho bruto. Sem isso a fronteira não é
+     * exercitável de fato: o FR2 encolhe a base uns pontos e o teste passaria
+     * a medir a redução, não a faixa. Foi o que aconteceu na primeira versão
+     * deste caso — base de R$ 4.913.411,30 em vez de R$ 5.000.000,00.
+     */
+    const semReducao = {
+      dataDeAquisicao: '2026-06-01' as DataISO,
+      dataDaVenda: '2026-06-10' as DataISO,
+    }
+    const naFronteira = calc({
+      ...semReducao,
+      valorDeVenda: centavos(500_000_000),
+      custoDeAquisicao: centavos(0),
+    })
+    expect(naFronteira.baseTributavel).toBe(500_000_000)
+    expect(naFronteira.aliquotaEfetivaBp).toBe(1_500)
+    expect(naFronteira.imposto).toBe(75_000_000)
+
+    /*
+     * Um centavo acima da fronteira paga o MESMO imposto, e isso é correto: o
+     * centavo excedente rende 0,175 centavo de imposto, que o arredondamento
+     * devolve a zero. A primeira versão deste caso afirmava o contrário e
+     * reprovava — a asserção estava errada, não o motor.
+     *
+     * A faixa nova aparece quando há o que tributar nela. Aqui, um milhão
+     * acima: R$ 5 mi a 15% mais R$ 1 mi a 17,5%.
+     */
+    const umCentavoAcima = calc({
+      ...semReducao,
+      valorDeVenda: centavos(500_000_001),
+      custoDeAquisicao: centavos(0),
+    })
+    expect(umCentavoAcima.imposto).toBe(naFronteira.imposto)
+
+    const umMilhaoAcima = calc({
+      ...semReducao,
+      valorDeVenda: centavos(600_000_000),
+      custoDeAquisicao: centavos(0),
+    })
+    // 500.000.000 × 15% + 100.000.000 × 17,5% = 75.000.000 + 17.500.000
+    expect(umMilhaoAcima.imposto).toBe(92_500_000)
+    expect(umMilhaoAcima.aliquotaEfetivaBp).toBeGreaterThan(1_500)
+    expect(umMilhaoAcima.aliquotaEfetivaBp).toBeLessThan(1_750)
   })
 
   /**
@@ -153,18 +220,21 @@ describe('CALC-020 · a tabela é progressiva por faixa', () => {
    * a da faixa alcançada — nunca igual à da faixa alcançada sobre tudo.
    */
   it('ganho acima de R$ 5 milhões tem efetiva entre 15% e 17,5%', () => {
+    // Venda de R$ 9.000.000,00, custo de R$ 1.000.000,00 → ganho de R$ 8 mi,
+    // que atravessa a primeira faixa e para dentro da segunda.
     const v = calc({
       ...recente,
-      valorDeVenda: centavos(900_000_000_00),
-      custoDeAquisicao: centavos(100_000_000_00),
+      valorDeVenda: centavos(900_000_000),
+      custoDeAquisicao: centavos(100_000_000),
     })
-    expect(v.baseTributavel).toBeGreaterThan(500_000_000_00)
+    expect(v.baseTributavel).toBeGreaterThan(500_000_000)
+    expect(v.baseTributavel).toBeLessThanOrEqual(1_000_000_000)
     expect(v.aliquotaEfetivaBp).toBeGreaterThan(1_500)
     expect(v.aliquotaEfetivaBp).toBeLessThan(1_750)
   })
 
   it('a alíquota efetiva sobe com o ganho, sem saltos', () => {
-    const efetivas = [1_000_000_00, 600_000_000_00, 2_000_000_000_00].map((venda) => {
+    const efetivas = [1_000_000_00, 600_000_000, 2_000_000_000].map((venda) => {
       const v = calc({ ...recente, valorDeVenda: centavos(venda), custoDeAquisicao: centavos(0) })
       return v.aliquotaEfetivaBp
     })
