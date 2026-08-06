@@ -291,7 +291,7 @@ Vale para a próxima auditoria: **norma digitalizada não é norma inconferível
 | ~~`Strict-Transport-Security`~~ | ✅ **Ativado em 31/07/2026**, `max-age=31536000; includeSubDomains`. **Sem `preload`** — porta de mão única, e exige `www` servido. Coberto por `tests/e2e/cabecalhos.spec.ts` |
 | ~~`www.calculoficial.com.br`~~ | ✅ **Servido desde 31/07/2026.** O DNS já estava certo — só faltava o domínio no serviço do EasyPanel, que é o que faz o Traefik pedir o certificado. Responde 308 para o ápice, por `next.config.ts` |
 | MCP da Hostinger | A configuração foi corrigida em `~/.claude.json`, mas exige reinício do app para valer. Não verificado |
-| ⛔ **O pipeline parou de rodar** | **06/08/2026.** O `Implantar` de CALC-014 não conseguiu executor (*"The job was not acquired by Runner of type hosted"*) e, a partir dali, **push em `main` deixou de criar execução**. É conta ou plataforma, não código — e é do mantenedor. Ver §7.63 |
+| ⛔ **O pipeline parou de rodar** | **06/08/2026.** Nenhum job obtém executor: ficam 15 min na fila e são cancelados (*"The job was not acquired by Runner of type hosted"*). Push deixou de criar execução; o disparo manual cria, mas o job é cancelado igual. É conta ou plataforma, não código — e é do mantenedor. Ver §7.63 |
 
 ### 5.4 Adiado por `ADR-008`, com teste que cobra
 
@@ -1950,17 +1950,44 @@ CALC-020, do commit anterior, estava no ar. CALC-014, do commit que reprovou,
 **não estava** — publicada no repositório, ausente do produto, por uma hora,
 sem nada no projeto dizendo isso.
 
-**E piorou depois.** Os três commits desta sessão foram empurrados às 17h48 e
-`main` remoto passou a apontar para eles — mas **nenhuma execução foi criada**.
-Cinco minutos de sondagem a cada 30 s, e a última execução do repositório
-continuava sendo a de CALC-014. Actions está habilitado
-(`permissions.enabled: true`); o que não acontece é a criação da execução.
+**E piorou depois.** Os commits desta sessão foram empurrados, `main` remoto
+passou a apontar para eles — e **nenhum push criou execução**. Actions está
+habilitado (`permissions.enabled: true`); o evento simplesmente não produz
+execução desde `1190d0e`.
 
-Os dois sintomas juntos — job que não obtém executor, e depois push que não
-cria execução — são o quadro clássico de **limite de gasto ou cota de Actions
-da conta**. Confirmar exige a API de faturamento, que pede escopo `user` que a
-sessão não tem, e resolver mexe em plano ou em limite de gasto: os dois estão
+O disparo manual (`workflow_dispatch`) **criou** a execução, o que descarta
+bloqueio na criação — e ela terminou assim:
+
+```
+X Verificar        15m02s   cancelado
+- Publicar imagem   0s      pulado
+- Implantar         0s      pulado
+
+"The job was not acquired by Runner of type hosted even after multiple attempts"
+```
+
+**Mesma anotação, mesmos 15m02s da falha anterior — só que agora no primeiro
+job.** Não é o passo de implantação: **nenhum job deste repositório está
+recebendo executor**. Ficam quinze minutos na fila e são cancelados.
+
+> **Correção de uma hipótese que escrevi antes de ter esta evidência.** A
+> primeira redação desta seção dizia que o quadro era "cota bloqueando a criação
+> de execuções". O disparo manual mostrou que criar funciona; o que não acontece
+> é a **alocação do executor**. A conclusão prática não muda — é conta ou
+> plataforma —, mas o sintoma a relatar no suporte é outro, e relatar o errado
+> custa a resposta errada.
+
+Os dois sintomas — push que não gera execução, e job que nunca obtém executor —
+são o quadro de **limite de gasto ou cota de Actions da conta**, ou de incidente
+da plataforma. Confirmar exige a API de faturamento, que pede escopo `user` que
+a sessão não tem, e resolver mexe em plano ou em limite de gasto: os dois estão
 na coluna "exige decisão do mantenedor" de `CLAUDE.md`.
+
+**Enquanto isso, o caminho manual de `13-deployment` §4 continua existindo** —
+clicar em reimplantar no painel do EasyPanel. Ele publica a última imagem
+**publicada com sucesso**, que é a de `181490b`; as imagens desta sessão nunca
+chegaram a ser construídas, porque `Publicar imagem` depende de `Verificar`.
+Ou seja: não há atalho para pôr os guias no ar sem o pipeline voltar.
 
 **O que fica como regra, e não depende de qual for a causa:**
 
