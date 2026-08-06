@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { CATALOGO } from '../../src/lib/calculadoras/indice'
+import { GUIAS as REGISTRO_DE_GUIAS } from '../../src/lib/guias'
 
 /**
  * SEO técnico e guias — T-106.
@@ -13,7 +14,10 @@ import { CATALOGO } from '../../src/lib/calculadoras/indice'
 // Derivada do registro: lista fixa aqui deixou seis calculadoras sem cobertura
 // de sitemap e de canônica entre o T-104 e 31/07/2026.
 const CALCULADORAS = CATALOGO.map((c) => c.slug)
-const GUIAS = ['salario-bruto-e-liquido', 'como-o-inss-e-calculado', 'imposto-de-renda-na-folha']
+// Também derivada, e pela mesma razão: a lista fixa que estava aqui tinha os
+// três guias do T-106 e teria deixado os sete de 06/08/2026 sem cobertura de
+// sitemap, de canônica e de acessibilidade — sem nada ficar vermelho.
+const GUIAS = REGISTRO_DE_GUIAS.map((g) => g.slug)
 
 // ---------------------------------------------------------------------------
 // EP-013 e EP-014
@@ -192,7 +196,7 @@ test('o sumário do guia leva às seções', async ({ page }) => {
   await expect(page).toHaveURL(new RegExp(`${destino?.replace('#', '\\#')}$`))
 })
 
-test('/guias lista os três guias e cada um abre', async ({ page }) => {
+test('/guias lista todos os guias publicados e cada um abre', async ({ page }) => {
   await page.goto('/guias')
   for (const slug of GUIAS) {
     // `.first()`: o rodapé também lista os guias, em toda página.

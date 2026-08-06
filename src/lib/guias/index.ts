@@ -7,14 +7,35 @@
 
 import { BRUTO_E_LIQUIDO } from './bruto-e-liquido'
 import { COMO_O_INSS_E_CALCULADO } from './como-o-inss-e-calculado'
+import { DECIMO_TERCEIRO } from './decimo-terceiro'
+import { FERIAS } from './ferias'
+import { FGTS_GUIA } from './fgts'
+import { HORAS_EXTRAS } from './horas-extras'
 import { IMPOSTO_DE_RENDA_NA_FOLHA } from './imposto-de-renda-na-folha'
+import { JUROS_COMPOSTOS } from './juros-compostos'
+import { PEDIDO_DE_DEMISSAO } from './pedido-de-demissao'
+import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
 import type { Guia } from './tipos'
 
-/** Ordem de exibição em `/guias`: do mais geral para o mais específico. */
+/**
+ * Ordem de exibição em `/guias`: do mais geral para o mais específico.
+ *
+ * Os dez guias de `03-functional-spec` §4, agrupados pelo caminho que o leitor
+ * costuma percorrer: primeiro a folha do mês, depois as verbas que aparecem uma
+ * vez por ano, depois o fim do contrato, e por último o único que não trata de
+ * norma trabalhista.
+ */
 export const GUIAS: readonly Guia[] = [
   BRUTO_E_LIQUIDO,
   COMO_O_INSS_E_CALCULADO,
   IMPOSTO_DE_RENDA_NA_FOLHA,
+  HORAS_EXTRAS,
+  FERIAS,
+  DECIMO_TERCEIRO,
+  FGTS_GUIA,
+  RESCISAO_SEM_JUSTA_CAUSA,
+  PEDIDO_DE_DEMISSAO,
+  JUROS_COMPOSTOS,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {

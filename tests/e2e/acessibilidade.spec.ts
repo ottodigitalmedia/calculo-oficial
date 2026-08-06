@@ -12,7 +12,23 @@ import { expect, test } from '@playwright/test'
  */
 
 const CALCULADORAS = ['salario-liquido', 'inss', 'irrf', 'juros-compostos']
-const GUIAS = ['salario-bruto-e-liquido', 'como-o-inss-e-calculado', 'imposto-de-renda-na-folha']
+/**
+ * AMOSTRA, e declarada como tal — não é a lista de guias publicados.
+ *
+ * Vale a mesma razão de `CALCULADORAS` acima: todos os guias saem da mesma
+ * página genérica (`ADR-009`), e varrer os dez com a ferramenta em dois
+ * dispositivos custaria minutos para exercitar o mesmo molde dez vezes. A
+ * amostra cobre os quatro tipos de bloco que existem — prosa, lista, tabela de
+ * faixas e valor vigente —, que é o que muda o HTML gerado.
+ *
+ * A cobertura de TODOS os guias existe, e fica em `seo.spec.ts`: lá a lista é
+ * derivada do registro, e é lá que a ausência de um guia apareceria.
+ */
+const GUIAS = [
+  'salario-bruto-e-liquido',
+  'como-o-inss-e-calculado',
+  'fgts-deposito-multa-e-saldo',
+]
 
 const ROTAS = [
   '/',

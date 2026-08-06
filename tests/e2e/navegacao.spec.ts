@@ -11,9 +11,23 @@ test('US-011 · a busca filtra sem requisição de rede', async ({ page }) => {
   const antes = requisicoes.length
 
   await page.getByLabel('Buscar calculadora').fill('holerite')
+
+  /*
+   * A verificação é ESCOPADA à lista de resultados, e o motivo é uma armadilha
+   * real: a home também lista os guias, e o guia de juros compostos tem no
+   * título o nome da calculadora. Como `getByRole` casa o nome acessível por
+   * subcadeia, a asserção sem escopo passou a reprovar quando o guia foi
+   * publicado — apontando para a busca, que estava certa.
+   *
+   * Asserção de ausência precisa dizer ONDE a coisa não pode estar. Sem isso,
+   * ela mede a página inteira e falha por conteúdo que nada tem com o que o
+   * teste verifica.
+   */
+  const resultados = page.getByRole('list', { name: 'Resultados da busca' })
+
   // Sinônimo: "holerite" não está no nome da calculadora.
-  await expect(page.getByRole('heading', { name: 'Salário líquido' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Juros compostos' })).toHaveCount(0)
+  await expect(resultados.getByRole('heading', { name: 'Salário líquido' })).toBeVisible()
+  await expect(resultados.getByRole('heading', { name: 'Juros compostos' })).toHaveCount(0)
 
   expect(requisicoes.length).toBe(antes)
 })

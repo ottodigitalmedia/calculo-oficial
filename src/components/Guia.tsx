@@ -4,8 +4,7 @@ import { IconeSeta } from '@/components/Marca'
 import { porSlug } from '@/lib/calculadoras'
 import type { Bloco, Guia as TipoGuia } from '@/lib/guias/tipos'
 import { formatarPercentual, formatarPeriodo, formatarReal } from '@/lib/format/moeda'
-import { INSS } from '@/lib/params/data/inss'
-import { IRRF } from '@/lib/params/data/irrf'
+import { TODOS_OS_CONJUNTOS } from '@/lib/params/data/todos'
 import { construirRegistro } from '@/lib/params/registry'
 import type { Faixa, VigenciaResolvida } from '@/lib/params/tipos'
 
@@ -20,7 +19,21 @@ import type { Faixa, VigenciaResolvida } from '@/lib/params/tipos'
  * build (G-4) — dois builds do mesmo commit produzem o mesmo HTML.
  */
 
-const registro = construirRegistro(INSS, IRRF)
+/**
+ * O registro do guia é o **do servidor**, completo — `data/todos.ts`.
+ *
+ * Ele já foi montado aqui com uma lista escrita à mão (`INSS, IRRF`), e essa é
+ * exatamente a forma do defeito que derrubou CALC-050: duas listas do mesmo
+ * conjunto divergem, e a que fica para trás falha em silêncio. Um guia
+ * trabalhista que citasse a alíquota do depósito do FGTS não encontraria o
+ * parâmetro e o bloco simplesmente sumiria da página — sem erro, sem teste
+ * vermelho, com a seção parecendo apenas curta.
+ *
+ * Não custa quilobyte a ninguém: `CorpoDoGuia` é componente de servidor e a
+ * página é estática, então as tabelas ficam no HTML gerado, não no pacote do
+ * navegador. É a mesma razão registrada em `data/todos.ts`.
+ */
+const registro = construirRegistro(...TODOS_OS_CONJUNTOS)
 
 // ---------------------------------------------------------------------------
 // Procedência — some junto de todo valor legal

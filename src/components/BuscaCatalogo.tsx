@@ -77,7 +77,11 @@ export function BuscaCatalogo() {
             </button>
           </p>
         ) : (
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          // O nome acessível distingue esta lista das outras da mesma página —
+          // catálogo por categoria e guias. Sem ele, quem navega por lista não
+          // sabe em qual está, e o teste de busca não tem como se limitar ao
+          // que a busca de fato filtra.
+          <ul aria-label="Resultados da busca" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {resultados.map((c) => (
               <li key={c.slug}>
                 <Link

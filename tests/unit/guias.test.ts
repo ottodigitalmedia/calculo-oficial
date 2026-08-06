@@ -15,11 +15,18 @@ import { describe, expect, it } from 'vitest'
 import { CALCULADORAS, porSlug } from '../../src/lib/calculadoras'
 import { GUIAS, guiaPorSlug, guiasDaCalculadora } from '../../src/lib/guias'
 import { prosaDoGuia } from '../../src/lib/guias/tipos'
-import { INSS } from '../../src/lib/params/data/inss'
-import { IRRF } from '../../src/lib/params/data/irrf'
+import { TODOS_OS_CONJUNTOS } from '../../src/lib/params/data/todos'
 import { construirRegistro } from '../../src/lib/params/registry'
 
-const registro = construirRegistro(INSS, IRRF)
+/**
+ * O mesmo registro que `components/Guia.tsx` monta — o do servidor, completo.
+ *
+ * Montá-lo aqui com uma lista própria faria o teste verificar um universo
+ * diferente do que a página renderiza: um `parametroId` fora da lista do
+ * componente passaria no teste e sumiria da página. É a lição de `todos.ts`
+ * aplicada ao segundo par de listas que existia deste conjunto.
+ */
+const registro = construirRegistro(...TODOS_OS_CONJUNTOS)
 
 // ---------------------------------------------------------------------------
 // G-1 · nenhum valor legal na prosa
