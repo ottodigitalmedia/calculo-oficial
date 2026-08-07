@@ -31,6 +31,33 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 07/08/2026
 
+### Parâmetro · seguro-desemprego — a tabela de 2025 entrou
+
+`seguro-desemprego-faixa-1-limite`, `-faixa-2-limite`, `-faixa-1-fator`,
+`-faixa-2-fator`, `-parcela-somar` e `-teto`, vigência de 11/01/2025 a
+10/01/2026.
+
+**Fonte:** anexo assinado SEI nº 4274391, num endereço gov.br. **A data** veio da
+publicação do próprio MTE de 10/01/2025 — pública então, hoje atrás de
+autenticação —, capturada pelo Internet Archive em 11/01/2025 e citada na
+observação de cada vigência.
+
+A pendência durava desde 31/07/2026 e não era de valor: os números estavam no
+anexo desde 06/08. Faltava o **dia**, e cadastrar 1º de janeiro aplicaria a
+tabela nova à primeira semana do mês.
+
+**BV-07 recusou o arquivo como fonte, e a recusa estava certa** — a regra existe
+para impedir que valor legal entre por site que recopia a fonte, e abrir exceção
+por domínio abriria para qualquer página arquivada. A composição que passou é a
+honesta: valores do anexo gov.br, que o usuário consegue abrir; data declarada
+na observação, com o endereço da captura.
+
+Três conferências independentes fecham: os valores batem ao centavo com o anexo;
+o piso citado na publicação é o salário mínimo de 2025 já cadastrado; e os quatro
+valores, reajustados por 3,90%, reproduzem os quatro de 2026 ao centavo.
+
+**CALC-009 e CALC-076 passaram a oferecer o exercício de 2025.**
+
 ### Adicionado · CALC-076 · comparador acordo mútuo × dispensa sem justa causa
 
 A primeira calculadora que nasceu fora do desenho original do catálogo, por

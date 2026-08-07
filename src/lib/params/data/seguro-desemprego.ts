@@ -194,6 +194,77 @@ export const SEGURO_DESEMPREGO: ConjuntoDeParametros = {
     // publica, e não recalculada — regra F-2: a norma decide o arredondamento,
     // não nós.
     // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    // 2025 — cadastrada em 07/08/2026, quando a data finalmente apareceu
+    //
+    // Os VALORES já eram conhecidos desde 06/08 (anexo assinado SEI nº
+    // 4274391) e já tinham servido para conferir os de 2026 por reprodução. O
+    // que faltava era o DIA, e sem ele a vigência não podia existir: cadastrar
+    // 1º de janeiro aplicaria a tabela nova à primeira semana do mês, quando a
+    // anterior ainda valia.
+    //
+    // A publicação do próprio MTE, arquivada e capturada em 11/01/2025, diz a
+    // data em letra: "com vigência a partir de 11 de janeiro de 2025". Ver a
+    // nota inteira em MTE_ANEXO_SEGURO_DESEMPREGO_2025.
+    //
+    // O `fim` fecha em 10/01/2026 — a véspera do início da tabela seguinte, sem
+    // buraco e sem sobreposição de um dia.
+    // -----------------------------------------------------------------------
+    {
+      id: 'sd-faixa-1-limite-2025',
+      parametroId: 'seguro-desemprego-faixa-1-limite',
+      fonteId: 'mte-anexo-seguro-desemprego-2025',
+      inicio: '2025-01-11',
+      fim: '2026-01-10',
+      valor: { tipo: 'valor_monetario', centavos: 213_876 },
+      observacao:
+        'Reajuste pelo INPC acumulado de 4,77%, na forma do art. 19 da Resolução CODEFAT nº 957/2022. Data de início lida na publicação do MTE de 10/01/2025, capturada pelo Internet Archive em 11/01/2025 — ver a nota em MTE_ANEXO_SEGURO_DESEMPREGO_2025. Conferido em três frentes: bate ao centavo com o anexo assinado SEI nº 4274391; o piso citado na mesma publicação, R$ 1.518,00, é o salário mínimo de 2025 já cadastrado; e os quatro valores, reajustados por 3,90%, reproduzem os quatro de 2026 ao centavo.',
+    },
+    {
+      id: 'sd-faixa-2-limite-2025',
+      parametroId: 'seguro-desemprego-faixa-2-limite',
+      fonteId: 'mte-anexo-seguro-desemprego-2025',
+      inicio: '2025-01-11',
+      fim: '2026-01-10',
+      valor: { tipo: 'valor_monetario', centavos: 356_496 },
+    },
+    {
+      id: 'sd-faixa-1-fator-2025',
+      parametroId: 'seguro-desemprego-faixa-1-fator',
+      fonteId: 'mte-anexo-seguro-desemprego-2025',
+      inicio: '2025-01-11',
+      fim: '2026-01-10',
+      valor: { tipo: 'percentual', aliquotaBp: 8_000 },
+      observacao: 'O fator 0,8 (oito décimos) está no art. 5º, I, da Lei nº 7.998/1990.',
+    },
+    {
+      id: 'sd-faixa-2-fator-2025',
+      parametroId: 'seguro-desemprego-faixa-2-fator',
+      fonteId: 'mte-anexo-seguro-desemprego-2025',
+      inicio: '2025-01-11',
+      fim: '2026-01-10',
+      valor: { tipo: 'percentual', aliquotaBp: 5_000 },
+      observacao: 'O fator 0,5 (cinco décimos) está no art. 5º, II, da Lei nº 7.998/1990.',
+    },
+    {
+      id: 'sd-parcela-somar-2025',
+      parametroId: 'seguro-desemprego-parcela-somar',
+      fonteId: 'mte-anexo-seguro-desemprego-2025',
+      inicio: '2025-01-11',
+      fim: '2026-01-10',
+      valor: { tipo: 'valor_monetario', centavos: 171_101 },
+      observacao:
+        'É o benefício apurado sobre o limite da primeira faixa (0,8 × R$ 2.138,76 = R$ 1.711,008). Registrada como a fonte a publica, e não recalculada — regra F-2: a norma decide o arredondamento, não nós.',
+    },
+    {
+      id: 'sd-teto-2025',
+      parametroId: 'seguro-desemprego-teto',
+      fonteId: 'mte-anexo-seguro-desemprego-2025',
+      inicio: '2025-01-11',
+      fim: '2026-01-10',
+      valor: { tipo: 'valor_monetario', centavos: 242_411 },
+    },
+
     {
       id: 'sd-faixa-1-limite-2026',
       parametroId: 'seguro-desemprego-faixa-1-limite',

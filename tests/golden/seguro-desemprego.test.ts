@@ -242,10 +242,25 @@ describe('CALC-009 · o total é a parcela vezes o número de parcelas', () => {
 })
 
 describe('CALC-009 · a data importa', () => {
-  it('antes de 11/01/2026 não há tabela de valor, e o cálculo é bloqueado', () => {
+  /**
+   * ESTE CASO MUDOU EM 07/08/2026, E O CASO É QUE ESTAVA ERRADO.
+   *
+   * Ele afirmava que "antes de 11/01/2026 não há tabela de valor", usando
+   * 10/01/2026 como prova. Aquilo não era uma regra: era o retrato de uma
+   * lacuna — a tabela de 2025 existia no mundo e faltava no cadastro, porque o
+   * DIA de início não tinha sido localizado em fonte oficial.
+   *
+   * Com a vigência de 2025 cadastrada, 10/01/2026 passou a ter cobertura, e a
+   * asserção antiga reprovou. `CLAUDE.md` manda descobrir se o errado é o código
+   * ou o caso: aqui é o caso, e o limite verdadeiro é 11/01/2025 — o primeiro
+   * dia da primeira tabela que este projeto conhece.
+   *
+   * A conferência da virada 2025→2026 está no bloco da tabela de 2025.
+   */
+  it('antes de 11/01/2025 não há tabela de valor, e o cálculo é bloqueado', () => {
     const r = calcularSeguroDesemprego(
       { salarios: salariosDe(300_000), mesesTrabalhados: 24, solicitacao: 'primeira' },
-      '2026-01-10' as DataISO,
+      '2025-01-10' as DataISO,
       registro,
     )
     expect(r.ok).toBe(false)
@@ -298,5 +313,119 @@ describe('CALC-009 · C-M1 · não existe cálculo sem memória', () => {
     const etapa = r.traco.etapas.find((e) => e.rotulo === 'Número de parcelas')
     expect(etapa?.unidade).toBe('numero')
     expect(etapa?.resultado).toBe(500)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// A tabela de 2025 — cadastrada em 07/08/2026
+// ---------------------------------------------------------------------------
+
+/**
+ * ORIGEM: publicação do MTE de 10/01/2025, com vigência declarada a partir de
+ * 11/01/2025, e o anexo assinado SEI nº 4274391. Os valores foram calculados a
+ * lápis a partir dos números publicados, degrau a degrau:
+ *
+ *   até R$ 2.138,76        →  salário × 0,8
+ *   R$ 2.138,77 a 3.564,96 →  (salário − 2.138,76) × 0,5 + R$ 1.711,01
+ *   acima de R$ 3.564,96   →  R$ 2.424,11, invariável
+ *   piso                   →  salário mínimo de 2025, R$ 1.518,00
+ *
+ * **AS DUAS FRONTEIRAS SÃO O CASO QUE MAIS PROVA.** A tabela é contínua nos dois
+ * pontos de corte: no limite da primeira faixa a fórmula devolve exatamente a
+ * parcela a somar, e no limite da segunda devolve exatamente o teto. Um erro de
+ * transcrição em qualquer um dos quatro valores quebraria essa continuidade — é
+ * uma conferência que não depende de acreditar na leitura.
+ */
+describe('CALC-009 · a tabela vigente a partir de 11/01/2025', () => {
+  const EM_2025 = '2025-06-15' as DataISO
+
+  const parcelaDe = (salario: number) => {
+    const r = calcularSeguroDesemprego(
+      { salarios: salariosDe(salario), mesesTrabalhados: 24, solicitacao: 'primeira' },
+      EM_2025,
+      registro,
+    )
+    if (!r.ok) throw new Error(`esperado sucesso, veio ${r.motivo}: ${r.detalhe}`)
+    return r.valores
+  }
+
+  it('primeira faixa · R$ 2.000,00 × 0,8 = R$ 1.600,00', () => {
+    const v = parcelaDe(200_000)
+    expect(v.parcela).toBe(160_000)
+    expect(v.faixaAplicada).toBe(1)
+  })
+
+  it('FRONTEIRA · no limite da 1ª faixa a conta devolve a própria parcela a somar', () => {
+    // 2.138,76 × 0,8 = 1.711,008 → R$ 1.711,01, que é o valor publicado como
+    // parcela a somar da segunda faixa. A tabela fecha em si mesma.
+    const v = parcelaDe(213_876)
+    expect(v.parcela).toBe(171_101)
+    expect(v.faixaAplicada).toBe(1)
+  })
+
+  it('segunda faixa · R$ 3.000,00 → R$ 2.141,63', () => {
+    // (3.000,00 − 2.138,76) × 0,5 + 1.711,01 = 430,62 + 1.711,01
+    const v = parcelaDe(300_000)
+    expect(v.parcela).toBe(214_163)
+    expect(v.faixaAplicada).toBe(2)
+  })
+
+  it('FRONTEIRA · no limite da 2ª faixa a conta devolve exatamente o teto', () => {
+    // (3.564,96 − 2.138,76) × 0,5 + 1.711,01 = 713,10 + 1.711,01 = 2.424,11
+    const v = parcelaDe(356_496)
+    expect(v.parcela).toBe(242_411)
+    expect(v.faixaAplicada).toBe(2)
+    expect(v.aplicouTeto).toBe(false)
+  })
+
+  it('terceira faixa · acima do limite o valor é invariável', () => {
+    const v = parcelaDe(500_000)
+    expect(v.parcela).toBe(242_411)
+    expect(v.faixaAplicada).toBe(3)
+    expect(v.aplicouTeto).toBe(true)
+  })
+
+  it('piso · o benefício não fica abaixo do salário mínimo de 2025', () => {
+    // R$ 1.000,00 × 0,8 = R$ 800,00, abaixo de R$ 1.518,00.
+    const v = parcelaDe(100_000)
+    expect(v.parcela).toBe(151_800)
+    expect(v.aplicouPiso).toBe(true)
+  })
+
+  /**
+   * A tabela de 2026 começa em 11/01/2026, e a de 2025 fecha na véspera. Sem
+   * este caso, um `fim` escrito com um dia de folga passaria despercebido — e
+   * um dia de sobreposição faz o registro devolver a vigência errada para quem
+   * foi dispensado exatamente na virada.
+   */
+  it('a virada é no dia certo, sem buraco e sem sobreposição', () => {
+    expect(parcelaDe(500_000).parcela).toBe(242_411)
+
+    const véspera = calcularSeguroDesemprego(
+      { salarios: salariosDe(500_000), mesesTrabalhados: 24, solicitacao: 'primeira' },
+      '2026-01-10' as DataISO,
+      registro,
+    )
+    if (!véspera.ok) throw new Error('esperado sucesso na véspera')
+    expect(véspera.valores.parcela, 'em 10/01/2026 ainda vale a tabela de 2025').toBe(242_411)
+
+    const virada = calcularSeguroDesemprego(
+      { salarios: salariosDe(500_000), mesesTrabalhados: 24, solicitacao: 'primeira' },
+      '2026-01-11' as DataISO,
+      registro,
+    )
+    if (!virada.ok) throw new Error('esperado sucesso na virada')
+    expect(virada.valores.parcela, 'em 11/01/2026 já vale a tabela de 2026').toBe(251_865)
+  })
+
+  /** Antes de 11/01/2025 não há tabela cadastrada, e isso BLOQUEIA — `RN-003`. */
+  it('data anterior à primeira tabela cadastrada é recusada, e não extrapolada', () => {
+    const r = calcularSeguroDesemprego(
+      { salarios: salariosDe(300_000), mesesTrabalhados: 24, solicitacao: 'primeira' },
+      '2025-01-10' as DataISO,
+      registro,
+    )
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('vigencia_ausente')
   })
 })

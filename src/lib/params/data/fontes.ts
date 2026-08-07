@@ -1156,10 +1156,26 @@ export const MTE_TABELA_SEGURO_DESEMPREGO: Fonte = {
 /**
  * O anexo assinado de 2025 — a peça que faltava para conferir a série.
  *
- * Não sustenta nenhuma vigência cadastrada hoje (a de 2025 ainda não existe, e a
- * razão está acima). Está aqui porque é a **prova documental** da reprodução
- * descrita em `MTE_TABELA_SEGURO_DESEMPREGO`, e porque quem for cadastrar 2025
- * na próxima sessão precisa achá-lo sem repetir a busca.
+ * **Desde 07/08/2026 ele sustenta a vigência de 2025**, que até então não existia
+ * por falta do DIA de início — os valores estavam aqui, a data não.
+ *
+ * A data veio da publicação do próprio MTE, que estava pública em janeiro de
+ * 2025 e hoje pede autenticação. O Internet Archive a capturou em 11/01/2025 às
+ * 15h34, um dia depois do carimbo da página ("Publicado em 10/01/2025 16h56"), e
+ * o texto do ministério diz em letra: *"com vigência a partir de 11 de janeiro
+ * de 2025"*. A captura está em
+ * `web.archive.org/web/20250111153440/https://www.gov.br/trabalho-e-emprego/pt-br/noticias-e-conteudo/2025/janeiro/seguro-desemprego-2025-atualizacao-das-faixas-e-valores-do-beneficio`.
+ *
+ * **O arquivo NÃO virou fonte cadastrada, e a recusa foi do verificador.** BV-07
+ * reprovou `web.archive.org` por não ser domínio oficial, e a recusa está certa:
+ * a regra existe para impedir que valor legal entre por site que recopia a
+ * fonte, e abrir exceção por domínio abriria para qualquer página arquivada.
+ *
+ * A composição que passou é a honesta: **os valores vêm deste anexo**, que é
+ * documento assinado num endereço gov.br que o usuário consegue abrir; **a data
+ * vem da publicação arquivada**, e está declarada na observação de cada
+ * vigência, com o endereço da captura. O que se clica na memória de cálculo
+ * continua sendo fonte oficial acessível.
  *
  * O PDF é digitalizado e `pdftotext` devolve vazio nele. Rasterizar funciona —
  * é a mesma lição da portaria do INSS, registrada em `ESTADO-DO-PROJETO` §5.2:
