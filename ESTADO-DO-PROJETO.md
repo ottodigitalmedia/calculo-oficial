@@ -2889,6 +2889,59 @@ voltam a falhar em bloco.
 
 ---
 
+### 7.72 A generalização que a própria calculadora desmentiu
+
+**07/08/2026.** CALC-076 compara acordo mútuo e dispensa sem justa causa. A tese
+dela — a que justifica a calculadora existir — é que **a diferença que decide não
+está nas verbas**: o art. 484-A, § 2º veda o seguro-desemprego, e isso não
+aparece em linha nenhuma da rescisão.
+
+Escrevi a nota do resultado dizendo exatamente isso: *"a maior parte da diferença
+costuma não estar nas verbas, e sim no seguro-desemprego."* Soava certo, era a
+premissa do trabalho, e ninguém que lesse a tela discutiria.
+
+Antes de publicar, rodei cinco casos reais. Com cinco anos de casa:
+
+| Salário | Seguro-desemprego | Reduções (aviso + multa + FGTS retido) |
+|---|---|---|
+| mínimo | R$ 8.105,00 | R$ 4.587,43 |
+| R$ 3.000,00 | R$ 10.833,30 | R$ 8.490,00 |
+| **R$ 8.000,00** | **R$ 12.593,25** | **R$ 22.640,00** |
+
+**A afirmação inverte, e o mecanismo é simples: o seguro-desemprego tem teto e as
+reduções do FGTS não.** Acima de certo salário o benefício satura e as verbas
+passam a dominar.
+
+A correção não foi escrever uma frase mais cuidadosa. Foi **parar de
+generalizar**: a tela tem os dois números, e agora diz qual deles é maior *neste
+caso*, com os valores. Dois casos-ouro fixam a inversão nas duas pontas, para que
+a generalização não volte por descuido.
+
+> **A afirmação mais perigosa de um produto é a que sustenta a existência dele.**
+> Ela chega junto com a ideia, é repetida no docblock, no changelog e na tela, e
+> ninguém a trata como hipótese porque ela é o motivo de tudo estar sendo
+> construído. Aqui ela sobreviveu até o último passo antes da publicação, e só
+> caiu porque medir custou cinco linhas de script.
+>
+> **Quando a tela tem os números, ela não deve generalizar.** Generalização é o
+> que se escreve quando não se tem o dado — e uma calculadora, por definição,
+> tem.
+
+**Um segundo achado, no teste de vazamento.** A suíte reprovou com o marcador de
+taxa `873` aparecendo na URL `page-1c4c292e36873c43.js`. Era o hash do pacote,
+não vazamento. O marcador tinha três dígitos num arquivo cujo docblock afirma que
+eles são *"escolhidos para serem improváveis por acaso"* — três dígitos decimais
+colidem com hash hexadecimal por probabilidade, e passar dezenas de builds sem
+falhar tinha sido sorte.
+
+A URL de recurso versionado saiu da varredura (é gerada no build, antes de haver
+usuário), corpo e cabeçalhos continuam escaneados, e entrou uma guarda que
+reprova se o recorte um dia passar a engolir a varredura inteira — porque um
+teste de vazamento que grita sem motivo é um teste que alguém desliga, e este se
+declara o mais importante depois dos casos-ouro.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -3008,9 +3061,8 @@ O que sobrou, em ordem:
    > aprovar o contêiner velho, o que já foi observado (§7.63) e nunca causou
    > incidente — a conferência em produção por `curl` cobre o buraco, e é o que
    > vem sendo feito a cada entrega.
-6. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
-   tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
-   faz. Não está no catálogo com ID; exige decisão do mantenedor.
+6. ~~**Um comparativo "acordo vs. dispensa"**~~ ✅ **decidido pelo mantenedor e
+   construído em 07/08/2026** — é CALC-076, e o catálogo fechou em 76. Ver §7.72.
 7. ~~**Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer~~ ✅ **feito em
    07/08/2026.** A fonte não precisou aparecer: estava no Planalto desde 1985 — §7.70.
 8. ~~**Os 7 guias restantes**~~ ✅ **feitos em 06/08/2026** — §4.6. Dez de dez.
