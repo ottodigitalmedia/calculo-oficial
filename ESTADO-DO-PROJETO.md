@@ -27,8 +27,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras **no repositório** | **75** de 75 — catálogo completo — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
 | Calculadoras **em produção** | ✅ **74** — implantadas em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. Repositório e produção **em dia** |
-| Guias | **10 de 10** no repositório e **10** em produção |
-| Testes | 1.521 de unidade · 627 ponta a ponta · 3 de vazamento |
+| Guias | **15** — os 10 de `03-functional-spec` §4 mais o bloco de crédito de §11.5. Faltam 23 para a cobertura total |
+| Testes | 1.564 de unidade · 637 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 93 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
 | Orçamento de JavaScript | 135,2 kB de **150** na pior rota — e **19,1 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
@@ -2046,15 +2046,52 @@ saem em uma sessão** com a mesma qualidade. A ordem sugerida é a da tabela: o
 bloco de crédito primeiro, porque é o de maior busca e o de maior dano quando
 mal explicado.
 
-### 11.5 O que decidir
+### 11.5 A decisão, e o primeiro bloco entregue
 
-> **A decisão é do mantenedor, e é sobre a abordagem, não sobre o esforço.**
-> 1:1 entrega 59 páginas e um risco de diluição; o agrupamento entrega cobertura
-> total com 28 páginas que se sustentam sozinhas na busca.
->
-> Enquanto não houver decisão, nenhum guia novo foi escrito — nem um rascunho,
-> para não criar a tentação de publicar em série o que precisa ser publicado com
-> pesquisa.
+O mantenedor mandou começar em 07/08/2026, depois de ler a ressalva de §11.2.
+**Seguido o agrupamento**, e não o 1:1.
+
+**Bloco de crédito — ✅ 5 guias, publicados em 07/08/2026:**
+
+| Guia | Cobre |
+|---|---|
+| Rotativo e cheque especial: o crédito mais caro que existe | `rotativo-do-cartao` · `cheque-especial` · `plano-de-quitacao` |
+| CET: por que a taxa anunciada não é o que você paga | `cet-custo-efetivo-total` · `portabilidade-de-credito` · `amortizacao-sac-price` |
+| SAC ou Price: a diferença aparece na primeira parcela | `amortizacao-sac-price` · os três financiamentos |
+| Consignado: a margem, a base dela e o que ela não cobre | `emprestimo-consignado` |
+| Quitar antes: quanto se economiza de verdade | `quitacao-antecipada` · `amortizacao-extra` |
+
+**Cobertura: 15 guias, e 27 calculadoras ligadas a pelo menos um** — de 10 e 15
+onde o levantamento começou.
+
+Dois deles trazem bloco `valorVigente`: o teto do cheque especial e o do cartão,
+no primeiro, e a margem do consignado, no quarto. Os demais não têm valor legal
+envolvido — CET, SAC e Price e quitação antecipada são método, não tabela.
+
+> **O que a escrita do bloco confirmou sobre §11.2.** O guia de SAC × Price cobre
+> quatro calculadoras sozinho, porque as quatro respondem à mesma pergunta com
+> valores diferentes. Escrever quatro textos para elas produziria quatro versões
+> do mesmo raciocínio — exatamente o conteúdo raso que o agrupamento evita.
+
+### 11.6 O que falta, na ordem sugerida
+
+| Bloco | Guias | Situação |
+|---|---|---|
+| Crédito | 5 | ✅ feito |
+| Imóveis | 5 | a fazer |
+| Investimentos | 4 | a fazer |
+| Autônomo e PJ | 6 | a fazer |
+| Trabalhista restante | 7 | a fazer |
+| Veículos | 2 | a fazer |
+| Casa e consumo | 3 | a fazer |
+| Índices e câmbio | 2 | a fazer |
+| Utilitárias | 2 | a fazer |
+
+**23 guias restantes.** O comando que confere a cobertura contra o registro:
+
+```bash
+grep -A 1 ": Guia = {" src/lib/guias/*.ts | grep "slug:"
+```
 
 ---
 

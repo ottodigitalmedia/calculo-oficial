@@ -6,6 +6,8 @@
  */
 
 import { BRUTO_E_LIQUIDO } from './bruto-e-liquido'
+import { CET_CUSTO_EFETIVO_TOTAL } from './cet-custo-efetivo-total'
+import { CONSIGNADO } from './consignado'
 import { COMO_O_INSS_E_CALCULADO } from './como-o-inss-e-calculado'
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
 import { FERIAS } from './ferias'
@@ -14,7 +16,10 @@ import { HORAS_EXTRAS } from './horas-extras'
 import { IMPOSTO_DE_RENDA_NA_FOLHA } from './imposto-de-renda-na-folha'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { PEDIDO_DE_DEMISSAO } from './pedido-de-demissao'
+import { QUITAR_ANTECIPADO } from './quitar-antecipado'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
+import { ROTATIVO_E_CHEQUE_ESPECIAL } from './rotativo-e-cheque-especial'
+import { SAC_OU_PRICE } from './sac-ou-price'
 import type { Guia } from './tipos'
 
 /**
@@ -36,6 +41,15 @@ export const GUIAS: readonly Guia[] = [
   RESCISAO_SEM_JUSTA_CAUSA,
   PEDIDO_DE_DEMISSAO,
   JUROS_COMPOSTOS,
+
+  // Bloco de crédito — §11.3. Primeiro da cobertura pedida em 07/08/2026,
+  // escolhido para abrir por ser o de maior busca e o de maior dano quando mal
+  // explicado.
+  ROTATIVO_E_CHEQUE_ESPECIAL,
+  CET_CUSTO_EFETIVO_TOTAL,
+  SAC_OU_PRICE,
+  CONSIGNADO,
+  QUITAR_ANTECIPADO,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {
