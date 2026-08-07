@@ -11,13 +11,16 @@ import { CET_CUSTO_EFETIVO_TOTAL } from './cet-custo-efetivo-total'
 import { CONSIGNADO } from './consignado'
 import { COMO_O_INSS_E_CALCULADO } from './como-o-inss-e-calculado'
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
+import { DECLARACAO_ANUAL } from './declaracao-anual'
 import { FERIAS } from './ferias'
 import { FGTS_GUIA } from './fgts'
 import { HORAS_EXTRAS } from './horas-extras'
 import { IMOVEL_PARA_ALUGAR } from './imovel-para-alugar'
+import { INSS_SEM_CARTEIRA } from './inss-sem-carteira'
 import { IMPOSTO_DE_RENDA_NA_FOLHA } from './imposto-de-renda-na-folha'
 import { IR_NA_VENDA_DE_IMOVEL } from './ir-na-venda-de-imovel'
 import { JUROS_COMPOSTOS } from './juros-compostos'
+import { MEI_DAS_E_LIMITE } from './mei-das-e-limite'
 import { PEDIDO_DE_DEMISSAO } from './pedido-de-demissao'
 import { QUANTO_IMOVEL_CABE } from './quanto-imovel-cabe'
 import { QUITAR_ANTECIPADO } from './quitar-antecipado'
@@ -60,6 +63,11 @@ export const GUIAS: readonly Guia[] = [
   ALUGAR_OU_COMPRAR,
   IMOVEL_PARA_ALUGAR,
   IR_NA_VENDA_DE_IMOVEL,
+
+  // Bloco de autônomo e PJ — §11.3.
+  INSS_SEM_CARTEIRA,
+  MEI_DAS_E_LIMITE,
+  DECLARACAO_ANUAL,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {
