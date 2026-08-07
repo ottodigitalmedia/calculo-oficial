@@ -39,7 +39,10 @@ const MARCADORES = {
   outros: '286354',
   capital: '731958',
   aporte: '164729',
-  taxa: '873',
+  // O campo de taxa tem teto de 10.000 — 100% —, então este marcador não pode
+  // ter seis dígitos como os monetários. Quatro é o que cabe, e a nota em
+  // `procurarVazamento` explica por que quatro ainda basta.
+  taxa: '9137',
   meses: '97',
 } as const
 
@@ -135,12 +138,39 @@ function referersComCaminho(saidas: readonly Saida[]): readonly string[] {
   return achados
 }
 
+/**
+ * A URL de um recurso estático versionado NÃO pode carregar dado do formulário.
+ *
+ * Ela é gerada no build, a partir do hash do conteúdo, antes de existir usuário.
+ * Escaneá-la produz falso positivo quando o hash contém, por acaso, a sequência
+ * de um marcador — e foi o que aconteceu em 07/08/2026: o pacote passou a se
+ * chamar `page-1c4c292e36873c43.js`, e o marcador de taxa era `873`.
+ *
+ * **Um teste de vazamento que grita sem motivo é um teste que alguém desliga**,
+ * e este arquivo se declara o mais importante depois dos casos-ouro. Marcador
+ * curto não colide com hash hexadecimal por azar, e sim por probabilidade: três
+ * dígitos decimais têm cerca de uma chance em mil por posição, e cada nome de
+ * arquivo traz dezenas de posições. Passar por dezenas de builds sem falhar era
+ * sorte, não garantia.
+ *
+ * O recorte é só da URL. **Corpo e cabeçalhos continuam escaneados** — se
+ * alguém enviasse o salário no corpo de uma requisição a um recurso estático,
+ * isto pegaria. E o `Referer` de TODA requisição continua verificado à parte,
+ * em `referersComCaminho`, que é onde o vazamento real do T-107 apareceu.
+ */
+function ehRecursoDeBuild(saida: Saida): boolean {
+  return new URL(saida.url).pathname.startsWith('/_next/static/')
+}
+
 function procurarVazamento(saidas: readonly Saida[]): readonly string[] {
   const achados: string[] = []
   for (const saida of saidas) {
     if (ehNavegacaoDePermalink(saida)) continue
 
-    const alvo = `${saida.url}\n${saida.corpo}\n${saida.cabecalhos}`
+    const alvo = ehRecursoDeBuild(saida)
+      ? `${saida.corpo}\n${saida.cabecalhos}`
+      : `${saida.url}\n${saida.corpo}\n${saida.cabecalhos}`
+
     for (const forma of TODAS_AS_FORMAS) {
       if (alvo.includes(forma)) {
         achados.push(`${saida.metodo} ${saida.url} contém "${forma}"`)
@@ -208,6 +238,23 @@ test('TC-040 · nenhum valor digitado sai do navegador', async ({ page, baseURL 
   // Prova de que houve o que capturar: um teste que não viu requisição nenhuma
   // por engano — servidor fora do ar, seletor errado — passaria vazio.
   expect(saidas.length, 'nenhuma requisição capturada; o teste não verificou nada').toBeGreaterThan(3)
+
+  /**
+   * E prova de que o recorte de recurso de build não engoliu a varredura.
+   *
+   * `procurarVazamento` deixa de escanear a URL dos pacotes versionados. Se um
+   * dia esse recorte passasse a casar com tudo — uma mudança de caminho, um
+   * `startsWith` frouxo —, o teste continuaria verde sem olhar URL nenhuma. É a
+   * mesma lição de §7.67: silêncio precisa significar "está certo", e não "não
+   * foi olhado".
+   */
+  const comUrlEscaneada = saidas.filter(
+    (s) => !ehNavegacaoDePermalink(s) && !ehRecursoDeBuild(s),
+  )
+  expect(
+    comUrlEscaneada.length,
+    'nenhuma URL foi escaneada: o recorte de recurso de build está largo demais',
+  ).toBeGreaterThan(0)
 
   const externas = paraTerceiros(saidas, baseURL ?? '')
   expect(
