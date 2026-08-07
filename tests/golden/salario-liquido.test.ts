@@ -10,15 +10,22 @@
 
 import { describe, expect, it } from 'vitest'
 
+import { calcular as calcularNaTela } from '../../src/lib/calculadoras/salario-liquido'
 import { calcularSalarioLiquido } from '../../src/lib/engine/calculadoras/salario-liquido'
 import { centavos } from '../../src/lib/engine/types'
 import { INSS } from '../../src/lib/params/data/inss'
 import { IRRF } from '../../src/lib/params/data/irrf'
+import { VALE_TRANSPORTE } from '../../src/lib/params/data/vale-transporte'
 import { construirRegistro } from '../../src/lib/params/registry'
 
-const registro = construirRegistro(INSS, IRRF)
+const registro = construirRegistro(INSS, IRRF, VALE_TRANSPORTE)
 
-const vazio = { dependentes: 0, pensao: centavos(0), outrosDescontos: centavos(0) }
+const vazio = {
+  dependentes: 0,
+  pensao: centavos(0),
+  outrosDescontos: centavos(0),
+  custoValeTransporte: centavos(0),
+}
 
 function calcular(salario: number, data: string, over: Partial<typeof vazio> = {}) {
   const r = calcularSalarioLiquido(
@@ -114,6 +121,151 @@ describe('C-M1 · o traço encadeia previdência, imposto e líquido', () => {
     const com = calcular(300_000, '2026-06-15', { outrosDescontos: centavos(15_000) })
     expect(sem.traco.etapas.some((e) => e.rotulo === 'Outros descontos')).toBe(false)
     expect(com.traco.etapas.some((e) => e.rotulo === 'Outros descontos')).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// RN-027 · vale-transporte
+// ---------------------------------------------------------------------------
+
+/**
+ * fonte_verificacao: Lei nº 7.418/1985, art. 4º, parágrafo único, e Decreto
+ * nº 10.854/2021, art. 114, I — ambos lidos no texto do Planalto em 07/08/2026.
+ *
+ * **A regra inteira é um mínimo entre dois números**, e é isso que estes casos
+ * fixam. O percentual sobre o salário é uma multiplicação que qualquer um
+ * confere; o que erra na prática é descontar a cota cheia de quem gasta menos
+ * que ela — cobrando por transporte que não houve.
+ *
+ * O líquido é conferido por DIFERENÇA, e não por valor absoluto: as parcelas de
+ * INSS e IRRF já estão fixadas nos casos acima, e repeti-las aqui criaria dois
+ * lugares para o mesmo número — a família de defeito que este projeto persegue.
+ */
+describe('RN-027 · vale-transporte é o menor entre a cota e o custo', () => {
+  const SALARIO = 300_000 // R$ 3.000,00 · cota de 6% = R$ 180,00
+  const COTA = 18_000
+
+  it('custo acima da cota desconta a COTA, e o empregador paga o excedente', () => {
+    const r = calcular(SALARIO, '2026-06-15', { custoValeTransporte: centavos(30_000) })
+    expect(r.valores.valeTransporte).toBe(COTA)
+  })
+
+  it('custo abaixo da cota desconta o CUSTO, e não a cota', () => {
+    const r = calcular(SALARIO, '2026-06-15', { custoValeTransporte: centavos(10_000) })
+    expect(r.valores.valeTransporte).toBe(10_000)
+  })
+
+  /** A fronteira: custo exatamente igual à cota dá o mesmo pelos dois caminhos. */
+  it('custo igual à cota desconta esse valor uma vez só', () => {
+    const r = calcular(SALARIO, '2026-06-15', { custoValeTransporte: centavos(COTA) })
+    expect(r.valores.valeTransporte).toBe(COTA)
+  })
+
+  it('quem não usa o benefício não sofre desconto nem ganha etapa', () => {
+    const r = calcular(SALARIO, '2026-06-15')
+    expect(r.valores.valeTransporte).toBe(0)
+    expect(r.traco.etapas.some((e) => e.rotulo === 'Vale-transporte')).toBe(false)
+  })
+
+  it('o desconto sai do líquido, exatamente uma vez', () => {
+    const sem = calcular(SALARIO, '2026-06-15')
+    const com = calcular(SALARIO, '2026-06-15', { custoValeTransporte: centavos(10_000) })
+    expect(sem.valores.liquido - com.valores.liquido).toBe(10_000)
+    expect(com.valores.totalDescontos - sem.valores.totalDescontos).toBe(10_000)
+  })
+
+  /**
+   * O arredondamento da cota, sobre um salário que não fecha em conta redonda.
+   *
+   * 6% de R$ 1.234,57 são R$ 74,0742 — e a política declarada é meio para cima,
+   * então param em R$ 74,07. Sem um caso aqui, uma troca de política passaria
+   * despercebida por mexer em centavos.
+   */
+  it('a cota arredonda pela política declarada', () => {
+    const r = calcular(123_457, '2026-06-15', { custoValeTransporte: centavos(50_000) })
+    expect(r.valores.valeTransporte).toBe(7_407)
+  })
+
+  /**
+   * A MEMÓRIA PRECISA CITAR A NORMA — é a razão de o produto existir.
+   *
+   * Uma etapa de vale-transporte sem `parametro` mostraria um desconto sem
+   * dizer de onde ele vem, que é exatamente o que este site promete não fazer.
+   */
+  it('a etapa cita o parâmetro, a vigência e a norma', () => {
+    const r = calcular(SALARIO, '2026-06-15', { custoValeTransporte: centavos(30_000) })
+    const etapa = r.traco.etapas.find((e) => e.rotulo === 'Vale-transporte')
+    expect(etapa).toBeDefined()
+    expect(etapa?.parametro?.parametroId).toBe('vale-transporte-cota-do-empregado')
+    expect(etapa?.parametro?.norma).toContain('7.418')
+    expect(etapa?.parametro?.url).toMatch(/^https:\/\/www\.planalto\.gov\.br/)
+    expect(r.traco.vigenciasAplicadas).toContain('vale-transporte-cota-do-empregado-1985')
+  })
+
+  /**
+   * `RN-003` — sem cobertura de vigência, o cálculo BLOQUEIA em vez de supor.
+   *
+   * Aqui o registro é montado sem o conjunto do vale-transporte, que é o que
+   * aconteceria se alguém esquecesse de ligá-lo em `construirRegistro`. Sem
+   * esta asserção, o esquecimento sairia como desconto zero — silencioso.
+   */
+  it('sem o parâmetro no registro, o cálculo recusa em vez de descontar zero', () => {
+    const semVale = construirRegistro(INSS, IRRF)
+    const r = calcularSalarioLiquido(
+      { salarioBruto: centavos(SALARIO), ...vazio, custoValeTransporte: centavos(30_000) },
+      '2026-06-15',
+      semVale,
+    )
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('vigencia_ausente')
+  })
+
+  /** E sem custo informado ele não é exigido — quem não usa não deve bloquear. */
+  it('sem o parâmetro no registro, quem não usa o benefício continua calculando', () => {
+    const semVale = construirRegistro(INSS, IRRF)
+    const r = calcularSalarioLiquido(
+      { salarioBruto: centavos(SALARIO), ...vazio },
+      '2026-06-15',
+      semVale,
+    )
+    expect(r.ok).toBe(true)
+  })
+})
+
+/**
+ * A PORTA DO CAMPO — `optanteVT` decide se `custoVT` conta.
+ *
+ * `custoVT` só aparece na tela quando o usuário marca "Uso" (`visivelSe`), mas
+ * o valor digitado continua na URL (`RF-006`) depois de o campo sumir. Sem o
+ * recorte em `calcular`, desmarcar manteria o desconto — campo invisível
+ * mexendo no resultado, que é a classe de defeito de um filtro que fica ativo
+ * depois de escondido.
+ */
+describe('CALC-001 · o custo do vale só conta quando o usuário declara que usa', () => {
+  const BASE = {
+    salarioBruto: 300_000,
+    dependentes: 0,
+    pensao: 0,
+    outrosDescontos: 0,
+    custoVT: 30_000,
+  }
+
+  function liquidoCom(optanteVT: string) {
+    const r = calcularNaTela({ ...BASE, optanteVT }, '2026-06-15')
+    if (!r.ok) throw new Error(r.detalhe)
+    return r
+  }
+
+  it('marcado "Uso", o desconto entra', () => {
+    const r = liquidoCom('usa')
+    expect(r.valores.detalhamento.some((l) => l.rotulo === 'Vale-transporte')).toBe(true)
+  })
+
+  it('marcado "Não uso", o custo residual na URL é ignorado', () => {
+    const r = liquidoCom('nao')
+    expect(r.valores.detalhamento.some((l) => l.rotulo === 'Vale-transporte')).toBe(false)
+    expect(r.valores.principal).toBe(liquidoCom('nao').valores.principal)
+    expect(r.valores.principal).toBeGreaterThan(liquidoCom('usa').valores.principal)
   })
 })
 

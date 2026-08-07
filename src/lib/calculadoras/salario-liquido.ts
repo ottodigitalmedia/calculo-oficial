@@ -7,10 +7,11 @@
 
 import { calcularSalarioLiquido } from '../engine/calculadoras/salario-liquido'
 import { centavos } from '../engine/types'
-import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
+import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
 import { INSS } from '../params/data/inss'
 import { IRRF } from '../params/data/irrf'
+import { VALE_TRANSPORTE } from '../params/data/vale-transporte'
 import { construirRegistro } from '../params/registry'
 
 /**
@@ -20,7 +21,7 @@ import { construirRegistro } from '../params/registry'
  * cálculo que as usa, e não no pacote estático de toda rota. Ver `tipos.ts`,
  * `FuncaoCalculo`.
  */
-const registro = construirRegistro(INSS, IRRF)
+const registro = construirRegistro(INSS, IRRF, VALE_TRANSPORTE)
 
 /**
  * Exportação de topo, e não método do literal abaixo — de propósito.
@@ -41,6 +42,18 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       dependentes: numero(valores, 'dependentes'),
       pensao: centavos(numero(valores, 'pensao')),
       outrosDescontos: centavos(numero(valores, 'outrosDescontos')),
+      /**
+       * O campo de custo só vale quando o usuário declarou que usa o benefício.
+       *
+       * Sem este recorte, desmarcar "Uso" e deixar o custo digitado manteria o
+       * desconto no resultado — o campo some da tela e o valor continua na URL
+       * (`RF-006`). É a mesma classe de defeito de um filtro que fica ativo
+       * depois de escondido.
+       */
+      custoValeTransporte:
+        texto(valores, 'optanteVT') === 'usa'
+          ? centavos(numero(valores, 'custoVT'))
+          : centavos(0),
     },
     dataReferencia,
     registro,
@@ -63,11 +76,31 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         ...(pensao > 0
           ? ([{ rotulo: 'Pensão alimentícia', valor: pensao, sinal: 'debito' }] as const)
           : []),
+        ...(r.valores.valeTransporte > 0
+          ? ([
+              {
+                rotulo: 'Vale-transporte',
+                valor: r.valores.valeTransporte,
+                sinal: 'debito',
+              },
+            ] as const)
+          : []),
         ...(outros > 0
           ? ([{ rotulo: 'Outros descontos', valor: outros, sinal: 'debito' }] as const)
           : []),
         { rotulo: 'Salário líquido', valor: r.valores.liquido, sinal: 'neutro' },
       ],
+      notas:
+        r.valores.valeTransporte > 0
+          ? [
+              'A cota do vale-transporte incide sobre o salário BÁSICO, sem adicionais nem ' +
+                'vantagens. Esta calculadora usa o salário bruto que você informou — se ele ' +
+                'inclui hora extra, adicional noturno ou periculosidade, a cota real é menor ' +
+                'que a calculada aqui.',
+              'O desconto nunca passa do custo real do seu transporte: quando ele é menor que a ' +
+                'cota, o desconto é o próprio custo, e o empregador não participa.',
+            ]
+          : [],
     },
   }
 }
@@ -107,6 +140,28 @@ export const SALARIO_LIQUIDO: DefinicaoCalculadora = {
       maximo: 100_000_000,
     },
     {
+      id: 'optanteVT',
+      rotulo: 'Vale-transporte',
+      tipo: 'selecao',
+      padrao: 'nao',
+      opcoes: [
+        { valor: 'nao', rotulo: 'Não uso' },
+        { valor: 'usa', rotulo: 'Uso' },
+      ],
+      ajuda:
+        'O desconto é o menor valor entre a cota do empregado sobre o salário e o custo real do seu transporte. O empregador arca com o que exceder.',
+    },
+    {
+      id: 'custoVT',
+      rotulo: 'Custo mensal do vale-transporte',
+      tipo: 'monetario',
+      padrao: 0,
+      minimo: 0,
+      maximo: 100_000_000,
+      // `03-functional-spec` §3.1: só aparece quando o usuário declara que usa.
+      visivelSe: { campo: 'optanteVT', em: ['usa'] },
+    },
+    {
       id: 'outrosDescontos',
       rotulo: 'Outros descontos (plano de saúde, etc.)',
       tipo: 'monetario',
@@ -121,6 +176,7 @@ export const SALARIO_LIQUIDO: DefinicaoCalculadora = {
     'irrf-tabela-progressiva',
     'irrf-deducao-dependente',
     'irrf-desconto-simplificado',
+    'vale-transporte-cota-do-empregado',
   ],
 
   rotuloResultado: 'Salário líquido estimado',
@@ -142,6 +198,16 @@ export const SALARIO_LIQUIDO: DefinicaoCalculadora = {
       pergunta: 'Por que o resultado muda quando eu troco o período?',
       resposta:
         'As tabelas de INSS e de Imposto de Renda mudam por norma, e nem sempre na virada do ano — a tabela do imposto mudou em maio de 2025, por exemplo. Ao escolher outro período, o cálculo usa a tabela que valia na época, e a memória mostra qual foi.',
+    },
+    {
+      pergunta: 'Como o vale-transporte é descontado?',
+      resposta:
+        'O desconto é o menor valor entre dois números: a cota do empregado sobre o salário e o custo real do seu transporte no mês. Se o transporte custa mais que a cota, você paga a cota e o empregador arca com todo o excedente — é ele quem cobre a diferença, não você. Se custa menos, o desconto é o próprio custo, e nesse caso o empregador não participa. A memória de cálculo mostra os dois números e qual deles prevaleceu.',
+    },
+    {
+      pergunta: 'A cota do vale-transporte incide sobre o quê, exatamente?',
+      resposta:
+        'Sobre o salário básico, excluídos quaisquer adicionais ou vantagens — é o que o regulamento determina. Esta calculadora aplica a cota sobre o salário bruto que você informar, porque é o campo que ela tem. Para quem não recebe adicional os dois valores coincidem e o resultado é exato. Para quem recebe hora extra, adicional noturno ou periculosidade, a cota real é um pouco menor que a exibida aqui — e isso só muda o desconto de quem gasta mais em transporte do que a cota.',
     },
     {
       pergunta: 'Este valor é o que vou receber exatamente?',
