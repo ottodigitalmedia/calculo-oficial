@@ -199,3 +199,52 @@ describe('RN-028 · o guia explica, não determina direito', () => {
     })
   }
 })
+
+// ---------------------------------------------------------------------------
+// Cobertura — toda calculadora tem guia
+// ---------------------------------------------------------------------------
+
+/**
+ * A LACUNA QUE ESTE TESTE FECHA JÁ EXISTIA, E FOI REGISTRADA ANTES DE DOER.
+ *
+ * Em 07/08/2026 a cobertura chegou a 75 de 75, e `ESTADO-DO-PROJETO` §11.7
+ * anotou que nada a mantinha: o comando que a mede existia, e ninguém o
+ * executava sozinho. É a mesma estrutura do defeito de §7.67 — a home anunciou
+ * cinco calculadoras publicadas como "Em breve" por semanas porque o
+ * verificador olhava o rodapé, e o silêncio dele não distinguia "está certo" de
+ * "não foi olhado".
+ *
+ * Aqui o silêncio passa a significar cobertura. Calculadora nova sem guia
+ * reprova, e a mensagem diz o que fazer.
+ *
+ * **Por que isto não é excesso de rigor.** O guia é o que traz a busca orgânica
+ * e o que explica a conta a quem não sabe conferir sozinho. Uma calculadora sem
+ * guia é uma página que ninguém encontra e que ninguém entende — e o custo de
+ * lembrar disso na revisão é maior que o de um teste.
+ */
+describe('cobertura · toda calculadora publicada tem pelo menos um guia', () => {
+  const cobertas = new Set(GUIAS.flatMap((g) => g.calculadoras))
+
+  for (const c of CALCULADORAS) {
+    it(`${c.slug} está ligada a algum guia`, () => {
+      expect(
+        cobertas.has(c.slug),
+        `"${c.slug}" (${c.id}) não aparece em nenhum guia. Acrescente o slug ao ` +
+          `campo "calculadoras" de um guia existente que responda à mesma pergunta, ` +
+          `ou escreva um guia novo. Ver ESTADO-DO-PROJETO §11 — agrupar por pergunta ` +
+          `do leitor, não criar um texto por calculadora.`,
+      ).toBe(true)
+    })
+  }
+
+  it('nenhum guia aponta para calculadora que não existe', () => {
+    // Já verificado acima em "integridade referencial"; repetido aqui como
+    // contraparte explícita: a cobertura vale nos dois sentidos.
+    const slugs = new Set(CALCULADORAS.map((c) => c.slug))
+    for (const guia of GUIAS) {
+      for (const slug of guia.calculadoras) {
+        expect(slugs.has(slug), `guia "${guia.slug}" cita "${slug}", que não existe`).toBe(true)
+      }
+    }
+  })
+})

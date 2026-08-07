@@ -132,9 +132,14 @@ Verificado no CI. Sem isso, o commit é rejeitado.
 4. Implementar no motor, retornando traço.
 5. Escrever os casos-ouro **antes** de considerar pronto, conferidos contra fonte oficial.
 6. Construir a página com todos os estados de `03-functional-spec.md` §1.5.
-7. Adicionar FAQ com no mínimo 4 perguntas e ligar ao guia.
+7. Adicionar FAQ com no mínimo 4 perguntas.
 8. Definir as calculadoras relacionadas.
-9. `npm run check`.
+9. **Ligar a calculadora a um guia** — acrescentando o slug ao campo `calculadoras` de um guia existente que responda à mesma pergunta, ou escrevendo um guia novo. `tests/unit/guias.test.ts` reprova se ela ficar sem nenhum.
+10. `npm run check`.
+
+> **Sobre o passo 9.** Guia não é enfeite: é o que traz busca orgânica e o que explica a conta a quem não sabe conferir sozinho. Uma calculadora sem guia é página que ninguém encontra e ninguém entende.
+>
+> **Guia novo só quando a pergunta for nova.** O campo `calculadoras` é de muitos para um justamente para isso — o guia de SAC × Price serve quatro calculadoras, porque as quatro respondem à mesma dúvida com valores diferentes. Criar um texto por calculadora produz variações do mesmo raciocínio, e conteúdo raso derruba o domínio inteiro na busca em vez de trazer tráfego. O critério e o histórico estão em `ESTADO-DO-PROJETO.md` §11.
 
 ## Ao atualizar um parâmetro legal
 
