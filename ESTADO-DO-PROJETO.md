@@ -2094,13 +2094,24 @@ que puxaria o domínio para baixo em vez de trazer tráfego.
 
 ### 11.7 O que fica para depois
 
-- **Nenhuma calculadora sem guia.** A cobertura só volta a abrir quando uma
-  calculadora nova for publicada — e o roteiro de "Ao adicionar uma calculadora"
-  não cobra guia. Vale decidir se passa a cobrar.
-- **Os guias não têm teste de cobertura.** `guias.test.ts` verifica G-1, G-2,
-  âncoras e integridade referencial, mas nada reprova se uma calculadora nova
-  ficar sem guia nenhum. É o mesmo tipo de lacuna de §7.67 — o comando que mede
-  está em §11.6, e ninguém o executa automaticamente.
+~~**Nenhuma calculadora sem guia**, e **os guias não têm teste de cobertura**~~
+✅ **fechado em 07/08/2026**, e as duas lacunas eram a mesma.
+
+`guias.test.ts` ganhou um bloco de cobertura que percorre `CALCULADORAS` e
+reprova a que não aparecer no campo `calculadoras` de guia nenhum. A mensagem
+diz o que fazer e aponta §11.2 — agrupar por pergunta do leitor, não escrever um
+texto por calculadora. **Conferido reprovando de propósito:** removendo
+`porcentagem` do guia de matemática, a suíte acusou `CALC-070` sem guia.
+
+`CLAUDE.md` ganhou o passo 9 no roteiro de "Ao adicionar uma calculadora", com o
+motivo escrito: guia é o que traz busca orgânica e o que explica a conta a quem
+não sabe conferir sozinho.
+
+> **Por que isto não é excesso de rigor.** O comando que media a cobertura já
+> existia em §11.6, e ninguém o executava sozinho — o mesmo formato de §7.67, em
+> que a home anunciou cinco calculadoras publicadas como "Em breve" por semanas
+> porque o verificador olhava só o rodapé. Verificação que depende de alguém
+> lembrar não é verificação; é uma intenção.
 
 ---
 
@@ -2709,6 +2720,74 @@ ano-calendário seguinte, e não a que se declara hoje.
 
 ---
 
+### 7.69 "Em breve" durou meses porque a justificativa nunca foi medida
+
+**07/08/2026.** A correção por índice oferecia Selic e TR desabilitadas, com a
+mesma explicação escrita no docblock: *são séries diárias na origem, e virar
+fator mensal exige uma convenção que ainda não foi decidida*. A frase estava em
+três lugares, soava técnica, e ninguém nunca a tinha conferido.
+
+Uma requisição à série 4390 do Banco Central bastou:
+
+```
+[{"data":"01/08/2026","valor":"0.21"},{"data":"01/07/2026","valor":"1.22"}, ...]
+```
+
+Uma observação por mês, na mesma forma do IPCA. **Não havia convenção a decidir
+— havia uma série não consultada.** É exatamente a lição que §8 já registrava a
+partir de CALC-041, *"antes de cadastrar parâmetro, verifique se a série não
+entrega o número pronto"*, e ela não pegou porque estava escrita como conselho
+sobre parâmetro legal, não sobre a justificativa de um "Em breve".
+
+A TR sobreviveu à mesma medição, e essa é a parte que dá valor ao achado: a
+série 226 devolve uma observação por **dia**, cada uma com `data` e `dataFim`
+separadas por um mês — a TR do período mensal que *começa* naquele dia. Escolher
+qual dia vale é cláusula de contrato. Metade da frase era verdade, e foi a
+metade verdadeira que manteve a outra de pé.
+
+> **Justificativa de pendência tem prazo de validade, e a deste projeto não
+> tinha data.** Uma explicação plausível o bastante para ninguém questionar é a
+> que fica mais tempo sem ser medida. Ao herdar um "Em breve", a primeira
+> pergunta não é *como faço isto*, é **isto ainda é verdade?** — e a resposta
+> custou uma requisição.
+
+**Três defeitos apareceram no caminho, e nenhum deles era o item.**
+
+**1 · A série publica o mês em curso, e um índice de preço não faz isso.** Na
+coleta, agosto valia 0,21% contra 1,07% a 1,22% em todo mês fechado do semestre:
+quatro dias úteis decorridos, não um mês. IPCA, INPC e IGP-M só aparecem depois
+de apurados, e por isso o coletor nunca precisou de guarda contra isso. Sem ela,
+qualquer correção terminando no mês corrente sairia **para menos** — plausível,
+sem erro, sem aviso, que é a forma cara de errar de `CLAUDE.md`. O ponto passa a
+ser descartado antes de gravar o cache, por um campo declarado
+(`descartarMesCorrente`) e não por um `if` escondido no script.
+
+**2 · O defeito não estava na lista; estava em quem a consumia.** As opções eram
+compartilhadas por cinco calculadoras, e **quatro delas perguntam sobre
+inflação** — poder de compra, reajuste de aluguel, reajuste salarial e projeção.
+"Em breve" ali prometia que um dia a Selic responderia *quanto meu dinheiro
+perdeu de poder de compra*, que é pergunta que ela não responde nunca. Uma opção
+desabilitada é uma promessa, e promessa de algo que não deve chegar é pior que
+ausência. Olhar a lista não mostrava isso; só olhar **quem importa dela**.
+
+A separação virou teste porque comentário não reprova ninguém: cada índice
+declara agora se mede `inflacao` ou `juro`, e devolver a Selic à lista
+compartilhada quebra a suíte na hora — conferido de propósito.
+
+**3 · Havia uma terceira lista escrita à mão do mesmo conjunto.**
+`IDS_CONHECIDOS`, em `series/sugestao.ts`, repetia os identificadores do
+catálogo sem nada a sincronizar. Família §7.41, e com o agravante de falhar
+calada: a função devolve o formulário inalterado quando não encontra o
+identificador, então uma série nova entraria no catálogo e a sugestão de taxa
+sumiria da tela sem erro. Passa a derivar de `SERIES`.
+
+> **O item rendeu três defeitos que não eram o item, e isso é o padrão.** Os
+> três só apareceram porque o trabalho foi *medir* em vez de *implementar a
+> partir do que estava escrito*. Nenhum deles estava em lista de pendência
+> nenhuma.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -2746,10 +2825,12 @@ O que sobrou, em ordem:
    > calculadora de investimento, verifique se a série não entrega o número
    > pronto.
 
-   **Selic e TR na correção por índice continuam pendentes** de uma decisão: as
-   duas são séries diárias na
-   origem, e virar fator mensal é convenção a definir — estão declaradas como
-   "Em breve" no campo, e não escondidas.
+   ~~**Selic e TR na correção por índice continuam pendentes** de uma decisão~~
+   ✅ **resolvido em 07/08/2026, e a premissa estava metade errada** — §7.69.
+   A Selic está no ar em CALC-060: a série 4390 publica o acumulado mensal
+   pronto, e não havia convenção a definir. **A TR continua declarada como "Em
+   breve"**, agora por motivo medido — a série 226 devolve uma observação por
+   dia, cada uma valendo o mês que começa naquele dia.
 2. ~~**Fechar a fonte da tabela do seguro-desemprego**~~ ✅ **feito em
    06/08/2026, e o resultado foi que não havia portaria a achar** — §5.5. A
    Resolução CODEFAT nº 957/2022 manda reajustar e atribui a *divulgação* à
