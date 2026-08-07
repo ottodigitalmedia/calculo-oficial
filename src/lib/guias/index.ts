@@ -6,12 +6,16 @@
  */
 
 import { ALUGAR_OU_COMPRAR } from './alugar-ou-comprar'
+import { AVISO_PREVIO } from './aviso-previo'
 import { BRUTO_E_LIQUIDO } from './bruto-e-liquido'
 import { CET_CUSTO_EFETIVO_TOTAL } from './cet-custo-efetivo-total'
 import { CONSIGNADO } from './consignado'
 import { COMO_O_INSS_E_CALCULADO } from './como-o-inss-e-calculado'
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
+import { CONTRATO_INTERMITENTE } from './contrato-intermitente'
+import { CUSTO_DO_FUNCIONARIO } from './custo-do-funcionario'
 import { DECLARACAO_ANUAL } from './declaracao-anual'
+import { EMPREGADO_DOMESTICO } from './empregado-domestico'
 import { FERIAS } from './ferias'
 import { FGTS_GUIA } from './fgts'
 import { HORAS_EXTRAS } from './horas-extras'
@@ -68,6 +72,12 @@ export const GUIAS: readonly Guia[] = [
   INSS_SEM_CARTEIRA,
   MEI_DAS_E_LIMITE,
   DECLARACAO_ANUAL,
+
+  // Bloco trabalhista restante — §11.3.
+  AVISO_PREVIO,
+  EMPREGADO_DOMESTICO,
+  CONTRATO_INTERMITENTE,
+  CUSTO_DO_FUNCIONARIO,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {
