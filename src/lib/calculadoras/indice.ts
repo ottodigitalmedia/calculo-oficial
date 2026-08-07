@@ -52,6 +52,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto se recebe na extinção por acordo — e o que se abre mão para ter esse valor.',
   },
   {
+    slug: 'acordo-ou-dispensa',
+    nome: 'Acordo mútuo ou dispensa',
+    linhaDeContexto:
+      'Quanto entra em cada caminho — com o seguro-desemprego, que é onde mora a maior diferença.',
+  },
+  {
     slug: 'rescisao-domestico',
     nome: 'Rescisão — empregado doméstico',
     linhaDeContexto:

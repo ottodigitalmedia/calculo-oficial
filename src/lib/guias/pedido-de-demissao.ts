@@ -20,7 +20,14 @@ export const PEDIDO_DE_DEMISSAO: Guia = {
   descricaoSeo:
     'O que continua sendo pago quando o pedido de saída parte do trabalhador, o que deixa de ser, e por que o aviso prévio pode aparecer como desconto no termo de rescisão.',
   atualizadoEm: '2026-08-06',
-  calculadoras: ['rescisao-pedido-demissao', 'rescisao-sem-justa-causa', 'rescisao-acordo-mutuo'],
+  calculadoras: [
+    'rescisao-pedido-demissao',
+    'rescisao-sem-justa-causa',
+    'rescisao-acordo-mutuo',
+    // CALC-076 responde à mesma pergunta do leitor — "qual saída me deixa com
+    // quanto" —, e por isso entra aqui em vez de ganhar guia próprio (§11.2).
+    'acordo-ou-dispensa',
+  ],
 
   secoes: [
     {

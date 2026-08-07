@@ -31,6 +31,44 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 07/08/2026
 
+### Adicionado · CALC-076 · comparador acordo mútuo × dispensa sem justa causa
+
+A primeira calculadora que nasceu fora do desenho original do catálogo, por
+decisão do mantenedor. Ela não colide com a exclusão jurídico-documental de
+`§14`: o que ali está fora é **gerar** documentos, e não calcular o valor de uma
+rescisão por acordo — que já está no ar desde CALC-008.
+
+**A diferença que decide não está nas verbas.** O art. 484-A, § 2º da CLT veda o
+seguro-desemprego, e isso não aparece em nenhuma linha da rescisão. Um comparador
+que somasse só as verbas mostraria o acordo perdendo pouco, e erraria pela
+omissão mais cara possível.
+
+Não há aritmética nova: o comparador chama `calcularRescisao` duas vezes e
+`calcularSeguroDesemprego` uma. Os casos-ouro cobram que cada lado bata ao
+centavo com a calculadora publicada correspondente, em vez de refixar valores.
+
+**Uma generalização foi medida e desmentida antes de publicar.** A nota do
+resultado afirmava que o seguro-desemprego era sempre a maior parte da diferença.
+Ele tem teto, e as reduções do FGTS crescem com o salário: no salário mínimo o
+benefício vale R$ 8.105,00 contra R$ 4.587,43 de reduções, e em R$ 8.000,00 ele
+vale R$ 12.593,25 contra R$ 22.640,00. A nota passou a ser calculada, e dois
+casos-ouro fixam a inversão.
+
+Vínculo abaixo do mínimo legal para o seguro-desemprego **não bloqueia a tela** —
+vira resultado, porque quem não tem direito ao benefício não o perde ao aceitar
+o acordo.
+
+### Corrigido · o teste de vazamento acusava falso positivo
+
+O marcador de taxa tinha três dígitos, `873`, e o pacote da rota passou a se
+chamar `page-1c4c292e36873c43.js`. A URL de um recurso estático é gerada no
+build, antes de existir usuário, e não pode carregar dado de formulário — ela
+saiu da varredura de URL. Corpo, cabeçalhos e a verificação de `Referer`
+continuam intactos, e uma guarda nova reprova se o recorte um dia passar a
+engolir a varredura inteira.
+
+Um teste de vazamento que grita sem motivo é um teste que alguém desliga.
+
 ### Parâmetro · vale-transporte — `RN-027` saiu da lista de pendências
 
 `vale-transporte-cota-do-empregado`, vigência aberta desde 16/12/1985.

@@ -62,7 +62,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| | **Total** | | **75** |
+| | **Total** | | **76** |
 
 ---
 
@@ -83,6 +83,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-007 | FGTS — saldo acumulado e multa rescisória | 🔥 | M | P | Baixa | **v1** |
 | CALC-008 | Rescisão — acordo mútuo (art. 484-A da CLT) | 🔸 | M | P | Alta | v2 |
 | CALC-009 | Seguro-desemprego — parcelas e valor | 🔥 | M | P | Alta | v2 |
+| CALC-076 | Acordo mútuo ou dispensa — comparador | 🔸 | A | P | Alta | v3 |
 | CALC-010 | Aviso prévio proporcional (Lei 12.506/2011) | 🔸 | M | P | Baixa | v2 |
 | CALC-011 | Custo real do funcionário (encargos + provisões) | 🔸 | M | P | Alta | v3 |
 | CALC-012 | Rescisão — empregado doméstico (LC 150/2015) | ▫️ | M | P | Alta | v3 |
@@ -90,6 +91,18 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-014 | Rescisão — contrato intermitente (art. 452-A) | ▫️ | M | P | Alta | v4 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
+
+> **CALC-076 entrou em 07/08/2026, por decisão do mantenedor**, e é a única do
+> catálogo que nasceu fora do desenho original. Ela não colide com a exclusão
+> jurídico-documental de `§14`: o que ali está fora é **gerar** documentos —
+> contratos, distratos, acordos —, e não calcular o valor de uma rescisão por
+> acordo, que já está no ar desde CALC-008. Comparar dois cálculos publicados é a
+> mesma classe, e não a excluída.
+>
+> O valor dela é alto porque a diferença que decide **não está nas verbas**: o
+> art. 484-A, § 2º veda o seguro-desemprego, e isso não aparece em linha nenhuma
+> da rescisão. A última nota do resultado de CALC-008 já mandava o usuário fazer
+> essa comparação à mão, em duas abas.
 
 ---
 

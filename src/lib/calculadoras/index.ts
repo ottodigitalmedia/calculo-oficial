@@ -76,6 +76,7 @@ import { VIAGEM } from './viagem'
 import { QUITACAO_ANTECIPADA } from './quitacao-antecipada'
 import { ROTATIVO_CARTAO } from './rotativo-cartao'
 import { RESCISAO_ACORDO_MUTUO } from './rescisao-acordo-mutuo'
+import { ACORDO_OU_DISPENSA } from './acordo-ou-dispensa'
 import { RESCISAO_DOMESTICO } from './rescisao-domestico'
 import { RESCISAO_PEDIDO_DEMISSAO } from './rescisao-pedido-demissao'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
@@ -88,6 +89,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RESCISAO_SEM_JUSTA_CAUSA,
   RESCISAO_PEDIDO_DEMISSAO,
   RESCISAO_ACORDO_MUTUO,
+  ACORDO_OU_DISPENSA,
   RESCISAO_DOMESTICO,
   AVISO_PREVIO,
   SEGURO_DESEMPREGO,
