@@ -264,7 +264,7 @@ esta lista é só o resumo.
 | **Incidência de INSS e IRRF sobre verbas rescisórias** | Pré-requisito de CALC-002 a CALC-005. Ver §6.2 |
 | **`RN-006`** — arredondamento da faixa intermediária do redutor | Indeterminado. Só afeta rendimentos entre R$ 5.000,01 e R$ 7.350,00 |
 | ~~**A portaria da tabela do seguro-desemprego de 2026**~~ | ✅ **Resolvida em 06/08/2026 — e a pergunta é que estava errada.** Ver §5.5 |
-| **A vigência de 2025 do seguro-desemprego** | O que sobrou daquela pendência, e é bem menor. Os valores estão num anexo assinado; falta o **dia** em que passaram a valer, e ele não foi inferido por analogia. Ver §5.5 |
+| ~~**A vigência de 2025 do seguro-desemprego**~~ | ✅ **Cadastrada em 07/08/2026.** O dia veio da publicação do próprio MTE, que era pública em janeiro de 2025 e hoje pede autenticação — capturada em 11/01/2025, um dia após a publicação. Os valores continuam vindo do anexo assinado, em endereço gov.br. Ver §7.73 |
 
 ### 5.2 Citação de fonte — ✅ resolvido em 31/07/2026
 
@@ -2939,6 +2939,65 @@ usuário), corpo e cabeçalhos continuam escaneados, e entrou uma guarda que
 reprova se o recorte um dia passar a engolir a varredura inteira — porque um
 teste de vazamento que grita sem motivo é um teste que alguém desliga, e este se
 declara o mais importante depois dos casos-ouro.
+
+---
+
+### 7.73 A fonte não tinha sumido — tinha fechado a porta depois de publicar
+
+**07/08/2026.** A vigência de 2025 do seguro-desemprego estava pendente desde
+31/07. Nesta mesma sessão, duas vezes, o documento registrou a busca como
+esgotada, e as duas listas eram verdadeiras:
+
+- gov.br autenticado · portalfat sem espelho de 2025 · busca do portal vazia
+- Relatório de Gestão do FAT sem a tabela · art. 19 da Resolução CODEFAT sem
+  fixar dia — este lido na íntegra e fechado **em definitivo**
+
+Todas corretas. E todas sobre o **presente** da página.
+
+**A página do MTE foi pública quando saiu.** O Internet Archive a capturou em
+11/01/2025 às 15h34, um dia depois do carimbo dela — *"Publicado em 10/01/2025
+16h56"* —, e o texto do ministério diz em letra: *"com vigência a partir de 11 de
+janeiro de 2025"*.
+
+> **"Não está acessível" e "não existe" são coisas diferentes, e a busca tratou
+> as duas como uma.** Cinco avenidas foram fechadas perguntando *onde está o
+> documento hoje*. Nenhuma perguntou *onde ele esteve*. Um documento oficial que
+> hoje pede autenticação pode ter sido público na semana em que importava — e
+> quase sempre foi, porque publicar é o ato.
+
+**O verificador recusou o atalho, e a recusa estava certa.** Cadastrei o endereço
+do arquivo como fonte, e BV-07 reprovou: não é domínio oficial. A tentação era
+abrir exceção para `web.archive.org`. Seria errado — a regra existe para impedir
+que valor legal entre por site que recopia a fonte, e uma exceção por domínio
+abriria para qualquer página arquivada, inclusive de blog.
+
+A composição que passou separa as duas coisas que o cadastro precisa:
+
+| O quê | De onde | Onde fica |
+|---|---|---|
+| **Os valores** | anexo assinado `SEI nº 4274391`, PDF em gov.br | campo `url` da fonte — o que o usuário clica |
+| **A data** | publicação do MTE, capturada em 11/01/2025 | observação de cada vigência, com o endereço |
+
+O que se clica na memória de cálculo continua sendo fonte oficial acessível.
+
+**Três conferências independentes fecham**, e a terceira é a que decide: os
+quatro valores de 2025, reajustados pelo INPC de 3,90%, reproduzem **os quatro de
+2026 ao centavo**. Um erro de transcrição teria de ser um erro que a fórmula do
+art. 19 reproduz. Some-se a isso que a tabela é **contínua nas duas fronteiras**
+— no limite da 1ª faixa a conta devolve a própria parcela a somar, e no limite da
+2ª devolve exatamente o teto —, o que dois casos-ouro agora fixam.
+
+**Um caso-ouro antigo reprovou, e ele é que estava errado.** Havia um caso
+afirmando que *"antes de 11/01/2026 não há tabela de valor"*. Não era regra: era
+o retrato de uma lacuna do cadastro escrito como se fosse propriedade do mundo. O
+limite verdadeiro é 11/01/2025, e o caso foi reescrito dizendo por quê.
+
+> **Lacuna de cadastro escrita como asserção vira falsidade quando a lacuna
+> fecha.** O teste teria passado para sempre se ninguém achasse a fonte, e por
+> isso ele parecia correto: um caso que só é verdadeiro enquanto o trabalho não
+> foi feito.
+
+**CALC-009 e CALC-076 passaram a oferecer o exercício de 2025.**
 
 ---
 
