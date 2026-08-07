@@ -39,6 +39,7 @@ import { RENDA_FIXA } from './renda-fixa'
 import { SEGURO_DESEMPREGO } from './seguro-desemprego'
 import { SIMPLES_NACIONAL } from './simples-nacional'
 import { TRABALHISTA } from './trabalhista'
+import { VALE_TRANSPORTE } from './vale-transporte'
 import type { ConjuntoDeParametros } from '../tipos'
 
 export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
@@ -51,6 +52,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   TRABALHISTA,
   CREDITO,
   CONSIGNADO,
+  VALE_TRANSPORTE,
   SEGURO_DESEMPREGO,
   SIMPLES_NACIONAL,
   EMPREGADOR,

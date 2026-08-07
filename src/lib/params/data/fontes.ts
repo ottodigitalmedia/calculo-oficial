@@ -642,6 +642,48 @@ export const LEI_10820_ART_2: Fonte = {
 }
 
 /**
+ * Vale-transporte — `RN-027`, em CALC-001.
+ *
+ * **A regra estava a uma leitura de distância, e o documento a listou como
+ * "não localizada" desde 31/07/2026.** O percentual é o mesmo desde a lei
+ * original de 1985, e nunca dependeu de portaria anual — que é o formato de
+ * pendência que a lista de §5.1 sugeria.
+ *
+ * As duas fontes dizem a mesma coisa, e a segunda é a que **define a base**:
+ *
+ *   Lei nº 7.418/1985, art. 4º, parágrafo único — *"O empregador participará
+ *   dos gastos de deslocamento do trabalhador com a ajuda de custo equivalente
+ *   à parcela que exceder a 6% (seis por cento) de seu salário básico."*
+ *
+ *   Decreto nº 10.854/2021, art. 114, I — *"pelo beneficiário, na parcela
+ *   equivalente a seis por cento de seu salário básico ou vencimento,
+ *   **excluídos quaisquer adicionais ou vantagens**"*.
+ *
+ * A lei dá o número; o regulamento diz sobre o quê. Sem o inciso I, a base
+ * plausível seria o salário bruto, e sobre quem recebe adicional isso
+ * **superestima** a cota do trabalhador — o mesmo erro de base que
+ * `consignado.ts` documenta para a margem consignável.
+ *
+ * O art. 4º não traz marca de revogação no texto compilado do Planalto; o que
+ * aparece revogado ali é o art. 3º, o incentivo fiscal, pela Lei nº 9.532/1997.
+ */
+export const LEI_7418_ART_4: Fonte = {
+  id: 'lei-7418-1985-art-4',
+  norma: 'Lei nº 7.418, de 16 de dezembro de 1985 (artigo renumerado pela Lei nº 7.619, de 1987)',
+  dispositivo: 'Art. 4º, parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l7418.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const DEC_10854_ART_114: Fonte = {
+  id: 'decreto-10854-2021-art-114',
+  norma: 'Decreto nº 10.854, de 10 de novembro de 2021',
+  dispositivo: 'Art. 114, I e II',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/decreto/D10854.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
  * Ganho de capital na venda de imóvel — CALC-020.
  *
  * **A armadilha de leitura aqui é a pior do projeto até agora.** O art. 21 da
@@ -1396,6 +1438,8 @@ export const FONTES: readonly Fonte[] = [
   RES_CODEFAT_957,
   MTE_TABELA_SEGURO_DESEMPREGO,
   MTE_ANEXO_SEGURO_DESEMPREGO_2025,
+  LEI_7418_ART_4,
+  DEC_10854_ART_114,
   RES_CMN_4765,
   LEI_8212_ART_22,
   STF_TEMA_985,

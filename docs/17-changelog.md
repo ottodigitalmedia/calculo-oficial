@@ -29,6 +29,62 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 07/08/2026
+
+### Parâmetro · vale-transporte — `RN-027` saiu da lista de pendências
+
+`vale-transporte-cota-do-empregado`, vigência aberta desde 16/12/1985.
+
+**Fonte:** Lei nº 7.418/1985, art. 4º, parágrafo único (o percentual) e Decreto
+nº 10.854/2021, art. 114, I (a base). **Verificado contra:** texto compilado do
+Planalto, lido em 07/08/2026.
+
+O percentual constava como *"não localizado em fonte oficial"* desde 31/07/2026.
+Estava na lei que criou o benefício, aberta e sem autenticação. **Enquanto durou
+a pendência, o campo não existiu na calculadora e nada foi estimado** — o custo
+foi funcionalidade ausente, nunca número errado.
+
+A base valeu mais que o percentual: o regulamento manda calcular sobre o salário
+básico *"excluídos quaisquer adicionais ou vantagens"*. Como o campo da tela é o
+salário bruto, a ressalva ficou declarada em nota e em pergunta do FAQ.
+
+### Adicionado · CALC-001 · desconto de vale-transporte
+
+O desconto é o menor valor entre a cota do empregado e o custo informado. Dois
+campos novos, com os textos de `03-functional-spec` §3.1, e o de custo só aparece
+para quem declara que usa. Nove casos-ouro, entre eles a fronteira em que custo e
+cota coincidem e o caso em que o parâmetro não está ligado ao registro — que deve
+**bloquear**, e não descontar zero em silêncio.
+
+### Corrigido · 57 de 75 calculadoras abriam cobrando campo de quem não digitou
+
+O estado inicial era decidido comparando cada valor com zero ou string vazia, e
+por isso qualquer campo com padrão diferente de zero derrubava o estado vazio de
+`03-functional-spec` §1.5. A página abria dizendo *"Falta preencher: ..."* antes
+de o visitante tocar em nada.
+
+Atingia a maioria do site desde o começo do ano. Nenhum número saiu errado —
+apenas a moldura —, e por isso nenhuma das defesas construídas para valores o
+alcançava. Ficou uma varredura derivada do registro que cobra o estado inicial de
+toda calculadora publicada.
+
+### Adicionado · CALC-060 · correção pela Selic acumulada no mês
+
+A opção existia desabilitada sob a justificativa de que faltava uma convenção de
+fator diário para mensal. A medição desmentiu: o Banco Central publica o
+acumulado mensal pronto. **A TR continua desabilitada**, agora por motivo medido.
+
+A Selic entra **só** em CALC-060, e não nas quatro telas que perguntam sobre
+inflação — ela é taxa de juro, não medida de preço.
+
+### Corrigido · a série da Selic publica o mês em curso
+
+A série 4390 divulga o mês corrente enquanto ele corre. Sem guarda, toda correção
+terminando no mês corrente sairia para menos, plausível e sem aviso. O ponto do
+mês da coleta passa a ser descartado antes de gravar o cache.
+
+---
+
 ## Ciclo de 06/08/2026
 
 ### Adicionado · CALC-048 · CLT, PJ ou MEI — e o catálogo fechou em 75 de 75
