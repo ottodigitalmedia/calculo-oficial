@@ -25,12 +25,12 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras **no repositório** | **74** de 75 — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
+| Calculadoras **no repositório** | **75** de 75 — catálogo completo — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
 | Calculadoras **em produção** | ✅ **74** — implantadas em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. Repositório e produção **em dia** |
 | Guias | **10 de 10** no repositório e **10** em produção |
-| Testes | 1.487 de unidade · 619 ponta a ponta · 3 de vazamento |
+| Testes | 1.521 de unidade · 627 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 93 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
-| Orçamento de JavaScript | 134,9 kB de **150** na pior rota — e **18,9 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
+| Orçamento de JavaScript | 135,2 kB de **150** na pior rota — e **19,1 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -43,6 +43,7 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 - **Autônomo:** precificação de hora · INSS do autônomo e do facultativo · DAS-MEI · limite do MEI · carnê-leão · pró-labore
 - **Ajuste anual do IRPF:** restituição estimada · simplificado ou completo
 - **Criptoativos:** imposto sobre venda de criptoativos
+- **Regime de contratação:** CLT, PJ ou MEI
 - **Energia:** retorno de energia solar
 - **Câmbio:** conversor de moeda com IOF
 - **Índices:** correção por índice · poder de compra · reajuste de salário · reajuste de aluguel · valor futuro
@@ -150,7 +151,7 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 
 ---
 
-## 4. Calculadoras pendentes — 1 de 75
+## 4. Calculadoras — ✅ 75 de 75, em 07/08/2026
 
 **Setenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -185,7 +186,7 @@ Restou uma só, em §4.3, e o comando que a confere contra as definições está
 O v2 e o v3 continuam sendo o corte de prioridade do catálogo; o que deixou de
 existir é a contagem paralela.
 
-### 4.3 A que falta, e o que trava
+### 4.3 Nenhuma falta — o catálogo fechou
 
 **Esta seção substitui as tabelas por versão que existiam aqui.** Elas listavam
 como pendentes calculadoras já publicadas — CALC-011, CALC-012 e CALC-013 entre
@@ -205,10 +206,10 @@ grep -rh "^  id: 'CALC-" src/lib/calculadoras/*.ts | grep -o "CALC-[0-9]*" | sor
 | ~~CALC-017~~ | ~~Restituição estimada do IRPF anual~~ | ✅ **publicada em 06/08/2026** — a tabela estava na página da Receita do ano-calendário, §6.6.2 |
 | ~~CALC-019~~ | ~~Comparador simplificado vs. completo~~ | ✅ **publicada junto** — mesma conta, outro recorte |
 | ~~CALC-021~~ | ~~IR sobre criptoativos~~ | ✅ **publicada em 06/08/2026** — a regra não mudou: a MP nº 1.303/2025 caducou, §7.66 |
-| CALC-048 | Comparador CLT vs. PJ vs. MEI | Quatro regimes que interagem, três estreando em 2026. A pesquisa avançou e está em **§10**, com o que falta nomeado |
+| ~~CALC-048~~ | ~~Comparador CLT vs. PJ vs. MEI~~ | ✅ **publicada em 07/08/2026** — o que a destravou foi uma data, não uma tabela: §10.6 |
 | ~~CALC-066~~ | ~~Retorno de energia solar~~ | ✅ **publicada em 06/08/2026** — o Fio B do art. 27 virou parâmetro, e o art. 26 virou campo |
 
-**Ela não dispensa pesquisa em norma.** O trecho do catálogo que dizia
+**Nenhuma restou.** O trecho do catálogo que dizia
 haver 33 calculadoras sem dependência valia quando foi escrito; elas foram
 construídas, e CALC-038 — a última delas — saiu em 06/08/2026. O que restou é
 tributário, previdenciário ou preso a um calendário, e **o próximo passo do
@@ -2057,15 +2058,12 @@ mal explicado.
 
 ---
 
-## 10. CALC-048 — a pesquisa, e por que ela ainda não virou código
+## 10. CALC-048 — a pesquisa, e a data que a destravou
 
-**Esta seção existe para a próxima sessão começar construindo, não pesquisando**
-— mesmo papel de §9 para CALC-020. A diferença é que aqui a pesquisa **não
-terminou**, e o que segue separa com clareza o que foi lido no texto do que
-ainda falta ler.
-
-Ela foi retomada em 06/08/2026, depois de CALC-021 e CALC-066. O que a parou não
-foi falta de tempo: foi o tamanho que ela revelou ter.
+**✅ Construída em 07/08/2026**, e esta seção virou o registro de como. Ela
+nasceu como pesquisa inacabada em 06/08 — mesmo papel de §9 para CALC-020 —, e o
+caminho de §10.4 foi seguido na ordem em que estava escrito. **Foi a ordem que
+salvou o trabalho**, pela razão em §10.5.
 
 ### 10.1 O que está confirmado, lido no texto
 
@@ -2100,7 +2098,7 @@ pela receita bruta de 12 meses decide entre o Anexo III e o Anexo V.
 **Anexo V, primeiras faixas** — 15,50% até R$ 180.000,00; 18,00% de
 R$ 180.000,01 a R$ 360.000,00.
 
-### 10.2 O que falta, e por que cada um importa
+### 10.2 O que faltava, e por que cada um importava
 
 | O que falta | Por que trava |
 |---|---|
@@ -2109,7 +2107,7 @@ R$ 180.000,01 a R$ 360.000,00.
 | **Anexos III e V completos** | Seis faixas cada, com alíquota nominal e parcela a deduzir, e **redações empilhadas** — o § 24 aparece em duas versões no texto consolidado, uma citando "Anexos V e VI" e outra só o V |
 | **O dispositivo dos 28%** | O limiar do fator R está no art. 18, e a extração automática do HTML do Planalto o devolve fragmentado. Precisa ser lido na página, não no `sed` |
 
-### 10.3 Por que não foi construída assim mesmo
+### 10.3 Por que ela não foi construída em 06/08
 
 Porque o que sobrou não é "mais uma tabela": são **quatro regimes que
 interagem**, três deles estreando em 2026 — Simples com fator R, retenção de
@@ -2127,7 +2125,7 @@ dividendos do art. 6º-A, tributação mínima do art. 16-A e o redutor do art. 
 Trocar "premissa antiga" por "quatro regimes lidos pela metade" não melhora a
 frase.
 
-### 10.4 O caminho, quando ela for retomada
+### 10.4 O caminho, e ele foi seguido nesta ordem
 
 1. Ler a LC nº 214/2025 na parte que toca os Anexos III e V. **Antes de tudo** —
    ela pode invalidar a transcrição inteira.
@@ -2137,11 +2135,47 @@ frase.
    entre III e V — a virada do fator R é o ponto que mais muda o resultado.
 4. Só então o comparador, que é a parte fácil: os três lados já têm motor.
 
-> **Uma alternativa que vale considerar antes de construir o comparador
-> completo.** Uma calculadora só do **fator R** — "meu pró-labore me leva ao
-> Anexo III?" — cabe em duas tabelas e uma divisão, responde a uma pergunta que
-> o público faz sozinha, e não depende de nenhum dos regimes de 2026. Ela não
-> está no catálogo com ID, então exige decisão do mantenedor (`§14`).
+### 10.5 O passo 1 valeu a sessão: a LC 214 substitui os anexos INTEIROS
+
+> **Art. 519.** Os Anexos I a V da Lei Complementar nº 123 [...] passam a
+> vigorar com a redação dos Anexos XVIII a XXII desta Lei Complementar.
+
+As tabelas do Simples são substituídas por completo. O que salvou o trabalho foi
+a **data**: o art. 544, III, na redação da **LC nº 227/2026**, põe os arts. 519 a
+534 em vigor apenas **a partir de 1º de janeiro de 2027**.
+
+Até 31/12/2026 valem os anexos atuais, e é com eles que a calculadora foi
+construída — com vigências **fechadas em 31/12/2026**, o mesmo padrão do IRPF
+anual (art. 11 revogado) e do Fio B (incisos futuros não cadastrados).
+
+> **Transcrever primeiro e descobrir depois** teria custado dois anexos inteiros
+> de trabalho jogados fora — ou pior, publicados. Quando um "Vide" aponta para
+> norma que **substitui tabela**, a data de produção de efeitos é a primeira
+> coisa a procurar, não a última.
+
+### 10.6 O recorte, e o que ficou declarado
+
+O art. 16-B — que §10.2 listava como bloqueante — resolveu-se sozinho na leitura:
+ele **só alcança quem está sujeito ao art. 16-A**, isto é, quem soma mais de
+R$ 600 mil de rendimentos no ano.
+
+Isso deu a fronteira. Abaixo dela está tudo calculado: Simples pelo anexo que o
+fator R indica, INSS e IRRF do pró-labore, e a retenção do art. 6º-A sobre
+dividendos. Acima dela, a tela **avisa** que o lado PJ está otimista, porque a
+tributação mínima não entra.
+
+O limite anual entrou como parâmetro justamente para esse aviso — sem ele, a
+frase teria valor legal escrito na tela, que a regra 1 proíbe.
+
+**O que mais custou não foi a lei, foi o HTML.** O trecho do fator R vem
+estilhaçado letra a letra por spans de `letter-spacing` no Planalto —
+`a 28% (vinte e oito por c ento)` —, e nenhuma expressão regular o encontra. Foi
+preciso ler o intervalo cru. Fica anotado para a próxima auditoria da LC 123.
+
+> **A alternativa que não foi necessária.** §10 sugeria uma calculadora só do
+> fator R como caminho mais curto. Ela deixou de ser necessária: o fator R virou
+> um destaque de CALC-048, com o anexo aplicado ao lado. Continua sendo uma
+> página possível, e continua exigindo decisão do mantenedor por não ter ID.
 
 ---
 

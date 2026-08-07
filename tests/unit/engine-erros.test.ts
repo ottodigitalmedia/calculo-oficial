@@ -10,12 +10,18 @@
 import { describe, expect, it } from 'vitest'
 
 import { calcularInss, liquidoAposInss } from '../../src/lib/engine/inss'
+import { calcularComparador } from '../../src/lib/engine/calculadoras/clt-pj-mei'
+import { calcularCripto } from '../../src/lib/engine/calculadoras/cripto'
 import { calcularIrpfAnual } from '../../src/lib/engine/calculadoras/irpf-anual'
+import { calcularSolar } from '../../src/lib/engine/calculadoras/solar'
 import { calcularIrrf } from '../../src/lib/engine/irrf'
 import { percentual, reais } from '../../src/lib/engine/traco'
 import { basisPoints, centavos } from '../../src/lib/engine/types'
 import { INSS } from '../../src/lib/params/data/inss'
+import { ENERGIA_DISTRIBUIDA } from '../../src/lib/params/data/energia-distribuida'
+import { GANHO_DE_CAPITAL } from '../../src/lib/params/data/ganho-de-capital'
 import { IRPF_ANUAL } from '../../src/lib/params/data/irpf-anual'
+import { TODOS_OS_CONJUNTOS } from '../../src/lib/params/data/todos'
 import { IRRF } from '../../src/lib/params/data/irrf'
 import { construirRegistro } from '../../src/lib/params/registry'
 import type { ConjuntoDeParametros } from '../../src/lib/params/tipos'
@@ -266,5 +272,154 @@ describe('ajuste anual do IRPF · C-M3', () => {
     const r = calcularIrpfAnual(entradaAnual, EM_2025, construirRegistro(tipoTrocado))
     expect(r.ok).toBe(false)
     if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Criptoativos, energia solar e o comparador — CALC-021, CALC-066 e CALC-048
+// ---------------------------------------------------------------------------
+
+describe('CALC-021 · criptoativos', () => {
+  const registroCripto = construirRegistro(GANHO_DE_CAPITAL)
+  const base = {
+    alienadoBrasil: centavos(5_000_000),
+    alienadoExterior: centavos(0),
+    custoAquisicao: centavos(1_000_000),
+  }
+
+  it.each([
+    ['vendas no Brasil', { alienadoBrasil: centavos(-1) }],
+    ['vendas no exterior', { alienadoExterior: centavos(-1) }],
+    ['custo de aquisição', { custoAquisicao: centavos(-1) }],
+  ])('recusa %s negativo', (_n, campo) => {
+    const r = calcularCripto({ ...base, ...campo }, '2026-06-15', registroCripto)
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+
+  it('recusa tabela cadastrada com tipo errado', () => {
+    const trocado: ConjuntoDeParametros = {
+      ...GANHO_DE_CAPITAL,
+      vigencias: GANHO_DE_CAPITAL.vigencias.map((v) =>
+        v.parametroId === 'ganho-capital-tabela'
+          ? { ...v, valor: { tipo: 'valor_monetario' as const, centavos: 1 } }
+          : v,
+      ),
+    }
+    const r = calcularCripto(base, '2026-06-15', construirRegistro(trocado))
+    expect(r.ok).toBe(false)
+  })
+
+  it('recusa teto de isenção cadastrado com tipo errado', () => {
+    const trocado: ConjuntoDeParametros = {
+      ...GANHO_DE_CAPITAL,
+      vigencias: GANHO_DE_CAPITAL.vigencias.map((v) =>
+        v.parametroId === 'ganho-capital-isencao-pequeno-valor'
+          ? { ...v, valor: { tipo: 'inteiro' as const, valor: 1 } }
+          : v,
+      ),
+    }
+    const r = calcularCripto(base, '2026-06-15', construirRegistro(trocado))
+    expect(r.ok).toBe(false)
+  })
+})
+
+describe('CALC-066 · energia solar', () => {
+  const registroSolar = construirRegistro(ENERGIA_DISTRIBUIDA)
+  const base = {
+    investimento: centavos(2_000_000),
+    geracaoMensalKwh: 500,
+    consumoMensalKwh: 600,
+    tarifaKwh: centavos(95),
+    tarifaFioBKwh: centavos(30),
+    custoFixoMensal: centavos(5_000),
+    regime: 'novo' as const,
+  }
+
+  it.each([
+    ['investimento', { investimento: centavos(-1) }],
+    ['tarifa', { tarifaKwh: centavos(-1) }],
+    ['tarifa do Fio B', { tarifaFioBKwh: centavos(-1) }],
+    ['custo fixo', { custoFixoMensal: centavos(-1) }],
+  ])('recusa %s negativo', (_n, campo) => {
+    const r = calcularSolar({ ...base, ...campo }, '2026-06-15', registroSolar)
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+
+  it.each([
+    ['geração fracionária', { geracaoMensalKwh: 1.5 }],
+    ['consumo negativo', { consumoMensalKwh: -1 }],
+  ])('recusa %s', (_n, campo) => {
+    const r = calcularSolar({ ...base, ...campo }, '2026-06-15', registroSolar)
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+
+  it('recusa percentual do Fio B com tipo errado', () => {
+    const trocado: ConjuntoDeParametros = {
+      ...ENERGIA_DISTRIBUIDA,
+      vigencias: ENERGIA_DISTRIBUIDA.vigencias.map((v) => ({
+        ...v,
+        valor: { tipo: 'valor_monetario' as const, centavos: 1 },
+      })),
+    }
+    const r = calcularSolar(base, '2026-06-15', construirRegistro(trocado))
+    expect(r.ok).toBe(false)
+  })
+})
+
+describe('CALC-048 · comparador', () => {
+  const registroComp = construirRegistro(...TODOS_OS_CONJUNTOS)
+  const base = {
+    salarioClt: centavos(1_000_000),
+    faturamento: centavos(1_500_000),
+    proLabore: centavos(200_000),
+    folhaMensal: centavos(200_000),
+    custoContabil: centavos(50_000),
+    dependentes: 0,
+    atividadeMei: 'servicos' as const,
+  }
+
+  it.each([
+    ['salário', { salarioClt: centavos(-1) }],
+    ['faturamento', { faturamento: centavos(-1) }],
+    ['pró-labore', { proLabore: centavos(-1) }],
+    ['folha', { folhaMensal: centavos(-1) }],
+    ['contabilidade', { custoContabil: centavos(-1) }],
+  ])('recusa %s negativo', (_n, campo) => {
+    const r = calcularComparador({ ...base, ...campo }, '2026-06-15', registroComp)
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+
+  it('recusa dependentes fracionário', () => {
+    const r = calcularComparador({ ...base, dependentes: 1.5 }, '2026-06-15', registroComp)
+    expect(r.ok).toBe(false)
+  })
+
+  /**
+   * Pró-labore maior que o faturamento não é cenário: seria distribuir o que
+   * não entrou. Recusar é melhor que devolver lucro negativo saneado a zero,
+   * que pareceria uma resposta.
+   */
+  it('recusa pró-labore maior que o faturamento', () => {
+    const r = calcularComparador(
+      { ...base, proLabore: centavos(2_000_000) },
+      '2026-06-15',
+      registroComp,
+    )
+    expect(r.ok).toBe(false)
+    if (!r.ok) expect(r.motivo).toBe('entrada_invalida')
+  })
+
+  it('faturamento zero não divide por zero — o fator R vira zero', () => {
+    const r = calcularComparador(
+      { ...base, faturamento: centavos(0), proLabore: centavos(0), folhaMensal: centavos(0) },
+      '2026-06-15',
+      registroComp,
+    )
+    // Sem receita não há Simples a calcular: a tabela não resolve.
+    expect(r.ok).toBe(false)
   })
 })

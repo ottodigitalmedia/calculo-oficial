@@ -348,6 +348,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './solar'
     ).then((m) => m.calcular),
+  'clt-ou-pj': () =>
+    import(
+      /* webpackChunkName: "calc-clt-pj-mei" */
+      /* webpackExports: ["calcular"] */
+      './clt-pj-mei'
+    ).then((m) => m.calcular),
   'pro-labore': () =>
     import(
       /* webpackChunkName: "calc-pro-labore" */

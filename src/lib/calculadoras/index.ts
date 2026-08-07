@@ -17,6 +17,7 @@ import { BOTIJAO } from './botijao'
 import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
 import { CARNE_LEAO } from './carne-leao'
+import { CLT_PJ_MEI } from './clt-pj-mei'
 import { CRIPTO } from './cripto'
 import { SOLAR } from './solar'
 import { RESTITUICAO_IRPF } from './restituicao-irpf'
@@ -134,6 +135,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   SIMPLIFICADO_OU_COMPLETO,
   CRIPTO,
   SOLAR,
+  CLT_PJ_MEI,
   PRO_LABORE,
   ORCAMENTO,
   ENERGIA,

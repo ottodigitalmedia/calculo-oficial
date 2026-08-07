@@ -24,6 +24,7 @@
 import { BANCO_DE_HORAS } from './banco-de-horas'
 import { CONSIGNADO } from './consignado'
 import { CREDITO } from './credito'
+import { DIVIDENDOS } from './dividendos'
 import { DOMESTICO } from './domestico'
 import { EMPREGADOR } from './empregador'
 import { ENERGIA_DISTRIBUIDA } from './energia-distribuida'
@@ -36,6 +37,7 @@ import { IRRF } from './irrf'
 import { MEI } from './mei'
 import { RENDA_FIXA } from './renda-fixa'
 import { SEGURO_DESEMPREGO } from './seguro-desemprego'
+import { SIMPLES_NACIONAL } from './simples-nacional'
 import { TRABALHISTA } from './trabalhista'
 import type { ConjuntoDeParametros } from '../tipos'
 
@@ -50,9 +52,11 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   CREDITO,
   CONSIGNADO,
   SEGURO_DESEMPREGO,
+  SIMPLES_NACIONAL,
   EMPREGADOR,
   ENERGIA_DISTRIBUIDA,
   FERIADOS,
+  DIVIDENDOS,
   DOMESTICO,
   RENDA_FIXA,
   BANCO_DE_HORAS,

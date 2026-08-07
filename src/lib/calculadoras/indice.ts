@@ -313,6 +313,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Em quanto tempo o sistema se paga, já com a cobrança do Fio B.',
   },
   {
+    slug: 'clt-ou-pj',
+    nome: 'CLT, PJ ou MEI',
+    linhaDeContexto: 'Qual regime deixa mais dinheiro no seu bolso, com os seus números.',
+  },
+  {
     slug: 'pro-labore',
     nome: 'Pró-labore e encargos do sócio',
     linhaDeContexto:

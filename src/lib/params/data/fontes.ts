@@ -215,6 +215,95 @@ export const LEI_14300_ART_26: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * Simples Nacional — os anexos de serviço e o fator R.
+ *
+ * **A janela é fechada, e a leitura que a fechou vale registrar.** O art. 519 da
+ * LC nº 214/2025 diz que os *"Anexos I a V da Lei Complementar nº 123 [...]
+ * passam a vigorar com a redação dos Anexos XVIII a XXII"* — ou seja, as tabelas
+ * inteiras são substituídas. O que salva a transcrição atual é o art. 544, III,
+ * na redação da **LC nº 227/2026**: os arts. 519 a 534 só produzem efeitos **a
+ * partir de 1º de janeiro de 2027**.
+ *
+ * Então até 31/12/2026 valem estes anexos, e de 2027 em diante valem outros.
+ * Foi por isso que `ESTADO-DO-PROJETO` §10 mandava ler a LC 214 **antes** de
+ * transcrever: sem essa data, a tabela cadastrada seria uma tabela que não vale.
+ *
+ * **O fator R decide qual anexo se aplica** — § 5º-J do art. 18: os serviços do
+ * § 5º-I são tributados pelo Anexo III *"caso a razão entre a folha de salários
+ * e a receita bruta da pessoa jurídica seja igual ou superior a 28%"*. Abaixo
+ * disso, Anexo V.
+ *
+ * O § 5º-K manda usar os montantes dos **doze meses anteriores** ao período de
+ * apuração, e o § 24 define folha como a remuneração paga a pessoas físicas
+ * pelo trabalho, incluídas as retiradas de pró-labore, acrescida do que foi
+ * efetivamente recolhido de contribuição patronal e de FGTS.
+ *
+ * > **O texto deste trecho vem estilhaçado no HTML do Planalto.** Os spans de
+ * > `letter-spacing` picam as palavras letra a letra — `a 28% (vinte e oito por
+ * > c ento)` —, e busca por expressão regular não acha. Foi preciso ler o
+ * > intervalo cru. Vale para quem for reconferir na próxima auditoria.
+ */
+/**
+ * Art. 6º-A — o fim da isenção de dividendos, e o degrau que ele criou.
+ *
+ * Inserido pela Lei nº 15.270/2025, com efeitos a partir de janeiro de 2026.
+ * Ver o cabeçalho de `dividendos.ts` para a leitura e as três armadilhas.
+ */
+export const LEI_9250_ART_6A: Fonte = {
+  id: 'lei-9250-1995-art-6a',
+  norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 15.270, de 2025',
+  dispositivo: 'Art. 6º-A, caput e §§ 1º a 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Art. 16-A — a tributação mínima, que CALC-048 declara e não calcula.
+ *
+ * A partir do ano-calendário de 2026, quem soma mais de R$ 600.000,00 de
+ * rendimentos no ano fica sujeito a uma alíquota mínima que cresce linearmente
+ * até 10% — `Alíquota % = (REND / 60.000) − 10` —, e o art. 16-B traz um redutor
+ * que depende da tributação efetiva dos lucros na pessoa jurídica.
+ *
+ * **O comparador não calcula isso, e o motivo é de honestidade, não de
+ * preguiça:** o redutor do art. 16-B exige saber a alíquota efetiva de
+ * tributação dos lucros da PJ, que numa empresa do Simples não é um número que
+ * o usuário tenha. O valor entra aqui para a calculadora AVISAR quem passou da
+ * fronteira de que o lado PJ dela está otimista — que é o que dá para afirmar.
+ */
+export const LEI_9250_ART_16A: Fonte = {
+  id: 'lei-9250-1995-art-16a',
+  norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 15.270, de 2025',
+  dispositivo: 'Art. 16-A, caput e § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LC_123_ANEXO_III: Fonte = {
+  id: 'lc-123-2006-anexo-iii',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006, com a redação da Lei Complementar nº 155, de 2016',
+  dispositivo: 'Anexo III — vigência a partir de 01/01/2018',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LC_123_ANEXO_V: Fonte = {
+  id: 'lc-123-2006-anexo-v',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006, com a redação da Lei Complementar nº 155, de 2016',
+  dispositivo: 'Anexo V — vigência a partir de 01/01/2018',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const LC_123_ART_18_FATOR_R: Fonte = {
+  id: 'lc-123-2006-art-18-fator-r',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006, com a redação da Lei Complementar nº 155, de 2016',
+  dispositivo: 'Art. 18, §§ 5º-J, 5º-K e 24',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
 export const LEI_9250_ART_22: Fonte = {
   id: 'lei-9250-1995-art-22',
   norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 11.196, de 2005',
@@ -1238,6 +1327,11 @@ export const FONTES: readonly Fonte[] = [
   RFB_PR_IRPF_CRIPTOATIVOS,
   LEI_14300_ART_26,
   LEI_14300_ART_27,
+  LEI_9250_ART_6A,
+  LEI_9250_ART_16A,
+  LC_123_ANEXO_III,
+  LC_123_ANEXO_V,
+  LC_123_ART_18_FATOR_R,
   LEI_9250_ART_3A,
   LEI_8036_ART_15,
   LEI_8036_ART_18,

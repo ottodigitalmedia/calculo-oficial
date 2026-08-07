@@ -31,6 +31,42 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 06/08/2026
 
+### Adicionado · CALC-048 · CLT, PJ ou MEI — e o catálogo fechou em 75 de 75
+
+A última, e a que mais esperou. Foi bloqueada em 06/08/2026 quando a pesquisa
+mostrou que a premissa universal desse tipo de comparador — "dividendo é isento"
+— tinha deixado de valer com a Lei nº 15.270/2025.
+
+**O que a destravou foi uma data, não uma tabela.** O art. 519 da LC nº 214/2025
+substitui os Anexos I a V do Simples Nacional por inteiro. O que salvou a
+transcrição foi o art. 544, III, na redação da LC nº 227/2026: os arts. 519 a 534
+só produzem efeitos **a partir de 1º de janeiro de 2027**. Até lá valem os anexos
+atuais, e é com eles que a calculadora foi construída — com vigências fechadas em
+31/12/2026.
+
+**Três coisas que a calculadora acerta e as planilhas do mercado erram:**
+
+- **A alíquota da faixa não é a que se paga.** Do valor apurado pela nominal
+  subtrai-se a parcela a deduzir; o que sobra, dividido pela receita, é a
+  efetiva. Numa empresa de R$ 960 mil por ano no Anexo III, a nominal é 16% e a
+  efetiva fica em 12,29%.
+- **O fator R decide o anexo, e a diferença é brutal.** Na primeira faixa, 15,50%
+  no Anexo V contra 6,00% no Anexo III. O § 5º-J diz "igual ou superior a 28%" —
+  o empate vai para o Anexo III, e um caso-ouro fixa essa fronteira.
+- **Dividendo acima do limite mensal sofre retenção sobre o TOTAL.** Degrau, não
+  rampa: a lei veda qualquer dedução da base.
+
+**A fronteira declarada.** O art. 16-B resolveu-se sozinho na leitura: ele só
+alcança quem está sujeito ao art. 16-A, acima de R$ 600 mil de rendimentos no
+ano. Abaixo disso está tudo calculado; acima, a tela avisa que o lado PJ está
+otimista, porque a tributação mínima não entra. O limite anual entrou como
+parâmetro justamente para esse aviso — sem ele, a frase teria valor legal escrito
+na tela.
+
+O lado CLT soma FGTS e as provisões de 13º e de férias com o terço. Sem elas a
+comparação seria desonesta com a carteira assinada: são valores que o trabalhador
+recebe, apenas não no mesmo mês. A memória mostra cada parcela em separado.
+
 ### Corrigido · a home anunciava cinco calculadoras publicadas como "Em breve"
 
 Rescisão sem justa causa, férias, 13º salário, horas extras e FGTS — as cinco do
