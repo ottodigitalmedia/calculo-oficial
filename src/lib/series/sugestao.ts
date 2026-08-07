@@ -13,17 +13,22 @@
  */
 
 import { sugestaoDe } from './index'
-import type { SerieId } from './tipos'
+import { SERIES, type SerieId } from './tipos'
 import type { DefinicaoCalculadora, FormularioCalculadora } from '../calculadoras/tipos'
 
-const IDS_CONHECIDOS: readonly SerieId[] = [
-  'selic-ao-ano',
-  'ipca-mensal',
-  'igpm-mensal',
-  'inpc-mensal',
-  'poupanca-mensal',
-  'tr-mensal',
-]
+/**
+ * DERIVADO DE `SERIES`, E NÃO ESCRITO À MÃO.
+ *
+ * Até 07/08/2026 esta era uma cópia literal dos identificadores do catálogo —
+ * a terceira lista do mesmo conjunto no projeto, e nenhum teste a mantinha em
+ * dia. Uma série nova entraria em `tipos.ts`, o tipo aceitaria a referência, e
+ * a sugestão sumiria da tela **em silêncio**: a função devolve o formulário
+ * inalterado quando não encontra o identificador.
+ *
+ * É a família de defeito de `ESTADO-DO-PROJETO` §7.41 — duas listas do mesmo
+ * conjunto divergem —, e ela apareceu justamente ao acrescentar `selic-mensal`.
+ */
+const IDS_CONHECIDOS: readonly SerieId[] = SERIES.map((s) => s.id)
 
 /**
  * Devolve o formulário com a sugestão resolvida, ou **o mesmo formulário** se

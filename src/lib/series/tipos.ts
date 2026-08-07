@@ -55,6 +55,7 @@ export interface PontoDaSerie {
  */
 export type SerieId =
   | 'selic-ao-ano'
+  | 'selic-mensal'
   | 'ipca-mensal'
   | 'igpm-mensal'
   | 'inpc-mensal'
@@ -96,6 +97,25 @@ export interface DefinicaoDeSerie {
   /** Intervalo plausível, na escala do percentual — `ADR-006` S-4. */
   readonly minimoPlausivel: PercentualEscalado
   readonly maximoPlausivel: PercentualEscalado
+  /**
+   * Descarta o ponto do **mês em que a coleta roda**.
+   *
+   * Existe para uma armadilha medida em 07/08/2026 e que nenhuma outra série
+   * deste catálogo tem: a Selic acumulada no mês (4390) publica o mês corrente
+   * **em curso**, crescendo dia a dia. Na coleta daquele dia, agosto valia
+   * 0,21% enquanto todo mês fechado do semestre ficou entre 1,07% e 1,22% —
+   * quatro dias úteis decorridos, não um mês.
+   *
+   * Um índice de preço não faz isso: só aparece depois de apurado. Quem
+   * multiplicasse os fatores mensais aplicaria um mês pela metade acreditando
+   * ter aplicado um mês inteiro, e o resultado sairia **para menos**, plausível
+   * e errado — a forma cara de errar que `CLAUDE.md` diz ser o risco número um
+   * deste projeto.
+   *
+   * O ponto não é corrigido nem estimado. É descartado: o último mês publicado
+   * passa a ser o último mês **fechado**, e a tela já mostra qual é.
+   */
+  readonly descartarMesCorrente?: boolean
 }
 
 /**
@@ -118,6 +138,37 @@ export const SERIES: readonly DefinicaoDeSerie[] = [
     pontosNoCache: 20,
     minimoPlausivel: 0,
     maximoPlausivel: 1_000_000,
+  },
+  /**
+   * Selic **acumulada no mês**, e não a taxa diária.
+   *
+   * Entrou em 07/08/2026, ao resolver o item que dizia faltar "uma convenção
+   * de fator diário para mensal" na correção por índice. A convenção não
+   * faltava: o Banco Central já publica o acumulado mensal pronto, uma
+   * observação por mês, na mesma forma do IPCA. A medição está em `docs/20`.
+   *
+   * É a mesma lição de CALC-041, registrada em `ESTADO-DO-PROJETO` §8 — antes
+   * de inventar a transformação, verifique se a série não entrega o número
+   * pronto. Aqui ela custou meses de "Em breve" numa opção que já era possível.
+   *
+   * NÃO É ÍNDICE DE INFLAÇÃO, e por isso não entra na lista compartilhada por
+   * `poder-de-compra`, `reajuste-aluguel`, `reajuste-salarial` e `valor-futuro`.
+   * Ver a separação das duas listas em `calculadoras/indices-comuns.ts`.
+   */
+  {
+    id: 'selic-mensal',
+    codigoSgs: 4390,
+    nome: 'Selic acumulada no mês',
+    unidade: '% ao mês',
+    produtor: 'Banco Central do Brasil',
+    janela: { tipo: 'intervalo', anos: 20 },
+    pontosNoCache: 240,
+    // Nunca negativa, e o teto é folgado de propósito: a série cobre períodos
+    // de juro muito alto, e apertar isto descartaria ponto verdadeiro.
+    minimoPlausivel: 0,
+    maximoPlausivel: 100_000,
+    // A única do catálogo que publica o mês em curso. Ver a nota do campo.
+    descartarMesCorrente: true,
   },
   {
     id: 'ipca-mensal',
@@ -163,6 +214,18 @@ export const SERIES: readonly DefinicaoDeSerie[] = [
     minimoPlausivel: 0,
     maximoPlausivel: 50_000,
   },
+  /**
+   * TR — e "período mensal" aqui **não** quer dizer uma observação por mês.
+   *
+   * Medido em 07/08/2026: a série 226 devolve uma observação por **dia**, cada
+   * uma com `data` e `dataFim` separadas por um mês. Cada ponto é a TR do
+   * período mensal que *começa* naquele dia — o aniversário da conta.
+   *
+   * Por isso ela não vira vetor posicional por mês, e por isso a correção por
+   * TR continua declarada como indisponível: escolher qual dia do mês vale é
+   * uma convenção de verdade, e ela depende do contrato, não do site. Foi a
+   * mesma guarda de calendário que já havia recusado a poupança (série 195).
+   */
   {
     id: 'tr-mensal',
     codigoSgs: 226,

@@ -25,6 +25,12 @@ import {
   pontosDaSerie,
   ultimoPonto,
 } from '../../src/lib/series'
+import {
+  INDICES,
+  OPCOES_DE_CORRECAO,
+  OPCOES_DE_INDICE,
+  serieDoIndice,
+} from '../../src/lib/calculadoras/indices-comuns'
 import { dataParaIso, normalizar, valorParaEscala } from '../../src/lib/series/normalizar'
 import { SERIES, type SerieId } from '../../src/lib/series/tipos'
 import type { DataISO } from '../../src/lib/params/tipos'
@@ -289,6 +295,41 @@ describe('cache versionado', () => {
     }
   })
 
+  /**
+   * O MÊS EM CURSO NÃO ENTRA NO CACHE — a armadilha medida em 07/08/2026.
+   *
+   * A Selic acumulada no mês (4390) publica o mês corrente **enquanto ele
+   * corre**: naquele dia agosto valia 0,21% contra 1,07% a 1,22% em todo mês
+   * fechado do semestre. Quatro dias úteis, não um mês.
+   *
+   * Um índice de preço não tem esse comportamento, e por isso o coletor não
+   * tinha guarda nenhuma contra ele. Sem esta asserção, apagar
+   * `descartarMesCorrente` devolveria a série a um estado em que a correção de
+   * qualquer intervalo terminado no mês corrente sai **para menos** — plausível,
+   * sem erro, sem aviso.
+   *
+   * A comparação é contra a data de coleta gravada no próprio cache, e não
+   * contra o relógio: assim o teste continua valendo daqui a um ano, sobre o
+   * arquivo que estiver commitado.
+   */
+  it('série que publica o mês em curso não guarda o mês da coleta', () => {
+    for (const s of SERIES) {
+      if (!s.descartarMesCorrente) continue
+
+      const coleta = coletadoEm(s.id as SerieId)
+      const ultimo = ultimoPonto(s.id as SerieId)
+      expect(coleta, s.id).not.toBeNull()
+      expect(ultimo, s.id).not.toBeNull()
+
+      expect(
+        ultimo!.data.slice(0, 7) < coleta!.slice(0, 7),
+        `${s.id}: último ponto em ${ultimo!.data}, coletado em ${coleta}. ` +
+          `Esta série publica o mês corrente pela metade, e o mês da coleta ` +
+          `não pode entrar no cache — ver "descartarMesCorrente" em series/tipos.`,
+      ).toBe(true)
+    }
+  })
+
   it('toda série declara quem produz o dado, e não só quem o publica', () => {
     for (const s of SERIES) {
       expect(s.produtor.length, s.id).toBeGreaterThan(0)
@@ -297,5 +338,67 @@ describe('cache versionado', () => {
     // atribuição errada — sexta armadilha de §6.1.
     expect(SERIES.find((s) => s.id === 'ipca-mensal')?.produtor).toContain('IBGE')
     expect(SERIES.find((s) => s.id === 'igpm-mensal')?.produtor).toContain('Getulio Vargas')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// As opções de índice das calculadoras
+// ---------------------------------------------------------------------------
+
+/**
+ * A LISTA DE INFLAÇÃO SÓ PODE TER ÍNDICE DE INFLAÇÃO.
+ *
+ * `OPCOES_DE_INDICE` é consumida por quatro telas que perguntam quanto os
+ * preços subiram — poder de compra, reajuste de aluguel, reajuste salarial e
+ * projeção. `OPCOES_DE_CORRECAO` é de CALC-060 sozinha, cuja pergunta é outra:
+ * quanto este valor virou, por um critério que o usuário escolhe.
+ *
+ * Até 07/08/2026 as duas eram a mesma lista, e a Selic aparecia nela marcada
+ * "Em breve" — uma promessa de que um dia ela responderia *quanto meu dinheiro
+ * perdeu de poder de compra*, que é pergunta que a Selic não responde nunca.
+ * Separar as listas resolveu; este teste é o que impede a fusão de voltar.
+ */
+describe('opções de índice', () => {
+  it('a lista compartilhada não oferece nada que não seja inflação', () => {
+    for (const opcao of OPCOES_DE_INDICE) {
+      const indice = INDICES[opcao.valor]
+      expect(indice, `"${opcao.valor}" não está em INDICES`).toBeDefined()
+      expect(
+        indice!.mede,
+        `"${opcao.valor}" mede ${indice!.mede} e está na lista que poder-de-compra, ` +
+          `reajuste-aluguel, reajuste-salarial e valor-futuro consomem. Essas quatro ` +
+          `perguntam sobre preço. Use OPCOES_DE_CORRECAO, que é de CALC-060.`,
+      ).toBe('inflacao')
+    }
+  })
+
+  it('a lista de CALC-060 contém a de inflação, e acrescenta', () => {
+    for (const opcao of OPCOES_DE_INDICE) {
+      expect(OPCOES_DE_CORRECAO.map((o) => o.valor)).toContain(opcao.valor)
+    }
+    expect(OPCOES_DE_CORRECAO.length).toBeGreaterThan(OPCOES_DE_INDICE.length)
+  })
+
+  /**
+   * O inverso do "Em breve": opção **habilitada** que não corrige nada.
+   *
+   * Uma opção sem série no pacote do navegador não dá erro — a correção sai com
+   * zero mês aplicado e devolve o valor de partida, como se nada tivesse
+   * mudado. É o modo de falha silencioso que `SERIE_VAZIA` cria de propósito
+   * para o primeiro build, e que aqui seria um defeito.
+   */
+  it('toda opção habilitada resolve para uma série com dado', () => {
+    for (const opcao of OPCOES_DE_CORRECAO) {
+      if (opcao.indisponivel) continue
+      const serie = serieDoIndice(opcao.valor)
+      expect(serie.valores.length, `"${opcao.valor}" está habilitada e sem série`).toBeGreaterThan(0)
+      expect(serie.inicio, opcao.valor).toMatch(/^\d{4}-\d{2}$/)
+    }
+  })
+
+  /** E o "Em breve" que sobrou tem de ser mesmo o que ainda não dá para fazer. */
+  it('a TR segue declarada como indisponível, e é a única', () => {
+    const pendentes = OPCOES_DE_CORRECAO.filter((o) => o.indisponivel).map((o) => o.valor)
+    expect(pendentes).toEqual(['tr'])
   })
 })

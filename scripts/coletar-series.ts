@@ -54,6 +54,10 @@ const COMPACTAS: readonly SerieId[] = [
   'ipca-mensal',
   'inpc-mensal',
   'igpm-mensal',
+  // A Selic acumulada no mês (4390) entrou em 07/08/2026. Ela passa na guarda
+  // de calendário abaixo porque é mesmo mensal — ao contrário da poupança e da
+  // TR, que são diárias na origem e caem no `ULTIMO_PONTO` ou em nada.
+  'selic-mensal',
 ]
 
 /**
@@ -216,6 +220,24 @@ async function main(): Promise<void> {
     }
 
     /**
+     * Fora o mês em curso, quando a série o publica pela metade.
+     *
+     * Só a Selic acumulada no mês faz isso — a justificativa completa está no
+     * campo `descartarMesCorrente`, em `series/tipos.ts`. Aqui o cuidado é de
+     * lugar: o corte acontece **antes** de gravar o cache, e não na leitura,
+     * para que o arquivo versionado nunca contenha um mês pela metade que um
+     * consumidor futuro tomaria por fechado.
+     */
+    const mesDaColeta = hojeIso.slice(0, 7)
+    const fechados = definicao.descartarMesCorrente
+      ? pontos.filter((p) => p.data.slice(0, 7) < mesDaColeta)
+      : pontos
+
+    if (definicao.descartarMesCorrente && fechados.length < pontos.length) {
+      avisar(`${definicao.id}: mês corrente (${mesDaColeta}) descartado — ainda em curso`)
+    }
+
+    /**
      * Resposta vazia depois da normalização é falha, não sucesso silencioso.
      *
      * É o caso em que a origem mudou de formato: a requisição responde 200, o
@@ -223,7 +245,7 @@ async function main(): Promise<void> {
      * apagaria o cache bom — a mesma classe de erro que `ESTADO-DO-PROJETO`
      * §7.5 descreve, com o verificador que melhora sozinho por deixar de olhar.
      */
-    if (pontos.length === 0) {
+    if (fechados.length === 0) {
       falhas += 1
       avisar(`${definicao.id}: nenhum ponto válido na resposta`)
       if (anterior) atualizadas.push(anterior)
@@ -232,7 +254,7 @@ async function main(): Promise<void> {
 
     // Guarda só a cauda mais recente: o arquivo é versionado no repositório, e
     // histórico sem teto viraria diff gigante a cada coleta.
-    const guardados = pontos.slice(-definicao.pontosNoCache)
+    const guardados = fechados.slice(-definicao.pontosNoCache)
 
     atualizadas.push({
       id: definicao.id,

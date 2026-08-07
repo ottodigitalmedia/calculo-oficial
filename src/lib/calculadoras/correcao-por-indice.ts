@@ -9,17 +9,25 @@
  * não o cache completo: aquele tem 60 kB de objetos e mora no servidor, este
  * cabe no pacote da rota. Ver `ADR-006` e `docs/20`.
  *
- * **Selic e TR aparecem desabilitadas, com "Em breve".** As duas são séries
- * diárias na origem, e transformá-las em fator mensal exige uma decisão de
- * convenção que ainda não foi tomada. `OpcaoSelecao.indisponivel` existe
- * exatamente para isto: declarar o que falta em vez de sugerir cobertura que
- * não há.
+ * **A Selic entrou em 07/08/2026; a TR continua desabilitada.** Até então as
+ * duas apareciam com "Em breve" sob a mesma justificativa — série diária na
+ * origem, faltando uma convenção de fator mensal. A medição desmentiu metade
+ * disso: a série 4390 publica o acumulado mensal pronto, uma observação por
+ * mês. Não havia convenção a decidir, havia uma série não consultada.
+ *
+ * A TR sobrevive à revisão. A série 226 devolve uma observação por dia, cada
+ * uma valendo o mês que começa naquele dia, e qual dia usar é cláusula de
+ * contrato. `OpcaoSelecao.indisponivel` continua declarando o que falta.
+ *
+ * **Esta é a única das cinco telas que oferece a Selic**, e a razão está em
+ * `indices-comuns.ts`: as outras quatro perguntam sobre inflação, e a Selic
+ * não mede preço. O catálogo nomeia CALC-060 com as cinco siglas; só ela.
  */
 
 import { corrigirPorIndice } from '../engine/calculadoras/indices'
 import { centavos } from '../engine/types'
 import { formatarPercentual, formatarReal } from '../format/moeda'
-import { indiceEscolhido, mesDe, OPCOES_DE_INDICE, serieDoIndice } from './indices-comuns'
+import { indiceEscolhido, mesDe, OPCOES_DE_CORRECAO, serieDoIndice } from './indices-comuns'
 import {
   numero,
   texto,
@@ -92,9 +100,9 @@ export const CORRECAO_POR_INDICE: DefinicaoCalculadora = {
   id: 'CALC-060',
   slug: 'correcao-por-indice',
   nome: 'Correção de valor por índice',
-  linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC ou IGP-M, mês a mês.',
+  linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC, IGP-M ou Selic, mês a mês.',
   descricaoSeo:
-    'Corrija um valor pela inflação entre dois meses usando IPCA, INPC ou IGP-M. Veja a variação acumulada, quantos meses entraram na conta e o valor atualizado.',
+    'Corrija um valor entre dois meses pelo IPCA, INPC, IGP-M ou pela Selic acumulada. Veja a variação no período, quantos meses entraram na conta e o valor atualizado.',
 
   campos: [
     {
@@ -110,8 +118,8 @@ export const CORRECAO_POR_INDICE: DefinicaoCalculadora = {
       rotulo: 'Índice',
       tipo: 'selecao',
       padrao: 'ipca',
-      opcoes: OPCOES_DE_INDICE,
-      ajuda: 'O IPCA é o índice oficial de inflação. O INPC mede famílias de renda mais baixa; o IGP-M é o mais usado em contrato de aluguel.',
+      opcoes: OPCOES_DE_CORRECAO,
+      ajuda: 'O IPCA é o índice oficial de inflação. O INPC mede famílias de renda mais baixa; o IGP-M é o mais usado em contrato de aluguel. A Selic não é índice de inflação: é a taxa básica de juro, usada para atualizar débito federal em atraso.',
     },
     {
       id: 'de',
@@ -139,7 +147,17 @@ export const CORRECAO_POR_INDICE: DefinicaoCalculadora = {
     {
       pergunta: 'Qual índice devo usar?',
       resposta:
-        'Depende do que o valor representa. Se há contrato, o índice é o que está escrito nele — aluguel costuma usar IGP-M, e cada vez mais IPCA. Para saber quanto um valor perdeu de poder de compra em geral, o IPCA é o índice oficial de inflação do país. O INPC mede a cesta de famílias com renda de um a cinco salários mínimos e é o mais usado em reajuste salarial de acordo coletivo.',
+        'Depende do que o valor representa. Se há contrato, o índice é o que está escrito nele — aluguel costuma usar IGP-M, e cada vez mais IPCA. Para saber quanto um valor perdeu de poder de compra em geral, o IPCA é o índice oficial de inflação do país. O INPC mede a cesta de famílias com renda de um a cinco salários mínimos e é o mais usado em reajuste salarial de acordo coletivo. A Selic é caso à parte, e a pergunta seguinte trata dela.',
+    },
+    {
+      pergunta: 'A Selic serve para corrigir valor?',
+      resposta:
+        'Serve para um uso específico, e não é inflação. A Selic é a taxa básica de juro da economia, e o que esta calculadora aplica é a Selic acumulada mês a mês, que é como o Banco Central a publica. É o critério usado para atualizar débito federal em atraso, e por isso ela costuma render bem mais que qualquer índice de preço no mesmo período — o que ela mede é juro, não aumento de preço. Se a sua pergunta é quanto o dinheiro perdeu de poder de compra, o índice é o IPCA, não a Selic.',
+    },
+    {
+      pergunta: 'O resultado pela Selic é o valor que devo pagar à Receita?',
+      resposta:
+        'Não. A guia de recolhimento de um débito em atraso soma outras parcelas além da Selic acumulada: há multa de mora, há um acréscimo próprio no mês do pagamento, e o marco inicial da contagem segue regra específica. Esta calculadora faz a acumulação pura da Selic entre dois meses, que serve para estimar e para conferir essa parte da conta. O valor exato sai dos sistemas da própria Receita Federal.',
     },
     {
       pergunta: 'Por que o índice do mês inicial não entra?',

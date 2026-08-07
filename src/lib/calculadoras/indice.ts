@@ -347,7 +347,7 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
   {
     slug: 'correcao-por-indice',
     nome: 'Correção de valor por índice',
-    linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC ou IGP-M, mês a mês.',
+    linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC, IGP-M ou Selic, mês a mês.',
   },
   {
     slug: 'poder-de-compra',

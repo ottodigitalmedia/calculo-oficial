@@ -20,6 +20,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { calcular } from '../../src/lib/calculadoras/correcao-por-indice'
+import { OPCOES_DE_CORRECAO } from '../../src/lib/calculadoras/indices-comuns'
 import {
   corrigirPorIndice,
   type EntradaCorrecao,
@@ -215,21 +216,48 @@ describe('CALC-060 · a calculadora publicada, sobre o cache versionado', () => 
     expect(r.valores.principal).toBe(corrigido?.valor)
   })
 
-  it('os três índices disponíveis calculam', () => {
-    for (const indice of ['ipca', 'inpc', 'igpm']) {
-      const r = calcular({ ...ENTRADA, indice }, REF)
-      expect(r.ok, indice).toBe(true)
+  /**
+   * A lista vem do campo, e não escrita de novo aqui.
+   *
+   * Repeti-la seria a quarta cópia do mesmo conjunto no projeto, e a família de
+   * defeito de `ESTADO-DO-PROJETO` §7.41 é justamente esta: um índice novo
+   * entraria na tela sem que nada o calculasse em teste.
+   */
+  it('toda opção habilitada da tela calcula de verdade', () => {
+    const habilitadas = OPCOES_DE_CORRECAO.filter((o) => !o.indisponivel)
+    expect(habilitadas.length).toBeGreaterThanOrEqual(4)
+
+    for (const opcao of habilitadas) {
+      const r = calcular({ ...ENTRADA, indice: opcao.valor }, REF)
+      expect(r.ok, opcao.valor).toBe(true)
     }
   })
 
   /**
-   * Selic e TR estão declaradas como indisponíveis no campo. Se um dia entrarem,
-   * este teste passa a falhar — que é o comportamento desejado: quem as
-   * habilitar precisa decidir a convenção de série diária para mensal no mesmo
-   * commit.
+   * A SELIC PRECISA ESTAR LIGADA NA SÉRIE DELA, E ISSO NÃO É ÓBVIO.
+   *
+   * `indiceEscolhido` devolve IPCA para qualquer chave desconhecida — um padrão
+   * deliberado, para que a tela nunca quebre. O efeito colateral é que uma
+   * ligação mal feita **não** dá erro: ela corrige pelo IPCA exibindo "Selic".
+   *
+   * Foi o que aconteceu até 07/08/2026, quando a opção existia desabilitada e o
+   * teste que ocupava este lugar apenas conferia que o cálculo não quebrava —
+   * asserção que continuava verde tanto com a ligação certa quanto sem ligação
+   * nenhuma. Nenhum valor é fixado aqui; o que se cobra é que os dois índices
+   * deem resultados **diferentes**, que é o que prova que a série é outra.
    */
+  it('a Selic corrige pela série da Selic, e não pelo padrão', () => {
+    const porSelic = calcular({ ...ENTRADA, indice: 'selic' }, REF)
+    const porIpca = calcular({ ...ENTRADA, indice: 'ipca' }, REF)
+    if (!porSelic.ok || !porIpca.ok) throw new Error('esperado sucesso nos dois')
+
+    expect(porSelic.valores.principal).not.toBe(porIpca.valores.principal)
+    expect(JSON.stringify(porSelic.traco)).toContain('Selic')
+  })
+
+  /** A TR é o que resta declarado como pendente — ver `indices-comuns.ts`. */
   it('índice ainda não coberto cai no padrão em vez de quebrar', () => {
-    const r = calcular({ ...ENTRADA, indice: 'selic' }, REF)
+    const r = calcular({ ...ENTRADA, indice: 'tr' }, REF)
     expect(r.ok).toBe(true)
   })
 })
