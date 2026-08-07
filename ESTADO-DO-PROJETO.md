@@ -27,8 +27,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras **no repositório** | **75** de 75 — catálogo completo — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
 | Calculadoras **em produção** | ✅ **74** — implantadas em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. Repositório e produção **em dia** |
-| Guias | **15** — os 10 de `03-functional-spec` §4 mais o bloco de crédito de §11.5. Faltam 23 para a cobertura total |
-| Testes | 1.564 de unidade · 637 ponta a ponta · 3 de vazamento |
+| Guias | **19** — os 10 de `03-functional-spec` §4 mais os blocos de crédito e de imóveis (§11.5). **33 calculadoras** ligadas a pelo menos um |
+| Testes | 1.602 de unidade · 645 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 93 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
 | Orçamento de JavaScript | 135,2 kB de **150** na pior rota — e **19,1 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
@@ -2061,7 +2061,21 @@ O mantenedor mandou começar em 07/08/2026, depois de ler a ressalva de §11.2.
 | Consignado: a margem, a base dela e o que ela não cobre | `emprestimo-consignado` |
 | Quitar antes: quanto se economiza de verdade | `quitacao-antecipada` · `amortizacao-extra` |
 
-**Cobertura: 15 guias, e 27 calculadoras ligadas a pelo menos um** — de 10 e 15
+**Bloco de imóveis — ✅ 4 guias, no mesmo dia:**
+
+| Guia | Cobre |
+|---|---|
+| Quanto imóvel cabe no seu bolso | `capacidade-de-financiamento` · `custo-de-aquisicao-de-imovel` · `financiamento-imobiliario` |
+| Alugar ou comprar: a conta que quase ninguém faz certo | `alugar-ou-comprar` |
+| Imóvel para alugar: o que sobra depois de tudo | `rentabilidade-de-aluguel` · `reajuste-de-aluguel` |
+| IR na venda de imóvel: as isenções e os fatores | `ganho-de-capital-imovel` |
+
+> **Saíram quatro, e não os cinco previstos.** O quinto do plano era sobre
+> amortização extra, e ele já tinha nascido dentro de "Quitar antes", no bloco de
+> crédito — a pergunta é a mesma. Previsão de contagem cede à pergunta do leitor,
+> que é o critério de §11.3.
+
+**Cobertura: 19 guias, e 33 calculadoras ligadas a pelo menos um** — de 10 e 15
 onde o levantamento começou.
 
 Dois deles trazem bloco `valorVigente`: o teto do cheque especial e o do cartão,
@@ -2078,7 +2092,7 @@ envolvido — CET, SAC e Price e quitação antecipada são método, não tabela
 | Bloco | Guias | Situação |
 |---|---|---|
 | Crédito | 5 | ✅ feito |
-| Imóveis | 5 | a fazer |
+| Imóveis | 4 | ✅ feito |
 | Investimentos | 4 | a fazer |
 | Autônomo e PJ | 6 | a fazer |
 | Trabalhista restante | 7 | a fazer |
@@ -2087,7 +2101,7 @@ envolvido — CET, SAC e Price e quitação antecipada são método, não tabela
 | Índices e câmbio | 2 | a fazer |
 | Utilitárias | 2 | a fazer |
 
-**23 guias restantes.** O comando que confere a cobertura contra o registro:
+**~22 guias restantes**, para 42 calculadoras ainda sem nenhum. O comando que confere a cobertura contra o registro:
 
 ```bash
 grep -A 1 ": Guia = {" src/lib/guias/*.ts | grep "slug:"

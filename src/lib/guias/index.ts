@@ -5,6 +5,7 @@
  * acrescentar uma entrada aqui. Não há rota nova a escrever.
  */
 
+import { ALUGAR_OU_COMPRAR } from './alugar-ou-comprar'
 import { BRUTO_E_LIQUIDO } from './bruto-e-liquido'
 import { CET_CUSTO_EFETIVO_TOTAL } from './cet-custo-efetivo-total'
 import { CONSIGNADO } from './consignado'
@@ -13,9 +14,12 @@ import { DECIMO_TERCEIRO } from './decimo-terceiro'
 import { FERIAS } from './ferias'
 import { FGTS_GUIA } from './fgts'
 import { HORAS_EXTRAS } from './horas-extras'
+import { IMOVEL_PARA_ALUGAR } from './imovel-para-alugar'
 import { IMPOSTO_DE_RENDA_NA_FOLHA } from './imposto-de-renda-na-folha'
+import { IR_NA_VENDA_DE_IMOVEL } from './ir-na-venda-de-imovel'
 import { JUROS_COMPOSTOS } from './juros-compostos'
 import { PEDIDO_DE_DEMISSAO } from './pedido-de-demissao'
+import { QUANTO_IMOVEL_CABE } from './quanto-imovel-cabe'
 import { QUITAR_ANTECIPADO } from './quitar-antecipado'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
 import { ROTATIVO_E_CHEQUE_ESPECIAL } from './rotativo-e-cheque-especial'
@@ -50,6 +54,12 @@ export const GUIAS: readonly Guia[] = [
   SAC_OU_PRICE,
   CONSIGNADO,
   QUITAR_ANTECIPADO,
+
+  // Bloco de imóveis — §11.3.
+  QUANTO_IMOVEL_CABE,
+  ALUGAR_OU_COMPRAR,
+  IMOVEL_PARA_ALUGAR,
+  IR_NA_VENDA_DE_IMOVEL,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {
