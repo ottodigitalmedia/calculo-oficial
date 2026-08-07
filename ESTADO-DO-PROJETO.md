@@ -2990,12 +2990,24 @@ O que sobrou, em ordem:
    >
    > | Caminho | O que custa |
    > |---|---|
-   > | Publicar `rev` no corpo | Revê §EP-016. O hash identifica a versão, mas **o repositório é privado** — ele não mapeia para código-fonte que qualquer um possa ler |
+   > | Publicar `rev` no corpo | Revê §EP-016. ⚠️ **O atenuante desapareceu:** medido em 07/08/2026, o repositório está **público**. O hash agora mapeia direto para o código-fonte, e qualquer um lê a árvore exata que roda em produção. Este caminho ficou mais caro do que quando foi escrito |
    > | Responder `rev` só com segredo no cabeçalho | Preserva a resposta pública intacta; custa um segredo novo e um caminho a mais na única rota dinâmica |
    > | Não fazer | O passo de saúde continua podendo aprovar o contêiner velho. Nunca causou incidente registrado |
    >
    > Enquanto não houver decisão, o item fica **parado por escolha**, e não por
    > esquecimento.
+   >
+   > **Recomendação, agora que o repositório é público:** o segundo caminho. Ele
+   > entrega ao pipeline exatamente o que falta — saber se o contêiner que
+   > respondeu é o novo — sem tocar na resposta pública nem em §EP-016. O
+   > primeiro caminho trocaria uma decisão de segurança registrada por
+   > conveniência de verificação, e ficou pior depois que o código passou a ser
+   > legível por qualquer um.
+   >
+   > **O custo de não fazer é conhecido e pequeno:** o passo de saúde pode
+   > aprovar o contêiner velho, o que já foi observado (§7.63) e nunca causou
+   > incidente — a conferência em produção por `curl` cobre o buraco, e é o que
+   > vem sendo feito a cada entrega.
 6. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
    tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
    faz. Não está no catálogo com ID; exige decisão do mantenedor.
