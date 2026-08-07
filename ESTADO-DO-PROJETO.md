@@ -261,7 +261,7 @@ esta lista é só o resumo.
 | O quê | Situação |
 |---|---|
 | ~~**Vale-transporte (`RN-027`)** em CALC-001~~ | ✅ **Resolvido em 07/08/2026 — e a norma estava aberta no Planalto o tempo todo.** Lei nº 7.418/1985, art. 4º, § único (o percentual) e Decreto nº 10.854/2021, art. 114, I (a base: salário básico, excluídos adicionais). Ver §7.70 |
-| **Incidência de INSS e IRRF sobre verbas rescisórias** | Pré-requisito de CALC-002 a CALC-005. Ver §6.2 |
+| ~~**Incidência de INSS e IRRF sobre verbas rescisórias**~~ | ✅ **Resolvida em 31/07/2026, e esta linha estava obsoleta desde então.** `docs/19` §9 diz em letra: *"Nenhuma pendência bloqueia CALC-002"*, e as cinco calculadoras dependentes estão no ar. O que sobrou ali são refinamentos de fonte nominal, declarados como não bloqueantes. Corrigida em 07/08/2026 |
 | **`RN-006`** — arredondamento da faixa intermediária do redutor | Indeterminado. Só afeta rendimentos entre R$ 5.000,01 e R$ 7.350,00 |
 | ~~**A portaria da tabela do seguro-desemprego de 2026**~~ | ✅ **Resolvida em 06/08/2026 — e a pergunta é que estava errada.** Ver §5.5 |
 | ~~**A vigência de 2025 do seguro-desemprego**~~ | ✅ **Cadastrada em 07/08/2026.** O dia veio da publicação do próprio MTE, que era pública em janeiro de 2025 e hoje pede autenticação — capturada em 11/01/2025, um dia após a publicação. Os valores continuam vindo do anexo assinado, em endereço gov.br. Ver §7.73 |

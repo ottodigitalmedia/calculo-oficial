@@ -294,9 +294,9 @@ fonte. Entra em CALC-005.
 | Saldo de salário | ✅ integra | ✅ tributável | ✅ integra |
 | 13º proporcional | ✅ integra | ✅ tributável (na fonte, em separado) | ✅ integra |
 | Aviso prévio **trabalhado** | ✅ integra | ✅ tributável | ✅ integra |
-| Aviso prévio **indenizado** | ⚠️ **divergência** (§3.1) | ❌ isento | ⏳ pendente |
-| Férias **vencidas indenizadas** + ⅓ | ❌ não integra | ❌ **isento** | ⏳ pendente |
-| Férias **proporcionais indenizadas** + ⅓ | ❌ não integra | ❌ **isento** | ⏳ pendente |
+| Aviso prévio **indenizado** | ⚠️ **divergência** (§3.1) | ❌ isento | ✅ integra (§11.2) |
+| Férias **vencidas indenizadas** + ⅓ | ❌ não integra | ❌ **isento** | ➖ não apurado |
+| Férias **proporcionais indenizadas** + ⅓ | ❌ não integra | ❌ **isento** | ➖ não apurado |
 | Férias **gozadas** + ⅓ | ✅ integra | ✅ tributável | ✅ integra |
 | Abono pecuniário de férias | ❌ não integra | ❌ isento | ❌ não integra |
 | Multa de 40% do FGTS | ❌ não integra | ❌ isento | — |
@@ -304,7 +304,26 @@ fonte. Entra em CALC-005.
 
 **Legenda.** ✅ e ❌ = confirmado em fonte primária, com dispositivo citado
 acima. ⚠️ = confirmado, mas com divergência que a memória de cálculo deve
-declarar. ⏳ = **não confirmado — não implementar.**
+declarar. ⏳ = **não confirmado — não implementar.** ➖ = não apurado, e **não
+entra em cálculo nenhum deste projeto** — ver a nota abaixo.
+
+> **Três células foram corrigidas em 07/08/2026, e a correção é de coerência
+> interna.** Duas listas do mesmo fato divergiam **dentro deste documento**: a
+> coluna FGTS marcava ⏳ para o aviso indenizado, enquanto §9 e §11.2 já o davam
+> por resolvido, com a Súmula 305 do TST transcrita — *"o pagamento relativo ao
+> período de aviso prévio, trabalhado ou não, está sujeito a contribuição para o
+> FGTS"*.
+>
+> As duas linhas de férias indenizadas passaram de ⏳ a ➖ porque ⏳ significa
+> "não implementar", e sugeria uma lacuna no cálculo que não existe: **a base do
+> FGTS neste projeto nunca é a soma das verbas × alíquota.** Ela é o saldo da
+> conta vinculada — informado pelo usuário a partir do extrato, ou estimado por
+> tempo de contrato (`RN-023`). Se a verba integra ou não a base de depósito é
+> pergunta do empregador ao recolher, e não da calculadora ao apurar a rescisão.
+>
+> Se algum dia entrar aqui uma calculadora que apure depósito verba a verba, a
+> pergunta volta a valer e precisa de fonte primária — **e a assimetria descrita
+> logo abaixo é o motivo de não presumir a resposta a partir do INSS.**
 
 **A assimetria que quase induziu ao erro.** Para o **INSS**, a exclusão das
 férias indenizadas é expressa em lei (art. 28, §9º, "d"). Para o **IRRF**, não
