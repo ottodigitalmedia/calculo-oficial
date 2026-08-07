@@ -1985,6 +1985,78 @@ até 1988 — o § 2º do art. 40 a preserva expressamente, e não aplicá-la fa
 imposto sair MAIOR que o devido. A calculadora avisa na tela quando a aquisição é
 anterior a 1989.
 
+## 11. Guias — o plano de cobertura, pedido em 07/08/2026
+
+**Pedido do mantenedor:** guias suficientes para que o site esteja "completo"
+antes de submeter ao Search Console, mantendo a qualidade dos dez atuais. A
+ideia inicial foi **um guia por calculadora**.
+
+### 11.1 O ponto de partida, medido
+
+```
+74 calculadoras · 10 guias · 15 calculadoras cobertas · 59 SEM nenhum guia
+```
+
+A cobertura é maior que dez porque o contrato já é de muitos-para-um: o campo
+`calculadoras: []` de cada guia aceita vários slugs, e
+`salario-bruto-e-liquido` sozinho serve três.
+
+### 11.2 Por que 1:1 provavelmente prejudica o objetivo
+
+O objetivo declarado é **tráfego orgânico**. Um guia por calculadora significa
+59 textos novos, e o risco não é o esforço — é o efeito contrário:
+
+| | |
+|---|---|
+| **Conteúdo raso é penalizado, não ignorado** | Os sistemas de conteúdo útil do Google avaliam o site inteiro. Páginas criadas para preencher cota puxam o domínio para baixo, inclusive as boas |
+| **Calculadoras variantes geram guias quase idênticos** | "Rescisão sem justa causa", "pedido de demissão", "acordo mútuo" e "doméstico" respondem à MESMA pergunta com variações — e já são um guia forte cada, não quatro textos parecidos |
+| **Utilitárias não têm pergunta que sustente um guia** | Divisão de conta e conversor de unidades se explicam no próprio FAQ. Um guia sobre "como dividir a conta" seria página de porta |
+| **A regra G-1 encarece cada guia** | Sem valor legal na prosa, o texto precisa explicar mecanismo. É o que torna os dez atuais bons — e o que impede produzi-los em série |
+
+### 11.3 A proposta: cobertura total com ~28 guias, não 59
+
+Todo calculadora fica ligada a pelo menos um guia. O agrupamento é **pela
+pergunta do leitor**, não pela contagem de calculadoras:
+
+| Bloco | Guias novos | Cobre |
+|---|---|---|
+| Crédito | 5 | CET · rotativo e cheque especial · quitação e plano · consignado · SAC vs. Price |
+| Imóveis | 5 | capacidade · amortização extra · alugar ou comprar · custo de aquisição · ganho de capital |
+| Investimentos | 4 | reserva · IR na renda fixa · ganho real · viver de renda |
+| Autônomo e PJ | 6 | preço da hora · INSS sem carteira · MEI · carnê-leão · declaração anual · cripto |
+| Trabalhista restante | 7 | aviso prévio · doméstico · intermitente · custo do funcionário · seguro-desemprego · três caminhos da saída · banco de horas |
+| Veículos | 2 | custo de ter um carro · qual combustível compensa |
+| Casa e consumo | 3 | conta de luz e água · energia solar · orçamento 50/30/20 |
+| Índices e câmbio | 2 | corrigir pela inflação · câmbio e IOF |
+| Utilitárias | 2 | porcentagem e regra de três · médias e prazos |
+
+**28 guias**, cada um com pergunta própria, ligados às 59 calculadoras
+descobertas. Os dez atuais permanecem.
+
+### 11.4 O custo, para a decisão ser informada
+
+Cada guia atual tem 5 a 7 seções, ~180 linhas, prosa que explica mecanismo sem
+citar valor legal, e blocos que leem `lib/params/` quando há número. Os sete de
+06/08/2026 saíram em uma sessão — mas eram trabalhistas, tema já pesquisado pelo
+projeto inteiro.
+
+Os 28 propostos atravessam crédito, investimento, tributário e consumo. **Não
+saem em uma sessão** com a mesma qualidade. A ordem sugerida é a da tabela: o
+bloco de crédito primeiro, porque é o de maior busca e o de maior dano quando
+mal explicado.
+
+### 11.5 O que decidir
+
+> **A decisão é do mantenedor, e é sobre a abordagem, não sobre o esforço.**
+> 1:1 entrega 59 páginas e um risco de diluição; o agrupamento entrega cobertura
+> total com 28 páginas que se sustentam sozinhas na busca.
+>
+> Enquanto não houver decisão, nenhum guia novo foi escrito — nem um rascunho,
+> para não criar a tentação de publicar em série o que precisa ser publicado com
+> pesquisa.
+
+---
+
 ## 10. CALC-048 — a pesquisa, e por que ela ainda não virou código
 
 **Esta seção existe para a próxima sessão começar construindo, não pesquisando**
