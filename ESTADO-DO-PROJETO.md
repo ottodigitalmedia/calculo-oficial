@@ -2467,11 +2467,23 @@ deixou de mentir no T-105. O que ninguém previu foi a escala: com quatro
 calculadoras a lista completa era um índice útil; com setenta e quatro, é uma
 parede de links que empurra o rodapé para fora da tela.
 
-**A correção preserva a propriedade e corta a exibição:** o rodapé mostra as oito
-primeiras do registro e uma chamada para o catálogo. O corte é `slice`, não uma
-segunda lista — e o número na chamada é `CALCULADORAS.length`, não uma constante.
-Se fosse constante, envelheceria, que é exatamente o defeito de §7.67 uma casa ao
-lado.
+**A correção preserva a propriedade e corta a exibição:** o rodapé mostra as
+quatro primeiras de cada registro e uma chamada para a listagem completa. O corte
+é `slice`, não uma segunda lista — e os números nas chamadas são `.length`, não
+constantes. Se fossem constantes, envelheceriam, que é exatamente o defeito de
+§7.67 uma casa ao lado.
+
+> 🚨 **A primeira versão desta correção resolveu metade, e o teste também.**
+> Encolhi a coluna das calculadoras e **deixei os dez guias inteiros** — e o
+> teste que escrevi junto só olhava as calculadoras. O mantenedor apontou no
+> mesmo dia: a coluna dos guias cresceria pelo mesmo caminho, guia a guia, em
+> toda página do site.
+>
+> **Um limite que se aplica a uma lista e não à irmã dela não é limite, é
+> adiamento** — e uma verificação que cobre metade da correção é a mesma
+> armadilha de §7.67, em escala menor: o silêncio dela não distingue "está certo"
+> de "não foi olhado". O limite passou a valer para as duas listas, e o teste
+> percorre as duas com o mesmo laço.
 
 > **Derivar do registro resolve "a lista mente". Não resolve "a lista cresceu".**
 > São problemas diferentes, e o segundo só aparece com o tempo. Vale reler

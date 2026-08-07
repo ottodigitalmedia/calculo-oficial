@@ -24,17 +24,28 @@ import { GUIAS } from '@/lib/guias'
  *
  * **Mas derivar tudo escala mal, e escalou mal.** Com quatro calculadoras a
  * lista completa cabia; com setenta e quatro o rodapé virou uma parede de
- * links em toda página do site. Em 06/08/2026 ele passou a mostrar as
- * primeiras `NO_RODAPE` e a apontar para o catálogo.
+ * links em toda página do site.
  *
- * O corte é **na exibição, não na fonte**: a lista continua vindo do registro,
- * e o número na chamada é `CALCULADORAS.length`, não uma constante escrita
- * aqui. Se fosse escrito, envelheceria — que é o defeito que este arquivo
+ * O corte é **na exibição, não na fonte**: as listas continuam vindo dos
+ * registros, e os números nas chamadas são `.length`, não constantes escritas
+ * aqui. Se fossem escritos, envelheceriam — que é o defeito que este arquivo
  * inteiro existe para não repetir.
+ *
+ * **E o corte vale para as DUAS listas.** A primeira versão desta correção
+ * encolheu só as calculadoras e deixou os dez guias inteiros, o que resolvia
+ * metade do problema e deixava a outra metade crescendo pelo mesmo caminho:
+ * guia novo, rodapé mais alto, em toda página. Um limite que se aplica a uma
+ * lista e não à irmã dela não é limite, é adiamento.
  */
 
-/** Quantas cabem sem o rodapé virar índice. Exibição, não conteúdo. */
-const NO_RODAPE = 8
+/**
+ * Quantos itens por coluna. Exibição, não conteúdo.
+ *
+ * Quatro porque é o que mantém o rodapé na altura da coluna "Legal", que tem
+ * quatro links fixos — nenhuma coluna puxa a altura sozinha, e o rodapé para
+ * de crescer quando o catálogo cresce.
+ */
+const NO_RODAPE = 4
 const LEGAIS = [
   { href: '/aviso-legal', rotulo: 'Aviso legal' },
   { href: '/privacidade', rotulo: 'Privacidade' },
@@ -80,13 +91,18 @@ export function Rodape() {
         <div>
           <h2 className="text-sm font-semibold">Guias</h2>
           <ul className="mt-3 space-y-2 text-sm opacity-75">
-            {GUIAS.map((g) => (
+            {GUIAS.slice(0, NO_RODAPE).map((g) => (
               <li key={g.slug}>
                 <Link href={`/guia/${g.slug}`} className="inline-block py-1 hover:underline">
                   {g.titulo}
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/guias" className="inline-block py-1 font-medium hover:underline">
+                Ver todos os {GUIAS.length} guias
+              </Link>
+            </li>
           </ul>
         </div>
 

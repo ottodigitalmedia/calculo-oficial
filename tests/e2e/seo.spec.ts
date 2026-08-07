@@ -253,20 +253,35 @@ test('o rodapé mostra uma amostra e leva ao catálogo completo', async ({ page 
 
   await expect(rodape.getByText('em breve', { exact: false })).toHaveCount(0)
 
-  const links = rodape.locator('a[href^="/calculadora/"]')
-  const quantos = await links.count()
-  expect(quantos).toBeGreaterThan(0)
-  expect(quantos).toBeLessThan(CALCULADORAS.length)
+  /*
+   * O limite vale para as DUAS listas.
+   *
+   * A primeira versão desta correção encolheu só as calculadoras e deixou os
+   * guias inteiros — e o teste, escrito junto, também só olhou as
+   * calculadoras. Meia verificação para meia correção: os guias continuariam
+   * crescendo o rodapé sem nada reprovar.
+   */
+  for (const [prefixo, universo] of [
+    ['/calculadora/', CALCULADORAS],
+    ['/guia/', GUIAS],
+  ] as const) {
+    const links = rodape.locator(`a[href^="${prefixo}"]`)
+    const quantos = await links.count()
+    expect(quantos, `${prefixo} sem links no rodapé`).toBeGreaterThan(0)
+    expect(quantos, `${prefixo} lista inteira no rodapé`).toBeLessThan(universo.length)
 
-  // Todo link do rodapé aponta para calculadora que existe de verdade.
-  for (let i = 0; i < quantos; i += 1) {
-    const href = await links.nth(i).getAttribute('href')
-    const slug = href?.replace('/calculadora/', '') ?? ''
-    expect(CALCULADORAS).toContain(slug)
+    // Todo link do rodapé aponta para algo que existe de verdade.
+    for (let i = 0; i < quantos; i += 1) {
+      const href = await links.nth(i).getAttribute('href')
+      expect(universo).toContain(href?.replace(prefixo, '') ?? '')
+    }
   }
 
-  // A contagem é derivada: some uma calculadora e este texto muda sozinho.
+  // As contagens são derivadas: publique mais uma e estes textos mudam sozinhos.
   await expect(
     rodape.getByRole('link', { name: `Ver todas as ${CALCULADORAS.length} calculadoras` }),
+  ).toBeVisible()
+  await expect(
+    rodape.getByRole('link', { name: `Ver todos os ${GUIAS.length} guias` }),
   ).toBeVisible()
 })
