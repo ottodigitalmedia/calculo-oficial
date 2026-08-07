@@ -75,9 +75,18 @@ RUN npm run build
 # runner — imagem final. Nada além do necessário para servir.
 # -----------------------------------------------------------------------------
 FROM base AS runner
+
+# A revisão precisa estar disponível ao PROCESSO, e não só como rótulo da
+# imagem: `EP-016` a devolve a quem apresenta credencial, para o pipeline saber
+# se falou com o contêiner novo ou com o velho. Ver a nota da rota de saúde.
+#
+# O `ARG` é declarado de novo aqui porque argumento de build não atravessa
+# estágio — este é outro `FROM`, e o valor do estágio anterior não vale nele.
+ARG VCS_REF="desconhecido"
 ENV NODE_ENV=production \
     PORT=3000 \
-    HOSTNAME=0.0.0.0
+    HOSTNAME=0.0.0.0 \
+    APP_REV=${VCS_REF}
 
 # D-2 — usuário sem privilégio. Criado antes das cópias para que os arquivos
 # já nasçam com o dono certo.

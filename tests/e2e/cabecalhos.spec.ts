@@ -118,3 +118,63 @@ test('HSTS não anuncia preload sem decisão registrada', async ({ request }) =>
       'A saída da lista de pré-carga leva meses e depende do navegador, não de nós.',
   ).not.toContain('preload')
 })
+
+// ---------------------------------------------------------------------------
+// EP-016 · a versão só sai com credencial
+// ---------------------------------------------------------------------------
+
+/**
+ * A DECISÃO DE `EP-016` NÃO FOI REVISTA, E ESTES CASOS SÃO O QUE A SUSTENTA.
+ *
+ * A rota passou a devolver a revisão em 07/08/2026, depois de o pipeline
+ * aprovar dois deploys que não aconteceram — a verificação lia "ok" do
+ * contêiner ANTIGO, que responde igual ao novo, em 1,8 segundo.
+ *
+ * O texto de `EP-016` continua valendo literalmente: *"não devolve versão,
+ * ambiente nem configuração"* **para quem não apresenta credencial**. Sem estes
+ * casos, a próxima pessoa a mexer na rota pode simplificar o `if` e publicar a
+ * versão para a internet inteira sem que nada reclame.
+ */
+test('EP-016 · a resposta pública não revela versão nem configuração', async ({ request }) => {
+  const resposta = await request.get('/api/health')
+  expect(resposta.ok()).toBe(true)
+
+  const corpo = await resposta.text()
+  expect(JSON.parse(corpo)).toEqual({ status: 'ok' })
+
+  // Explícito além do toEqual: o que não pode vazar, nomeado.
+  for (const proibido of ['rev', 'version', 'commit', 'env', 'NODE_ENV']) {
+    expect(corpo, `a resposta pública contém "${proibido}"`).not.toContain(proibido)
+  }
+})
+
+/**
+ * E credencial ERRADA precisa ser tratada como credencial ausente.
+ *
+ * Um `if` que aceitasse qualquer cabeçalho presente — em vez de conferir o
+ * valor — passaria no caso acima e entregaria a versão a quem mandasse
+ * `x-health-token: qualquer-coisa`. É o modo de falha mais provável de uma
+ * comparação escrita com pressa.
+ */
+test('EP-016 · credencial errada não revela versão', async ({ request }) => {
+  const resposta = await request.get('/api/health', {
+    headers: { 'x-health-token': 'palpite-errado' },
+  })
+  expect(resposta.ok()).toBe(true)
+  expect(JSON.parse(await resposta.text())).toEqual({ status: 'ok' })
+})
+
+/**
+ * O que impede um intermediário de servir a resposta autenticada a quem não
+ * apresentou credencial.
+ *
+ * A primeira versão deste caso cobrava `Vary: x-health-token`. **Medido: não
+ * funciona** — o Next sobrescreve o cabeçalho com os valores de roteamento
+ * dele, e o teste reprovava por uma promessa que a plataforma não deixa
+ * cumprir. Quem de fato protege é o `no-store`, que proíbe qualquer cache de
+ * guardar a resposta — e é isso que se cobra aqui.
+ */
+test('EP-016 · a resposta proíbe ser armazenada em cache', async ({ request }) => {
+  const controle = (await request.get('/api/health')).headers()['cache-control'] ?? ''
+  expect(controle).toContain('no-store')
+})

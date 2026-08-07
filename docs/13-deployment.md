@@ -116,6 +116,7 @@ flowchart TD
 | `BCB_SERIES_ID` | build | não | Identificador da série econômica |
 | `BCB_TIMEOUT_MS` | build | não | Tempo limite da coleta; 3000 por padrão (`06-api-spec` §4.2) |
 | `DEPLOY_WEBHOOK_URL` | CI | **sim** | Disparo do deploy |
+| `HEALTH_TOKEN` | CI **e** prod | **sim** | Libera a revisão em `EP-016`, para o pipeline conferir se o contêiner novo respondeu. **Precisa do mesmo valor no cofre do repositório e no painel do EasyPanel** — em só um dos dois, a conferência degrada para aviso |
 | `REGISTRY_TOKEN` | CI | **sim** | Publicação da imagem — **só se o registro for externo ao GitHub**. Com o registro de contêineres do próprio GitHub, o token efêmero do workflow basta e não há segredo a guardar nem a rotacionar (`07-security` §6) |
 | `UMAMI_*` (quatro) | — | — | **Superadas em 07/08/2026.** Pertenciam à análise autohospedada que `INT-005` previa antes da troca por GTM e GA4. Ficam vazias; a limpeza depende de confirmar que a instância antiga não subiu |
 | `VCS_REF` | CI | não | Hash do commit; vira etiqueta da imagem (D-5) |

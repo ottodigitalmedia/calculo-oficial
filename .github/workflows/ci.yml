@@ -160,6 +160,10 @@ jobs:
   publicar:
     name: Publicar imagem
     needs: verificar
+    # A etiqueta atravessa para o job de implantação, que a usa para CONFERIR
+    # qual revisão o contêiner passou a servir — ver a verificação de saúde.
+    outputs:
+      sha: ${{ steps.meta.outputs.sha }}
     # Aceita disparo manual além do push. Sem isso o `workflow_dispatch` seria
     # inútil para o caso que o motivou: reimplantar sem commit quando o
     # serviço cai e a imagem publicada já está correta (15-runbook RB-01).
@@ -308,16 +312,50 @@ jobs:
         if: steps.disparo.outputs.implantou == 'true'
         id: saude
         run: |
+          # ESPERAR A VERSÃO CERTA, E NÃO SÓ UMA RESPOSTA VIVA.
+          #
+          # Em 07/08/2026 este passo aprovou dois deploys que não aconteceram.
+          # Entre disparar o webhook e ler "ok" passou 1,8 segundo: a resposta
+          # veio do contêiner ANTIGO, que também responde "ok". Uma verificação
+          # que não distingue versão não consegue, por construção, saber se o
+          # deploy ocorreu.
+          #
+          # Agora ela espera a revisão do commit. O segredo vai no cabeçalho
+          # porque a resposta pública continua sem versão — ver a rota.
           alvo="${{ vars.NEXT_PUBLIC_SITE_URL }}/api/health"
-          for i in $(seq 1 20); do
-            if curl --fail --silent --max-time 5 "$alvo" | grep -q '"status":"ok"'; then
-              echo "Saudável na tentativa $i."
-              exit 0
-            fi
-            echo "tentativa $i: ainda não saudável"
+          esperado="${{ needs.publicar.outputs.sha }}"
+          vivo=nao
+
+          for i in $(seq 1 30); do
+            corpo=$(curl --fail --silent --max-time 5 \
+                      -H "x-health-token: ${{ secrets.HEALTH_TOKEN }}" "$alvo" || true)
+
+            case "$corpo" in
+              *'"status":"ok"'*) vivo=sim ;;
+              *) echo "tentativa $i: ainda não responde"; sleep 6; continue ;;
+            esac
+
+            case "$corpo" in
+              *"\"rev\":\"$esperado\""*)
+                echo "Saudável na tentativa $i, servindo a revisão $esperado."
+                exit 0
+                ;;
+              *'"rev":'*)
+                echo "tentativa $i: vivo, mas ainda servindo revisão anterior"
+                ;;
+              *)
+                # Sem `rev` na resposta: o segredo não está configurado dos dois
+                # lados. Não dá para confirmar a versão, e fingir que dá seria
+                # repetir o defeito que este passo existe para corrigir.
+                echo "::warning title=Versão não confirmada::A rota de saúde respondeu sem \`rev\`. O deploy pode ter ocorrido, mas ESTE PASSO NÃO CONSEGUE PROVAR. Configure o segredo HEALTH_TOKEN no repositório E a variável de mesmo nome no painel do EasyPanel — enquanto isso, confira à mão. Ver 13-deployment §10."
+                echo "Saudável na tentativa $i (versão não confirmada)."
+                exit 0
+                ;;
+            esac
             sleep 6
           done
-          echo "::error title=Verificação de saúde::EP-016 não respondeu em ~2 min."
+
+          echo "::error title=Verificação de saúde::EP-016 não passou a servir a revisão $esperado em ~3 min. Se a rota responde mas a revisão não muda, o orquestrador não trocou a imagem — implante pelo painel (15-runbook RB-01)."
           exit 1
 
       - name: Rollback automático
