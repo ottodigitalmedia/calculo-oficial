@@ -46,7 +46,21 @@ export default defineConfig({
     command: 'npm run build && npm run start',
     // A porta vai por ambiente porque `VAR=x cmd` não funciona no shell do
     // Windows, e o mantenedor trabalha em Windows.
-    env: { PORT: PORTA },
+    /**
+     * O CONTÊINER DE MEDIÇÃO ENTRA LIGADO **AQUI**, E SÓ AQUI.
+     *
+     * `NEXT_PUBLIC_GTM_ID` é embutido no build, então esta é a única suíte que
+     * exercita o site com o Google Tag Manager carregando de verdade. A e2e
+     * segue sem ele, o que mantém aqueles testes medindo o produto e não a
+     * integração.
+     *
+     * O identificador é de mentira de propósito: `gtm.js` responde 404, e é
+     * exatamente isso que se quer. O que TC-042 precisa inspecionar é o que
+     * ESTE repositório envia — a requisição do contêiner e o `dataLayer` que
+     * montamos —, e não o que o Google devolveria para um contêiner real, que
+     * é configuração fora daqui e muda sem commit.
+     */
+    env: { PORT: PORTA, NEXT_PUBLIC_GTM_ID: 'GTM-TESTE01' },
     url: BASE_URL,
     // Nunca reaproveitar servidor de fora: a linha de base precisa ser um
     // processo cuja origem esta suíte conhece.

@@ -169,11 +169,17 @@ calcular(entradas: EntradasDaCalculadora, dataReferencia: Data)
 | INT-002 | Plataforma de consentimento | Sempre, antes de qualquer outro terceiro | Nenhum terceiro carrega. Produto funciona integralmente |
 | INT-003 | Rede de anúncio | Somente após consentimento | Slot permanece com a altura reservada e vazio. Sem deslocamento (`RNF-002`) |
 | INT-004 | Registro de erro | Sempre, sem cookie | Erro não é reportado. Nenhum impacto ao usuário |
-| INT-005 | Análise de uso autohospedada | Sempre, sem cookie | Evento perdido. Nenhum impacto |
+| INT-005 | **Google Tag Manager + GA4** (revisto em 07/08/2026) | Sempre; **sem cookie até haver consentimento**, por Consent Mode v2 negado por omissão | Evento perdido. Nenhum impacto |
 
 **Regra R-4.** Nenhuma integração de terceiro participa do caminho crítico de renderização ou de cálculo. `RNF-007` exige que o produto funcione integralmente com todas elas bloqueadas.
 
 **Regra R-5.** INT-004 e INT-005 nunca recebem valores de formulário, nem em contexto de erro (`RN-030`). A configuração de captura de erro deve remover explicitamente query string e conteúdo de campos antes do envio.
+
+> **A troca de INT-005 por ferramenta de terceiro não afrouxou R-5 — apertou o lugar onde ela é cumprida.** `RF-006` põe o estado do formulário na query, então `location.search` contém salário. Um GA4 padrão envia `page_location` com a URL inteira.
+>
+> A sanitização mora em `components/Medicao.tsx`, **no código e antes de o contêiner carregar**: `page_location` e `page_path` são montados a partir de `pathname`, o `page_referrer` é reduzido à origem, `url_passthrough` fica desligado e o `noscript` do GTM é deliberadamente omitido — ele é um iframe que dispara com a URL da página e não há JavaScript para interceptá-lo.
+>
+> **O limite, declarado:** a etiqueta do GA4 no painel precisa usar essas variáveis de `dataLayer` em vez de `Page URL`. Apontá-la para a URL da página contorna tudo isto sem que nada neste repositório mude. TC-042 cobra o que sai daqui; não alcança o que for configurado no painel amanhã.
 
 ## 6. Webhooks
 

@@ -9,10 +9,20 @@ import { expect, test, type Request } from '@playwright/test'
  * sai do navegador — em verificação executável. Sem ele, a promessa é texto na
  * página de privacidade.
  *
- * A linha de base nasce ANTES do primeiro script de terceiro (`11-roadmap`,
- * nota de F-5): hoje o site não carrega nenhum, e é justamente por isso que o
- * teste é confiável agora. Quando o anúncio entrar, qualquer vazamento terá
- * culpado identificável, porque este arquivo já provava a ausência dele.
+ * A linha de base nasceu ANTES do primeiro script de terceiro (`11-roadmap`,
+ * nota de F-5), e **o primeiro entrou em 07/08/2026**: o contêiner de medição,
+ * por decisão do mantenedor. Foi exatamente para este dia que ela existia — o
+ * que este arquivo provava antes é o que torna possível, agora, atribuir
+ * qualquer vazamento a um culpado identificável.
+ *
+ * A proteção trocou de forma, e não de força:
+ *
+ *   antes  → nenhum terceiro, nunca
+ *   agora  → **exatamente os declarados**, e nada saindo com marcador
+ *
+ * **Esta suíte é a única que roda com o contêiner ligado** — ver
+ * `playwright.leak.config.ts`. A e2e segue sem ele, medindo o produto e não a
+ * integração.
  */
 
 // ---------------------------------------------------------------------------
@@ -180,9 +190,24 @@ function procurarVazamento(saidas: readonly Saida[]): readonly string[] {
   return achados
 }
 
-/** Requisições para fora da origem do site. */
-function paraTerceiros(saidas: readonly Saida[], origem: string): readonly Saida[] {
-  return saidas.filter((s) => !s.url.startsWith(origem) && !s.url.startsWith('data:'))
+/**
+ * Os únicos destinos externos que este site pode tocar. **Lista exaustiva.**
+ *
+ * Era vazia até 07/08/2026. O contêiner de medição entrou por decisão do
+ * mantenedor, e a proteção trocou de forma em vez de sumir: antes "nenhum
+ * terceiro", agora "estes e mais nenhum". Acrescentar um item aqui é declarar
+ * um destino novo, e deve vir com o motivo.
+ */
+const TERCEIROS_DECLARADOS = ['https://www.googletagmanager.com/']
+
+/** Requisições para destino externo que não está na lista declarada. */
+function foraDaLista(saidas: readonly Saida[], origem: string): readonly Saida[] {
+  return saidas.filter(
+    (s) =>
+      !s.url.startsWith(origem) &&
+      !s.url.startsWith('data:') &&
+      !TERCEIROS_DECLARADOS.some((permitido) => s.url.startsWith(permitido)),
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -256,10 +281,21 @@ test('TC-040 · nenhum valor digitado sai do navegador', async ({ page, baseURL 
     'nenhuma URL foi escaneada: o recorte de recurso de build está largo demais',
   ).toBeGreaterThan(0)
 
-  const externas = paraTerceiros(saidas, baseURL ?? '')
+  /**
+   * A asserção mudou em 07/08/2026, junto com a entrada do contêiner.
+   *
+   * Ela dizia "qualquer requisição externa é regressão", o que era verdade
+   * enquanto o site não tinha terceiro nenhum. Agora tem exatamente um, e o que
+   * ela cobra é a **lista fechada** — qualquer destino fora dela reprova, que é
+   * a mesma proteção com um item declarado dentro.
+   *
+   * O que NÃO foi afrouxado é a varredura de marcadores acima: ela continua
+   * valendo para toda requisição, inclusive as do contêiner.
+   */
+  const inesperadas = foraDaLista(saidas, baseURL ?? '')
   expect(
-    externas.map((s) => s.url),
-    'o site não carrega script de terceiro; qualquer requisição externa é regressão',
+    inesperadas.map((s) => s.url),
+    'requisição a destino externo não declarado — ver TERCEIROS_DECLARADOS',
   ).toEqual([])
 })
 
@@ -305,24 +341,38 @@ test('TC-041 · erro provocado não transporta valor de campo nem query', async 
 })
 
 // ---------------------------------------------------------------------------
-// TC-042 e TC-043 · a linha de base que os antecede
+// TC-042 · o contêiner de medição entrou, e a promessa continua de pé
 // ---------------------------------------------------------------------------
 
 /**
- * TC-042 (evento de análise) e TC-043 (marcadores com anúncio consentido) não
- * têm objeto: `ADR-008` adiou análise de uso e anúncio para depois do
- * lançamento.
+ * A LINHA DE BASE DE ZERO TERCEIROS ACABOU EM 07/08/2026, POR DECISÃO DO
+ * MANTENEDOR — E ESTE É O TESTE QUE ELA EXIGIA NO MESMO COMMIT.
  *
- * Escrever os dois agora produziria testes que passam por não haver o que
- * verificar — o mesmo defeito do `echo` que fingia ser TC-051 do T-003 ao
- * T-105. Em vez disso, o teste abaixo **falha no dia em que o objeto surgir**,
- * obrigando quem introduzir análise ou anúncio a escrever TC-042 e TC-043 no
- * mesmo commit.
+ * O teste anterior dizia, na própria mensagem de falha: *"se foi análise de uso
+ * ou anúncio, escreva TC-042 e TC-043 no mesmo commit e substitua este teste."*
+ * É o que está aqui. Ele não foi afrouxado: trocou de forma.
+ *
+ *   antes  → nenhum terceiro, nunca
+ *   agora  → **exatamente um** terceiro declarado, e nada saindo com marcador
+ *
+ * A parte que importa de `RN-030` não mudou de exigência. Mudou de dificuldade:
+ * antes bastava não haver requisição externa; agora há uma, e ela precisa ser
+ * provada limpa.
+ *
+ * **O risco concreto que estes casos vigiam.** `RF-006` escreve o estado do
+ * formulário na query, então `location.search` contém salário, pensão e saldo de
+ * FGTS. Um GA4 padrão envia `page_location` com a URL inteira — ligá-lo sem
+ * cuidado exportaria tudo isso. `components/Medicao.tsx` sanitiza no código, e
+ * estes casos são o que impede a sanitização de ser desfeita em silêncio.
+ *
+ * **O limite, dito aqui também.** O contêiner carrega etiquetas configuradas
+ * FORA deste repositório. Estes casos alcançam o que este código envia e o que o
+ * contêiner enviar durante a execução — não o que alguém configurar amanhã no
+ * painel. Nenhum teste daqui alcança aquilo, e fingir o contrário seria pior que
+ * não ter teste.
  */
-test('a linha de base é zero terceiros — reprova se análise ou anúncio entrar sem teste', async ({
-  page,
-  baseURL,
-}) => {
+
+test('TC-042 · a lista de terceiros é exatamente a declarada', async ({ page, baseURL }) => {
   const saidas = capturar(page)
 
   for (const rota of [
@@ -335,19 +385,67 @@ test('a linha de base é zero terceiros — reprova se análise ou anúncio entr
     await page.waitForLoadState('networkidle')
   }
 
-  const externas = paraTerceiros(saidas, baseURL ?? '')
+  const inesperadas = foraDaLista(saidas, baseURL ?? '')
   expect(
-    externas.map((s) => `${s.metodo} ${s.url}`),
-    'Apareceu requisição a terceiro. Se foi análise de uso ou anúncio: escreva ' +
-      'TC-042 e TC-043 (12-test-plan §7) NO MESMO COMMIT e substitua este teste. ' +
-      'A exceção de RN-031.1 é exaustiva — busca_sem_resultado e nada mais.',
+    inesperadas.map((s) => `${s.metodo} ${s.url}`),
+    'Apareceu terceiro fora da lista declarada. Se foi anúncio, escreva TC-043 ' +
+      '(12-test-plan §7) NO MESMO COMMIT. Se foi etiqueta nova do contêiner, ' +
+      'ela precisa entrar em TERCEIROS_DECLARADOS com o motivo.',
   ).toEqual([])
 
-  // Sem cookie também é estado atual declarado na página de privacidade. Se
-  // isso mudar, aquele texto passa a mentir.
-  const cookies = await page.context().cookies()
+  // E o contêiner precisa ter carregado de verdade: um teste que passasse por
+  // ele não ter subido não teria verificado nada — a lição de §7.67.
+  const doContainer = saidas.filter((s) => s.url.includes('googletagmanager.com'))
   expect(
-    cookies.map((c) => c.name),
-    'A página de privacidade afirma que o site não usa cookies. Atualize-a no mesmo commit.',
+    doContainer.length,
+    'o contêiner não carregou; este teste não verificou a medição. Confira ' +
+      'NEXT_PUBLIC_GTM_ID em playwright.leak.config.ts',
+  ).toBeGreaterThan(0)
+})
+
+test('TC-042 · nada que o contêiner envia carrega valor de formulário', async ({ page }) => {
+  const saidas = capturar(page)
+
+  // Semeia a query com os marcadores, que é o cenário perigoso: é assim que o
+  // salário chega a `location.search` num permalink compartilhado.
+  await page.goto(
+    `/calculadora/salario-liquido?salarioBruto=${MARCADORES.salario}` +
+      `&pensao=${MARCADORES.pensao}&outrosDescontos=${MARCADORES.outros}`,
+  )
+  await expect(page.getByText('Salário líquido estimado')).toBeVisible()
+  await page.waitForLoadState('networkidle')
+
+  const vazamentos = procurarVazamento(saidas)
+  expect(
+    vazamentos,
+    `Valor de formulário saiu com a medição ligada:\n${vazamentos.join('\n')}`,
   ).toEqual([])
+})
+
+test('TC-042 · o dataLayer reporta a rota sem query, e o referenciador sem caminho', async ({
+  page,
+}) => {
+  await page.goto(
+    `/calculadora/salario-liquido?salarioBruto=${MARCADORES.salario}&pensao=${MARCADORES.pensao}`,
+  )
+  await expect(page.getByText('Salário líquido estimado')).toBeVisible()
+
+  const camada = (await page.evaluate(() => {
+    const janela = window as unknown as { dataLayer?: unknown[] }
+    return JSON.stringify(janela.dataLayer ?? [])
+  })) as string
+
+  // Prova de que houve o que inspecionar.
+  expect(camada, 'dataLayer vazio: a medição não montou nada para verificar').toContain(
+    'pagina_vista',
+  )
+
+  // C-04 · o identificador de página é a rota, sem query.
+  expect(camada).toContain('/calculadora/salario-liquido')
+  for (const forma of TODAS_AS_FORMAS) {
+    expect(camada, `o dataLayer contém "${forma}"`).not.toContain(forma)
+  }
+
+  // Consent Mode v2 negado por omissão — sem isto o GA4 grava cookie.
+  expect(camada).toContain('denied')
 })

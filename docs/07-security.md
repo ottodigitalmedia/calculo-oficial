@@ -62,8 +62,8 @@ Esta é a seção central do documento, porque é a promessa do produto.
 |---|---|---|
 | C-01 | Cálculo executa integralmente no cliente; não há endpoint que receba dado de formulário | Arquitetura |
 | C-02 | Ferramenta de erro configurada para remover query string, corpo de requisição e conteúdo de campos antes do envio | Configuração de INT-004 |
-| C-03 | Eventos de análise contêm apenas identificador de calculadora e tipo de interação — nunca valores | Configuração de INT-005 |
-| C-04 | Identificador de página reportado é a rota sem query string (regra R-2) | Camada de análise |
+| C-03 | Eventos de análise contêm apenas identificador de calculadora e tipo de interação — nunca valores | `components/Medicao.tsx`, verificado por TC-042 |
+| C-04 | Identificador de página reportado é a rota sem query string (regra R-2) | `components/Medicao.tsx` — montado de `pathname`, nunca de `location.href`. Verificado por TC-042 |
 | C-05 | Política de segurança de conteúdo restringe destinos de conexão a uma lista explícita | Cabeçalhos HTTP |
 | C-06 | Scripts de terceiro carregam em contexto isolado sempre que o provedor permitir | Camada de anúncio |
 | C-07 | Teste automatizado que preenche formulário, captura todo o tráfego de saída e **falha se qualquer valor digitado aparecer** | `12-test-plan` |
@@ -173,7 +173,7 @@ Contra AM-06: proxy com limitação de conexões por origem; se a VPS se tornar 
 | Nome, e-mail, telefone, documento | **Não** | Não são solicitados em nenhum ponto |
 | Endereço IP | Indiretamente | Registro do servidor e da ferramenta de análise |
 | Identificador publicitário | Sim, se consentido | Tratado pela rede de anúncio, na condição de controladora própria |
-| Cookies | Somente os da rede de anúncio, após consentimento | A análise de uso não usa cookie |
+| Cookies | Somente os da rede de anúncio e os do GA4, **ambos após consentimento** | Consent Mode v2 entra negado por omissão, o que mantém o GA4 sem cookie até haver aceite (revisto em 07/08/2026) |
 
 ### 11.2 Bases legais
 

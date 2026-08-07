@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { Cabecalho } from '@/components/Cabecalho'
+import { Medicao } from '@/components/Medicao'
 import { Rodape } from '@/components/Rodape'
 import { NOME_DO_SITE, SITE_URL } from '@/lib/seo'
 
@@ -48,6 +49,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Cabecalho />
         <div className="flex-1">{children}</div>
         <Rodape />
+        {/* Sem NEXT_PUBLIC_GTM_ID não renderiza nada — RNF-007. */}
+        <Medicao />
       </body>
     </html>
   )
