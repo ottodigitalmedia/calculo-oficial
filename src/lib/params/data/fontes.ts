@@ -1080,9 +1080,23 @@ export const RES_CODEFAT_957: Fonte = {
  *     — a notícia existe e a página pede autenticação
  *   ✗ `portalfat.mte.gov.br` — espelhou 2024 e 2026, não espelhou 2025
  *   ✗ busca do próprio portal do FAT por "seguro-desemprego 2025"
+ *   ✗ Relatório de Gestão do FAT 2025 (`RG_FAT_2025.pdf`, abril/2026, no host
+ *     `portalfat.trabalho.gov.br`) — texto extraído, não traz a tabela
+ *   ✗ **o art. 19 da própria Resolução CODEFAT nº 957/2022, lido na íntegra:
+ *     ele NÃO fixa dia nem mês.** Define o índice (INPC) e o período de
+ *     acumulação ("doze meses anteriores ao mês de reajuste"), e o § 2º
+ *     menciona *"a vigência do reajuste"* como data já conhecida, sem dizê-la.
+ *     Esta avenida está fechada em definitivo — não vale reler o artigo.
  *
- * O que resta tentar: o Relatório de Gestão do FAT de 2025, publicado em
- * abril/2026 no portal, que costuma transcrever a tabela do exercício.
+ * **Uma coincidência que NÃO serve de fonte, registrada para não ser usada:** a
+ * Lei nº 7.998 é de **11 de janeiro** de 1990, e as tabelas de 2024 e 2026
+ * começam a valer em 11/01. O padrão é forte e a explicação é plausível, mas
+ * nenhuma norma lida até aqui diz que o reajuste vigora no aniversário da lei.
+ * Padrão observado não é dispositivo.
+ *
+ * O que resta tentar: a edição do DOU de janeiro/2025 (fora da janela de ~4
+ * meses do INLABS, exige a busca por edição no portal do IN), ou o pedido da
+ * página do MTE por outro caminho que não o autenticado.
  *
  * **Não foi inferida por analogia**, e não deve ser: data de vigência é valor
  * legal, e o dia certo decide qual tabela se aplica a quem foi dispensado na
