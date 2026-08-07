@@ -1067,13 +1067,26 @@ export const RES_CODEFAT_957: Fonte = {
  * R$ 1.621,00, coincide com `salario-minimo` de 2026, conferido no PDF da
  * Portaria Interministerial MPS/MF nº 13/2026.
  *
- * **O que falta, e é menor do que parecia:** cadastrar a vigência de 2025 como
- * exercício anterior. O anexo assinado tem os valores, mas declara "período: ano
- * de 2025" sem dizer o dia — e as tabelas de 2024 e de 2026 valem a partir de 11
- * de janeiro, não de 1º. Cadastrar 2025 exige ler a data de início em fonte
- * oficial; as páginas de notícia do `gov.br` pedem autenticação. **Não foi
- * inferida por analogia**: data de vigência é valor legal, e o dia certo decide
- * qual tabela se aplica a quem foi dispensado na primeira semana de janeiro.
+ * **O que falta, e a busca já foi delimitada.** Cadastrar a vigência de 2025 como
+ * exercício anterior exige o DIA em que ela passou a valer. O anexo assinado traz
+ * os valores e declara apenas *"período: ano de 2025"*; as tabelas de 2024 e de
+ * 2026 valem a partir de **11 de janeiro**, não de 1º — então "ano de 2025" não
+ * responde, e cadastrar 01/01 aplicaria a tabela nova à primeira semana de
+ * janeiro, quando a antiga ainda valia.
+ *
+ * **Onde já se procurou (07/08/2026), para não repetir:**
+ *
+ *   ✗ `gov.br/trabalho-e-emprego/.../2025/janeiro/seguro-desemprego-2025-...`
+ *     — a notícia existe e a página pede autenticação
+ *   ✗ `portalfat.mte.gov.br` — espelhou 2024 e 2026, não espelhou 2025
+ *   ✗ busca do próprio portal do FAT por "seguro-desemprego 2025"
+ *
+ * O que resta tentar: o Relatório de Gestão do FAT de 2025, publicado em
+ * abril/2026 no portal, que costuma transcrever a tabela do exercício.
+ *
+ * **Não foi inferida por analogia**, e não deve ser: data de vigência é valor
+ * legal, e o dia certo decide qual tabela se aplica a quem foi dispensado na
+ * primeira semana de janeiro.
  */
 export const MTE_TABELA_SEGURO_DESEMPREGO: Fonte = {
   id: 'mte-tabela-seguro-desemprego-2026',
