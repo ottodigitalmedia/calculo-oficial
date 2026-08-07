@@ -6,29 +6,41 @@
  */
 
 import { ALUGAR_OU_COMPRAR } from './alugar-ou-comprar'
+import { AS_CONTAS_DA_CASA } from './as-contas-da-casa'
 import { AVISO_PREVIO } from './aviso-previo'
 import { BRUTO_E_LIQUIDO } from './bruto-e-liquido'
 import { CET_CUSTO_EFETIVO_TOTAL } from './cet-custo-efetivo-total'
 import { CONSIGNADO } from './consignado'
 import { COMO_O_INSS_E_CALCULADO } from './como-o-inss-e-calculado'
 import { DECIMO_TERCEIRO } from './decimo-terceiro'
+import { CAMBIO_E_IOF } from './cambio-e-iof'
 import { CONTRATO_INTERMITENTE } from './contrato-intermitente'
+import { CRIPTO_NO_IMPOSTO } from './cripto-no-imposto'
+import { CUSTO_DE_TER_UM_CARRO } from './custo-de-ter-um-carro'
 import { CUSTO_DO_FUNCIONARIO } from './custo-do-funcionario'
 import { DECLARACAO_ANUAL } from './declaracao-anual'
 import { EMPREGADO_DOMESTICO } from './empregado-domestico'
+import { ENERGIA_SOLAR } from './energia-solar'
 import { FERIAS } from './ferias'
+import { GANHO_REAL } from './ganho-real'
 import { FGTS_GUIA } from './fgts'
 import { HORAS_EXTRAS } from './horas-extras'
 import { IMOVEL_PARA_ALUGAR } from './imovel-para-alugar'
 import { INSS_SEM_CARTEIRA } from './inss-sem-carteira'
 import { IMPOSTO_DE_RENDA_NA_FOLHA } from './imposto-de-renda-na-folha'
+import { IR_NA_RENDA_FIXA } from './ir-na-renda-fixa'
 import { IR_NA_VENDA_DE_IMOVEL } from './ir-na-venda-de-imovel'
 import { JUROS_COMPOSTOS } from './juros-compostos'
+import { MATEMATICA_DO_DIA_A_DIA } from './matematica-do-dia-a-dia'
 import { MEI_DAS_E_LIMITE } from './mei-das-e-limite'
+import { ORCAMENTO_DOMESTICO } from './orcamento-domestico'
 import { PEDIDO_DE_DEMISSAO } from './pedido-de-demissao'
+import { QUAL_COMBUSTIVEL_COMPENSA } from './qual-combustivel-compensa'
+import { QUANTO_COBRAR_POR_HORA } from './quanto-cobrar-por-hora'
 import { QUANTO_IMOVEL_CABE } from './quanto-imovel-cabe'
 import { QUITAR_ANTECIPADO } from './quitar-antecipado'
 import { RESCISAO_SEM_JUSTA_CAUSA } from './rescisao-sem-justa-causa'
+import { VIVER_DE_RENDA } from './viver-de-renda'
 import { ROTATIVO_E_CHEQUE_ESPECIAL } from './rotativo-e-cheque-especial'
 import { SAC_OU_PRICE } from './sac-ou-price'
 import type { Guia } from './tipos'
@@ -78,6 +90,30 @@ export const GUIAS: readonly Guia[] = [
   EMPREGADO_DOMESTICO,
   CONTRATO_INTERMITENTE,
   CUSTO_DO_FUNCIONARIO,
+
+  // Bloco de investimentos — §11.3.
+  IR_NA_RENDA_FIXA,
+  GANHO_REAL,
+  VIVER_DE_RENDA,
+
+  // Autônomo e PJ, o que sobrou do bloco — §11.3.
+  QUANTO_COBRAR_POR_HORA,
+  CRIPTO_NO_IMPOSTO,
+
+  // Veículos — §11.3.
+  CUSTO_DE_TER_UM_CARRO,
+  QUAL_COMBUSTIVEL_COMPENSA,
+
+  // Casa e consumo — §11.3.
+  AS_CONTAS_DA_CASA,
+  ENERGIA_SOLAR,
+  ORCAMENTO_DOMESTICO,
+
+  // Câmbio — §11.3.
+  CAMBIO_E_IOF,
+
+  // Utilitárias, num guia só — §11.2 explica por que não são seis.
+  MATEMATICA_DO_DIA_A_DIA,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {

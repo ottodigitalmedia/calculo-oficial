@@ -27,8 +27,8 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras **no repositório** | **75** de 75 — catálogo completo — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
 | Calculadoras **em produção** | ✅ **74** — implantadas em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. Repositório e produção **em dia** |
-| Guias | **26** — os 10 de `03-functional-spec` §4 mais quatro blocos de §11.5. **45 de 75 calculadoras** ligadas a pelo menos um |
-| Testes | 1.678 de unidade · 659 ponta a ponta · 3 de vazamento |
+| Guias | ✅ **38** — e **as 75 calculadoras** têm pelo menos um. Cobertura completa em 07/08/2026; §11.5 |
+| Testes | 1.780 de unidade · 683 ponta a ponta · 3 de vazamento |
 | Auditoria de parâmetros | 93 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
 | Orçamento de JavaScript | 135,2 kB de **150** na pior rota — e **19,1 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
 | Vulnerabilidades | 0 |
@@ -2046,92 +2046,61 @@ saem em uma sessão** com a mesma qualidade. A ordem sugerida é a da tabela: o
 bloco de crédito primeiro, porque é o de maior busca e o de maior dano quando
 mal explicado.
 
-### 11.5 A decisão, e o primeiro bloco entregue
+### 11.5 ✅ Cobertura completa — 38 guias, 75 de 75 calculadoras
 
 O mantenedor mandou começar em 07/08/2026, depois de ler a ressalva de §11.2.
-**Seguido o agrupamento**, e não o 1:1.
+**Seguido o agrupamento**, e não o 1:1. Fechou no mesmo dia.
 
-**Bloco de crédito — ✅ 5 guias, publicados em 07/08/2026:**
-
-| Guia | Cobre |
-|---|---|
-| Rotativo e cheque especial: o crédito mais caro que existe | `rotativo-do-cartao` · `cheque-especial` · `plano-de-quitacao` |
-| CET: por que a taxa anunciada não é o que você paga | `cet-custo-efetivo-total` · `portabilidade-de-credito` · `amortizacao-sac-price` |
-| SAC ou Price: a diferença aparece na primeira parcela | `amortizacao-sac-price` · os três financiamentos |
-| Consignado: a margem, a base dela e o que ela não cobre | `emprestimo-consignado` |
-| Quitar antes: quanto se economiza de verdade | `quitacao-antecipada` · `amortizacao-extra` |
-
-**Bloco de imóveis — ✅ 4 guias, no mesmo dia:**
-
-| Guia | Cobre |
-|---|---|
-| Quanto imóvel cabe no seu bolso | `capacidade-de-financiamento` · `custo-de-aquisicao-de-imovel` · `financiamento-imobiliario` |
-| Alugar ou comprar: a conta que quase ninguém faz certo | `alugar-ou-comprar` |
-| Imóvel para alugar: o que sobra depois de tudo | `rentabilidade-de-aluguel` · `reajuste-de-aluguel` |
-| IR na venda de imóvel: as isenções e os fatores | `ganho-de-capital-imovel` |
-
-> **Saíram quatro, e não os cinco previstos.** O quinto do plano era sobre
-> amortização extra, e ele já tinha nascido dentro de "Quitar antes", no bloco de
-> crédito — a pergunta é a mesma. Previsão de contagem cede à pergunta do leitor,
-> que é o critério de §11.3.
-
-**Bloco de autônomo e PJ — ✅ 3 guias:**
-
-| Guia | Cobre |
-|---|---|
-| INSS de quem não tem carteira assinada | `inss-autonomo-e-facultativo` · `pro-labore` |
-| MEI: o DAS, o limite e o que acontece se você passar | `das-mei` · `limite-do-mei` · `clt-ou-pj` |
-| A declaração anual: restituição, modelos e o que deduzir | `restituicao-irpf` · `simplificado-ou-completo` · `carne-leao` |
-
-> **Três, e não os seis previstos** — pelo mesmo motivo do bloco de imóveis. O
-> preço da hora e o cripto sobraram para o bloco seguinte, e os demais couberam
-> nos três acima porque respondem à mesma pergunta.
-
-**Bloco trabalhista restante — ✅ 4 guias:**
-
-| Guia | Cobre |
-|---|---|
-| Aviso prévio: o prazo, a projeção e quando vira desconto | `aviso-previo-proporcional` |
-| Empregado doméstico: o que muda na rescisão | `rescisao-domestico` |
-| Trabalho intermitente: o acerto de cada convocação | `contrato-intermitente` |
-| Quanto custa um funcionário para a empresa | `custo-do-funcionario` |
-
-> **Quatro, e não sete.** Seguro-desemprego, acordo mútuo e banco de horas já
-> tinham ficado cobertos pelos guias de rescisão e de horas extras, escritos em
-> 06/08. A contagem do plano cede à cobertura real — e é a terceira vez seguida
-> que isso acontece, o que diz algo sobre a estimativa de §11.3.
-
-**Cobertura: 26 guias, e 45 calculadoras ligadas a pelo menos um** — de 10 e 15
-onde o levantamento começou. **Mais de metade do catálogo.**
-
-Dois deles trazem bloco `valorVigente`: o teto do cheque especial e o do cartão,
-no primeiro, e a margem do consignado, no quarto. Os demais não têm valor legal
-envolvido — CET, SAC e Price e quitação antecipada são método, não tabela.
-
-> **O que a escrita do bloco confirmou sobre §11.2.** O guia de SAC × Price cobre
-> quatro calculadoras sozinho, porque as quatro respondem à mesma pergunta com
-> valores diferentes. Escrever quatro textos para elas produziria quatro versões
-> do mesmo raciocínio — exatamente o conteúdo raso que o agrupamento evita.
-
-### 11.6 O que falta, na ordem sugerida
-
-| Bloco | Guias | Situação |
+| Bloco | Guias | Cobre |
 |---|---|---|
-| Crédito | 5 | ✅ feito |
-| Imóveis | 4 | ✅ feito |
-| Investimentos | 4 | a fazer |
-| Autônomo e PJ | 3 | ✅ feito · faltam preço da hora e cripto |
-| Trabalhista restante | 4 | ✅ feito |
-| Veículos | 2 | a fazer |
-| Casa e consumo | 3 | a fazer |
-| Índices e câmbio | 2 | a fazer |
-| Utilitárias | 2 | a fazer |
+| Crédito | 5 | rotativo e cheque especial · CET · SAC vs. Price · consignado · quitar antes |
+| Imóveis | 4 | quanto cabe · alugar ou comprar · imóvel para alugar · IR na venda |
+| Autônomo e PJ | 5 | INSS sem carteira · MEI · declaração anual · preço da hora · cripto |
+| Trabalhista restante | 4 | aviso prévio · doméstico · intermitente · custo do funcionário |
+| Investimentos | 3 | IR na renda fixa · ganho real · viver de renda |
+| Veículos | 2 | custo de ter um carro · qual combustível compensa |
+| Casa e consumo | 3 | contas da casa · energia solar · orçamento |
+| Câmbio | 1 | câmbio e IOF |
+| Utilitárias | 1 | matemática do dia a dia |
 
-**~22 guias restantes**, para 42 calculadoras ainda sem nenhum. O comando que confere a cobertura contra o registro:
+**28 guias novos**, somados aos 10 de `03-functional-spec` §4. Toda calculadora
+do catálogo está ligada a pelo menos um.
 
-```bash
-grep -A 1 ": Guia = {" src/lib/guias/*.ts | grep "slug:"
+### 11.6 O que a execução ensinou sobre a estimativa
+
+A previsão de §11.3 era de ~28 guias distribuídos de um jeito; a execução
+entregou 28 distribuídos de outro. **Bloco a bloco, a contagem prevista quase
+nunca bateu** — e sempre para menos:
+
 ```
+previsto   5 · 5 · 6 · 7 · 4 · 2 · 3 · 2 · 2
+entregue   5 · 4 · 5 · 4 · 3 · 2 · 3 · 1 · 1
+```
+
+O motivo é sempre o mesmo: ao escrever, aparece que duas ou três calculadoras
+respondem à MESMA pergunta, e forçar textos separados produziria variações do
+mesmo raciocínio. Aconteceu com os quatro financiamentos, com as três rescisões
+e com as seis utilitárias.
+
+> **A lição é sobre planejar por pergunta, não por item.** Contar guias a partir
+> do número de calculadoras superestima, porque calculadora é recorte de
+> ferramenta e guia é recorte de dúvida. Os dois não se correspondem um a um, e
+> a diferença é justamente o que o agrupamento captura.
+
+**O caso extremo, e o que ele confirma de §11.2:** as seis utilitárias couberam
+num guia só. Seis textos sobre porcentagem, regra de três e divisão de conta
+seriam páginas de porta — conteúdo raso criado para preencher cota, exatamente o
+que puxaria o domínio para baixo em vez de trazer tráfego.
+
+### 11.7 O que fica para depois
+
+- **Nenhuma calculadora sem guia.** A cobertura só volta a abrir quando uma
+  calculadora nova for publicada — e o roteiro de "Ao adicionar uma calculadora"
+  não cobra guia. Vale decidir se passa a cobrar.
+- **Os guias não têm teste de cobertura.** `guias.test.ts` verifica G-1, G-2,
+  âncoras e integridade referencial, mas nada reprova se uma calculadora nova
+  ficar sem guia nenhum. É o mesmo tipo de lacuna de §7.67 — o comando que mede
+  está em §11.6, e ninguém o executa automaticamente.
 
 ---
 
