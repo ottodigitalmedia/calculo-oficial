@@ -222,8 +222,23 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
       .map((c) => c.rotulo)
 
     if (faltando.length > 0) {
-      const tudoVazio = Object.values(valoresAdiados).every((v) => v === 0 || v === '')
-      return tudoVazio ? { tipo: 'vazio' } : { tipo: 'pendente', faltando }
+      /**
+       * "VAZIO" É "NINGUÉM MEXEU", E NÃO "TUDO VALE ZERO".
+       *
+       * A versão anterior comparava cada valor com `0` ou `''`, e por isso
+       * **qualquer campo de seleção com padrão derrubava o estado vazio**: um
+       * `padrao: 'ipca'` já é diferente de vazio na primeira renderização, e a
+       * tela abria dizendo *"Falta preencher: ..."* a quem ainda não tinha
+       * tocado em nada. CALC-060 fazia isso desde que nasceu; CALC-001 passou a
+       * fazer ao ganhar o campo de vale-transporte, e foi assim que apareceu.
+       *
+       * Comparar com `valoresIniciais` diz o que a regra sempre quis dizer, e
+       * vale para todo campo — inclusive os que ainda não existem.
+       */
+      const intocado = Object.entries(valoresIniciais).every(
+        ([id, inicial]) => valoresAdiados[id] === inicial,
+      )
+      return intocado ? { tipo: 'vazio' } : { tipo: 'pendente', faltando }
     }
     // §1.2: entrada inválida limpa o resultado anterior. Como o estado é
     // derivado, isso acontece por construção — não há resultado velho a limpar.
@@ -235,7 +250,7 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
     if (!calcular) return { tipo: 'carregando' }
 
     return { tipo: 'calculado', resultado: calcular(valoresAdiados, dataAdiada) }
-  }, [calcular, valoresAdiados, dataAdiada, camposVisiveis, erros])
+  }, [calcular, valoresAdiados, dataAdiada, camposVisiveis, erros, valoresIniciais])
 
   return (
     <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">

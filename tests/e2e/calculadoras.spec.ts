@@ -29,6 +29,44 @@ for (const c of CALCULADORAS) {
   })
 }
 
+/**
+ * §1.5 · TODA CALCULADORA ABRE NO ESTADO VAZIO — E ISSO JÁ ESTAVA QUEBRADO.
+ *
+ * O estado inicial era decidido comparando cada valor com zero ou string vazia,
+ * e por isso **um campo de seleção com padrão derrubava o estado vazio**: um
+ * `padrao: 'ipca'` já difere de vazio na primeira renderização. A página abria
+ * dizendo *"Falta preencher: ..."* a quem ainda não tinha tocado em nada.
+ *
+ * CALC-060 fazia isso desde que nasceu, sem ninguém notar; CALC-001 passou a
+ * fazer ao ganhar o campo de vale-transporte, e foi um teste de fluxo que
+ * denunciou. Esta varredura é o que impede a terceira vez — e ela vale para
+ * toda calculadora, inclusive as que ainda não existem.
+ *
+ * O laço pula quem não tem campo obrigatório: essas calculam de saída, e o
+ * estado vazio nunca aparece nelas.
+ */
+for (const c of CALCULADORAS) {
+  test(`${c.slug} · abre no estado vazio, sem cobrar campo de quem não digitou`, async ({
+    page,
+  }) => {
+    await page.goto(`/calculadora/${c.slug}`)
+    const resultado = page.locator('[aria-live="polite"]')
+    const vazio = resultado.getByText('Preencha os campos ao lado para ver o resultado.')
+
+    // Quem já calcula sem entrada nenhuma não passa pelo estado vazio.
+    if ((await vazio.count()) === 0) {
+      await expect(
+        resultado.getByText(/^Falta preencher:/),
+        `"${c.slug}" abriu cobrando campo de quem ainda não digitou nada. ` +
+          `O estado inicial de §1.5 é "vazio" — ver a nota em Calculadora.tsx.`,
+      ).toHaveCount(0)
+      return
+    }
+
+    await expect(vazio).toBeVisible()
+  })
+}
+
 test('INSS · mostra a alíquota efetiva, que é a saída secundária de CALC-016', async ({ page }) => {
   await page.goto('/calculadora/inss')
   await page.getByLabel('Salário de contribuição').fill('500000')
