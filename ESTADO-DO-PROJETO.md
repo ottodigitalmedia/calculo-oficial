@@ -260,7 +260,7 @@ esta lista é só o resumo.
 
 | O quê | Situação |
 |---|---|
-| **Vale-transporte (`RN-027`)** em CALC-001 | O percentual legal não foi localizado em fonte oficial. O campo **não existe** na calculadora — não foi estimado. Resolver antes de anunciar CALC-001 como completa |
+| ~~**Vale-transporte (`RN-027`)** em CALC-001~~ | ✅ **Resolvido em 07/08/2026 — e a norma estava aberta no Planalto o tempo todo.** Lei nº 7.418/1985, art. 4º, § único (o percentual) e Decreto nº 10.854/2021, art. 114, I (a base: salário básico, excluídos adicionais). Ver §7.70 |
 | **Incidência de INSS e IRRF sobre verbas rescisórias** | Pré-requisito de CALC-002 a CALC-005. Ver §6.2 |
 | **`RN-006`** — arredondamento da faixa intermediária do redutor | Indeterminado. Só afeta rendimentos entre R$ 5.000,01 e R$ 7.350,00 |
 | ~~**A portaria da tabela do seguro-desemprego de 2026**~~ | ✅ **Resolvida em 06/08/2026 — e a pergunta é que estava errada.** Ver §5.5 |
@@ -2788,6 +2788,107 @@ sumiria da tela sem erro. Passa a derivar de `SERIES`.
 
 ---
 
+### 7.70 A pendência de uma semana que era uma lei aberta no Planalto
+
+**07/08/2026.** `RN-027`, o vale-transporte, estava na lista *"precisa de pesquisa
+em fonte oficial"* desde 31/07 com a frase *"o percentual legal não foi
+localizado em fonte oficial"*. A norma é a **Lei nº 7.418/1985, art. 4º,
+parágrafo único** — pública, sem autenticação, com o texto compilado inteiro no
+Planalto. Uma requisição resolveu.
+
+É a segunda vez na mesma sessão que uma pendência antiga cai com uma leitura
+(§7.69 foi a primeira), e as duas têm a mesma forma: **uma frase plausível que
+ninguém conferiu.** Aqui a frase era ainda mais convidativa a acreditar, porque
+"parâmetro legal não localizado" descreve corretamente vários casos deste
+projeto — o seguro-desemprego de 2025 continua sendo um.
+
+> **A diferença entre as duas está no formato da pendência, e vale reconhecê-la
+> de longe.** Uma tabela que muda todo ano e depende de ato administrativo
+> publicado num portal pode mesmo não ser localizável. Um percentual fixo desde
+> 1985, escrito na lei que criou o benefício, não pode. Antes de aceitar
+> "não localizado", pergunte se o número é do tipo que muda — se não for, ele
+> está na lei, e a lei está aberta.
+
+**O que salvou o período em que ficou pendente:** o campo simplesmente não
+existiu na calculadora, e nada foi estimado. O custo foi uma funcionalidade
+ausente, nunca um número errado — a troca que `CLAUDE.md` manda fazer, e a razão
+de esta pendência ter sido barata.
+
+**A base valeu mais que o percentual.** A lei dá o número; quem define sobre o
+quê é o **Decreto nº 10.854/2021, art. 114, I**: *"seis por cento de seu salário
+básico ou vencimento, excluídos quaisquer adicionais ou vantagens"*. Parar na
+lei teria produzido uma calculadora que aplica o percentual certo sobre a base
+errada — o mesmo defeito que `consignado.ts` já documenta para a margem
+consignável, onde o erro comum é usar o bruto em vez do disponível.
+
+Como o campo da tela é o salário bruto, a ressalva ficou **declarada** em nota e
+em pergunta do FAQ, em vez de silenciada. Ela só altera o resultado de quem
+recebe adicional **e** gasta em transporte mais que a cota — porque o desconto é
+o mínimo entre cota e custo.
+
+**Dois testes que existem por causa de erros previsíveis, ambos conferidos
+reprovando de propósito:**
+
+- **O custo residual na URL.** `custoVT` some da tela quando o usuário desmarca
+  "Uso" (`visivelSe`), mas o valor continua no endereço (`RF-006`). Sem o
+  recorte em `calcular`, desmarcar manteria o desconto — campo invisível mexendo
+  no resultado.
+- **O parâmetro não ligado ao registro.** Se alguém esquecer o conjunto em
+  `construirRegistro`, o esperado é **bloquear** (`RN-003`), não descontar zero
+  em silêncio. O caso monta um registro sem ele e cobra `vigencia_ausente` — e um
+  segundo caso garante que quem *não* usa o benefício continua calculando, para
+  o bloqueio não virar dano colateral.
+
+---
+
+### 7.71 Cinquenta e sete telas abriam cobrando campo, e o teste que achou isso procurava outra coisa
+
+**07/08/2026.** Ao acrescentar o campo de vale-transporte a CALC-001, o fluxo
+TC-037 reprovou numa asserção que não tinha nada a ver com a mudança: a tela não
+mostrava mais *"Preencha os campos ao lado para ver o resultado."*
+
+A causa estava em `Calculadora.tsx`, e era de 2026 inteiro:
+
+```ts
+const tudoVazio = Object.values(valoresAdiados).every((v) => v === 0 || v === '')
+```
+
+"Vazio" estava definido como **"tudo vale zero"**, quando o que a regra queria
+dizer é **"ninguém mexeu"**. Qualquer campo com padrão diferente de zero — uma
+seleção com `padrao: 'ipca'`, um prazo que abre em 12 meses — já difere de zero
+na primeira renderização, e a página abria dizendo *"Falta preencher: ..."* a
+quem ainda não tinha tocado em nada.
+
+**Medido depois de corrigir, sobre as definições: 57 de 75.** Não era um caso de
+canto; era a maioria do site. A correção compara com `valoresIniciais`, que o
+componente já calculava e já usava para decidir o que entra na URL.
+
+> **O defeito não estava escondido — estava visível em 57 páginas, e ninguém o
+> viu.** Um texto ligeiramente errado no primeiro quadro não quebra nada, não
+> gera erro, não aparece em log. Passa por decisão de produto para quem chega
+> depois. É o oposto do modo de falha que este projeto vigia — aqui o número
+> estava certo e a moldura errada —, e por isso nenhuma das defesas construídas
+> para números o alcançava.
+
+**O que o achou foi um teste de fluxo, não um teste da regra.** TC-037 preenche
+um holerite de ponta a ponta e, no caminho, confere o estado inicial. Nenhum
+teste unitário cobria "com que estado a calculadora abre", porque a decisão mora
+num `useMemo` de componente de cliente.
+
+**A varredura que ficou** percorre todas as calculadoras publicadas e cobra o
+estado inicial de cada uma, com a mesma estrutura de §11.7 e de §7.67: derivada
+do registro, não escrita à mão, e portanto válida para as que ainda não existem.
+Conferida reprovando de propósito — revertendo a correção, as calculadoras
+voltam a falhar em bloco.
+
+> **Terceira vez na mesma sessão que o achado real não é o item de trabalho.**
+> §7.69 buscava uma convenção e achou três defeitos; §7.70 buscava um percentual
+> e achou que a base valia mais; aqui um campo novo destapou 57 telas. O padrão
+> não é sorte: é o que acontece quando se mede em vez de implementar a partir do
+> que está escrito.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -2898,7 +2999,8 @@ O que sobrou, em ordem:
 6. **Um comparativo "acordo vs. dispensa"** — CALC-008 e CALC-009 já produzem
    tudo o que ele precisa, e juntas respondem a pergunta que o usuário de fato
    faz. Não está no catálogo com ID; exige decisão do mantenedor.
-7. **Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer (§5.1).
+7. ~~**Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer~~ ✅ **feito em
+   07/08/2026.** A fonte não precisou aparecer: estava no Planalto desde 1985 — §7.70.
 8. ~~**Os 7 guias restantes**~~ ✅ **feitos em 06/08/2026** — §4.6. Dez de dez.
 
 > **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
