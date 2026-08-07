@@ -31,6 +31,40 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ## Ciclo de 07/08/2026
 
+### Adicionado · medição de uso — Google Tag Manager e GA4
+
+Decisão do mantenedor, tomada sabendo que `INT-005` previa análise autohospedada
+e sem cookie. As linhas que diziam o contrário foram corrigidas, não deixadas
+mentindo.
+
+`RN-030` continua valendo sem exceção, e a garantia mora no código: o
+`page_location` é montado a partir de `pathname`, o referenciador é reduzido à
+origem, e o consentimento entra **negado por omissão** — o que mantém o GA4 sem
+cookie até existir banner. O `noscript` do GTM foi omitido de propósito: é um
+iframe que dispara com a URL da página e não há JavaScript para interceptá-lo.
+
+Sem `NEXT_PUBLIC_GTM_ID` nada carrega, e o site segue com zero terceiros.
+
+### Corrigido · a sanitização dependia do painel, e o painel não a aplicou
+
+A primeira versão empurrava os valores limpos para o `dataLayer` e **avisava**,
+em quatro lugares, que a etiqueta do GA4 precisava lê-los. Lido o contêiner
+publicado antes de implantar, a etiqueta estava sem sobrescrita nenhuma — ou
+seja, usaria a URL da página, que neste site carrega salário na query.
+
+A defesa passou para `gtag('set', …)`, que entra na fila antes de o contêiner
+subir e vale independentemente do painel. Conferido contra o contêiner real: a
+coleta saiu com a rota sem query, referenciador vazio e consentimento negado, e
+nenhum marcador apareceu.
+
+**Um aviso não é um controle.** Ver §7.74.
+
+### Adicionado · verificação do Search Console por DNS
+
+Registro TXT no ápice, aplicado sem tocar no `A` e conferido nos resolvedores
+públicos. Verifica o domínio inteiro, incluindo `www`, e não custa nada ao
+navegador. O sitemap já existia e cobre 120 endereços.
+
 ### Parâmetro · seguro-desemprego — a tabela de 2025 entrou
 
 `seguro-desemprego-faixa-1-limite`, `-faixa-2-limite`, `-faixa-1-fator`,

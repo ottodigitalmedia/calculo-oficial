@@ -198,7 +198,13 @@ function procurarVazamento(saidas: readonly Saida[]): readonly string[] {
  * terceiro", agora "estes e mais nenhum". Acrescentar um item aqui é declarar
  * um destino novo, e deve vir com o motivo.
  */
-const TERCEIROS_DECLARADOS = ['https://www.googletagmanager.com/']
+const TERCEIROS_DECLARADOS = [
+  'https://www.googletagmanager.com/',
+  // Só aparece com contêiner REAL — a etiqueta do GA4 coleta aqui. Na execução
+  // de rotina, com o identificador de mentira, nada bate nele.
+  'https://www.google-analytics.com/',
+  'https://region1.google-analytics.com/',
+]
 
 /** Requisições para destino externo que não está na lista declarada. */
 function foraDaLista(saidas: readonly Saida[], origem: string): readonly Saida[] {

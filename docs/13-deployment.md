@@ -109,8 +109,7 @@ flowchart TD
 | `NEXT_PUBLIC_AD_CLIENT_ID` | prod | não | Identificador público da rede de anúncio |
 | `NEXT_PUBLIC_AD_SLOT_ID` | prod | não | Identificador do slot único (`10-ux-ui-spec` §9) |
 | `NEXT_PUBLIC_CMP_ID` | prod | não | Plataforma de gestão de consentimento (INT-002) |
-| `NEXT_PUBLIC_ANALYTICS_URL` | prod | não | Endereço da análise autohospedada |
-| `NEXT_PUBLIC_ANALYTICS_SITE_ID` | prod | não | Identificador do site |
+| `NEXT_PUBLIC_GTM_ID` | prod | não | Contêiner do Google Tag Manager (`INT-005`, revisto em 07/08/2026). **Substituída no build**, via build-arg do Docker a partir da variável de repositório de mesmo nome — configurá-la no painel do EasyPanel **não tem efeito**, pelo mesmo motivo que a canônica de §7. **Ausente, nenhum terceiro carrega** (`RNF-007`) |
 | `SENTRY_DSN` | prod | não | Registro de erro |
 | `SENTRY_AUTH_TOKEN` | CI | **sim** | Envio de mapas de origem |
 | `BCB_API_BASE_URL` | build | não | Endereço-base do serviço de séries temporais |
@@ -118,10 +117,7 @@ flowchart TD
 | `BCB_TIMEOUT_MS` | build | não | Tempo limite da coleta; 3000 por padrão (`06-api-spec` §4.2) |
 | `DEPLOY_WEBHOOK_URL` | CI | **sim** | Disparo do deploy |
 | `REGISTRY_TOKEN` | CI | **sim** | Publicação da imagem — **só se o registro for externo ao GitHub**. Com o registro de contêineres do próprio GitHub, o token efêmero do workflow basta e não há segredo a guardar nem a rotacionar (`07-security` §6) |
-| `UMAMI_DATABASE_URL` | prod | **sim** | Banco da ferramenta de análise |
-| `UMAMI_APP_SECRET` | prod | **sim** | Sessão da ferramenta de análise |
-| `UMAMI_DB_USER` | prod | **sim** | Usuário do Postgres da análise |
-| `UMAMI_DB_PASSWORD` | prod | **sim** | Senha do Postgres da análise |
+| `UMAMI_*` (quatro) | — | — | **Superadas em 07/08/2026.** Pertenciam à análise autohospedada que `INT-005` previa antes da troca por GTM e GA4. Ficam vazias; a limpeza depende de confirmar que a instância antiga não subiu |
 | `VCS_REF` | CI | não | Hash do commit; vira etiqueta da imagem (D-5) |
 
 **Regras.** Segredos vivem apenas no cofre do repositório e no painel do EasyPanel. `.env.example` contém nomes e comentários, nunca valores. Nenhuma variável prefixada como pública contém segredo — o prefixo torna o valor visível no navegador.
@@ -152,6 +148,7 @@ A ausência de banco transforma migração em refatoração — reversível por 
 | TLS | Certificado automático via EasyPanel. **Renovação automática confirmada em 31/07/2026 por evidência:** o certificado foi substituído sozinho em 30/07/2026, sem intervenção. Emissor Let's Encrypt |
 | Redirecionamentos | **Escolhido o ápice.** Desde 31/07/2026 `www.calculoficial.com.br` é servido com certificado próprio e responde **308 para o ápice**, preservando caminho e query. O redirecionamento vive em `next.config.ts` (condição de `host`), não no painel — assim é versionado e testável; ver `tests/e2e/cabecalhos.spec.ts`. HTTP para HTTPS sempre |
 | HSTS | **Ativo desde 31/07/2026**, com `max-age=31536000; includeSubDomains`. A condição — TLS estável — foi satisfeita por evidência, não por configuração. **Sem `preload`:** é porta de mão única e exige `www` servido em HTTPS. Ver `07-security` §5 |
+| Verificação do Search Console | **TXT no ápice, criado em 07/08/2026:** `google-site-verification=q9rQ1f9x_…`, TTL 3600. Escolhido em vez da meta tag porque verifica o domínio **inteiro** — incluindo `www` e subdomínio futuro — e não custa um byte no navegador. Aplicado com `overwrite: false`, que acrescenta sem tocar no `A` do ápice; conferido depois que o `A` e o `CNAME` do `www` seguiam intactos e que o site respondia 200 |
 
 **Canônica.** `NEXT_PUBLIC_SITE_URL=https://calculoficial.com.br` em produção. O valor entra no build, não em runtime — o prefixo `NEXT_PUBLIC_` é substituído no bundle. Consequência prática: mudar o domínio exige rebuild, não apenas reconfigurar o painel.
 

@@ -207,6 +207,7 @@ jobs:
           build-args: |
             VCS_REF=${{ steps.meta.outputs.sha }}
             NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://calculoficial.com.br' }}
+            NEXT_PUBLIC_GTM_ID=${{ vars.NEXT_PUBLIC_GTM_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

@@ -53,14 +53,19 @@ ARG NEXT_PUBLIC_SITE_URL=""
 ARG NEXT_PUBLIC_AD_CLIENT_ID=""
 ARG NEXT_PUBLIC_AD_SLOT_ID=""
 ARG NEXT_PUBLIC_CMP_ID=""
-ARG NEXT_PUBLIC_ANALYTICS_URL=""
-ARG NEXT_PUBLIC_ANALYTICS_SITE_ID=""
+# INT-005 passou a ser Google Tag Manager em 07/08/2026. As duas variáveis da
+# análise autohospedada saíram daqui junto — mantê-las seria prometer no build
+# uma integração que o código não consome mais.
+#
+# Sem valor, o componente de medição não renderiza nada e a imagem sai com zero
+# terceiros. É `RNF-007`, e é o que faz o build de desenvolvimento continuar
+# limpo sem ninguém precisar lembrar.
+ARG NEXT_PUBLIC_GTM_ID=""
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL} \
     NEXT_PUBLIC_AD_CLIENT_ID=${NEXT_PUBLIC_AD_CLIENT_ID} \
     NEXT_PUBLIC_AD_SLOT_ID=${NEXT_PUBLIC_AD_SLOT_ID} \
     NEXT_PUBLIC_CMP_ID=${NEXT_PUBLIC_CMP_ID} \
-    NEXT_PUBLIC_ANALYTICS_URL=${NEXT_PUBLIC_ANALYTICS_URL} \
-    NEXT_PUBLIC_ANALYTICS_SITE_ID=${NEXT_PUBLIC_ANALYTICS_SITE_ID}
+    NEXT_PUBLIC_GTM_ID=${NEXT_PUBLIC_GTM_ID}
 
 ENV NODE_ENV=production
 RUN npm run build

@@ -60,7 +60,24 @@ export default defineConfig({
      * montamos —, e não o que o Google devolveria para um contêiner real, que
      * é configuração fora daqui e muda sem commit.
      */
-    env: { PORT: PORTA, NEXT_PUBLIC_GTM_ID: 'GTM-TESTE01' },
+    env: {
+      PORT: PORTA,
+      /**
+       * Identificador de mentira por omissão, real sob demanda.
+       *
+       * `GTM-TESTE01` faz `gtm.js` responder 404, e é o que se quer na execução
+       * de rotina: determinística, sem rede para fora, sem poluir a propriedade
+       * do GA4 com visita sintética a cada verificação. O que TC-042 precisa
+       * inspecionar é o que ESTE repositório envia.
+       *
+       * `GTM_REAL=1` troca pelo contêiner de produção e liga a sonda de
+       * `contentor-real.spec.ts`, que dispara a etiqueta de verdade e lê a
+       * requisição que chega ao Google. É a única forma de conferir o que o
+       * PAINEL faz — e ela fica fora do caminho bloqueante de propósito, porque
+       * um teste de deploy que depende do Google cai quando o Google cai.
+       */
+      NEXT_PUBLIC_GTM_ID: process.env.GTM_REAL ? 'GTM-P3ZH6Q93' : 'GTM-TESTE01',
+    },
     url: BASE_URL,
     // Nunca reaproveitar servidor de fora: a linha de base precisa ser um
     // processo cuja origem esta suíte conhece.

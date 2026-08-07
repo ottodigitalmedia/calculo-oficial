@@ -151,6 +151,36 @@ export function Medicao() {
           gtag('set', 'url_passthrough', false);
           gtag('set', 'ads_data_redaction', true);
 
+          /*
+            A SANITIZAÇÃO QUE NÃO DEPENDE DO PAINEL.
+
+            Medido em 07/08/2026, lendo o contêiner publicado: a etiqueta do GA4
+            saiu como um "__googtag" pelado, só com o identificador de medição e
+            sem sobrescrita nenhuma de parâmetro. Assim, ela usa
+            "document.location" — que neste site carrega salário, pensão e saldo
+            de FGTS, porque RF-006 põe o formulário na query.
+
+            A versão anterior deste arquivo empurrava os valores limpos para o
+            dataLayer e CONFIAVA que a etiqueta fosse lê-los. Duas falhas nisso:
+            a etiqueta dispara em "gtm.init", antes deste empurrão, e ler o
+            dataLayer exige configuração no painel que ninguém garante.
+
+            "gtag('set', ...)" resolve as duas: entra na fila ANTES de o
+            contêiner subir, e o gtag.js aplica os parâmetros a todo evento
+            seguinte, independentemente do que o painel diga. É a diferença
+            entre uma promessa e um mecanismo.
+          */
+          gtag('set', {
+            page_location: location.origin + location.pathname,
+            page_referrer: (function () {
+              try {
+                return document.referrer ? new URL(document.referrer).origin : '';
+              } catch (e) {
+                return '';
+              }
+            })()
+          });
+
           (function(w,d,s,l,i){w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

@@ -3001,6 +3001,80 @@ limite verdadeiro é 11/01/2025, e o caso foi reescrito dizendo por quê.
 
 ---
 
+### 7.74 Escrevi um aviso onde devia ter escrito um mecanismo
+
+**07/08/2026.** O mantenedor optou por GTM e GA4 sabendo que `INT-005` previa
+análise autohospedada e sem cookie. Construí a integração sanitizando a URL —
+`page_location` e `page_path` montados de `pathname`, sem a query que carrega o
+salário — e empurrei esses valores para o `dataLayer`.
+
+E então escrevi, em quatro lugares diferentes, uma variação disto:
+
+> *A etiqueta do GA4 no painel precisa usar as variáveis de `dataLayer` em vez de
+> `Page URL`. Se alguém apontar a etiqueta para a URL da página, a sanitização
+> daqui é contornada.*
+
+Docblock, `06-api-spec` R-5, `.env.example`, e em voz alta na conversa. Quatro
+avisos, nenhum mecanismo.
+
+**Antes de publicar, li o contêiner.** Ele é servido em texto e qualquer um pode
+baixá-lo:
+
+```
+"tags":[{"function":"__googtag","vtp_tagId":"G-RHT3C92DPT","tag_id":3}]
+```
+
+Uma etiqueta pelada. **Sem sobrescrita de parâmetro nenhuma** — exatamente a
+configuração que meus quatro avisos pediam para evitar. E as cinco "variáveis"
+do painel eram as nativas do GTM (`URL`, `HOST`, `PATH`, `Referrer`, `Event`),
+não as da camada de dados.
+
+Publicar ali teria começado a exportar salário, pensão e saldo de FGTS ao Google
+a cada navegação, com o site passando em todos os testes.
+
+> **O aviso não falhou por ser mal escrito. Falhou por ser aviso.** Eu tinha
+> identificado o risco com precisão, escrito onde ele mora, e mesmo assim ele se
+> materializou na primeira oportunidade — porque a defesa dependia de alguém ler
+> quatro parágrafos e traduzi-los em cliques num painel de terceiro. Um controle
+> que precisa de um humano atento em outro sistema não é controle.
+
+**A correção coube em nove linhas**, e move a garantia para onde ela não depende
+de ninguém:
+
+```js
+gtag('set', { page_location: location.origin + location.pathname, page_referrer: … })
+```
+
+`gtag('set', …)` entra na fila **antes** de o contêiner subir, e o `gtag.js`
+aplica esses parâmetros a todo evento seguinte, independentemente do que o painel
+mande. A versão anterior empurrava para o `dataLayer` e torcia para a etiqueta
+ler — e ela nem podia: a etiqueta dispara em `gtm.init`, antes do empurrão.
+
+**Medido contra o contêiner real, não deduzido.** A requisição que o GA4 de fato
+enviou:
+
+```
+dl=http%3A%2F%2F…%2Fcalculadora%2Fsalario-liquido      ← sem a query
+dr=                                                     ← referenciador vazio
+gcs=G100  npa=1  pscdl=denied                           ← consentimento negado
+```
+
+Os marcadores `538271` e `419637` estavam na URL da página e **não aparecem em
+lugar nenhum** da coleta.
+
+**Ficou uma sonda, e ela é o resto da lição.** `tests/leak/contentor-real.spec.ts`
+carrega o contêiner de produção e lê o que chega ao Google. Roda sob demanda
+(`GTM_REAL=1`), fora do caminho bloqueante — um teste que trava deploy não pode
+depender de o Google estar de pé, nem mandar visita sintética à propriedade do
+mantenedor a cada verificação. Mas ela existe, e é a única forma de conferir o
+que o **painel** faz.
+
+> **Onde a fronteira do repositório passa, a garantia precisa mudar de forma.**
+> Dentro, ela é teste. Fora, é no máximo sonda sob demanda. O que não pode é
+> continuar sendo parágrafo.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
