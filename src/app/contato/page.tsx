@@ -24,7 +24,16 @@ export const metadata: Metadata = {
  * prefere o próprio programa de e-mail não deveria ter que preencher campo
  * nenhum, e é ele que também atende quando o envio está fora do ar.
  */
-const ENDERECO = 'contato.ottodigitalmedia@gmail.com'
+/**
+ * Trocado em 08/08/2026, por decisão do mantenedor: era um endereço de Gmail,
+ * passou a ser o do domínio próprio.
+ *
+ * **Ele aparece na tela, e não é o mesmo que recebe o formulário.** Quem recebe
+ * é `CONTATO_DESTINO`, variável de ambiente lida em `api/contato`. Os dois
+ * podem divergir sem que nada quebre — e é por isso que a troca de um pede a
+ * conferência do outro no painel.
+ */
+const ENDERECO = 'contato@ottodigitalmedia.com'
 
 export default function Contato() {
   return (
