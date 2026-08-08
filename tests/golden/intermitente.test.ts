@@ -1,6 +1,22 @@
 /**
  * CALC-014 — casos-ouro do acerto do contrato intermitente.
  *
+ * ORIGEM DOS VALORES ESPERADOS, DECLARADA
+ *
+ * `fonte_verificacao`: os valores esperados são **derivados do texto da norma**,
+ * e cada bloco abaixo cita o dispositivo que o produz — art. 452-A, §§ 6º e 8º
+ * da CLT para a estrutura das cinco parcelas e para a base do FGTS, e art. 28,
+ * § 9º, "d" da Lei nº 8.212/1991 para a exclusão das indenizadas do
+ * salário-de-contribuição. Não existe exemplo oficial resolvido de acerto
+ * intermitente publicado por órgão público.
+ *
+ * Nenhum número foi lido de calculadora concorrente, de blog, de planilha de
+ * terceiro ou de resposta gerada por modelo de linguagem (`CO-1`, regra 10 de
+ * `CLAUDE.md`). Onde o caso depende de INSS, o esperado é `calcularInss`
+ * chamado diretamente — o motor já conferido contra os exemplos publicados pela
+ * Receita em `tests/golden/inss.test.ts` —, e não um valor congelado: o que
+ * precisa ficar travado aqui é QUAL base entra na contribuição.
+ *
  * **O que estes casos medem é a COMPOSIÇÃO do § 6º**, não a tabela do INSS nem
  * a do imposto de renda: essas têm casos-ouro próprios, conferidos contra a
  * norma, e repeti-los aqui só multiplicaria o custo de manutenção sem cobrir
