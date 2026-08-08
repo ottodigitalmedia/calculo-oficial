@@ -128,7 +128,10 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
           rotulo: `FGTS liberado para saque (${formatarPercentual(v.limiteSaqueBp)})`,
           valor: formatarReal(v.saqueDisponivel),
         },
-        { rotulo: "Seguro-desemprego", valor: "Não tem direito" },
+        // `RN-028`: o destaque diz o que a NORMA veda, não o que a pessoa tem
+        // ou deixa de ter. "Não tem direito" afirma sobre o caso de quem lê —
+        // e quem decide habilitação é o Ministério do Trabalho, não esta tela.
+        { rotulo: "Seguro-desemprego", valor: "Vedado no acordo (art. 484-A, § 2º)" },
         ...(v.dataProjetada !== texto(valores, "desligamento")
           ? [
               {
@@ -163,7 +166,7 @@ export const RESCISAO_ACORDO_MUTUO: DefinicaoCalculadora = {
   linhaDeContexto:
     "Quanto se recebe na extinção por acordo — e o que se abre mão para ter esse valor.",
   descricaoSeo:
-    "Calcule a rescisão por acordo entre empregado e empregador (art. 484-A da CLT): aviso prévio e multa do FGTS pela metade, saque limitado a 80% e a vedação do seguro-desemprego.",
+    "Calcule a rescisão por acordo do art. 484-A da CLT: aviso prévio e multa do FGTS pela metade, saque limitado e a vedação do seguro-desemprego.",
 
   campos: [
     {

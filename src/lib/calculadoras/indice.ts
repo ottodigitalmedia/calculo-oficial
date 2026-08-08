@@ -72,7 +72,7 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
   {
     slug: 'seguro-desemprego',
     nome: 'Seguro-desemprego',
-    linhaDeContexto: 'Quantas parcelas você tem direito a receber, e de quanto é cada uma.',
+    linhaDeContexto: 'Quantas parcelas e de quanto é cada uma, pela regra do programa.',
   },
   {
     slug: 'custo-do-funcionario',

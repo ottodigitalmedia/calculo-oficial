@@ -91,9 +91,19 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
   id: 'CALC-009',
   slug: 'seguro-desemprego',
   nome: 'Seguro-desemprego',
-  linhaDeContexto: 'Quantas parcelas você tem direito a receber, e de quanto é cada uma.',
+  /**
+   * `RN-028`. A primeira versão dizia *"Quantas parcelas você tem direito a
+   * receber"* — a frase que a regra 8 de `CLAUDE.md` nomeia como proibida, no
+   * lugar mais visível da página. Estava lá desde que a calculadora nasceu,
+   * porque o teste que caça essa linguagem só olhava os guias.
+   *
+   * A calculadora conta parcelas pela regra do programa; **quem decide se a
+   * pessoa se habilita é o Ministério do Trabalho**, e os requisitos do art. 3º
+   * da Lei nº 7.998/1990 nem entram nesta conta.
+   */
+  linhaDeContexto: 'Quantas parcelas e de quanto é cada uma, pela regra do programa.',
   descricaoSeo:
-    'Calcule o seguro-desemprego: número de parcelas pelo tempo de vínculo e valor de cada uma pelas faixas da tabela vigente, com o piso do salário mínimo e o teto aplicados.',
+    'Calcule o seguro-desemprego: quantas parcelas o tempo de vínculo alcança e o valor de cada uma pelas faixas da tabela vigente, com piso e teto.',
 
   campos: [
     {
