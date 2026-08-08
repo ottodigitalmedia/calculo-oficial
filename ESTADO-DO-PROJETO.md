@@ -3167,6 +3167,39 @@ faltava a ideia da verificação — faltava um passo de alcance dela.
   ali não quebra nada, só nunca casa. Quarenta e nove sinônimos que apenas
   repetiam o nome foram removidos: não faziam nada e davam impressão de cobertura.
 
+**Conferido em produção em 08/08/2026, depois do deploy.** Três coisas, e a
+segunda é a que este projeto mais precisava provar:
+
+1. **A política de conteúdo não quebrou a medição.** `gtm.js`, `gtag/js` e
+   `www.google-analytics.com/g/collect` carregaram sem violação nenhuma, pelo
+   endpoint listado. A ressalva sobre pontos de coleta regionais fica para o
+   futuro, não para hoje.
+
+2. **`RN-030` verificado com o contêiner REAL, e não com o teste.** Abrir
+   `/calculadora/salario-liquido?salarioBruto=538271&pensao=419637` e ler as
+   requisições ao Google: `dl` chegou como
+   `.../calculadora/salario-liquido`, **sem query**, e nenhum dos três pedidos
+   levava `538271`, `419637` ou `salarioBruto`. É exatamente a conferência que o
+   cabeçalho de `components/Medicao.tsx` declara que **nenhum teste deste
+   repositório consegue fazer** — o que o painel faz com os valores é
+   configurado fora daqui. `gcs=G100` e `npa=1` confirmam o consentimento negado
+   por omissão.
+
+3. **O passo `Implantar` aprovou 45 segundos antes de o contêiner trocar.** Ele
+   terminou em 4s com a anotação *"a rota de saúde respondeu sem `rev`"*, e a
+   CSP só apareceu em produção três sondagens depois. É §7.63 acontecendo de
+   novo, e a correção **já está escrita**: falta o segredo `HEALTH_TOKEN` no
+   repositório e a variável de mesmo nome no painel do EasyPanel. Enquanto os
+   dois não existirem, o pipeline continua verde sem conseguir provar nada.
+
+> **Uma correção de fato, registrada porque o erro esteve neste documento por
+> minutos.** A auditoria concluiu, do HTML servido por `curl`, que não havia
+> medição em produção. **Havia.** `next/script` com `afterInteractive` injeta o
+> contêiner depois da hidratação, e `curl` não hidrata — a ausência era do
+> método, não do produto. `NEXT_PUBLIC_GTM_ID` está configurado desde
+> 07/08/2026. A lição é a de §7.75 outra vez, e do outro lado: *o que esta
+> verificação assume sobre coisas que não estão sob meu controle?*
+
 **O que a auditoria NÃO resolveu, e não é código:** não há uma única unidade de
 anúncio no produto cuja tese de monetização é *"exclusiva por anúncio"* (`D-01`),
 e a medição instalada reporta **só visita de página**. `busca_sem_resultado`

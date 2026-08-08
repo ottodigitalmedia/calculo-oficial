@@ -104,7 +104,9 @@ A diretiva que mais vale aqui é `connect-src`. `RF-006` põe salário, pensão 
 
 > **O limite, declarado em vez de escondido:** `script-src` admite `'unsafe-inline'`. O Next injeta script embutido para hidratar, com conteúdo que muda a cada build — hash não serve —, e a alternativa é nonce, que exige `middleware` e **torna dinâmica toda página hoje estática**. Isso é revisão de `ADR-008`, e revisão de ADR é do mantenedor. O que `script-src` já proíbe é script vindo de origem não listada, que é o vetor de AM-02; e `connect-src` continua valendo mesmo para um script que consiga executar.
 
-> ⚠️ VERIFICAR EM PRODUÇÃO, uma vez, com o console do navegador aberto: o GA4 pode usar pontos de coleta regionais (`region1.google-analytics.com` e afins) que não estão listados. Aparecendo bloqueio, acrescente **o host exato**. Nunca curinga — ver o aviso ao fim desta seção. `tests/e2e/cabecalhos.spec.ts` reprova se um `*` entrar na política.
+**Conferida em produção em 08/08/2026, com o console aberto** — a verificação que esta nota pedia, feita no mesmo dia da ativação. Resultado: `gtm.js`, `gtag/js` e `www.google-analytics.com/g/collect` carregaram **sem uma violação de política sequer**. A coleta usou o endpoint listado; nenhum ponto regional apareceu.
+
+> ⚠️ Continua valendo para o futuro: o GA4 pode passar a usar pontos regionais (`region1.google-analytics.com` e afins), e a rede de anúncio vai pedir origens novas. Aparecendo bloqueio, acrescente **o host exato**. Nunca curinga — ver o aviso ao fim desta seção. `tests/e2e/cabecalhos.spec.ts` reprova se um `*` entrar na política.
 
 **`Strict-Transport-Security` ativado em 31/07/2026**, com `max-age=31536000; includeSubDomains`. A condição de `13-deployment` §7 — TLS estável — foi satisfeita por evidência: o certificado foi substituído sozinho em 30/07/2026, sem intervenção.
 
