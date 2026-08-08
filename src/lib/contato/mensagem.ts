@@ -31,9 +31,26 @@
  * finalidade só: responder. Quem não quiser resposta pode relatar um erro de
  * cálculo sem se identificar de forma alguma — que é o caso de uso que mais
  * importa para este produto.
+ *
+ * ## POR QUE ESTE MÓDULO NÃO CONHECE O CATÁLOGO
+ *
+ * **Ele conhecia, e isso pôs o site inteiro dentro do navegador de quem abria
+ * `/contato`.** Um `import { porSlug } from '../calculadoras'` — uma linha,
+ * usada em um `if` — arrastava as 76 definições, os FAQ, os textos de SEO, o
+ * motor e as tabelas de INSS e de IRRF. `FormularioContato` é componente de
+ * cliente e importa daqui; medido em 08/08/2026: **328,4 kB** comprimidos numa
+ * página com três campos, contra 141,4 kB da rota de calculadora mais pesada.
+ *
+ * É exatamente a regressão que `ADR-008` e `RNF-004` descrevem, e ela passou
+ * porque `verificar-orcamento.ts` só reprovava rotas `/calculadora/`. Media a
+ * `/contato`, imprimia o número e não bloqueava. Passou a bloquear.
+ *
+ * A conferência do slug **não sumiu — mudou de lugar**, para `api/contato`, que
+ * é onde ela sempre pertenceu: validação de entrada é trabalho de servidor, e
+ * um cliente que valida o próprio envio não valida nada. O predicado é
+ * **parâmetro obrigatório** de propósito: com valor padrão, alguém o omitiria
+ * um dia e a conferência sumiria em silêncio, que é o modo de falha desta casa.
  */
-
-import { porSlug } from '../calculadoras'
 
 export type MotivoDeContato = 'erro-de-calculo' | 'comercial' | 'outro'
 
@@ -113,7 +130,19 @@ function limpoParaCabecalho(valor: string): string {
   return valor.replace(/[\r\n\u0000-\u001f\u007f]/g, ' ').trim()
 }
 
-export function validarMensagem(bruta: MensagemBruta): Veredito {
+/**
+ * Diz se um slug existe no catálogo.
+ *
+ * Injetado, e não importado: ver a nota de topo. Quem chama é o servidor, que
+ * já tem o registro carregado; o navegador nunca precisa dele para desenhar um
+ * formulário de três campos.
+ */
+export type CalculadoraConhecida = (slug: string) => boolean
+
+export function validarMensagem(
+  bruta: MensagemBruta,
+  calculadoraConhecida: CalculadoraConhecida,
+): Veredito {
   if (bruta.site.trim() !== '') {
     return { tipo: 'descartar', motivo: 'campo-armadilha preenchido' }
   }
@@ -150,7 +179,8 @@ export function validarMensagem(bruta: MensagemBruta): Veredito {
    * direto do cliente. Validar contra o catálogo faz o campo ser uma escolha
    * entre valores conhecidos, e não uma caixa de texto disfarçada.
    */
-  const calculadora = porSlug(bruta.calculadora.trim()) ? bruta.calculadora.trim() : ''
+  const slug = bruta.calculadora.trim()
+  const calculadora = calculadoraConhecida(slug) ? slug : ''
 
   return {
     tipo: 'valida',

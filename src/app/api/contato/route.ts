@@ -1,5 +1,6 @@
 import { createTransport } from 'nodemailer'
 
+import { porSlug } from '@/lib/calculadoras'
 import {
   ROTULO_DO_MOTIVO,
   validarMensagem,
@@ -138,14 +139,25 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const c = bruta as Record<string, unknown>
-  const veredito = validarMensagem({
-    motivo: String(c['motivo'] ?? ''),
-    mensagem: String(c['mensagem'] ?? ''),
-    email: String(c['email'] ?? ''),
-    calculadora: String(c['calculadora'] ?? ''),
-    site: String(c['site'] ?? ''),
-    decorridoMs: Number(c['decorridoMs'] ?? 0),
-  })
+  const veredito = validarMensagem(
+    {
+      motivo: String(c['motivo'] ?? ''),
+      mensagem: String(c['mensagem'] ?? ''),
+      email: String(c['email'] ?? ''),
+      calculadora: String(c['calculadora'] ?? ''),
+      site: String(c['site'] ?? ''),
+      decorridoMs: Number(c['decorridoMs'] ?? 0),
+    },
+    /**
+     * O catálogo entra AQUI, e não em `lib/contato/mensagem.ts`.
+     *
+     * Aquele módulo é importado pelo formulário, que é componente de cliente —
+     * e o `import` do registro punha as 76 definições, o motor e as tabelas
+     * legais no pacote de `/contato`: 328,4 kB para três campos. Do lado do
+     * servidor o registro já está carregado e não custa nada.
+     */
+    (slug) => porSlug(slug) !== undefined,
+  )
 
   /**
    * Robô recebe SUCESSO. Ver a nota do tipo `Veredito`: devolver "spam

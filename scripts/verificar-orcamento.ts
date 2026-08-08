@@ -86,9 +86,37 @@ const ORCAMENTO_VARIAVEL = 30 * 1024
  * Rotas sujeitas ao limite bloqueante.
  *
  * `RNF-004` fala de rota de calculadora, que é onde o produto é usado e onde a
- * lentidão custa uso. As demais são medidas e exibidas, sem bloquear.
+ * lentidão custa uso. As demais eram medidas e exibidas, sem bloquear.
+ *
+ * ## `/contato` ENTROU EM 08/08/2026, E O MOTIVO É UM DEFEITO QUE ESCAPOU
+ *
+ * A página de contato apareceu neste relatório com **328,4 kB** — mais que o
+ * dobro do teto e o triplo da rota de calculadora mais pesada — porque
+ * `lib/contato/mensagem.ts` importava o registro inteiro para conferir um slug.
+ * As 76 definições, os FAQ, o motor e as tabelas legais iam para o navegador de
+ * quem abrisse um formulário de três campos.
+ *
+ * **O verificador viu, imprimiu e deixou passar**, por semanas, porque a
+ * página não casava com `/^\/calculadora\//`. É a mesma família de §7.67 e de
+ * `guias.test.ts`: o silêncio de um verificador não distingue "está certo" de
+ * "não foi olhado".
+ *
+ * A régua é: **toda rota que o visitante abre e que carrega JavaScript de
+ * interação** entra aqui. Rota de API e página puramente estática não têm o que
+ * bloquear, e continuam medidas e exibidas.
  */
-const BLOQUEANTES = [/^\/calculadora\//]
+const BLOQUEANTES = [/^\/calculadora\//, /^\/contato$/]
+
+/**
+ * Rotas que participam da medição de **parte variável**.
+ *
+ * Só as de calculadora, e isto é deliberado: a parte variável é definida como
+ * "o que o motor e as tabelas daquela calculadora custam sobre o piso comum",
+ * e `/contato` não tem motor. Incluí-la a tornaria a rota mais leve do conjunto
+ * e mudaria o piso de referência — a medida deixaria de significar o que
+ * significa hoje.
+ */
+const COM_PARTE_VARIAVEL = [/^\/calculadora\//]
 
 interface Medida {
   readonly rota: string
@@ -446,7 +474,7 @@ function main(): void {
    * é aritmética pura. O que sobra em cada rota acima dela é o que aquela
    * calculadora custou.
    */
-  const bloqueantes = medidas.filter((m) => m.bloqueante)
+  const bloqueantes = medidas.filter((m) => COM_PARTE_VARIAVEL.some((p) => p.test(m.rota)))
   const maisLeve = bloqueantes[bloqueantes.length - 1]
 
   if (maisLeve) {
@@ -478,7 +506,10 @@ function main(): void {
     }
   }
 
-  const maiorBloqueante = medidas.find((m) => m.bloqueante)
+  // A mensagem fala em "rota de calculadora", então quem a alimenta é o
+  // conjunto de calculadoras — e não `bloqueante`, que desde 08/08/2026 inclui
+  // `/contato`. Aviso que nomeia a coisa errada é aviso que se aprende a ignorar.
+  const maiorBloqueante = bloqueantes[0]
   if (maiorBloqueante) {
     const folga = ORCAMENTO_CALCULADORA - maiorBloqueante.bytes
     // Aviso, não falha: a margem é informação de planejamento, e transformar
