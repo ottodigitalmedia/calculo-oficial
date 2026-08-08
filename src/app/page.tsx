@@ -12,6 +12,7 @@ import {
   IconeSeta,
 } from '@/components/Marca'
 import { BuscaCatalogo } from '@/components/BuscaCatalogo'
+import { GRADE } from '@/lib/layout'
 
 /**
  * A canônica da home precisa ser declarada explicitamente. Sem ela, a página
@@ -92,7 +93,7 @@ export default function Home() {
 
       {/* -------------------------------------------------------- herói -- */}
       <section className="bg-[var(--color-surface-tint)]">
-        <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <div className={`${GRADE} py-16 md:py-24`}>
           <p className="inline-flex items-center gap-2 rounded-full bg-[var(--color-brand-soft)] px-3 py-1 text-sm font-medium text-[var(--color-brand)]">
             Gratuito · sem cadastro
           </p>
@@ -137,7 +138,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------- diferenciais -- */}
-      <section className="mx-auto max-w-6xl px-5 py-14">
+      <section className={`${GRADE} py-14`}>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {DIFERENCIAIS.map((d) => (
             <div key={d.titulo}>
@@ -156,7 +157,7 @@ export default function Home() {
 
       {/* ------------------------------------------------ como funciona -- */}
       <section id="como-funciona" className="bg-[var(--color-surface-tint)]">
-        <div className="mx-auto max-w-6xl px-5 py-16">
+        <div className={`${GRADE} py-16`}>
           <h2 className="text-center text-3xl font-bold tracking-tight text-[var(--color-navy)]">
             Como funciona
           </h2>
@@ -179,7 +180,7 @@ export default function Home() {
       </section>
 
       {/* -------------------------------------------------- calculadoras - */}
-      <section id="calculadoras" className="mx-auto max-w-6xl px-5 py-16">
+      <section id="calculadoras" className={`${GRADE} py-16`}>
         <h2 className="text-3xl font-bold tracking-tight text-[var(--color-navy)]">Calculadoras</h2>
         <p className="mt-2 text-[var(--color-text-muted)]">
           Poucas e auditadas, em vez de muitas e abandonadas.
@@ -193,7 +194,7 @@ export default function Home() {
 
       {/* -------------------------------------------------------- guias -- */}
       <section id="guias" className="bg-[var(--color-surface-tint)]">
-        <div className="mx-auto max-w-6xl px-5 py-16">
+        <div className={`${GRADE} py-16`}>
           <h2 className="text-3xl font-bold tracking-tight text-[var(--color-navy)]">Guias</h2>
           <p className="mt-2 text-[var(--color-text-muted)]">
             Entender a conta é o que permite conferir o resultado.

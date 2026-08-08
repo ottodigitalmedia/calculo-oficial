@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Logotipo } from '@/components/Marca'
 import { CALCULADORAS } from '@/lib/calculadoras'
 import { GUIAS } from '@/lib/guias'
+import { GRADE } from '@/lib/layout'
 
 /**
  * Rodapé — `03-functional-spec` §5.
@@ -122,7 +123,7 @@ export function Rodape() {
       </div>
 
       <div className="border-t border-white/10">
-        <p className="mx-auto max-w-6xl px-5 py-6 text-sm opacity-60">
+        <p className={`${GRADE} py-6 text-sm opacity-60`}>
           Ferramenta informativa e educacional. Os resultados são estimativas e não constituem
           aconselhamento jurídico, contábil ou financeiro.
         </p>

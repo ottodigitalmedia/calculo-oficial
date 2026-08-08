@@ -16,6 +16,7 @@ import { TODOS_OS_CONJUNTOS } from '@/lib/params/data/todos'
 import { construirRegistro } from '@/lib/params/registry'
 import { aplicarSugestao } from '@/lib/series/sugestao'
 import { guiasDaCalculadora } from '@/lib/guias'
+import { GRADE } from '@/lib/layout'
 
 /**
  * EP-004 — `/calculadora/{slug}`.
@@ -82,7 +83,7 @@ export default async function PaginaCalculadora({
   const guias = guiasDaCalculadora(definicao.slug)
 
   return (
-    <main id="conteudo" className="mx-auto max-w-5xl px-5 py-10">
+    <main id="conteudo" className={`${GRADE} py-10`}>
       {/* O `FAQPage` sai do MESMO array que renderiza as perguntas abaixo, e o
           `WebApplication` do mesmo objeto que dá título à página. Marcar o que
           a página não mostra é a causa mais comum de penalização por dado

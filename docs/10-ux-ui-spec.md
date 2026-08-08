@@ -63,6 +63,18 @@ Escala de espaçamento em múltiplos de 4px. Raio pequeno para campos e botões,
 | `md` | ≥ 768px | Formulário e resultado lado a lado quando couber |
 | `lg` | ≥ 1024px | Conteúdo centralizado, largura máxima de leitura |
 
+### 2.5 A grade da página
+
+**Uma largura de página para todas as rotas**, definida em `src/lib/layout.ts` e usada por cabeçalho, rodapé e todo `main`. A coluna de leitura é limitada **dentro** dela, alinhada à esquerda.
+
+As duas exigências de `lg` acima são de níveis diferentes, e é isso que permite atendê-las juntas: a **página** é centralizada; o que respeita a **medida de leitura** é a coluna de texto dentro dela. Centralizar também a coluna reproduz o desalinhamento.
+
+> **Isto entrou em 08/08/2026 corrigindo um defeito visível.** Cada rota escolhia a própria largura à mão — home em `6xl`, calculadora em `5xl`, `/guias` em `4xl`, guia e as cinco legais em `3xl` —, enquanto cabeçalho e rodapé ficavam sempre em `6xl`. Medido em 1280 px: o logotipo começava em `x = 77` e o título de `/contato` em `x = 269`. **Cento e noventa e dois pixels**, em cinco rotas, e o site parecia quatro modelos costurados.
+>
+> Nada acusava porque não havia o que acusar: quatro números soltos em quatro arquivos não formam uma regra que se possa quebrar. Agora formam.
+>
+> **Em telefone nada mudou, e isso é verificável:** abaixo de 1152 px nenhum `max-w-*` chega a valer, e o `px-5` já era o mesmo em todas as rotas.
+
 ## 3. Biblioteca de componentes
 
 | Componente | Papel | Notas |

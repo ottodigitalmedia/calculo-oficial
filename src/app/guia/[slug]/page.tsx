@@ -8,6 +8,7 @@ import { IconeSeta } from '@/components/Marca'
 import { porSlug } from '@/lib/calculadoras'
 import { GUIAS, guiaPorSlug } from '@/lib/guias'
 import { formatarData } from '@/lib/format/moeda'
+import { GRADE, LEITURA } from '@/lib/layout'
 
 /**
  * EP-006 — `/guia/{slug}`.
@@ -51,7 +52,9 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
   const calculadoras = guia.calculadoras.map(porSlug).filter((c) => c !== undefined)
 
   return (
-    <main id="conteudo" className="mx-auto max-w-3xl px-5 py-12">
+    <main id="conteudo" className={`${GRADE} py-12`}>
+      {/* Coluna de leitura dentro da grade — ver `lib/layout.ts`. */}
+      <div className={LEITURA}>
       <DadosEstruturados
         dados={dadosDoGuia({
           titulo: guia.titulo,
@@ -117,6 +120,7 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
           </ul>
         </section>
       ) : null}
+      </div>
     </main>
   )
 }

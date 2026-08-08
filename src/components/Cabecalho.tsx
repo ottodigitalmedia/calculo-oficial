@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { Logotipo } from '@/components/Marca'
+import { GRADE } from '@/lib/layout'
 
 /**
  * Cabeçalho — navegação e busca (`03-functional-spec` §1.1).
@@ -12,7 +13,7 @@ import { Logotipo } from '@/components/Marca'
 export function Cabecalho() {
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+      <div className={`${GRADE} flex h-16 items-center justify-between`}>
         <Link href="/" aria-label="Cálculo Oficial — página inicial">
           <Logotipo />
         </Link>

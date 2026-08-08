@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { DadosEstruturados, dadosDeMigalhas } from '@/components/DadosEstruturados'
 import { IconeSeta } from '@/components/Marca'
 import { GUIAS } from '@/lib/guias'
+import { GRADE, LEITURA } from '@/lib/layout'
 
 /** EP-005 — índice dos guias. */
 
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function PaginaGuias() {
   return (
-    <main id="conteudo" className="mx-auto max-w-4xl px-5 py-12">
+    <main id="conteudo" className={`${GRADE} py-12`}>
       <DadosEstruturados
         dados={dadosDeMigalhas([
           { nome: 'Início', caminho: '/' },
@@ -24,6 +25,9 @@ export default function PaginaGuias() {
         ])}
       />
 
+      {/* A coluna de leitura vive DENTRO da grade — ver `lib/layout.ts`. É o
+          que alinha o "G" de Guias com o logotipo do cabeçalho. */}
+      <div className={LEITURA}>
       <header>
         <h1 className="text-3xl font-bold tracking-tight text-[var(--color-navy)] md:text-4xl">
           Guias
@@ -54,6 +58,7 @@ export default function PaginaGuias() {
       {/* Os sete guias restantes são `03-functional-spec` §4 e estão suspensos
           até depois do lançamento (`ADR-008`). Não são anunciados aqui: uma
           lista de "em breve" numa página de conteúdo só dilui o que existe. */}
+      </div>
     </main>
   )
 }
