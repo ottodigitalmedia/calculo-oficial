@@ -85,11 +85,30 @@ export const INSS_MENSAL: DefinicaoCalculadora = {
       padrao: 'empregado',
       opcoes: [
         { valor: 'empregado', rotulo: 'Empregado, doméstico ou avulso' },
-        // Declarado como indisponível em vez de omitido: não sugerir que a
-        // calculadora cobre casos que ela não cobre (`03-functional-spec` §3.9).
-        { valor: 'individual', rotulo: 'Contribuinte individual', indisponivel: true },
-        { valor: 'facultativo', rotulo: 'Facultativo', indisponivel: true },
+        /**
+         * Declarados como indisponíveis em vez de omitidos: não sugerir que a
+         * calculadora cobre casos que ela não cobre (`03-functional-spec` §3.9).
+         *
+         * **Mas a nota deixou de ser "Em breve".** Os dois casos estão cobertos
+         * por CALC-050 desde que ela foi publicada, e a etiqueta continuava
+         * anunciando como futuro o que já estava no ar — mandando embora
+         * justamente o autônomo, que é quem mais precisa da conta. A calculadora
+         * aparece agora também no fim da página, em `relacionadas`.
+         */
+        {
+          valor: 'individual',
+          rotulo: 'Contribuinte individual',
+          indisponivel: true,
+          nota: 'use a calculadora do autônomo',
+        },
+        {
+          valor: 'facultativo',
+          rotulo: 'Facultativo',
+          indisponivel: true,
+          nota: 'use a calculadora do autônomo',
+        },
       ],
+      ajuda: 'Esta calculadora cobre o desconto na folha, pela tabela progressiva. Autônomo, MEI e facultativo recolhem por conta própria, com regra diferente — a conta está em "INSS do autônomo e do facultativo", no fim desta página.',
     },
   ],
 
@@ -113,7 +132,7 @@ export const INSS_MENSAL: DefinicaoCalculadora = {
     {
       pergunta: 'Este cálculo serve para autônomo ou MEI?',
       resposta:
-        'Não. Esta calculadora cobre o segurado empregado, o doméstico e o trabalhador avulso, que seguem a tabela progressiva. Contribuinte individual e facultativo têm regra própria e ficam para uma calculadora específica.',
+        'Não, e a conta deles é outra: quem recolhe por conta própria usa alíquota única sobre a base do plano escolhido, e não a tabela progressiva da folha. A calculadora certa é "INSS do autônomo e do facultativo", que cobre o plano completo, o simplificado e o do facultativo de baixa renda — ela está listada no fim desta página.',
     },
     {
       pergunta: 'Posso calcular o desconto de um ano anterior?',
@@ -122,5 +141,7 @@ export const INSS_MENSAL: DefinicaoCalculadora = {
     },
   ],
 
-  relacionadas: ['salario-liquido', 'irrf'],
+  // CALC-050 vem PRIMEIRO: é o destino de quem chegou aqui e descobriu que a
+  // tabela progressiva não é a dele. Antes, a página não oferecia saída nenhuma.
+  relacionadas: ['inss-autonomo-e-facultativo', 'salario-liquido', 'irrf'],
 }

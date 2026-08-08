@@ -152,6 +152,19 @@ export interface OpcaoSelecao {
   readonly rotulo: string
   /** Desabilitada com "Em breve" — para não sugerir cobertura que não existe. */
   readonly indisponivel?: boolean
+  /**
+   * Substitui o "Em breve" ao lado da opção desabilitada.
+   *
+   * **Nasceu de um defeito real, e do mesmo tipo que já custou caro aqui.**
+   * CALC-016 marcava "Contribuinte individual" e "Facultativo" como *Em breve*
+   * — enquanto CALC-050 cobria exatamente esses dois casos e estava publicada.
+   * O autônomo chegava, lia que não existia e ia embora, com a ferramenta a um
+   * clique. É §7.67 outra vez: anunciar como futuro o que já está no ar.
+   *
+   * "Em breve" é promessa de construção. Quando o caso é coberto **em outro
+   * lugar**, a opção precisa dizer onde — e não fingir que não existe.
+   */
+  readonly nota?: string
 }
 
 /**

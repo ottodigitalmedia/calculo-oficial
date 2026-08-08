@@ -221,7 +221,7 @@ export function CampoFormulario({ campo, valor, erro, onChange }: Props) {
           {campo.opcoes?.map((o) => (
             <option key={o.valor} value={o.valor} disabled={o.indisponivel}>
               {o.rotulo}
-              {o.indisponivel ? ' — Em breve' : ''}
+              {o.indisponivel ? ` — ${o.nota ?? 'Em breve'}` : ''}
             </option>
           ))}
         </select>
