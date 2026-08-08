@@ -92,6 +92,50 @@ valores, reajustados por 3,90%, reproduzem os quatro de 2026 ao centavo.
 
 **CALC-009 e CALC-076 passaram a oferecer o exercício de 2025.**
 
+### Adicionado · canal de contato — `EP-017`
+
+O site não tinha nenhum, e a página de privacidade dizia isso em letra: *"Não
+pedimos nome, e-mail, telefone ou documento em nenhum ponto."* O mantenedor
+decidiu ter formulário próprio sabendo que isso torna a frase falsa; **a página
+foi reescrita no mesmo commit**, e agora declara a exceção, a finalidade única do
+e-mail e o que não é registrado.
+
+Coleta reduzida ao mínimo: só a mensagem é obrigatória. Sem nome, sem telefone. O
+e-mail é opcional e serve apenas para responder — **relatar um erro de cálculo
+sem se identificar de forma alguma é possível**, e é o caso de uso que a página
+existe para atender.
+
+**`RN-030` mandou no desenho.** `RF-006` põe o estado do formulário na URL, então
+o endereço de quem está numa calculadora carrega salário, pensão e saldo de FGTS.
+Anexar a página de origem a um relato de erro é o reflexo natural de quem quer
+ajudar a depurar — e mandaria o holerite da pessoa. O formulário não lê a URL,
+não lê o referenciador e não tem campo para isso; o único vínculo possível é o
+slug, validado contra o catálogo. A rota tampouco anexa IP ou `User-Agent`.
+
+Antispam sem terceiro: campo-armadilha fora da tabulação e do leitor de tela,
+tempo mínimo entre montar e enviar, e limite de frequência em memória. Robô
+recebe sucesso e é descartado — devolver "spam detectado" é o retorno que ensina
+o robô a ajustar até passar.
+
+Sem SMTP configurado o formulário responde **indisponível** e mostra o endereço
+direto. Mensagem engolida é pior que formulário que se declara fora do ar.
+
+### Corrigido · o verificador de orçamento parou de entender o empacotador
+
+`check:orcamento` passou a reprovar com *"não foi possível ler o mapa de hashes"*.
+Não havia defeito no build: o webpack trocou a forma da função que resolve
+pedaços, passando a emitir uma **cadeia de ternários** para os compartilhados
+enquanto mantinha os **dois dicionários** para os nomeados. Acrescentar uma rota
+bastou para a troca.
+
+O script lia só os dicionários, num recorte que terminava no primeiro `.js"`.
+Agora lê as duas formas, na ordem certa, varrendo a fonte inteira.
+
+Terceira vez na mesma sessão que um verificador falha por conta própria — as
+outras foram o marcador curto do teste de vazamento e o `Vary` que o Next
+sobrescreve. Nos três casos a mensagem apontava o lugar certo e a causa era o
+verificador.
+
 ### Adicionado · CALC-076 · comparador acordo mútuo × dispensa sem justa causa
 
 A primeira calculadora que nasceu fora do desenho original do catálogo, por

@@ -47,6 +47,7 @@ import { GUIAS } from '@/lib/guias'
  */
 const NO_RODAPE = 4
 const LEGAIS = [
+  { href: '/contato', rotulo: 'Contato' },
   { href: '/aviso-legal', rotulo: 'Aviso legal' },
   { href: '/privacidade', rotulo: 'Privacidade' },
   { href: '/termos', rotulo: 'Termos de uso' },

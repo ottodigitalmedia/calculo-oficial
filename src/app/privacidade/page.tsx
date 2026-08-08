@@ -39,8 +39,40 @@ export default function Privacidade() {
 
       <h2>Não há cadastro</h2>
       <p>
-        Não pedimos nome, e-mail, telefone ou documento em nenhum ponto. Não existe conta, sessão
-        nem login. Você não pode se identificar aqui, e isso é deliberado.
+        Não existe conta, sessão nem login. Não pedimos nome, telefone ou documento em ponto
+        algum, e nenhuma calculadora exige identificação.
+      </p>
+      <p>
+        <strong>Há uma exceção, e ela é o formulário de contato.</strong> Ali você pode informar
+        um e-mail — <em>opcional</em>, e com uma finalidade só: receber resposta. Uma mensagem
+        enviada sem e-mail chega do mesmo jeito, e nesse caso você não se identifica de forma
+        alguma.
+      </p>
+
+      <h2>O que fazemos com a mensagem de contato</h2>
+      <ul>
+        <li>
+          ela é <strong>enviada por e-mail</strong> para quem mantém o site e não fica guardada
+          aqui — não há banco de dados onde guardá-la;
+        </li>
+        <li>
+          o e-mail que você informar é usado apenas para responder àquela mensagem, e não entra em
+          lista de divulgação;
+        </li>
+        <li>
+          <strong>não registramos seu endereço de rede junto da mensagem.</strong> Ele é usado só
+          para limitar quantos envios partem do mesmo lugar em pouco tempo, permanece na memória do
+          servidor e não acompanha o e-mail;
+        </li>
+        <li>
+          o formulário <strong>não lê a página de onde você veio</strong>. Como o endereço de uma
+          calculadora preenchida carrega os valores que você digitou, anexá-lo enviaria dados que
+          você não escolheu enviar — então ele não é anexado, e não existe campo para isso.
+        </li>
+      </ul>
+      <p>
+        Para pedir a exclusão de uma mensagem já enviada, ou saber o que foi guardado a respeito
+        dela, basta escrever para o mesmo endereço de contato.
       </p>
 
       <h2>O link que você compartilha</h2>

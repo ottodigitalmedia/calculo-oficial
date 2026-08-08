@@ -178,3 +178,82 @@ test('EP-016 · a resposta proíbe ser armazenada em cache', async ({ request })
   const controle = (await request.get('/api/health')).headers()['cache-control'] ?? ''
   expect(controle).toContain('no-store')
 })
+
+// ---------------------------------------------------------------------------
+// EP-017 · o formulário de contato não carrega dado de cálculo
+// ---------------------------------------------------------------------------
+
+/**
+ * O RISCO QUE ESTE CASO VIGIA É ESPECÍFICO DESTE SITE.
+ *
+ * `RF-006` põe o estado do formulário na query, então o endereço de quem está
+ * numa calculadora carrega salário, pensão e saldo de FGTS. Anexar "a página de
+ * onde a pessoa veio" a um relato de erro é o reflexo natural de quem quer
+ * ajudar a depurar — e mandaria o holerite dela por e-mail sem que ela pedisse.
+ *
+ * O formulário não tem campo de URL e não lê o referenciador. Estes casos são o
+ * que impede alguém de acrescentar "só para facilitar".
+ */
+test('EP-017 · o formulário não tem campo de URL nem envia a origem', async ({ page }) => {
+  const enviadas: string[] = []
+  page.on('request', (r) => {
+    if (r.url().includes('/api/contato')) enviadas.push(r.postData() ?? '')
+  })
+
+  // Chega na página de contato VINDO de uma calculadora preenchida: é o caminho
+  // em que a URL de origem carregaria o salário.
+  await page.goto('/calculadora/salario-liquido?salarioBruto=538271&pensao=419637')
+  await page.goto('/contato')
+
+  await page.getByLabel('Assunto').selectOption('erro-de-calculo')
+  await page
+    .getByLabel('Mensagem')
+    .fill('O décimo terceiro proporcional está saindo com um avo a mais do que eu esperava.')
+
+  // A armadilha de tempo exige três segundos entre montar e enviar.
+  await page.waitForTimeout(3_500)
+  await page.getByRole('button', { name: 'Enviar mensagem' }).click()
+  await page.waitForTimeout(1_500)
+
+  expect(enviadas.length, 'o formulário não chegou a enviar nada').toBeGreaterThan(0)
+
+  for (const corpo of enviadas) {
+    for (const proibido of ['538271', '419637', 'salarioBruto', 'http://', 'https://']) {
+      expect(corpo, `o envio contém "${proibido}"`).not.toContain(proibido)
+    }
+  }
+})
+
+/**
+ * O campo-armadilha precisa estar fora do caminho de quem navega por teclado.
+ *
+ * Escondê-lo só com CSS o deixaria focável e anunciado por leitor de tela, o que
+ * transformaria a proteção contra robô num obstáculo para pessoa — e o teste de
+ * acessibilidade da página passaria mesmo assim, porque campo com rótulo é
+ * válido.
+ */
+test('EP-017 · o campo-armadilha não alcança pessoa nenhuma', async ({ page }) => {
+  await page.goto('/contato')
+  const armadilha = page.locator('#site-contato')
+
+  // Fora da ordem de tabulação: quem navega por teclado não passa por ele.
+  await expect(armadilha).toHaveAttribute('tabindex', '-1')
+
+  // Fora do leitor de tela: o contêiner é `aria-hidden`.
+  await expect(armadilha.locator('xpath=ancestor::*[@aria-hidden="true"]')).toHaveCount(1)
+
+  /**
+   * E fora da tela.
+   *
+   * A primeira versão usava `toBeHidden()`, e estava errada: para o Playwright,
+   * "escondido" é `display:none`, `visibility:hidden` ou caixa vazia — elemento
+   * posicionado fora da área visível continua **visível** por essa definição. A
+   * asserção reprovava sem que houvesse defeito.
+   *
+   * O que se cobra agora é a propriedade real: o campo fica à esquerda da
+   * origem, longe de qualquer viewport.
+   */
+  const caixa = await armadilha.boundingBox()
+  expect(caixa, 'o campo-armadilha sumiu do documento').not.toBeNull()
+  expect(caixa!.x, 'o campo-armadilha está dentro da tela').toBeLessThan(0)
+})

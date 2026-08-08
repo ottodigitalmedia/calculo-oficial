@@ -37,6 +37,15 @@ const ROTAS = [
   '/termos',
   '/cookies',
   '/aviso-legal',
+  /**
+   * O formulário de contato entra na varredura, e é a página que mais precisa.
+   *
+   * É a única do site com campos que não são de calculadora, e a única com um
+   * elemento deliberadamente escondido — o campo-armadilha. Esconder algo do
+   * olho sem escondê-lo do leitor de tela é o erro clássico dessa técnica, e a
+   * varredura de axe é o que o pega.
+   */
+  '/contato',
   ...CALCULADORAS.map((s) => `/calculadora/${s}`),
   ...GUIAS.map((s) => `/guia/${s}`),
 ]

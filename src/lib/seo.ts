@@ -54,6 +54,9 @@ const ROTAS_FIXAS: readonly RotaIndexavel[] = [
   { caminho: '/privacidade', prioridade: 0.3 },
   { caminho: '/termos', prioridade: 0.3 },
   { caminho: '/cookies', prioridade: 0.3 },
+  // Prioridade acima das demais institucionais: o relato de erro em cálculo é
+  // o canal que sustenta a promessa de auditabilidade do produto.
+  { caminho: '/contato', prioridade: 0.4 },
 ]
 
 /**
