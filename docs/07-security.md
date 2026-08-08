@@ -96,11 +96,23 @@ O efeito real, encontrado por TC-040: ao digitar o salário, `replaceState` o co
 
 `strict-origin` envia só a origem, inclusive para nós mesmos. Nenhuma query viaja em cabeçalho, e os links para as normas oficiais continuam sabendo de onde vieram. Verificado por `referersComCaminho` em `tests/leak/vazamento.spec.ts`, com prova de mutação: revertendo o valor, o teste reprova.
 
-**Estado dos demais.** `X-Content-Type-Options`, `X-Frame-Options` e `Permissions-Policy` entraram junto, em `next.config.ts`. `Content-Security-Policy` continua adiada por depender das origens do provedor de anúncio.
+**Estado dos demais.** `X-Content-Type-Options`, `X-Frame-Options` e `Permissions-Policy` entraram junto, em `next.config.ts`.
+
+**`Content-Security-Policy` ativada em 08/08/2026, pela auditoria.** Ela era a única das seis que faltava, e a justificativa registrada — *"depende das origens exatas do provedor de anúncio"* — **tinha deixado de existir**: não há provedor de anúncio no código, e a adiação sobrevivia a uma dependência que ninguém chegou a criar.
+
+A diretiva que mais vale aqui é `connect-src`. `RF-006` põe salário, pensão e saldo de FGTS na query; a ameaça específica deste produto não é desfiguração de página, é **um script conseguir mandar isso para fora**, e `connect-src` fecha essa porta por completo. `form-action`, `base-uri`, `object-src 'none'` e `frame-ancestors 'none'` fecham as variantes.
+
+> **O limite, declarado em vez de escondido:** `script-src` admite `'unsafe-inline'`. O Next injeta script embutido para hidratar, com conteúdo que muda a cada build — hash não serve —, e a alternativa é nonce, que exige `middleware` e **torna dinâmica toda página hoje estática**. Isso é revisão de `ADR-008`, e revisão de ADR é do mantenedor. O que `script-src` já proíbe é script vindo de origem não listada, que é o vetor de AM-02; e `connect-src` continua valendo mesmo para um script que consiga executar.
+
+> ⚠️ VERIFICAR EM PRODUÇÃO, uma vez, com o console do navegador aberto: o GA4 pode usar pontos de coleta regionais (`region1.google-analytics.com` e afins) que não estão listados. Aparecendo bloqueio, acrescente **o host exato**. Nunca curinga — ver o aviso ao fim desta seção. `tests/e2e/cabecalhos.spec.ts` reprova se um `*` entrar na política.
 
 **`Strict-Transport-Security` ativado em 31/07/2026**, com `max-age=31536000; includeSubDomains`. A condição de `13-deployment` §7 — TLS estável — foi satisfeita por evidência: o certificado foi substituído sozinho em 30/07/2026, sem intervenção.
 
-**Sem `preload`, por decisão.** A lista de pré-carga é porta de mão única: a remoção leva meses e depende do navegador, não de nós. Ela exige, além disso, que `www` responda em HTTPS, e `www.calculoficial.com.br` ainda não é servido. Enquanto o domínio não estiver completo, `preload` compra risco irreversível por uma proteção que só vale para a **primeira** visita de quem nunca esteve no site.
+**Sem `preload`, por decisão.** A lista de pré-carga é porta de mão única: a remoção leva meses e depende do navegador, não de nós.
+
+O pré-requisito de infraestrutura **foi satisfeito em 31/07/2026** — `www.calculoficial.com.br` passou a ser servido em HTTPS e redireciona para o ápice (`13-deployment` §7), e há teste com `Host` forjado em `tests/e2e/cabecalhos.spec.ts`. Esta seção seguiu afirmando o contrário por uma semana, até a auditoria de 08/08/2026; corrigido aqui.
+
+O que **não** foi satisfeito é a decisão, e ela continua de pé: `preload` só vale para a **primeira** visita de quem nunca esteve no site, e para todos os demais este cabeçalho já basta. Trocar ganho estreito por compromisso irreversível é decisão a registrar, não configuração a ligar.
 
 **Verificação.** `tests/e2e/cabecalhos.spec.ts` mede o que o servidor de produção envia — não o que o `next.config.ts` declara — em uma rota estática, uma de calculadora e uma de API. A asserção é de valor exato: `max-age` zerado, ou `includeSubDomains` perdido numa edição, deixa o cabeçalho presente e a proteção ausente, que é o formato preferido de regressão silenciosa. Um teste separado reprova se `preload` aparecer.
 

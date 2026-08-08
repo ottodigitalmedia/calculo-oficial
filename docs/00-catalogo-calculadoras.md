@@ -303,11 +303,18 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 |---|---|---|---|
 | **v1** | 10 | TRB, TRI, CRD | Provar a tese: memória de cálculo auditável em volume alto de busca |
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
-| **v3** | 28 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
+| **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| | **75** | 10 | |
+| | **76** | 10 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
+
+> **A regra acima foi violada por esta própria tabela, e a auditoria de
+> 08/08/2026 a encontrou.** CALC-076 entrou em §4 em 07/08/2026 e §15 não foi
+> recontada: a tabela seguiu somando **75** enquanto §3 já dizia **76**, com o
+> v3 em 28 em vez de 29. Um documento de escopo que erra a própria soma perde a
+> autoridade justamente onde ela mais vale — nas afirmações que não dá para
+> conferir de imediato.
 
 ### Composição do v1
 

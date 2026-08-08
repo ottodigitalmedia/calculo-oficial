@@ -25,12 +25,14 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 | | |
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
-| Calculadoras **no repositório** | **75** de 75 — catálogo completo — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador e **as duas do ajuste anual do IRPF** |
-| Calculadoras **em produção** | ✅ **74** — implantadas em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. Repositório e produção **em dia** |
-| Guias | ✅ **38** — e **as 75 calculadoras** têm pelo menos um. Cobertura completa em 07/08/2026; §11.5 |
-| Testes | 1.780 de unidade · 683 ponta a ponta · 3 de vazamento |
-| Auditoria de parâmetros | 93 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
-| Orçamento de JavaScript | 135,2 kB de **150** na pior rota — e **19,1 kB de 30** de parte variável. Limite revisado em 01/08/2026 com medição, ver §7.27. Os sete guias novos **não mexeram em nada**: `/guia/[slug]` continua em 105,7 kB, porque `CorpoDoGuia` é servidor |
+| Calculadoras **no repositório** | **76** de 76 — catálogo completo — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador, **as duas do ajuste anual do IRPF** e o comparador de desligamento (CALC-076) |
+| Calculadoras **em produção** | **A conferir.** Eram 74 em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. O que veio depois — CALC-076, o canal de contato e as correções de 08/08/2026 — foi empurrado para `main`, e o pipeline implanta sozinho; **este número não é verificável a partir do repositório**. Conferir em produção e atualizar aqui |
+| Guias | ✅ **38** — e **as 76 calculadoras** têm pelo menos um. Cobertura completa em 07/08/2026; §11.5 |
+| Testes | 2.159 de unidade · 853 ponta a ponta · 5 de vazamento |
+| Auditoria de parâmetros | 94 parâmetros, 109 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
+| Verificações estruturais | **9 de 12** rodando de fato (BV-01 a BV-09). BV-08 e BV-09 entraram em 08/08/2026 — eram `console.log` fixos, §7.76 |
+| Orçamento de JavaScript | 139,6 kB de **150** na pior rota — e **23,3 kB de 30** de parte variável. `/contato` caiu de **328,4 para 107,6 kB** em 08/08/2026, §7.76 |
+| Cabeçalhos de segurança | **6 de 6**. A política de conteúdo entrou em 08/08/2026, §7.76 |
 | Vulnerabilidades | 0 |
 
 ### No ar hoje
@@ -3120,6 +3122,60 @@ sintoma não chegou lá.
 
 ---
 
+### 7.76 A auditoria de 08/08/2026, e o que ela diz sobre os guarda-corpos
+
+**08/08/2026.** Auditoria completa do projeto contra o que estava planejado. O
+pipeline inteiro passou — 1.926 testes, 853 de ponta a ponta, 0 vulnerabilidade,
+orçamento dentro, 76 de 76 calculadoras com guia. **E ainda assim havia cinco
+defeitos**, nenhum deles capaz de fazer teste nenhum ficar vermelho.
+
+| O que estava errado | Onde | Por que nada acusou |
+|---|---|---|
+| *"Quantas parcelas **você tem direito a** receber"* no subtítulo de CALC-009 e no cartão da home | `calculadoras/seguro-desemprego.ts`, `indice.ts` | O teste de `RN-028` existia desde `ADR-009` e olhava **só os guias** |
+| `/contato` com **328,4 kB** — as 76 definições, o motor e as tabelas legais no navegador | `contato/mensagem.ts` importava `porSlug` | `verificar-orcamento.ts` só reprovava `/^\/calculadora\//`. Media, imprimia e deixava passar |
+| CALC-016 anunciando *"Em breve"* o que CALC-050 já publica, sem link nenhum para ela | `calculadoras/inss.ts` | Nada compara o que uma calculadora declara indisponível com o que o catálogo cobre |
+| BV-08 e BV-09 nunca implementadas — duas linhas de `console.log` dizendo *"ENT-005 chega em T-010"* | `scripts/validate-params.ts` | O relatório fechava com "Sem violações", que se lê como "tudo conferido" |
+| Política de conteúdo ausente — a única das seis de `07-security` §5 | `next.config.ts` | Adiada por depender do provedor de anúncio, que **nunca existiu** |
+
+**O padrão é um só, e é o mesmo de §7.75 por outro lado.** Lá, três
+verificadores falharam sem que houvesse defeito. Aqui, cinco defeitos passaram
+sem que verificador nenhum falhasse. As duas metades da mesma pergunta:
+
+> *O silêncio deste verificador significa "está certo" ou significa "não foi
+> olhado"?*
+
+Quatro dos cinco tinham **verificador vizinho que quase pegava**: o teste de
+`RN-028` que só olhava guias, o orçamento que só olhava calculadoras, o
+`catalogo.test.ts` que conferia nome e slug mas não FAQ nem relacionadas. Não
+faltava a ideia da verificação — faltava um passo de alcance dela.
+
+**O que mudou, além das cinco correções:**
+
+- `RN-028` passou a valer para os textos de calculadora, com a **mesma lista** de
+  `guias.test.ts` — duas listas do mesmo conjunto divergem;
+- `catalogo.test.ts` passou a cobrar os dois contratos que `tipos.ts` declarava
+  em prosa e ninguém verificava: `relacionadas` de 2 a 4, e FAQ com no mínimo
+  quatro perguntas. CALC-022 tinha **uma** relacionada, apontando para fora do
+  cluster dela, enquanto recebia link de 24 outras;
+- `/contato` entrou no orçamento bloqueante;
+- BV-08 e BV-09 rodam de fato. BV-09 aceita `fonte_verificacao` **e** "ORIGEM DOS
+  VALORES ESPERADOS" porque os dois termos estavam em uso e quarenta arquivos
+  cumpriam a regra escrevendo o segundo — exigir só um reprovaria arquivo correto,
+  e o caminho mais curto para calar isso seria colar o termo sem ler nada;
+- o mapa de sinônimos da busca saiu de 4 chaves (as do lançamento, congeladas com
+  76 calculadoras no ar) para 74, em módulo próprio e **com teste** — chave errada
+  ali não quebra nada, só nunca casa. Quarenta e nove sinônimos que apenas
+  repetiam o nome foram removidos: não faziam nada e davam impressão de cobertura.
+
+**O que a auditoria NÃO resolveu, e não é código:** não há uma única unidade de
+anúncio no produto cuja tese de monetização é *"exclusiva por anúncio"* (`D-01`),
+e a medição instalada reporta **só visita de página**. `busca_sem_resultado`
+segue sendo comentário — e ele carrega o termo digitado, então é exceção a
+`RN-031` e precisa de decisão, não de commit. MR-3 está marcado para ~90 dias
+após 31/07/2026, e chega, do jeito que está, sem dado sobre HIP-03.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
@@ -3202,10 +3258,17 @@ O que sobrou, em ordem:
    > calculadoras com essa necessidade — CALC-028, CALC-073, CALC-075 e, em menor
    > grau, CALC-074 —, e CALC-040 não está entre elas. Ela compara três produtos
    > fixos. O erro mantinha uma calculadora na fila errada.
-5. **`/api/health` que responde igual em toda versão.** O passo de verificação
-   do pipeline pode aprovar contra o contêiner ANTIGO enquanto o EasyPanel ainda
-   constrói. Expor o hash do commit em `rev` e comparar resolve — o projeto
-   irmão já faz assim.
+5. ~~**`/api/health` que responde igual em toda versão.**~~ ✅ **feito em
+   07/08/2026, pelo segundo caminho da tabela abaixo** — a rota devolve `rev`
+   só a quem apresenta `x-health-token`, e a resposta pública continua sendo
+   `{"status":"ok"}` e mais nada. `EP-016` não precisou ser revisto, e quatro
+   casos de `tests/e2e/cabecalhos.spec.ts` sustentam a distinção.
+
+   > **Este item ficou marcado como "parado por escolha" por um dia depois de
+   > pronto**, e a auditoria de 08/08/2026 o encontrou assim (§7.76). A tabela
+   > de decisão abaixo fica como registro do raciocínio — foi ela que produziu a
+   > escolha certa, e o texto original dizia bem por que o primeiro caminho
+   > tinha piorado depois que o repositório passou a ser público.
 
    > ⚠️ **Este item colide com uma decisão já registrada, e a colisão não tinha
    > sido notada.** `06-api-spec` §EP-016 diz, sobre esta rota: *"Não devolve
