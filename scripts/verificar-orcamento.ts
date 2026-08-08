@@ -225,32 +225,84 @@ function resolvedorDeArquivo(): (id: string) => string | undefined {
     )
     process.exit(1)
   }
-  const fecho = fonte.indexOf('.js"', inicio)
-  const trecho = fonte.slice(inicio, fecho === -1 ? fonte.length : fecho + '.js"'.length)
+  /**
+   * O EMPACOTADOR TEM DUAS FORMAS PARA ESTA FUNÇÃO, E ELA MUDOU SOZINHA.
+   *
+   * Em 07/08/2026 o build passou a emitir uma CADEIA DE TERNÁRIOS no lugar dos
+   * dois dicionários:
+   *
+   *     u = c => 649===c ? "static/chunks/649-a5d6….js"
+   *            : 8464===c ? "static/chunks/8464-ee45….js" : …
+   *
+   * Nada no site mudou para causar isso — o webpack escolhe a representação
+   * conforme o conjunto de pedaços, e acrescentar uma rota bastou. O script
+   * falhou alto, com a mensagem certa, e o motivo era ele: exatamente o que a
+   * nota acima já registrava sobre o recorte por tamanho, agora sobre a FORMA.
+   *
+   * As duas são aceitas. A ternária vem primeiro por ser a atual, e resolve o
+   * caminho inteiro de uma vez; a de dicionários fica para não quebrar quem
+   * construir com uma versão que ainda a emita.
+   */
+  /**
+   * O RUNTIME USA AS DUAS FORMAS AO MESMO TEMPO — e foi isso que custou duas
+   * tentativas erradas nesta correção.
+   *
+   * Medido em 07/08/2026, a função `u` traz uma CADEIA DE TERNÁRIOS para os
+   * pedaços compartilhados e, logo depois, os DOIS DICIONÁRIOS para os que
+   * receberam `webpackChunkName`:
+   *
+   *     u = c => 649===c ? "static/chunks/649-a5d6….js"
+   *            : …
+   *            : "static/chunks/" + ({2106:"calc-salario-liquido", …}[c] || c)
+   *              + "." + {2106:"4e7aa731bbd7d192", …}[c] + ".js"
+   *
+   * Resolver só a cadeia deixa de fora exatamente os pedaços por calculadora,
+   * que são o objeto do orçamento. Resolver só os dicionários deixa de fora os
+   * compartilhados, que é o defeito que o comentário histórico acima descreve.
+   * **As duas precisam ser lidas, e nesta ordem.**
+   *
+   * A varredura é sobre a fonte inteira, e não sobre um recorte: o `trecho`
+   * antigo terminava no primeiro `.js"`, o que era correto quando essa sequência
+   * aparecia uma vez, e passou a cortar tudo menos o primeiro pedaço quando a
+   * cadeia surgiu.
+   */
+  const daCadeia = new Map<string, string>()
+  for (const par of fonte.matchAll(/(\d+)===\w+\?"static\/chunks\/([^"]+\.js)"/g)) {
+    const id = par[1]
+    const arquivo = par[2]
+    if (id !== undefined && arquivo !== undefined) daCadeia.set(id, arquivo)
+  }
 
-  const objetos = [...trecho.matchAll(/\{((?:\s*\d+:\s*"[^"]*",?)+)\}/g)].map((m) => {
-    const dicionario: Record<string, string> = {}
-    for (const par of (m[1] ?? '').matchAll(/(\d+):\s*"([^"]*)"/g)) {
-      const chave = par[1]
-      const valor = par[2]
-      if (chave !== undefined && valor !== undefined) dicionario[chave] = valor
-    }
-    return dicionario
-  })
+  const depoisDeU = fonte.slice(inicio)
+  const objetos = [...depoisDeU.matchAll(/\{((?:\s*\d+:\s*"[^"]*",?)+)\}/g)]
+    .slice(0, 2)
+    .map((m) => {
+      const dicionario: Record<string, string> = {}
+      for (const par of (m[1] ?? '').matchAll(/(\d+):\s*"([^"]*)"/g)) {
+        const chave = par[1]
+        const valor = par[2]
+        if (chave !== undefined && valor !== undefined) dicionario[chave] = valor
+      }
+      return dicionario
+    })
 
   const nomes = objetos[0] ?? {}
   const hashes = objetos[1] ?? {}
 
-  if (Object.keys(hashes).length === 0) {
+  if (daCadeia.size === 0 && Object.keys(hashes).length === 0) {
     console.error(
-      'Não foi possível ler o mapa de hashes do runtime do empacotador.' +
-        '\nSem ele não há como saber o nome do arquivo de cada pedaço adiado, e o' +
-        '\norçamento mediria menos do que o navegador baixa.',
+      'Nao foi possivel ler o mapa de pedacos do runtime do empacotador.' +
+        '\nNem a cadeia de ternarios nem os dois dicionarios foram reconhecidos —' +
+        '\no formato provavelmente mudou de novo. Sem esse mapa nao ha como saber' +
+        '\no nome do arquivo de cada pedaco adiado, e o orcamento mediria menos' +
+        '\ndo que o navegador baixa.',
     )
     process.exit(1)
   }
 
   return (id) => {
+    const daChain = daCadeia.get(id)
+    if (daChain !== undefined) return daChain
     const hash = hashes[id]
     if (hash === undefined) return undefined
     return `${nomes[id] ?? id}.${hash}.js`
