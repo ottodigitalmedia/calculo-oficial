@@ -40,8 +40,9 @@ const nextConfig: NextConfig = {
  * Cabeçalhos de segurança — `07-security` §5.
  *
  * Entram aqui os que **não** dependem das origens da rede de anúncio.
- * `Content-Security-Policy` continua adiada, porque exige a lista exata do
- * provedor e não admite curinga.
+ * `Content-Security-Policy` **entrou em 08/08/2026** — ver a nota própria dela
+ * logo abaixo. Ficava adiada por depender das origens do provedor de anúncio, e
+ * essa dependência nunca chegou a existir.
  *
  * STRICT-TRANSPORT-SECURITY · CONDIÇÃO SATISFEITA
  *
@@ -81,7 +82,70 @@ const nextConfig: NextConfig = {
  * viaja em cabeçalho, e os links para as normas oficiais continuam sabendo de
  * onde vieram.
  */
+/**
+ * CONTENT-SECURITY-POLICY · ATIVADA EM 08/08/2026
+ *
+ * `07-security` §5 a especifica como mitigadora de **AM-01, AM-02 e AM-04** — a
+ * lista de ameaças mais grave do documento — e ela era a única das seis que
+ * faltava. A justificativa registrada era *"depende das origens exatas do
+ * provedor de anúncio"*, e essa justificativa **deixou de existir**: não há
+ * provedor de anúncio no código. Estava adiada por uma dependência que ninguém
+ * criou.
+ *
+ * ## `connect-src` É A DIRETIVA QUE IMPORTA NESTE PRODUTO
+ *
+ * `RF-006` põe salário, pensão e saldo de FGTS na query. A ameaça específica
+ * daqui não é desfiguração de página: é **um script conseguir mandar isso para
+ * fora**. `connect-src` fecha exatamente essa porta, e a fecha por completo,
+ * independentemente de qualquer coisa que `script-src` permita.
+ *
+ * `form-action 'self'` fecha a variante por formulário; `base-uri 'self'` impede
+ * reescrever a base das URLs relativas; `object-src 'none'` e
+ * `frame-ancestors 'none'` fecham plugin e sobreposição de clique.
+ *
+ * ## O LIMITE HONESTO: `'unsafe-inline'` EM `script-src`
+ *
+ * O Next injeta script embutido para hidratar, com conteúdo que muda a cada
+ * build — hash não serve. A alternativa é nonce, e nonce exige `middleware`,
+ * que **torna dinâmica toda página hoje estática**. Isso derruba o modelo de
+ * entrega inteiro e a decisão é de `ADR-008`, reservada ao mantenedor.
+ *
+ * Então `script-src` continua admitindo embutido. O que ele passa a proibir é
+ * script vindo de origem não listada — que é o vetor de AM-02 em que um pacote
+ * comprometido chama código de fora. E o `connect-src` acima continua valendo
+ * mesmo para um script que consiga executar: sem canal de saída, o dado fica.
+ *
+ * > ⚠️ VERIFICAR EM PRODUÇÃO, uma vez, com o console aberto. O GA4 pode usar
+ * > pontos de coleta regionais (`region1.google-analytics.com` e afins) que não
+ * > estão listados. Se aparecerem bloqueios, **acrescente o host exato** — nunca
+ * > um curinga: `CLAUDE.md` proíbe, e curinga aqui anula a proteção contra
+ * > AM-02, que é a ameaça mais provável do sistema.
+ *
+ * `upgrade-insecure-requests` fica de fora por ser redundante com o HSTS acima e
+ * por mascarar, em vez de reprovar, uma referência a `http://` que entrasse.
+ */
+const GTM = 'https://www.googletagmanager.com'
+const GA = 'https://www.google-analytics.com'
+const GA_ALT = 'https://analytics.google.com'
+
+const POLITICA_DE_CONTEUDO = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  // Sem fonte externa e sem imagem remota: medido, o site não usa nenhuma das
+  // duas. `data:` cobre o favicon embutido.
+  "font-src 'self'",
+  `img-src 'self' data: ${GTM} ${GA}`,
+  "style-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline' ${GTM} ${GA}`,
+  // A porta de saída do dado digitado. É a linha mais importante do arquivo.
+  `connect-src 'self' ${GTM} ${GA} ${GA_ALT}`,
+].join('; ')
+
 const CABECALHOS = [
+  { key: 'Content-Security-Policy', value: POLITICA_DE_CONTEUDO },
   { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
   { key: 'Referrer-Policy', value: 'strict-origin' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },

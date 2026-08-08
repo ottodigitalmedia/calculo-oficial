@@ -40,6 +40,28 @@ const ESPERADOS: Readonly<Record<string, string>> = {
   'x-frame-options': 'DENY',
 }
 
+/**
+ * A política de conteúdo é verificada por DIRETIVA, e não por igualdade de texto.
+ *
+ * A lista de origens vai crescer quando o anúncio entrar (`07-security` §5), e
+ * um `toBe` do valor inteiro reprovaria a cada acréscimo legítimo — o formato
+ * de teste que se aprende a atualizar sem ler. O que não pode mudar é o que
+ * está aqui: o padrão fechado, as três portas de saída de dado e a ausência de
+ * curinga.
+ *
+ * **`connect-src` é a linha que protege o dado digitado.** `RF-006` põe salário
+ * e saldo de FGTS na query; sem esta diretiva, qualquer script que execute na
+ * página consegue mandá-los para fora.
+ */
+const DIRETIVAS_EXIGIDAS = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  'connect-src ',
+]
+
 // Uma rota estática, uma dinâmica e uma de API: os cabeçalhos são declarados
 // para `/:caminho*`, e um dia alguém restringe esse padrão sem perceber que
 // deixou a rota de calculadora — a única que recebe dado do usuário — de fora.
@@ -61,6 +83,25 @@ for (const rota of ROTAS) {
     for (const recurso of ['camera', 'microphone', 'geolocation', 'payment', 'usb']) {
       expect(permissoes, `${rota} · Permissions-Policy sem ${recurso}`).toContain(`${recurso}=()`)
     }
+
+    const politica = cabecalhos['content-security-policy'] ?? ''
+    for (const diretiva of DIRETIVAS_EXIGIDAS) {
+      expect(politica, `${rota} · CSP sem "${diretiva}"`).toContain(diretiva)
+    }
+
+    /**
+     * Curinga na política anula a proteção contra AM-02, que `07-security` §5
+     * descreve como a ameaça mais provável do sistema — e `CLAUDE.md` o lista
+     * entre os "nunca faça".
+     *
+     * É o atalho que alguém vai considerar no dia em que a rede de anúncio
+     * pedir uma lista de origens comprida. Este caso é o que impede.
+     */
+    expect(
+      politica,
+      `${rota} · a política de conteúdo usa curinga. Liste o host exato: ` +
+        `curinga anula a proteção contra AM-02 (07-security §5).`,
+    ).not.toMatch(/(^|[\s;])\*|\*\./)
   })
 }
 
