@@ -135,3 +135,115 @@ describe('microcopy · nenhum resquício de markdown no texto de tela', () => {
     expect(comCrase).toEqual([])
   })
 })
+
+/**
+ * `RN-028` · a calculadora estima, não declara direito.
+ *
+ * A LACUNA QUE ESTE BLOCO FECHA ESTAVA ABERTA DESDE O COMEÇO, E DOEU.
+ *
+ * A mesma verificação existia em `tests/unit/guias.test.ts` desde `ADR-009`, e
+ * olhava **só os guias**. Ninguém olhava os textos das calculadoras — que é
+ * onde a afirmação de direito é mais perigosa, porque vem colada ao número.
+ *
+ * O resultado foi CALC-009 no ar com *"Quantas parcelas VOCÊ TEM DIREITO A
+ * receber"* como subtítulo da página e como chamada no índice da home: a frase
+ * que a regra 8 de `CLAUDE.md` nomeia, literalmente, como proibida.
+ *
+ * A lista de padrões é a MESMA de `guias.test.ts`, de propósito. Duas listas do
+ * mesmo conjunto divergem — a lição que este projeto já pagou três vezes.
+ */
+describe('RN-028 · a calculadora estima, não determina direito', () => {
+  const PROIBIDOS = [
+    /você tem direito/i,
+    /voce tem direito/i,
+    /tem direito a receber/i,
+    /\bdeve receber\b/i,
+    /\bgarante o direito\b/i,
+    /\bfaz jus\b/i,
+  ]
+
+  for (const c of CALCULADORAS) {
+    it(`${c.slug} não usa expressão prescritiva`, () => {
+      const seus = [
+        c.nome,
+        c.linhaDeContexto,
+        c.descricaoSeo,
+        c.rotuloResultado,
+        c.avisoAdicional ?? '',
+        ...c.campos.flatMap((campo) => [
+          campo.rotulo,
+          campo.ajuda ?? '',
+          ...(campo.opcoes ?? []).map((o) => o.rotulo),
+        ]),
+        ...c.faq.flatMap((f) => [f.pergunta, f.resposta]),
+      ]
+
+      for (const texto of seus) {
+        for (const proibido of PROIBIDOS) {
+          expect(
+            proibido.test(texto),
+            `"${texto}" viola RN-028 em ${c.slug}. A formulação obrigatória é ` +
+              `"estimativa com base nos dados informados" — nunca afirmação de direito.`,
+          ).toBe(false)
+        }
+      }
+    })
+  }
+})
+
+/**
+ * Os dois contratos que `tipos.ts` declara em prosa e que nada cobrava.
+ *
+ * `relacionadas` é "slugs de 2 a 4"; o passo 7 de "Ao adicionar uma calculadora"
+ * pede FAQ com no mínimo quatro perguntas. Nenhum dos dois tinha verificação:
+ * o e2e olha UMA página, e uma página não é o catálogo.
+ *
+ * CALC-022 estava com **uma** relacionada — e é a única do v1 na vertical de
+ * maior valor publicitário, recebendo link de 24 outras calculadoras e sem
+ * mandar ninguém a lugar nenhum.
+ */
+describe('contratos da definição', () => {
+  for (const c of CALCULADORAS) {
+    it(`${c.slug} · de 2 a 4 relacionadas`, () => {
+      expect(
+        c.relacionadas.length,
+        `"${c.slug}" tem ${c.relacionadas.length} relacionada(s). ` +
+          `O fim da página é o que leva o visitante ao cluster seguinte.`,
+      ).toBeGreaterThanOrEqual(2)
+      expect(c.relacionadas.length).toBeLessThanOrEqual(4)
+      expect(new Set(c.relacionadas).size, 'relacionada repetida').toBe(c.relacionadas.length)
+    })
+
+    it(`${c.slug} · FAQ com no mínimo 4 perguntas`, () => {
+      expect(c.faq.length, `"${c.slug}" tem ${c.faq.length} pergunta(s)`).toBeGreaterThanOrEqual(4)
+    })
+  }
+
+  /**
+   * A descrição de SEO precisa CABER no que o buscador mostra.
+   *
+   * O Google trunca por volta de 160 caracteres. Trinta e oito das 76 passavam
+   * disso em 08/08/2026 — uma chegava a **234** —, e o efeito não era um erro:
+   * era a segunda metade de uma frase escrita com cuidado sendo cortada com
+   * reticências no único lugar onde ela disputa o clique.
+   *
+   * O piso existe pelo motivo oposto: descrição curta demais desperdiça o
+   * espaço que o buscador dá de graça.
+   */
+  for (const c of CALCULADORAS) {
+    it(`${c.slug} · descrição de SEO entre 70 e 160 caracteres`, () => {
+      expect(
+        c.descricaoSeo.length,
+        `"${c.slug}" tem ${c.descricaoSeo.length} caracteres. Acima de 160 o buscador corta.`,
+      ).toBeLessThanOrEqual(160)
+      expect(c.descricaoSeo.length).toBeGreaterThanOrEqual(70)
+    })
+  }
+
+  it('nenhum id nem slug se repete', () => {
+    const ids = CALCULADORAS.map((c) => c.id)
+    const slugs = CALCULADORAS.map((c) => c.slug)
+    expect(new Set(ids).size, 'id repetido — o catálogo não recicla ID').toBe(ids.length)
+    expect(new Set(slugs).size, 'slug repetido — duas calculadoras na mesma URL').toBe(slugs.length)
+  })
+})

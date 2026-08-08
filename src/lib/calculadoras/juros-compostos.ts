@@ -171,5 +171,17 @@ export const JUROS_COMPOSTOS: DefinicaoCalculadora = {
     },
   ],
 
-  relacionadas: ['salario-liquido'],
+  /**
+   * Eram só `salario-liquido`, e isso era um defeito de distribuição.
+   *
+   * CALC-022 é a única do v1 na vertical de **maior valor publicitário** do
+   * catálogo (§6 de `00-catalogo`), e recebe link de 24 outras calculadoras.
+   * Mandava todo esse tráfego para uma página trabalhista, que é o cluster
+   * vizinho — e não para nenhuma das do cluster dela.
+   *
+   * As três agora apontam para dentro de INV, na ordem em que a dúvida costuma
+   * aparecer: quanto isso rende por mês, quanto preciso guardar antes, quanto
+   * falta para viver disso.
+   */
+  relacionadas: ['quanto-rende-por-mes', 'reserva-de-emergencia', 'independencia-financeira'],
 }
