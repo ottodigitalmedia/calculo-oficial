@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 
 import { IconeSeta } from '@/components/Marca'
 import { CATALOGO } from '@/lib/calculadoras/indice'
+import { SINONIMOS } from '@/lib/calculadoras/sinonimos'
 
 /**
  * Busca local no catálogo — `RF-007`, `03-functional-spec` §2.1.
@@ -17,18 +18,13 @@ import { CATALOGO } from '@/lib/calculadoras/indice'
  * funções de cálculo e, por elas, o motor e as tabelas legais. Numa página que
  * só filtra nomes, isso custava 11 kB comprimidos ao visitante da home.
  *
- * `> ⚠️ Quando a análise de uso entrar (adiada por ADR-008), instrumentar aqui
- * o evento `busca_sem_resultado` — é a única exceção de RN-031.1 e a
- * informação mais valiosa para decidir a próxima calculadora.`
+ * O mapa de sinônimos saiu daqui em 08/08/2026, para `lib/calculadoras/sinonimos`.
+ * O motivo é prosaico e vale registrar: **componente `.tsx` não é testável na
+ * suíte de unidade deste projeto**, que roda em ambiente `node` sem plugin de
+ * JSX. Dado que precisa de verificação não pode morar dentro de componente — e
+ * as 76 chaves daquele mapa são slugs escritos à mão, cada um deles capaz de
+ * errar em silêncio.
  */
-
-/** Termos que as pessoas usam e que não estão no nome da calculadora. */
-const SINONIMOS: Readonly<Record<string, readonly string[]>> = {
-  'salario-liquido': ['holerite', 'contracheque', 'salario liquido', 'desconto folha', 'quanto vou receber'],
-  inss: ['previdencia', 'aposentadoria', 'contribuicao', 'desconto inss'],
-  irrf: ['imposto de renda', 'ir', 'leao', 'retencao', 'imposto na fonte'],
-  'juros-compostos': ['investimento', 'render', 'rendimento', 'poupanca', 'aporte'],
-}
 
 function normalizar(s: string): string {
   return s
