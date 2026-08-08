@@ -3075,6 +3075,51 @@ que o **painel** faz.
 
 ---
 
+### 7.75 Três verificadores falharam num dia, e nenhum por defeito do que verificam
+
+**07/08/2026.** Numa sessão só, três verificações reprovaram sem que houvesse
+nada errado no que elas guardam:
+
+| Verificador | O que acusou | A causa real |
+|---|---|---|
+| Vazamento (TC-040) | valor digitado saiu do navegador | o marcador tinha três dígitos e bateu no hash do nome do pacote |
+| `EP-016` (`Vary`) | resposta não declara variação por credencial | o Next sobrescreve o cabeçalho; a promessa não era cumprível |
+| Orçamento (TC-051) | não deu para ler o mapa de pedaços | o webpack trocou a forma da função `u` sozinho |
+
+**Nos três, a mensagem de erro apontava o lugar certo e a conclusão natural era
+a errada.** "Valor saiu do navegador" leva a procurar vazamento; "não deu para
+ler o mapa" leva a procurar build quebrado. Em nenhum caso o problema estava
+onde a mensagem apontava.
+
+> **Verificador é código, e código apodrece — só que ninguém trata a suíte como
+> superfície que envelhece.** Um marcador escolhido quando os nomes de arquivo
+> eram outros; um cabeçalho que a plataforma passou a gerenciar; um analisador
+> escrito contra uma saída que o empacotador reserva o direito de mudar. Nenhum
+> dos três foi tocado por commit nenhum — os três quebraram sozinhos, com o
+> mundo à volta se movendo.
+
+**A pergunta que os três exigem, antes de investigar o produto:** *o que esta
+verificação assume sobre coisas que não estão sob meu controle?* Nome de arquivo
+gerado, cabeçalho gerenciado por framework, formato de saída de ferramenta. Onde
+houver essa dependência, a falha é dela primeiro.
+
+**E o custo de errar essa ordem é assimétrico.** Investigar o produto quando o
+problema é o verificador custa tempo. Investigar o verificador quando o problema
+é o produto custa **publicar um defeito** — porque o caminho mais curto para
+"fazer o verificador parar de reclamar" é afrouxá-lo. Nos três casos aqui a
+correção **manteve ou aumentou** o rigor: a lista de terceiros ficou fechada em
+vez de vazia, o `no-store` substituiu um `Vary` que não funcionava, e o
+orçamento passou a ler as duas formas em vez de uma.
+
+**A correção do orçamento levou duas tentativas erradas**, e as duas por ler
+parte do arquivo: primeiro só a cadeia nova, perdendo os pedaços por
+calculadora; depois a cadeia dentro do recorte antigo, que termina no primeiro
+`.js"` e cortava tudo além do primeiro pedaço. O runtime usa **as duas formas ao
+mesmo tempo**, e foi preciso imprimir o arquivo para ver isso — deduzir do
+sintoma não chegou lá.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
