@@ -125,7 +125,7 @@ export const RESCISAO_DOMESTICO: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto se recebe na saída do trabalho doméstico — sem multa de 40%, com o fundo de 3,2%.',
   descricaoSeo:
-    'Calcule a rescisão do empregado doméstico pela Lei Complementar nº 150/2015: saldo, aviso prévio, 13º, férias e a indenização compensatória de 3,2% que substitui a multa do FGTS.',
+    'Calcule a rescisão do empregado doméstico pela LC nº 150/2015: saldo, aviso prévio, 13º, férias e a indenização que substitui a multa do FGTS.',
 
   campos: [
     {

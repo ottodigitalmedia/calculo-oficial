@@ -92,7 +92,7 @@ export const CUSTO_EMPREGADOR: DefinicaoCalculadora = {
   nome: 'Custo real do funcionário',
   linhaDeContexto: 'Quanto um salário custa de verdade — com encargos e provisões na conta.',
   descricaoSeo:
-    'Calcule o custo real de um funcionário CLT: contribuição patronal, RAT, terceiros, FGTS e as provisões de 13º e férias com o terço, com a norma de cada encargo à mostra.',
+    'Calcule o custo real de um funcionário CLT: contribuição patronal, RAT, terceiros, FGTS e as provisões de 13º e férias, com a norma de cada encargo.',
 
   campos: [
     {

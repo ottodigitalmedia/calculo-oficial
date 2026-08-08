@@ -112,7 +112,7 @@ export const AVISO_PREVIO: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quantos dias de aviso prévio o seu tempo de casa garante — e quanto eles valem.',
   descricaoSeo:
-    'Calcule os dias de aviso prévio proporcional pela Lei nº 12.506/2011: 30 dias mais 3 por ano de serviço, até 90. Veja o valor, a projeção do contrato e a norma aplicada.',
+    'Calcule os dias de aviso prévio proporcional pela Lei nº 12.506/2011, com o valor, a projeção do contrato e a norma aplicada no passo a passo.',
 
   campos: [
     {

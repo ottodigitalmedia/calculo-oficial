@@ -85,7 +85,7 @@ export const REAJUSTE_ALUGUEL: DefinicaoCalculadora = {
   nome: 'Reajuste de aluguel',
   linhaDeContexto: 'Quanto o aluguel passa a ser pelo índice do contrato — com a conta à mostra.',
   descricaoSeo:
-    'Calcule o reajuste do aluguel pelo IGP-M, IPCA ou INPC entre a data do último reajuste e o mês do novo. Veja a variação acumulada, o novo valor e a diferença em doze meses.',
+    'Calcule o reajuste do aluguel pelo IGP-M, IPCA ou INPC entre o último reajuste e o mês do novo. Veja a variação acumulada e o novo valor.',
 
   campos: [
     {

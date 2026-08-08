@@ -145,7 +145,7 @@ export const GANHO_DE_CAPITAL: DefinicaoCalculadora = {
   nome: 'IR sobre ganho de capital na venda de imóvel',
   linhaDeContexto: 'Quanto de imposto na venda — com os fatores de redução que quase ninguém aplica.',
   descricaoSeo:
-    'Calcule o imposto sobre o ganho de capital na venda do seu imóvel, com os fatores de redução por tempo de posse e as isenções do imóvel único e do reinvestimento.',
+    'Calcule o imposto sobre o ganho de capital na venda do imóvel, com a redução por tempo de posse e as isenções do imóvel único e do reinvestimento.',
 
   campos: [
     {

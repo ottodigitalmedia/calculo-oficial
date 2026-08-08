@@ -114,7 +114,7 @@ export const VALOR_FUTURO: DefinicaoCalculadora = {
   nome: 'Valor futuro corrigido pela inflação',
   linhaDeContexto: 'Quanto será preciso ter lá na frente — e o que o dinheiro parado comprará.',
   descricaoSeo:
-    'Projete quanto um valor de hoje precisará ser no futuro para manter o poder de compra, pela inflação anual que você estimar, com o acumulado recente como referência.',
+    'Projete quanto um valor de hoje precisará ser no futuro para manter o poder de compra, pela inflação anual que você estimar, com o acumulado recente.',
 
   campos: [
     {

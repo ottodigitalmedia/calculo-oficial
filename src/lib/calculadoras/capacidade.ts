@@ -72,7 +72,7 @@ export const CAPACIDADE: DefinicaoCalculadora = {
   nome: 'Capacidade de financiamento',
   linhaDeContexto: 'Quanto de financiamento a sua renda sustenta — e quanto ele custa no total.',
   descricaoSeo:
-    'Descubra quanto você consegue financiar a partir da renda, das parcelas já comprometidas, da taxa e do prazo. Veja a parcela máxima, o teto do bem e os juros do contrato.',
+    'Descubra quanto você consegue financiar pela renda, pelas parcelas já comprometidas, pela taxa e pelo prazo. Veja a parcela máxima e o teto do bem.',
 
   campos: [
     {

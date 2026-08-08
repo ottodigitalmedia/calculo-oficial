@@ -112,7 +112,7 @@ export const AMORTIZACAO_EXTRA: DefinicaoCalculadora = {
   linhaDeContexto:
     'O que rende mais com o mesmo dinheiro: encurtar o contrato ou baixar a prestação.',
   descricaoSeo:
-    'Simule uma amortização extra no seu financiamento e compare as duas escolhas lado a lado: reduzir o prazo ou reduzir a parcela, com a economia de juros de cada uma.',
+    'Simule uma amortização extra e compare as duas escolhas lado a lado: reduzir o prazo ou reduzir a parcela, com a economia de juros de cada uma.',
 
   campos: [
     {

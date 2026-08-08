@@ -127,7 +127,7 @@ export const ROTATIVO_CARTAO: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto custa não pagar a fatura inteira — e qual é o teto que a lei impõe à cobrança.',
   descricaoSeo:
-    'Calcule o custo real do crédito rotativo do cartão: um ciclo de rotativo, a migração obrigatória para o parcelamento e o teto legal que limita juros e encargos ao valor original da dívida.',
+    'Calcule o custo real do rotativo do cartão: um ciclo, a migração obrigatória para o parcelamento e o teto legal que limita juros e encargos.',
 
   campos: [
     {

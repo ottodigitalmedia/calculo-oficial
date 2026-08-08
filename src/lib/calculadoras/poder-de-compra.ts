@@ -83,7 +83,7 @@ export const PODER_DE_COMPRA: DefinicaoCalculadora = {
   nome: 'Poder de compra ao longo do tempo',
   linhaDeContexto: 'Quanto o dinheiro perdeu — e quanto seria preciso hoje para comprar o mesmo.',
   descricaoSeo:
-    'Descubra quanto um valor do passado equivale hoje e quanto do poder de compra a inflação levou, por IPCA, INPC ou IGP-M, com os dois sentidos da conta lado a lado.',
+    'Descubra quanto um valor do passado equivale hoje e quanto do poder de compra a inflação levou, por IPCA, INPC ou IGP-M, nos dois sentidos.',
 
   campos: [
     {

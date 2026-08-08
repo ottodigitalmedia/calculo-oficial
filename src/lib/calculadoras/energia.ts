@@ -68,7 +68,7 @@ export const ENERGIA: DefinicaoCalculadora = {
   nome: 'Consumo de energia por aparelho',
   linhaDeContexto: 'Quanto cada aparelho pesa na conta de luz — pela sua tarifa, não por média.',
   descricaoSeo:
-    'Calcule quanto um aparelho consome de energia por mês e quanto isso custa na sua conta de luz, a partir da potência em watts, das horas de uso e da tarifa da sua fatura.',
+    'Calcule quanto um aparelho consome por mês e quanto custa na conta de luz, pela potência em watts, pelas horas de uso e pela tarifa da sua fatura.',
 
   campos: [
     {

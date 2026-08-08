@@ -97,7 +97,7 @@ export const ELETRICO_VS_COMBUSTAO: DefinicaoCalculadora = {
   nome: 'Carro elétrico ou a combustão',
   linhaDeContexto: 'Quanto cada um custa por quilômetro — pela sua tarifa e pelo seu consumo.',
   descricaoSeo:
-    'Compare o custo por quilômetro de um carro elétrico e um a combustão a partir do consumo real, do preço do combustível e da tarifa de energia da sua conta de luz.',
+    'Compare o custo por quilômetro de um elétrico e de um a combustão pelo consumo real, pelo preço do combustível e pela tarifa da sua conta de luz.',
 
   campos: [
     {

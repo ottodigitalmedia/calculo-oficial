@@ -102,7 +102,7 @@ export const CORRECAO_POR_INDICE: DefinicaoCalculadora = {
   nome: 'Correção de valor por índice',
   linhaDeContexto: 'Quanto um valor de ontem vale hoje — por IPCA, INPC, IGP-M ou Selic, mês a mês.',
   descricaoSeo:
-    'Corrija um valor entre dois meses pelo IPCA, INPC, IGP-M ou pela Selic acumulada. Veja a variação no período, quantos meses entraram na conta e o valor atualizado.',
+    'Corrija um valor entre dois meses pelo IPCA, INPC, IGP-M ou pela Selic acumulada. Veja a variação do período e quantos meses entraram na conta.',
 
   campos: [
     {

@@ -95,7 +95,7 @@ export const PRECIFICACAO: DefinicaoCalculadora = {
   nome: 'Precificação de hora',
   linhaDeContexto: 'Quanto cobrar por hora para fechar a sua conta — com hora não faturável dentro.',
   descricaoSeo:
-    'Calcule o valor da sua hora como freelancer ou autônomo considerando renda pretendida, custos fixos, imposto por dentro e a fatia do expediente que realmente vira hora faturada.',
+    'Calcule o valor da sua hora como freelancer ou autônomo: renda pretendida, custos fixos, imposto por dentro e a fatia do expediente que vira faturamento.',
 
   campos: [
     {

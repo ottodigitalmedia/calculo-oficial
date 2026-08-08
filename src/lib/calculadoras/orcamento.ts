@@ -83,7 +83,7 @@ export const ORCAMENTO: DefinicaoCalculadora = {
   nome: 'Orçamento doméstico 50/30/20',
   linhaDeContexto: 'Como dividir a renda do mês — com os percentuais no seu controle, não fixos.',
   descricaoSeo:
-    'Divida sua renda líquida entre necessidades, desejos e poupança pela regra 50/30/20, ou pelos percentuais que você escolher. Veja o valor de cada fatia e o que a poupança acumula em um ano.',
+    'Divida sua renda líquida entre necessidades, desejos e poupança pela regra 50/30/20, ou pelos percentuais que escolher. Veja o valor de cada fatia.',
 
   campos: [
     {

@@ -58,7 +58,7 @@ export const CET: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto o empréstimo custa de verdade — com tarifas e seguros dentro da conta.',
   descricaoSeo:
-    'Calcule o CET de um empréstimo a partir do valor recebido, da parcela e do prazo. Veja a taxa mensal e anual, o custo total e a norma do Banco Central que define o cálculo.',
+    'Calcule o CET de um empréstimo pelo valor recebido, pela parcela e pelo prazo. Veja a taxa mensal e anual, o custo total e a norma do Banco Central.',
 
   campos: [
     {

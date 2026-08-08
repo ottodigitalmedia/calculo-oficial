@@ -111,7 +111,7 @@ export const LOCACAO: DefinicaoCalculadora = {
   nome: 'Rentabilidade de imóvel para locação',
   linhaDeContexto: 'Quanto o imóvel rende de verdade — depois da vacância, do IPTU e da taxa.',
   descricaoSeo:
-    'Calcule a rentabilidade líquida de um imóvel alugado descontando taxa de administração, IPTU, manutenção e meses de vacância. Compare com a rentabilidade bruta do anúncio.',
+    'Calcule a rentabilidade líquida de um imóvel alugado descontando administração, IPTU, manutenção e vacância. Compare com a do anúncio.',
 
   campos: [
     {

@@ -103,7 +103,7 @@ export const RENDA_FIXA: DefinicaoCalculadora = {
   nome: 'IR sobre renda fixa',
   linhaDeContexto: 'Quanto o imposto tira do seu rendimento — e quanto o prazo devolve.',
   descricaoSeo:
-    'Calcule o imposto de renda sobre CDB, Tesouro e outras aplicações pela tabela regressiva da Lei nº 11.033/2004, de 22,5% a 15%, e veja quanto se ganha esperando a faixa seguinte.',
+    'Calcule o imposto de renda sobre CDB, Tesouro e outras aplicações pela tabela regressiva da Lei nº 11.033/2004, e quanto rende esperar a faixa seguinte.',
 
   campos: [
     {

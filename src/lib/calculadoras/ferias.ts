@@ -88,7 +88,7 @@ export const FERIAS: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto você recebe nas férias — com o terço, o abono e os descontos separados.',
   descricaoSeo:
-    'Calcule as férias com o terço constitucional, a venda de 1/3 (abono) e o adiantamento do 13º. Veja o passo a passo, a norma de cada incidência e a vigência aplicada.',
+    'Calcule as férias com o terço constitucional, a venda de um terço (abono) e o adiantamento do 13º, com a norma de cada incidência à mostra.',
 
   campos: [
     {

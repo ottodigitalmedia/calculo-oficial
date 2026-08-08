@@ -110,7 +110,7 @@ export const REAJUSTE_SALARIAL: DefinicaoCalculadora = {
   nome: 'Reajuste de salário pela inflação',
   linhaDeContexto: 'Quanto o salário precisaria ser para manter o poder de compra — e o que a proposta representa.',
   descricaoSeo:
-    'Calcule quanto seu salário precisaria subir para repor a inflação do período por INPC, IPCA ou IGP-M, e compare com o reajuste oferecido para ver ganho ou perda real.',
+    'Calcule quanto seu salário precisaria subir para repor a inflação por INPC, IPCA ou IGP-M, e compare com o reajuste oferecido para ver o ganho real.',
 
   campos: [
     {

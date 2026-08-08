@@ -98,7 +98,7 @@ export const RESERVA_DE_EMERGENCIA: DefinicaoCalculadora = {
   nome: 'Reserva de emergência',
   linhaDeContexto: 'De quanto ela precisa ser, quanto falta e em quanto tempo o seu aporte fecha.',
   descricaoSeo:
-    'Dimensione sua reserva de emergência a partir da despesa mensal essencial e dos meses de cobertura que você escolher. Veja quanto falta reunir e em quanto tempo o aporte chega lá.',
+    'Dimensione sua reserva de emergência pela despesa mensal essencial e pelos meses de cobertura que escolher. Veja quanto falta e em quanto tempo.',
 
   campos: [
     {

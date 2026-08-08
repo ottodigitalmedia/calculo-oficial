@@ -113,7 +113,7 @@ export const FINANCIAMENTO_IMOBILIARIO: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto a prestação custa de verdade — com os seguros e a tarifa dentro da conta.',
   descricaoSeo:
-    'Simule um financiamento imobiliário no SAC ou no Price com MIP, DFI e tarifa de administração na prestação. Veja a primeira e a última parcela, o total pago e quanto dele é seguro.',
+    'Simule um financiamento imobiliário no SAC ou no Price com MIP, DFI e tarifa na prestação. Veja a primeira parcela, a última e quanto do total é seguro.',
 
   campos: [
     {

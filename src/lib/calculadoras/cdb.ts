@@ -124,7 +124,7 @@ export const CDB: DefinicaoCalculadora = {
   nome: 'CDB, LCI e LCA — rendimento líquido',
   linhaDeContexto: 'Quanto sobra de "110% do CDI" depois do imposto — e quando o isento ganha.',
   descricaoSeo:
-    'Converta o percentual do CDI em rendimento e veja quanto sobra depois do imposto de renda, com a alíquota que o prazo determina. Compare produto tributado e isento.',
+    'Converta o percentual do CDI em rendimento e veja quanto sobra depois do imposto de renda, com a alíquota que o prazo determina. Tributado e isento.',
 
   campos: [
     {

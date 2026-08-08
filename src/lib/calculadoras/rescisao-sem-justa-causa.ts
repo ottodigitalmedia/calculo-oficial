@@ -145,7 +145,7 @@ export const RESCISAO_SEM_JUSTA_CAUSA: DefinicaoCalculadora = {
   linhaDeContexto:
     "Quanto você tem a receber na demissão sem justa causa — verba a verba, com as incidências à mostra.",
   descricaoSeo:
-    "Calcule as verbas da rescisão sem justa causa: saldo de salário, aviso prévio, 13º, férias e multa do FGTS. Veja o passo a passo, a norma de cada incidência e a vigência aplicada.",
+    "Calcule as verbas da rescisão sem justa causa: saldo de salário, aviso prévio, 13º, férias e multa do FGTS, com a norma de cada incidência à mostra.",
 
   campos: [
     {

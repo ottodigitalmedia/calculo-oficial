@@ -89,7 +89,7 @@ export const QUITACAO_ANTECIPADA: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto custa quitar hoje, com os juros reduzidos na proporção que a lei manda.',
   descricaoSeo:
-    'Calcule o saldo devedor real de um financiamento e quanto se economiza quitando ou amortizando antes do prazo, com a redução proporcional dos juros que o art. 52, § 2º do CDC assegura.',
+    'Calcule o saldo devedor real e quanto se economiza quitando antes do prazo, com a redução de juros que o art. 52, § 2º do CDC assegura.',
 
   campos: [
     {

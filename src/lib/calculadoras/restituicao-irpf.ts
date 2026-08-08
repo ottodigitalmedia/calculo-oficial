@@ -111,7 +111,7 @@ export const RESTITUICAO_IRPF: DefinicaoCalculadora = {
   nome: 'Restituição do Imposto de Renda',
   linhaDeContexto: 'Se você tem imposto a restituir ou a pagar na declaração anual.',
   descricaoSeo:
-    'Estime a restituição ou o imposto a pagar na Declaração de Ajuste Anual, com dependentes, instrução e despesas médicas, e veja qual modelo compensa. Com a tabela anual e a norma de cada dedução.',
+    'Estime a restituição ou o imposto a pagar na Declaração de Ajuste Anual, com dependentes, instrução e despesas médicas, e veja qual modelo compensa.',
 
   campos: [
     {

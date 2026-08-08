@@ -102,7 +102,7 @@ export const RESCISAO_PEDIDO_DEMISSAO: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto você recebe ao pedir demissão — e o que é descontado se não cumprir o aviso.',
   descricaoSeo:
-    'Calcule as verbas do pedido de demissão: saldo de salário, 13º proporcional, férias e o desconto do aviso não cumprido. Veja o passo a passo, com a norma de cada incidência.',
+    'Calcule as verbas do pedido de demissão: saldo de salário, 13º proporcional, férias e o desconto do aviso não cumprido, com a norma de cada incidência.',
 
   campos: [
     { id: 'admissao', rotulo: 'Data de admissão', tipo: 'data', obrigatorio: true },

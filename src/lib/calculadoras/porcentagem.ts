@@ -91,7 +91,7 @@ export const PORCENTAGEM: DefinicaoCalculadora = {
   linhaDeContexto:
     'Parte, acréscimo, desconto, proporção e variação — com a conta aberta ao lado.',
   descricaoSeo:
-    'Calcule porcentagem nos cinco casos que aparecem no dia a dia: quanto é X% de um valor, quanto sobra com desconto, quanto fica com acréscimo, que fração um valor representa de outro e qual foi a variação percentual entre dois valores.',
+    'Calcule porcentagem nos cinco casos do dia a dia: quanto é uma parte de um valor, desconto, acréscimo, que fração um valor é de outro e a variação entre dois.',
 
   campos: [
     {

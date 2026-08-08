@@ -84,7 +84,7 @@ export const VIAGEM: DefinicaoCalculadora = {
   nome: 'Custo de viagem de carro',
   linhaDeContexto: 'Quanto a viagem gasta de combustível e pedágio — ida, volta e por pessoa.',
   descricaoSeo:
-    'Calcule quantos litros e quanto custa uma viagem de carro a partir da distância, do consumo real do veículo e do preço do combustível. Com pedágio, ida e volta e divisão por pessoa.',
+    'Calcule quantos litros e quanto custa uma viagem de carro pela distância, pelo consumo real e pelo preço do combustível. Com pedágio e divisão por pessoa.',
 
   campos: [
     {

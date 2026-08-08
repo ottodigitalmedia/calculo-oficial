@@ -81,7 +81,7 @@ export const CHEQUE_ESPECIAL: DefinicaoCalculadora = {
   nome: 'Cheque especial — custo real',
   linhaDeContexto: 'Quanto custam os dias no vermelho — e qual é o teto que a lei impõe.',
   descricaoSeo:
-    'Calcule os juros do cheque especial pelo valor usado e pelos dias de uso, veja a taxa anual equivalente e compare com o teto de 8% ao mês da Resolução CMN nº 4.765/2019.',
+    'Calcule os juros do cheque especial pelo valor e pelos dias de uso, veja a taxa anual equivalente e compare com o teto da Resolução CMN nº 4.765/2019.',
 
   campos: [
     {

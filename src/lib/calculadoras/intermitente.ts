@@ -112,7 +112,7 @@ export const INTERMITENTE: DefinicaoCalculadora = {
   nome: 'Contrato intermitente — o acerto de cada convocação',
   linhaDeContexto: 'Quanto entra a cada chamada, com o 13º e as férias que a lei manda pagar na hora.',
   descricaoSeo:
-    'Calcule quanto você recebe em cada período de convocação no contrato intermitente: remuneração das horas, férias proporcionais com o terço, décimo terceiro, INSS, imposto de renda e o FGTS depositado.',
+    'Calcule o acerto de cada convocação no contrato intermitente: horas, férias proporcionais com o terço, décimo terceiro, INSS, imposto de renda e FGTS.',
 
   campos: [
     {

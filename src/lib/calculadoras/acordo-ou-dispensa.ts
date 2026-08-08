@@ -168,7 +168,7 @@ export const ACORDO_OU_DISPENSA: DefinicaoCalculadora = {
   linhaDeContexto:
     'Quanto entra em cada caminho — com o seguro-desemprego, que é onde mora a maior diferença.',
   descricaoSeo:
-    'Compare a rescisão por acordo mútuo (art. 484-A da CLT) com a dispensa sem justa causa: verbas, multa do FGTS, limite de saque e o seguro-desemprego que o acordo veda.',
+    'Compare o acordo do art. 484-A com a dispensa sem justa causa: verbas, multa do FGTS, limite de saque e o seguro-desemprego que o acordo veda.',
 
   campos: [
     {

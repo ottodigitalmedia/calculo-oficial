@@ -95,7 +95,7 @@ export const INDEPENDENCIA: DefinicaoCalculadora = {
   nome: 'Meta de independência financeira',
   linhaDeContexto: 'Quanto patrimônio sustenta a renda que você quer — e quanto tempo até lá.',
   descricaoSeo:
-    'Calcule o patrimônio necessário para viver de renda a partir da despesa mensal que você quer sustentar e da taxa de retirada que escolher. Veja quanto falta e em quantos anos o seu aporte chega lá.',
+    'Calcule o patrimônio para viver de renda pela despesa mensal que quer sustentar e pela taxa de retirada que escolher. Veja quanto falta e em quantos anos.',
 
   campos: [
     {

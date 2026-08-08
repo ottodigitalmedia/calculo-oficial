@@ -111,7 +111,7 @@ export const ALUGAR_OU_COMPRAR: DefinicaoCalculadora = {
   nome: 'Alugar ou comprar',
   linhaDeContexto: 'Qual constrói mais patrimônio no seu prazo — e quanto o imóvel teria que valorizar para empatar.',
   descricaoSeo:
-    'Compare alugar e comprar pelo patrimônio ao fim do prazo, com financiamento, custos de aquisição e a carteira de quem aluga. Veja a valorização anual que faria as duas pontas empatarem.',
+    'Compare alugar e comprar pelo patrimônio ao fim do prazo, com financiamento, custos de aquisição e a carteira de quem aluga. Veja o ponto de empate.',
 
   campos: [
     {

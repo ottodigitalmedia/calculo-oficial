@@ -102,7 +102,7 @@ export const CUSTO_DO_CARRO: DefinicaoCalculadora = {
   nome: 'Custo mensal de ter um carro',
   linhaDeContexto: 'Quanto o carro custa por mês de verdade — não só o que sai no posto.',
   descricaoSeo:
-    'Some tudo o que um carro custa por mês: combustível, IPVA, seguro, licenciamento, manutenção, estacionamento e perda de valor. Veja o custo por quilômetro rodado.',
+    'Some tudo o que um carro custa por mês: combustível, IPVA, seguro, licenciamento, manutenção, estacionamento e perda de valor, com o custo por quilômetro.',
 
   campos: [
     {

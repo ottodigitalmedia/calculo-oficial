@@ -75,7 +75,7 @@ export const COMBUSTIVEL: DefinicaoCalculadora = {
   linhaDeContexto:
     'Qual compensa no seu carro — pelo consumo real, não pela regra dos 70%.',
   descricaoSeo:
-    'Descubra se compensa abastecer com álcool ou gasolina usando o consumo real do seu carro. Veja o custo por percurso, o custo a cada 100 km e o preço de equilíbrio do etanol.',
+    'Descubra se compensa abastecer com álcool ou gasolina pelo consumo real do seu carro. Veja o custo a cada 100 km e o preço de equilíbrio do etanol.',
 
   campos: [
     {
