@@ -46,8 +46,22 @@ export const GRADE = 'mx-auto w-full max-w-6xl px-5'
 /**
  * Coluna de leitura, dentro de `GRADE`.
  *
- * Sem `mx-auto`, de propósito: ver a nota acima. Vale para prosa — guias,
- * páginas legais, FAQ. Não vale para grade de cartões nem para o par
- * formulário/resultado, que usam a largura inteira.
+ * Sem `mx-auto`, de propósito: ver a nota acima.
+ *
+ * ## POR QUE 4xl, E NÃO 3xl NEM A GRADE INTEIRA
+ *
+ * Alinhar o conteúdo com o cabeçalho resolveu o desalinhamento e criou outro
+ * efeito, que o mantenedor apontou: a sobra deixou de ser dos dois lados e
+ * passou a ser toda de um. Ao lado de uma calculadora — que preenche a grade
+ * com formulário **e** resultado — a página de texto parecia estreita.
+ *
+ * A saída **não** foi esticar o texto até a grade. Linha longa demais cansa e
+ * faz o olho perder o início da seguinte; a 16px, a grade inteira daria mais de
+ * 140 caracteres por linha, quase o dobro do confortável.
+ *
+ * O guia resolveu de verdade, ganhando uma segunda coluna com o sumário fixo —
+ * ver `SumarioDoGuia`. As páginas que não têm o que pôr ao lado (legais,
+ * contato, `/guias`) ganham esta largura intermediária: mais próxima da
+ * calculadora sem entregar a legibilidade.
  */
-export const LEITURA = 'max-w-3xl'
+export const LEITURA = 'max-w-4xl'

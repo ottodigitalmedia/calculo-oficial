@@ -3,12 +3,12 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { DadosEstruturados, dadosDeMigalhas, dadosDoGuia } from '@/components/DadosEstruturados'
-import { CorpoDoGuia } from '@/components/Guia'
+import { CorpoDoGuia, SumarioDoGuia } from '@/components/Guia'
 import { IconeSeta } from '@/components/Marca'
 import { porSlug } from '@/lib/calculadoras'
 import { GUIAS, guiaPorSlug } from '@/lib/guias'
 import { formatarData } from '@/lib/format/moeda'
-import { GRADE, LEITURA } from '@/lib/layout'
+import { GRADE } from '@/lib/layout'
 
 /**
  * EP-006 — `/guia/{slug}`.
@@ -53,8 +53,6 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
 
   return (
     <main id="conteudo" className={`${GRADE} py-12`}>
-      {/* Coluna de leitura dentro da grade — ver `lib/layout.ts`. */}
-      <div className={LEITURA}>
       <DadosEstruturados
         dados={dadosDoGuia({
           titulo: guia.titulo,
@@ -81,6 +79,12 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
         <Link href="/guias" className="inline-block py-1 hover:underline">Guias</Link>
       </nav>
 
+      {/* DUAS COLUNAS A PARTIR DE `lg` — ver a nota em `SumarioDoGuia`.
+          A coluna de leitura mantém a largura que a legibilidade pede, e o que
+          preenche a grade é navegação útil, não texto esticado. Abaixo de `lg`
+          o `grid` não se aplica e tudo volta a ser uma coluna só. */}
+      <div className="lg:grid lg:grid-cols-[minmax(0,48rem)_minmax(0,1fr)] lg:gap-12">
+      <div>
       <header className="mt-4">
         <h1 className="text-3xl font-bold leading-tight tracking-tight text-[var(--color-navy)] md:text-4xl">
           {guia.titulo}
@@ -94,6 +98,14 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
       </header>
 
       <CorpoDoGuia guia={guia} />
+      </div>
+
+      {/* `sticky`: o sumário acompanha a leitura em vez de sumir no primeiro
+          rolar. `top-24` limpa os 64px do cabeçalho fixo mais uma folga. */}
+      <aside className="hidden lg:block print:hidden">
+        <SumarioDoGuia guia={guia} className="sticky top-24" />
+      </aside>
+      </div>
 
       {calculadoras.length > 0 ? (
         <section className="mt-14">
@@ -120,7 +132,6 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
           </ul>
         </section>
       ) : null}
-      </div>
     </main>
   )
 }

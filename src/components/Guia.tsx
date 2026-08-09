@@ -213,25 +213,60 @@ function RenderBloco({ bloco }: { readonly bloco: Bloco }) {
 // Guia
 // ---------------------------------------------------------------------------
 
+/**
+ * O sumário, separado do corpo em 08/08/2026 — e a razão é de layout.
+ *
+ * A coluna de leitura tem largura máxima por legibilidade, e num monitor largo
+ * isso deixava metade da grade vazia à direita: a página parecia estreita ao
+ * lado de uma calculadora, que preenche a largura com formulário e resultado.
+ *
+ * Em vez de alargar o texto — linha longa demais cansa e faz o olho perder o
+ * início da seguinte —, o espaço passou a ser ocupado por algo útil. O sumário
+ * é o candidato natural: em texto longo ele é navegação de verdade, e fixo ao
+ * lado ele funciona **durante** a leitura, e não só antes dela.
+ *
+ * **Renderizado duas vezes, e sem duplicar marco de navegação:** o de cima
+ * aparece só abaixo de `lg`, o lateral só a partir de `lg`, e `display: none`
+ * tira o oculto da árvore de acessibilidade. Em qualquer largura o leitor de
+ * tela encontra exatamente um.
+ */
+export function SumarioDoGuia({
+  guia,
+  className = '',
+}: {
+  readonly guia: TipoGuia
+  readonly className?: string
+}) {
+  return (
+    // Cada âncora é também um alvo que o buscador pode oferecer direto no
+    // resultado — motivo pelo qual o sumário existia antes de ser barra lateral.
+    <nav aria-label="Nesta página" className={className}>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+        Nesta página
+      </h2>
+      <ol className="mt-3 space-y-1.5">
+        {guia.secoes.map((secao) => (
+          <li key={secao.id}>
+            <a href={`#${secao.id}`} className="text-[var(--color-brand)] hover:underline">
+              {secao.titulo}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
 export function CorpoDoGuia({ guia }: { readonly guia: TipoGuia }) {
   return (
     <>
-      {/* Sumário: além de útil em texto longo, cada âncora é um alvo que o
-          buscador pode oferecer direto no resultado. */}
-      <nav aria-label="Nesta página" className="mt-10 rounded-xl bg-[var(--color-surface-sunken)] p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
-          Nesta página
-        </h2>
-        <ol className="mt-3 space-y-1.5">
-          {guia.secoes.map((secao) => (
-            <li key={secao.id}>
-              <a href={`#${secao.id}`} className="text-[var(--color-brand)] hover:underline">
-                {secao.titulo}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      {/* Abaixo de `lg` não há coluna lateral, e o sumário volta para cima do
+          texto, como sempre esteve. `print:hidden`: no papel a navegação por
+          âncora não leva a lugar nenhum. */}
+      <SumarioDoGuia
+        guia={guia}
+        className="mt-10 rounded-xl bg-[var(--color-surface-sunken)] p-5 lg:hidden print:hidden"
+      />
 
       {guia.secoes.map((secao) => (
         <section key={secao.id} id={secao.id} className="mt-12 scroll-mt-20">

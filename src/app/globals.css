@@ -67,6 +67,16 @@ html {
      campo, e o formulário salta na cara do usuário (§2.2). */
   font-size: 100%;
   scroll-behavior: smooth;
+
+  /* O CABEÇALHO É FIXO, E SEM ISTO ELE ENGOLE O DESTINO DE TODA ÂNCORA.
+     Encontrado em 08/08/2026: `Cabecalho` é `sticky top-0` com `h-16` (64px),
+     e o navegador leva o alvo de `#ancora` para y=0 — ou seja, para debaixo
+     dele. O título da seção sumia atrás da barra em TODO link de âncora do
+     site: o sumário "Nesta página" dos 38 guias, `#calculadoras` e
+     `#como-funciona` do menu, e o "pular para o conteúdo", que é justamente o
+     recurso de quem navega por teclado.
+     5rem = os 64px da barra mais uma folga, para o título não nascer colado. */
+  scroll-padding-top: 5rem;
 }
 
 body {
