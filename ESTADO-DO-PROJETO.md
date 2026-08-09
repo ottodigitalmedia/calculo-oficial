@@ -3209,6 +3209,44 @@ após 31/07/2026, e chega, do jeito que está, sem dado sobre HIP-03.
 
 ---
 
+### 7.77 A prova de deploy foi desfeita, e o commit que a desfez não disse isso
+
+**09/08/2026.** Dois registros, e o segundo é sobre o registro em si.
+
+**A prova por identificador de build foi revertida.** Ela reprovou o pipeline
+num deploy que **deu certo**: o passo esperou 3 minutos por
+`.next/static/<BUILD_ID>/_buildManifest.js`, recebeu 404 em 30 tentativas e
+falhou — enquanto produção já servia o commit novo, conferido pela barra
+lateral e pela página 404.
+
+O argumento chegou ao build; o log mostra `--build-arg BUILD_ID=1460b3d0…`. O
+caminho existe no servidor autônomo local — medido antes de entrar, 200 para o
+id certo e 404 para um inexistente — e **não existe dentro do contêiner**. A
+causa não foi identificada.
+
+Desfeito porque descobrir exigiria empurrar tentativas para o site no ar, e
+porque **reprovar deploy bom é pior que o problema que a mudança resolvia**. O
+defeito de §7.63 volta declarado: o passo pode aprovar contra o contêiner
+antigo. Defeito conhecido é melhor que correção que reprova o que funciona.
+
+**E o commit `e660ce7` levou o revert junto sem dizer.** A mensagem descreve
+apenas o ajuste do limite da barra lateral, e o commit mexe também em
+`ci.yml`, `Dockerfile` e `next.config.ts`. Causa: os arquivos do revert já
+estavam no índice por um `git add -A` anterior, e o `git add` seguinte não
+tinha o que acrescentar.
+
+É a mesma falha que a sessão já tinha cometido e corrigido antes — o e-mail de
+contato entrando no commit de layout, em 08/08/2026 — e ali houve tempo de
+separar antes de empurrar. Aqui não houve, e `RB-06` manda corrigir para a
+frente: o histórico fica como está, e o que faltava na mensagem fica aqui.
+
+**A régua que sobrou:** conferir `git show --stat` **antes** do push, e não
+depois. Mensagem que não descreve o conteúdo é pior que mensagem curta, porque
+quem procurar a origem de uma mudança no `ci.yml` não vai olhar um commit
+chamado `fix(guia)`.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
