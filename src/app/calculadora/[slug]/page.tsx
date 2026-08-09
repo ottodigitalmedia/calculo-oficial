@@ -105,7 +105,7 @@ export default async function PaginaCalculadora({
 
       {/* `py-1` não é estética: sem ele o alvo de toque fica com 19 px de
           altura, abaixo dos 24 px de WCAG 2.2 (2.5.8). */}
-      <nav aria-label="Trilha de navegação" className="text-sm text-[var(--color-text-muted)]">
+      <nav aria-label="Trilha de navegação" className="text-sm text-[var(--color-text-muted)] print:hidden">
         <Link href="/" className="inline-block py-1 hover:underline">
           Início
         </Link>
@@ -136,7 +136,7 @@ export default async function PaginaCalculadora({
           nunca acima, nunca dentro da memória (MC-5, `10-ux-ui-spec` §9).
           Não entra no lançamento — `ADR-008`. */}
 
-      <section className="mt-12">
+      <section className="mt-12 print:hidden">
         <h2 className="text-2xl font-bold tracking-tight text-[var(--color-navy)]">Perguntas frequentes</h2>
         <dl className="mt-4 space-y-5">
           {definicao.faq.map((item) => (
@@ -149,7 +149,7 @@ export default async function PaginaCalculadora({
       </section>
 
       {guias.length > 0 ? (
-        <section className="mt-12">
+        <section className="mt-12 print:hidden">
           <h2 className="text-2xl font-bold tracking-tight text-[var(--color-navy)]">
             Entenda a conta
           </h2>
@@ -175,7 +175,7 @@ export default async function PaginaCalculadora({
           relacionadas". As relacionadas estavam declaradas nas quatro
           calculadoras desde então e não eram renderizadas em lugar nenhum. */}
       {relacionadas.length > 0 ? (
-        <section className="mt-12">
+        <section className="mt-12 print:hidden">
           <h2 className="text-2xl font-bold tracking-tight text-[var(--color-navy)]">
             Calculadoras relacionadas
           </h2>

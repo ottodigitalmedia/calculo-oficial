@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 
 import {
   formatarNumero,
@@ -25,8 +24,15 @@ import type { Traco } from '@/lib/engine/traco'
  *   MC-8  valores idênticos aos do detalhamento
  */
 
-export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
-  const [aberta, setAberta] = useState(false)
+export function MemoriaCalculo({
+  traco,
+  aberta,
+  aoAlternar,
+}: {
+  readonly traco: Traco
+  readonly aberta: boolean
+  readonly aoAlternar: () => void
+}) {
 
   // Parâmetro E fundamento: numa rescisão, metade das normas aplicadas decide
   // incidência e não tem valor numérico. Listar só as do parâmetro deixaria o
@@ -45,7 +51,7 @@ export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
           discreto; é um convite (§4). */}
       <button
         type="button"
-        onClick={() => setAberta((a) => !a)}
+        onClick={aoAlternar}
         aria-expanded={aberta}
         aria-controls="memoria-de-calculo"
         className="w-full rounded border border-[var(--color-border)] bg-[var(--color-surface-sunken)] px-4 py-3 text-left text-base font-medium hover:border-[var(--color-brand)]"
@@ -56,6 +62,21 @@ export function MemoriaCalculo({ traco }: { readonly traco: Traco }) {
         </span>
       </button>
 
+      {/*
+        RENDERIZADA SÓ QUANDO ABERTA — e a tentativa de mudar isso custou caro.
+
+        Para atender `MC-7` (memória "legível impressa, sem depender de
+        interação"), a primeira versão da impressão deixou este bloco SEMPRE no
+        DOM, escondido por CSS. Reprovou **170 testes** por dois efeitos que a
+        ideia não previa: o `h3` daqui passou a existir mesmo recolhido, criando
+        salto de `h1` para `h3` na hierarquia de títulos; e cada valor passou a
+        aparecer duas vezes no documento — no detalhamento e aqui —, deixando os
+        localizadores dos testes sem como distinguir qual era qual.
+
+        A impressão é resolvida sem tocar nisto: quem imprime pelo botão de
+        `AcoesDoResultado` tem a memória aberta ANTES do diálogo abrir. Ver a
+        nota lá.
+      */}
       {aberta ? (
         <div
           id="memoria-de-calculo"

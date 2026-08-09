@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 
+import { AcoesDoResultado } from '@/components/AcoesDoResultado'
 import { CampoFormulario, validar } from '@/components/campos'
 import { MemoriaCalculo } from '@/components/MemoriaCalculo'
 import { carregarCalculo } from '@/lib/calculadoras/calculo'
@@ -365,6 +366,15 @@ function Resultado({
   readonly periodoEhEscolha: boolean
   readonly avisoAdicional?: string
 }) {
+  /**
+   * O estado da memória vive AQUI, e não dentro de `MemoriaCalculo`.
+   *
+   * Subiu em 09/08/2026 para que o botão de imprimir pudesse abri-la antes de
+   * chamar o diálogo. A alternativa — deixá-la sempre no DOM — parecia mais
+   * simples e reprovou 170 testes: ver a nota em `MemoriaCalculo`.
+   */
+  const [memoriaAberta, setMemoriaAberta] = useState(false)
+
   // Altura mínima reservada: nenhum estado empurra o que está abaixo
   // (`RNF-002`, regra transversal de §5).
   const caixa =
@@ -549,7 +559,19 @@ function Resultado({
         </section>
       ) : null}
 
-      <MemoriaCalculo traco={r.traco} />
+      <MemoriaCalculo
+        traco={r.traco}
+        aberta={memoriaAberta}
+        aoAlternar={() => setMemoriaAberta((a) => !a)}
+      />
+
+      {/* Depois da memória, de propósito: o que se leva embora é o resultado
+          COM a conta, e não o resultado sozinho.
+
+          `aoPrepararImpressao` é o que faz `MC-7` valer sem deixar a memória
+          sempre no DOM — abordagem que reprovou 170 testes, ver a nota em
+          `MemoriaCalculo`. O botão abre a memória e só então chama o diálogo. */}
+      <AcoesDoResultado aoPrepararImpressao={() => setMemoriaAberta(true)} />
     </div>
   )
 }

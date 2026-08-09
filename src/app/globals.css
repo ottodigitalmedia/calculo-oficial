@@ -128,3 +128,129 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+/* ---------------------------------------------------------------------------
+   IMPRESSÃO — o cálculo que a pessoa leva embora.
+
+   `MC-7` sempre exigiu a memória "legível impressa ou capturada, sem depender
+   de interação", e até 08/08/2026 não havia folha de impressão nenhuma: o
+   papel saía com cabeçalho, busca, FAQ, calculadoras relacionadas e rodapé, e
+   SEM a memória de cálculo — que só existia no DOM depois de um clique.
+
+   Este bloco existe porque um produto cuja tese é "a conta está à mostra,
+   confira" precisa deixar levar a conta ao RH, ao advogado, ao contador. E
+   porque a alternativa — gerar PDF — esbarra em duas regras: no servidor
+   violaria `RN-030` (salário atravessando a rede) e no cliente estouraria
+   `RNF-004` (a pior rota tem ~10 kB de folga). O diálogo do navegador já
+   entrega "Salvar como PDF", de graça e sem o dado sair do aparelho.
+
+   A identidade visual mora AQUI, e não num gerador paralelo: um segundo
+   caminho de renderização divergiria da tela, e divergência entre o que se vê
+   e o que se imprime é a forma mais convincente de publicar um número errado.
+   --------------------------------------------------------------------------- */
+
+@media print {
+  /* Tinta é do usuário: fundo branco, texto preto, sem sombra nem cor de apoio. */
+  :root {
+    --color-surface: #fff;
+    --color-surface-tint: #fff;
+    --color-surface-sunken: #fff;
+    --color-text-primary: #000;
+    --color-text-secondary: #222;
+    --color-text-muted: #333;
+    --color-border: #999;
+  }
+
+  html {
+    font-size: 11pt;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Cromo do site: nada disso é o documento. */
+  header,
+  footer,
+  .pular-para-conteudo {
+    display: none !important;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  /* O timbre do documento, montado só na impressão. */
+  main::before {
+    content: 'Cálculo Oficial · calculoficial.com.br';
+    display: block;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #000;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  /* O aviso de estimativa fecha o documento, e é o que responde por ele. */
+  main::after {
+    content: 'Estimativa gerada em calculoficial.com.br a partir dos dados informados pelo usuário. Não constitui aconselhamento jurídico, contábil ou financeiro, nem substitui conferência do documento oficial. As normas aplicadas estão citadas na memória de cálculo acima.';
+    display: block;
+    margin-top: 1.25rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #000;
+    font-size: 9pt;
+    line-height: 1.4;
+  }
+
+  /* Formulário: os valores informados são a premissa do cálculo e ficam. O que
+     sai é a aparência de controle — borda, sombra e altura de alvo de toque. */
+  input,
+  select,
+  textarea {
+    border: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: #000 !important;
+    font-weight: 600;
+    appearance: none;
+  }
+
+  button {
+    display: none !important;
+  }
+
+  /* A NORMA IMPRESSA PRECISA SER CONFERÍVEL FORA DA TELA.
+     Sem isto, "Portaria MPS/MF nº 13/2026" vira texto sublinhado sem destino, e
+     o papel perde justamente a propriedade que o site vende. */
+  #memoria-de-calculo a[href^='http']::after {
+    content: ' <' attr(href) '>';
+    font-size: 8pt;
+    word-break: break-all;
+  }
+
+  /* Nenhuma etapa da memória partida entre páginas. */
+  #memoria-de-calculo li,
+  tr {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  table {
+    width: 100% !important;
+  }
+
+  /* Rolagem não existe no papel: o que estava oculto por overflow precisa sair. */
+  .overflow-x-auto {
+    overflow: visible !important;
+  }
+}
+
+@page {
+  margin: 14mm;
+}
