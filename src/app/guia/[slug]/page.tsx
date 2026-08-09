@@ -83,7 +83,7 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
           A coluna de leitura mantém a largura que a legibilidade pede, e o que
           preenche a grade é navegação útil, não texto esticado. Abaixo de `lg`
           o `grid` não se aplica e tudo volta a ser uma coluna só. */}
-      <div className="lg:grid lg:grid-cols-[minmax(0,48rem)_minmax(0,1fr)] lg:gap-12">
+      <div className="min-[900px]:grid min-[900px]:grid-cols-[minmax(0,1fr)_16rem] min-[900px]:gap-10">
       <div>
       <header className="mt-4">
         <h1 className="text-3xl font-bold leading-tight tracking-tight text-[var(--color-navy)] md:text-4xl">
@@ -102,7 +102,7 @@ export default async function PaginaGuia({ params }: { params: Promise<{ slug: s
 
       {/* `sticky`: o sumário acompanha a leitura em vez de sumir no primeiro
           rolar. `top-24` limpa os 64px do cabeçalho fixo mais uma folga. */}
-      <aside className="hidden lg:block print:hidden">
+      <aside className="hidden min-[900px]:block print:hidden">
         <SumarioDoGuia guia={guia} className="sticky top-24" />
       </aside>
       </div>

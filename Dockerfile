@@ -67,21 +67,6 @@ ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL} \
     NEXT_PUBLIC_CMP_ID=${NEXT_PUBLIC_CMP_ID} \
     NEXT_PUBLIC_GTM_ID=${NEXT_PUBLIC_GTM_ID}
 
-# Identificador do build, para o pipeline PROVAR que o contêiner trocou.
-#
-# **Não é segredo e não é a revisão.** É um valor opaco, sorteado pelo pipeline
-# a cada execução. `.next/static/<BUILD_ID>/` é servido publicamente, então
-# depois do deploy basta pedir aquele caminho: 200 significa que o contêiner
-# NOVO está no ar, 404 significa que ainda é o antigo.
-#
-# Opaco de propósito. Usar o hash do commit resolveria igual e publicaria a
-# revisão em toda URL de recurso — o repositório é público, e `EP-016` recusa
-# exatamente isso. Sorteado, não diz nada a quem o lê.
-#
-# Vazio, o Next sorteia o dele como sempre. Nada muda fora do CI.
-ARG BUILD_ID=""
-ENV BUILD_ID=${BUILD_ID}
-
 ENV NODE_ENV=production
 RUN npm run build
 

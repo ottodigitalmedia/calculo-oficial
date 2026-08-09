@@ -164,8 +164,6 @@ jobs:
     # qual revisão o contêiner passou a servir — ver a verificação de saúde.
     outputs:
       sha: ${{ steps.meta.outputs.sha }}
-      # Prova de troca de contêiner, sem segredo. Ver o passo de saúde.
-      build_id: ${{ steps.meta.outputs.build_id }}
     # Aceita disparo manual além do push. Sem isso o `workflow_dispatch` seria
     # inútil para o caso que o motivou: reimplantar sem commit quando o
     # serviço cai e a imagem publicada já está correta (15-runbook RB-01).
@@ -200,13 +198,6 @@ jobs:
           echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
           echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
 
-          # SORTEADO, e não derivado do commit. `.next/static/<build_id>/` é
-          # servido publicamente; derivá-lo do hash publicaria a revisão em toda
-          # URL de recurso, que é o que EP-016 recusa — e o repositório é
-          # público. Aleatório não diz nada a quem o lê, e serve igual para
-          # provar que o contêiner trocou.
-          echo "build_id=$(openssl rand -hex 12)" >> "$GITHUB_OUTPUT"
-
       - name: Construir e publicar
         uses: docker/build-push-action@v7
         with:
@@ -219,7 +210,6 @@ jobs:
             ghcr.io/${{ steps.meta.outputs.repo }}:latest
           build-args: |
             VCS_REF=${{ steps.meta.outputs.sha }}
-            BUILD_ID=${{ steps.meta.outputs.build_id }}
             NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://calculoficial.com.br' }}
             NEXT_PUBLIC_GTM_ID=${{ vars.NEXT_PUBLIC_GTM_ID }}
           cache-from: type=gha
@@ -334,13 +324,6 @@ jobs:
           # porque a resposta pública continua sem versão — ver a rota.
           alvo="${{ vars.NEXT_PUBLIC_SITE_URL }}/api/health"
           esperado="${{ needs.publicar.outputs.sha }}"
-          # A PROVA QUE NÃO PRECISA DE SEGREDO.
-          #
-          # `.next/static/<BUILD_ID>/_buildManifest.js` só existe na imagem
-          # construída com aquele identificador, e é servido publicamente. O
-          # pipeline sorteou o valor, então: 200 é o contêiner NOVO, 404 é o
-          # antigo. Sem credencial, sem nada a configurar em painel.
-          manifesto="${{ vars.NEXT_PUBLIC_SITE_URL }}/_next/static/${{ needs.publicar.outputs.build_id }}/_buildManifest.js"
           vivo=nao
 
           for i in $(seq 1 30); do
@@ -361,23 +344,18 @@ jobs:
                 echo "tentativa $i: vivo, mas ainda servindo revisão anterior"
                 ;;
               *)
-                # Sem `rev`: o HEALTH_TOKEN não está configurado dos dois lados.
-                # Antes, isto avisava e saía com sucesso — verde sem prova, que
-                # é o defeito que este passo existe para corrigir. Agora cai na
-                # prova pública, que não depende de segredo nenhum.
-                codigo=$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 5 "$manifesto" || true)
-                if [ "$codigo" = "200" ]; then
-                  echo "Saudável na tentativa $i, e o contêiner NOVO está servindo (manifesto do build presente)."
-                  echo "::notice title=Versão confirmada pelo build::Confirmado pelo identificador de build, não pela revisão. Para o pipeline citar a revisão exata, configure HEALTH_TOKEN no repositório E no painel do EasyPanel (13-deployment §10)."
-                  exit 0
-                fi
-                echo "tentativa $i: vivo, mas ainda o contêiner anterior (manifesto do build respondeu $codigo)"
+                # Sem `rev` na resposta: o segredo não está configurado dos dois
+                # lados. Não dá para confirmar a versão, e fingir que dá seria
+                # repetir o defeito que este passo existe para corrigir.
+                echo "::warning title=Versão não confirmada::A rota de saúde respondeu sem \`rev\`. O deploy pode ter ocorrido, mas ESTE PASSO NÃO CONSEGUE PROVAR. Configure o segredo HEALTH_TOKEN no repositório E a variável de mesmo nome no painel do EasyPanel — enquanto isso, confira à mão. Ver 13-deployment §10."
+                echo "Saudável na tentativa $i (versão não confirmada)."
+                exit 0
                 ;;
             esac
             sleep 6
           done
 
-          echo "::error title=Verificação de saúde::EP-016 não passou a servir a revisão $esperado nem o build ${{ needs.publicar.outputs.build_id }} em ~3 min. Se a rota responde mas a revisão não muda, o orquestrador não trocou a imagem — implante pelo painel (15-runbook RB-01)."
+          echo "::error title=Verificação de saúde::EP-016 não passou a servir a revisão $esperado em ~3 min. Se a rota responde mas a revisão não muda, o orquestrador não trocou a imagem — implante pelo painel (15-runbook RB-01)."
           exit 1
 
       - name: Rollback automático

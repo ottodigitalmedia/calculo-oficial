@@ -265,7 +265,7 @@ export function CorpoDoGuia({ guia }: { readonly guia: TipoGuia }) {
           âncora não leva a lugar nenhum. */}
       <SumarioDoGuia
         guia={guia}
-        className="mt-10 rounded-xl bg-[var(--color-surface-sunken)] p-5 lg:hidden print:hidden"
+        className="mt-10 rounded-xl bg-[var(--color-surface-sunken)] p-5 min-[900px]:hidden print:hidden"
       />
 
       {guia.secoes.map((secao) => (
