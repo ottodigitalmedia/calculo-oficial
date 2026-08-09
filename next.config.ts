@@ -23,6 +23,30 @@ const nextConfig: NextConfig = {
     '*': ['node_modules/typescript/**'],
   },
 
+  /**
+   * O identificador do build, quando o pipeline manda um.
+   *
+   * **Existe para tornar o deploy VERIFICÁVEL sem segredo.** Até 08/08/2026 o
+   * passo `Implantar` aprovava sem conseguir provar que o contêiner trocou:
+   * `/api/health` responde igual em toda versão, e a revisão só sai para quem
+   * apresenta `x-health-token` — segredo que precisa existir dos DOIS lados e
+   * não existia de nenhum. O passo fechava em 4 segundos, verde, com um aviso
+   * dizendo que não sabia. Observado três vezes seguidas; numa delas a troca
+   * só aconteceu 45 segundos DEPOIS do "sucesso".
+   *
+   * Com isto, `.next/static/<BUILD_ID>/_buildManifest.js` passa a ser uma
+   * prova pública e barata: o pipeline sorteia o valor, constrói a imagem com
+   * ele e depois pede aquele caminho. **200 é o contêiner novo; 404 é o
+   * antigo.** Nenhum segredo, nenhuma credencial, nada a configurar em painel.
+   *
+   * `EP-016` continua intacta: o valor é sorteado, não derivado do commit. Usar
+   * o hash resolveria igual e publicaria a revisão em toda URL de recurso —
+   * que é precisamente o que aquela decisão recusa, e o repositório é público.
+   *
+   * Ausente, o Next sorteia o dele. Desenvolvimento e build local não mudam.
+   */
+  ...(process.env.BUILD_ID ? { generateBuildId: () => process.env.BUILD_ID! } : {}),
+
   // Barra final ausente; redirecionamento permanente quando presente
   // (06-api-spec §2.1).
   trailingSlash: false,
