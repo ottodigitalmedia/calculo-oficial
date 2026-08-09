@@ -29,6 +29,88 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 08/08/2026
+
+### Adicionado · imprimir o cálculo, e salvar em PDF pelo navegador
+
+**Reverte uma exclusão de escopo, por decisão do mantenedor.** "Exportação em
+PDF" constava como fora do v1 em `00-product-brief` §141 e `01-prd` §271, as
+duas vezes marcada como *reavaliável*. Está reavaliada.
+
+E o que a construção revelou é que **`MC-7` estava violada desde sempre**:
+`10-ux-ui-spec` §4 exige a memória de cálculo *"legível impressa ou capturada,
+SEM depender de interação"*, e ela só existia no DOM depois do clique no
+acionador. Quem mandasse imprimir levava o resultado sem a conta que o sustenta
+— o oposto do que este produto vende. Não havia folha de impressão alguma: o
+papel saía com cabeçalho, busca, FAQ, calculadoras relacionadas e rodapé.
+
+**Sem biblioteca de PDF, e as duas razões são regras do projeto.** No servidor,
+gerar o arquivo exigiria transmitir salário, pensão e saldo de FGTS — `RN-030`,
+que não admite exceção. No cliente, qualquer biblioteca estouraria `RNF-004`,
+que deixa ~10 kB de folga na pior rota. `window.print()` resolve as duas: o
+diálogo do navegador já traz "Salvar como PDF" no Chrome, no Safari, no Android
+e no iPhone, o arquivo nasce e morre no aparelho, e o custo é uma chamada.
+
+A identidade do documento mora na folha de impressão, e não num gerador
+paralelo — dois caminhos de renderização divergiriam, e divergência entre o que
+se vê e o que se imprime é a forma mais convincente de publicar número errado.
+As normas saem **com o endereço ao lado**: "Portaria MPS/MF nº 13/2026"
+sublinhada no papel não leva a lugar nenhum.
+
+### Adicionado · botão para compartilhar o cálculo
+
+`RF-006`, `UC-04` e `US-009` previam isto desde o começo, e o permalink existe
+desde o T-103. O que nunca foi construído foi o **botão**: a história terminava
+em *"copio a URL da barra de endereço"*, que é instrução de quem já sabe, no
+aparelho onde isso é mais difícil de fazer.
+
+Usa `navigator.share` onde existe e cai para a área de transferência no resto.
+Nada é transmitido ao site: o texto vai para o aplicativo que o usuário
+escolher. E leva o aviso de que **o link carrega os valores digitados** — um
+botão que facilita o envio sem dizer o que vai junto transforma decisão
+informada em acidente.
+
+### Adicionado · páginas de erro 404 e de falha
+
+O projeto não tinha `not-found.tsx` nem `error.tsx`, e servia as do framework:
+*"This page could not be found."*, em inglês, sem contêiner, entre o cabeçalho e
+o rodapé estilizados. Num site brasileiro de cálculo trabalhista, a única página
+pública que não falava com quem chegava nela.
+
+Importa mais aqui do que na média: `10-ux-ui-spec` §8 registra que a entrada
+dominante é busca externa direto na calculadora, então o 404 recebe resultado de
+busca velho e link de terceiro quebrado — gente com intenção clara, a um passo
+da ferramenta certa.
+
+A página de falha **não mostra a mensagem de erro e não registra nada**. É
+`RN-030`: a rota de calculadora tem salário na query, e mensagem e pilha
+arrastam contexto. `TC-041` cobra isso e continua passando.
+
+### Alterado · uma grade só para todas as rotas, e barra lateral nos guias
+
+Cada rota escolhia a própria largura à mão — home em `6xl`, calculadora em
+`5xl`, `/guias` em `4xl`, guia e legais em `3xl` — enquanto cabeçalho e rodapé
+ficavam sempre em `6xl`. Medido em 1280 px: o logotipo começava em `x=77` e o
+título de `/contato` em `x=269`.
+
+Alinhar tudo expôs o efeito seguinte: a sobra deixou de ser dos dois lados e
+passou a ser toda de um, e a página de texto parecia estreita ao lado de uma
+calculadora, que preenche a grade com formulário **e** resultado.
+
+A saída não foi esticar o texto — na grade inteira a linha passaria de 140
+caracteres. O guia ganhou segunda coluna de verdade, com o sumário fixo ao lado,
+que funciona **durante** a leitura; as páginas sem sumário ganharam largura
+intermediária. Registrado em `10-ux-ui-spec` §2.5.
+
+### Corrigido · o cabeçalho fixo engolia o destino de toda âncora
+
+`Cabecalho` é `sticky top-0` com 64 px e o CSS não tinha `scroll-padding-top`:
+o navegador levava o alvo de `#ancora` para `y=0`, ou seja, para debaixo dele.
+Atingia os links do menu e o "pular para o conteúdo" — o recurso de quem navega
+por teclado.
+
+---
+
 ## Ciclo de 07/08/2026
 
 ### Adicionado · medição de uso — Google Tag Manager e GA4
