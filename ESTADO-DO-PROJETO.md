@@ -12,6 +12,13 @@
 > **o v2 chegou ao fim do que dava para construir sem dependência externa**, com
 > CALC-031 (§4.2) — e a próxima decisão de maior alcance passou a ser `ADR-006`.
 >
+> **Ciclo de 08 e 09/08/2026 — auditoria e acabamento.** Nenhuma calculadora
+> nova: o trabalho foi conferir o que estava construído contra o que estava
+> planejado, e fechar o que faltava. Cinco defeitos passavam por todos os
+> guardas (§7.76), e a sessão deixou três lições operacionais que não cabem em
+> teste (§8.0 D). **Comece por §8.0** — ela lista o que ficou aberto e de quem
+> é cada item.
+>
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
 
@@ -26,12 +33,14 @@ O marco **MR-2** foi atingido e a contagem de 90 dias de medição começou.
 |---|---|
 | Tickets | 8 de 8 concluídos (T-101 a T-108, mais T-001 a T-006) |
 | Calculadoras **no repositório** | **76** de 76 — catálogo completo — v1 completo, o bloco de desligamento fechado, **sete de crédito**, **cinco de imóveis**, **cinco de veículos**, quatro de consumo, cinco utilitárias, duas de investimentos, a primeira de autônomo, quatro de índice, a primeira do lado do empregador, **as duas do ajuste anual do IRPF** e o comparador de desligamento (CALC-076) |
-| Calculadoras **em produção** | **A conferir.** Eram 74 em 06/08/2026 às 22h40, quando o incidente do GitHub cedeu. O que veio depois — CALC-076, o canal de contato e as correções de 08/08/2026 — foi empurrado para `main`, e o pipeline implanta sozinho; **este número não é verificável a partir do repositório**. Conferir em produção e atualizar aqui |
+| Calculadoras **em produção** | **76.** Conferido no navegador em 09/08/2026: barra lateral do guia, página 404 em português e os botões de imprimir e compartilhar respondendo em `calculoficial.com.br` |
+| Impressão e compartilhamento | ✅ **no ar desde 09/08/2026** — §7.76. Sem biblioteca de PDF: `window.print()`, por `RN-030` e `RNF-004` |
+| Páginas de erro | ✅ **404 e falha, em português**, desde 09/08/2026. Antes servia a do framework, em inglês |
 | Guias | ✅ **38** — e **as 76 calculadoras** têm pelo menos um. Cobertura completa em 07/08/2026; §11.5 |
-| Testes | 2.159 de unidade · 853 ponta a ponta · 5 de vazamento |
+| Testes | **2.235** de unidade · **875** ponta a ponta · 5 de vazamento |
 | Auditoria de parâmetros | 94 parâmetros, 109 vigências, **1 correção** em 06/08/2026 — as faixas do ganho de capital estavam 100× maiores, §7.66. A fonte que era a mais fraca deixou de ser, §5.5 |
 | Verificações estruturais | **9 de 12** rodando de fato (BV-01 a BV-09). BV-08 e BV-09 entraram em 08/08/2026 — eram `console.log` fixos, §7.76 |
-| Orçamento de JavaScript | 139,6 kB de **150** na pior rota — e **23,3 kB de 30** de parte variável. `/contato` caiu de **328,4 para 107,6 kB** em 08/08/2026, §7.76 |
+| Orçamento de JavaScript | 140,1 kB de **150** na pior rota — e **23,3 kB de 30** de parte variável. `/contato` caiu de **328,4 para 107,6 kB** em 08/08/2026, §7.76. Os botões de imprimir e compartilhar custaram ~0,5 kB |
 | Cabeçalhos de segurança | **6 de 6**. A política de conteúdo entrou em 08/08/2026, §7.76 |
 | Vulnerabilidades | 0 |
 
@@ -3248,6 +3257,88 @@ chamado `fix(guia)`.
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
+
+### 8.0 Retomada em 09/08/2026 — leia isto primeiro
+
+O ciclo de 08 e 09/08/2026 foi de **auditoria e acabamento**, não de catálogo:
+nenhuma calculadora nova entrou. O que mudou está em §7.76 e §7.77.
+
+**Nada aqui bloqueia trabalho novo.** A lista abaixo é o que ficou aberto, com
+o dono de cada item — porque três dos seis não são código.
+
+---
+
+#### A · Depende do mantenedor, não de código
+
+| # | O quê | Por que importa | Onde |
+|---|---|---|---|
+| A-1 | **Credenciais de SMTP no painel** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | **O formulário de contato não envia hoje.** Faltando qualquer uma, `api/contato` responde "indisponível" e mostra o e-mail direto. Comportamento correto (`RNF-007`), resultado inútil | `13-deployment` §5 |
+| A-2 | **Anúncio e consentimento** | `D-01` diz "monetização exclusiva por anúncio" e **não existe uma unidade sequer**. MR-3 cai por volta de 29/10/2026 e decide continuar, reposicionar ou descontinuar — com HIP-03 sem dado nenhum. O gatilho do roadmap é circular: pede sinal do painel de anúncios para justificar construir o anúncio | `11-roadmap` §5 item 5 |
+| A-3 | **`/cookies` e `/privacidade` afirmam que não há medição de audiência** | O GTM e o GA4 rodam desde 07/08/2026 — verificado no navegador em 08/08. É declaração pública que nega tratamento em curso. **O mantenedor mandou ignorar em 08/08/2026**; fica registrado por ser matéria de política, não de gosto | `src/app/cookies`, `src/app/privacidade` |
+
+---
+
+#### B · Código, e pequeno
+
+| # | O quê | Estado |
+|---|---|---|
+| B-1 | **Evento de memória expandida** | HIP-02 se mede pela taxa de expansão da memória "desde o lançamento" (`00-product-brief`), e o evento **nunca foi instrumentado**. Não carrega nada digitado — só a calculadora e o tipo de interação —, então cabe em `RN-031` **sem exceção**. É o menor trabalho da lista com efeito no MR-3 |
+| B-2 | **`busca_sem_resultado`** | Continua sendo comentário em `lib/calculadoras/sinonimos.ts`. Diferente de B-1, ele **carrega o termo digitado** — é exceção a `RN-031` e precisa de decisão, não de commit |
+| B-3 | **Hierarquia de títulos com a memória aberta** | Latente e pré-existente: o `h3` da memória cria salto de `h1` para `h3` em calculadoras sem `h2` antes. Só aparece com a memória **expandida**, e por isso `acessibilidade.spec.ts` não o pega. Descoberto em 09/08 ao tentar deixá-la sempre no DOM (§7.76) |
+| B-4 | **Duas etiquetas `robots` no 404 sob `/calculadora/`** | A do layout vem primeiro dizendo `index, follow`. Não é falha de proteção — o status **404** é o que decide, e o buscador aplica a diretiva mais restritiva. Documentado em `tests/e2e/pagina-404.spec.ts` |
+
+---
+
+#### C · A investigação que ficou aberta
+
+**Por que `.next/static/<BUILD_ID>/` não existe dentro do contêiner.**
+
+A prova de troca de contêiner por identificador de build foi construída,
+**funcionou no servidor autônomo local** (200 para o id certo, 404 para um
+inexistente) e **falhou no contêiner publicado** — reprovando um deploy que
+tinha dado certo. Revertida em 09/08/2026; ver §7.77.
+
+O que já se sabe, para não refazer o caminho:
+
+- o argumento **chega ao build**: o log traz `--build-arg BUILD_ID=1460b3d0…`;
+- o `ARG`/`ENV` está no estágio `builder`, antes de `RUN npm run build`;
+- `next.config.ts` só aplica `generateBuildId` quando a variável existe;
+- localmente, `BUILD_ID=x npm run build` grava `.next/BUILD_ID` e cria
+  `.next/static/x/_buildManifest.js`;
+- produção **não referencia** `_next/static/<id>/` em lugar nenhum do HTML —
+  só `chunks/` e `css/`.
+
+**Hipótese não testada:** cache de camada do BuildKit (`type=gha`) reaproveitando
+o `RUN npm run build` de uma execução anterior.
+
+> **Regra que esta investigação deixou:** ela precisa acontecer **fora do
+> caminho de publicação** — construindo a imagem localmente e inspecionando-a —,
+> e não empurrando tentativas para o site no ar. Foi por isso que a mudança foi
+> revertida em vez de ajustada.
+
+O defeito que ela resolvia **volta declarado**: o passo `Implantar` pode aprovar
+contra o contêiner antigo (§7.63). O `HEALTH_TOKEN` continua sendo o caminho
+alternativo, e exige o segredo no repositório **e** a variável de mesmo nome no
+painel do EasyPanel.
+
+---
+
+#### D · Três lições operacionais desta sessão
+
+Custaram horas e não estão em nenhum teste:
+
+1. **`pkill` não funciona no Windows.** Um `serve-standalone.mjs` sobrevivente
+   segurou `.next/standalone` e travou **todas** as builds seguintes, com
+   sintomas que pareciam de código. Encerrar por `Stop-Process` e conferir.
+2. **`next dev` e `next build` disputam o mesmo `.next`.** Não dá para deixar o
+   servidor de teste no ar enquanto a verificação roda.
+3. **`curl` não hidrata.** Duas conclusões erradas nesta sessão vieram de ler o
+   HTML servido: "não há medição em produção" (havia) e "o botão de imprimir não
+   subiu" (tinha subido). O que é renderizado no cliente só se verifica com
+   navegador.
+
+---
+
 
 Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
 fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
