@@ -452,6 +452,31 @@ test('TC-042 · o dataLayer reporta a rota sem query, e o referenciador sem cami
     expect(camada, `o dataLayer contém "${forma}"`).not.toContain(forma)
   }
 
-  // Consent Mode v2 negado por omissão — sem isto o GA4 grava cookie.
-  expect(camada).toContain('denied')
+  // Consent Mode v2 declarado por omissão. Até 14/08/2026 esta linha exigia
+  // `denied`, e o que ela protegia era o cookie — não o vazamento. O mantenedor
+  // liberou a medição naquele dia (`Medicao.tsx` diz por quê e sob que base), e
+  // manter a asserção antiga só faria a suíte reprovar uma decisão registrada.
+  //
+  // O que substitui não é uma asserção mais fraca, é a asserção CERTA para este
+  // arquivo: `url_passthrough` desligado é o que impede o próprio Google de
+  // recolar parâmetro na URL — e é `RF-006` que põe o salário lá. Este guarda
+  // vale nos dois estados de consentimento; o anterior não valia em nenhum.
+  expect(camada, 'o consentimento precisa ser declarado, nunca omitido').toContain('consent')
+
+  // Estrutural, e não por texto: `gtag()` empurra o objeto `arguments`, que
+  // serializa como {"0":"set","1":"url_passthrough","2":false}. Procurar a
+  // string `"url_passthrough",true` nunca casaria com nada — passaria sempre,
+  // que é o defeito de verificador descrito em §7.5.
+  const passagemDeUrl = await page.evaluate(() => {
+    const janela = window as unknown as { dataLayer?: Record<string, unknown>[] }
+    const entrada = (janela.dataLayer ?? []).find(
+      (item) => item?.['0'] === 'set' && item?.['1'] === 'url_passthrough',
+    )
+    return entrada === undefined ? 'ausente' : entrada['2']
+  })
+  expect(
+    passagemDeUrl,
+    'url_passthrough precisa estar explicitamente desligado: ligado, o Google ' +
+      'recola parâmetro na URL — e RF-006 põe o salário exatamente lá',
+  ).toBe(false)
 })

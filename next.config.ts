@@ -124,9 +124,38 @@ const nextConfig: NextConfig = {
  * `upgrade-insecure-requests` fica de fora por ser redundante com o HSTS acima e
  * por mascarar, em vez de reprovar, uma referência a `http://` que entrasse.
  */
+/**
+ * OS HOSTS DO GOOGLE, UM A UM — ampliado em 14/08/2026.
+ *
+ * O aviso acima ("VERIFICAR EM PRODUÇÃO, uma vez, com o console aberto") foi
+ * cumprido em 14/08/2026: a coleta saiu para `www.google-analytics.com`, sem
+ * bloqueio. **A CSP nunca foi a causa do relatório vazio** — a causa era o
+ * consentimento negado por omissão, corrigido em `components/Medicao.tsx`.
+ *
+ * O que entra agora é o que a concessão de consentimento passa a acionar, e que
+ * a lista antiga não cobria:
+ *
+ * - `region1.google-analytics.com` — ponto de coleta regional. O GA4 escolhe o
+ *   endpoint em tempo de execução; quem cair nele com a lista antiga perderia o
+ *   hit inteiro, e em silêncio. É a armadilha que o aviso previa;
+ * - `stats.g.doubleclick.net` e `td.doubleclick.net` — Google Signals e
+ *   remarketing, que só disparam com `ad_storage` concedido.
+ *
+ * **Nenhum curinga**, e não é preferência de estilo: `CLAUDE.md` proíbe, e
+ * curinga aqui anula a proteção contra AM-02. Se aparecer bloqueio de um host
+ * não listado, acrescente **o host exato** — nunca `*.google-analytics.com`.
+ *
+ * `connect-src` continua sendo a linha que importa, e ampliá-la não afrouxa
+ * `RN-030`: o que sai para esses hosts é sanitizado na origem, em `Medicao.tsx`,
+ * antes de qualquer etiqueta rodar. A CSP decide PARA ONDE se pode falar; ela
+ * nunca foi o que decide O QUE se fala.
+ */
 const GTM = 'https://www.googletagmanager.com'
 const GA = 'https://www.google-analytics.com'
+const GA_REGIONAL = 'https://region1.google-analytics.com'
 const GA_ALT = 'https://analytics.google.com'
+const SIGNALS = 'https://stats.g.doubleclick.net'
+const SIGNALS_ALT = 'https://td.doubleclick.net'
 
 const POLITICA_DE_CONTEUDO = [
   "default-src 'self'",
@@ -137,11 +166,11 @@ const POLITICA_DE_CONTEUDO = [
   // Sem fonte externa e sem imagem remota: medido, o site não usa nenhuma das
   // duas. `data:` cobre o favicon embutido.
   "font-src 'self'",
-  `img-src 'self' data: ${GTM} ${GA}`,
+  `img-src 'self' data: ${GTM} ${GA} ${GA_REGIONAL} ${SIGNALS} ${SIGNALS_ALT}`,
   "style-src 'self' 'unsafe-inline'",
   `script-src 'self' 'unsafe-inline' ${GTM} ${GA}`,
   // A porta de saída do dado digitado. É a linha mais importante do arquivo.
-  `connect-src 'self' ${GTM} ${GA} ${GA_ALT}`,
+  `connect-src 'self' ${GTM} ${GA} ${GA_REGIONAL} ${GA_ALT} ${SIGNALS} ${SIGNALS_ALT}`,
 ].join('; ')
 
 const CABECALHOS = [

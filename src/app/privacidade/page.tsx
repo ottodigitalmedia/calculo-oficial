@@ -13,10 +13,14 @@ export const metadata: Metadata = {
 /**
  * `RF-010`, `RN-030`, `07-security` §11.
  *
- * O texto descreve o estado ATUAL do produto, não o planejado. Anúncio,
- * consentimento e análise de uso foram adiados por `ADR-008`; quando entrarem,
- * esta página muda no mesmo commit — política que descreve o que o site não faz
- * ainda é tão inútil quanto política que esconde o que ele faz.
+ * O texto descreve o estado ATUAL do produto, não o planejado — e a seção de
+ * cookies foi corrigida em 14/08/2026 justamente por ter deixado de descrevê-lo.
+ * Ela negava medição de audiência enquanto o GA4 rodava desde 07/08/2026, e a
+ * liberação do consentimento em 14/08 acrescentou o cookie que ela também
+ * negava. O anúncio continua não existindo, e isso a página segue dizendo.
+ *
+ * A regra que isto aplica é a mesma de sempre: política que esconde o que o
+ * site faz é pior que política ausente.
  */
 export default function Privacidade() {
   return (
@@ -90,15 +94,23 @@ export default function Privacidade() {
         </li>
       </ul>
 
-      <h2>Cookies</h2>
+      <h2>Cookies e medição de audiência</h2>
       <p>
-        Este site <strong>não usa cookies</strong> e não carrega script de terceiro. Não há
-        publicidade, não há medição de audiência e não há rastreamento entre sessões.
+        Este site usa o <strong>Google Analytics</strong> para medir audiência, e ele grava cookies
+        próprios deste domínio para distinguir uma visita nova de um retorno. A base legal é o
+        legítimo interesse na medição de público, e não o consentimento — por isso não há banner.
       </p>
       <p>
-        Quando a publicidade for introduzida, ela será precedida de pedido de consentimento, nada de
-        terceiro carregará antes da sua decisão, e esta página será atualizada descrevendo
-        exatamente o que passa a existir.
+        <strong>Os valores que você digita não vão junto.</strong> O endereço da página é limpo
+        antes de a medição carregar: sai o caminho da página, nunca a parte que carrega salário,
+        pensão ou saldo. Isso está no código, não numa configuração, e há teste automático que
+        reprova a publicação se a limpeza for desfeita. O site de onde você veio é reduzido ao
+        domínio pelo mesmo motivo.
+      </p>
+      <p>
+        Não há publicidade hoje. Quando for introduzida, esta página será atualizada no mesmo
+        momento, descrevendo o que passa a existir. Como recusar a medição está na{' '}
+        <Link href="/cookies" className="text-[var(--color-brand)] underline">página sobre cookies</Link>.
       </p>
 
       <h2>Registros do servidor</h2>

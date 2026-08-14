@@ -32,9 +32,37 @@ import { useEffect } from 'react'
  *      já foi vetor de vazamento real neste projeto, no T-107;
  *   3. `url_passthrough` desligado, para o próprio Google não recolar
  *      parâmetros;
- *   4. o consentimento entra **negado por omissão** (Consent Mode v2), o que
- *      mantém o GA4 sem cookie até que exista uma plataforma de consentimento
- *      (`INT-002`) e o usuário aceite.
+ *   4. o consentimento entra **concedido por omissão** (Consent Mode v2) —
+ *      revisto pelo mantenedor em 14/08/2026, ver abaixo.
+ *
+ * ## O CONSENTIMENTO CONCEDIDO POR OMISSÃO — DECISÃO DE 14/08/2026
+ *
+ * Até aqui este arquivo negava tudo por omissão, esperando uma plataforma de
+ * consentimento (`INT-002`) que nunca foi construída. O efeito medido em
+ * produção em 14/08/2026: o hit saía com `gcs=G100`, isto é, **ping sem
+ * cookie** — que o GA4 recebe e **não reporta** como usuário nem sessão, porque
+ * a modelagem comportamental exige limiares de tráfego que um site recém-lançado
+ * não atinge. Quinze dias no ar, zero visita no relatório, com a coleta
+ * funcionando o tempo todo.
+ *
+ * O mantenedor determinou liberar a medição por omissão. A base é o legítimo
+ * interesse de medição de audiência da LGPD, que não exige coleta prévia de
+ * consentimento como o RGPD europeu exige.
+ *
+ * **O que isso muda:** o GA4 passa a gravar cookie de primeira parte e a contar
+ * usuário e sessão de verdade.
+ *
+ * **O que isso NÃO muda, e é a razão de este arquivo continuar existindo:**
+ * `RN-030` segue inviolável. A sanitização abaixo é independente do
+ * consentimento — `page_location` continua sendo montado sem query, e
+ * `page_referrer` continua reduzido à origem. Consentimento decide se há
+ * cookie; ele nunca decidiu, e não decide agora, o que vai dentro do hit.
+ * Nenhum valor digitado sai do navegador em nenhum dos dois estados.
+ *
+ * `url_passthrough` **continua desligado** de propósito: ele repassa parâmetro
+ * de clique pela URL entre páginas, e com cookie liberado é redundante. Ligá-lo
+ * seria devolver ao Google a chance de recolar parâmetro na query — que é onde
+ * `RF-006` guarda o salário.
  *
  * ## O LIMITE HONESTO DESTA IMPLEMENTAÇÃO
  *
@@ -123,7 +151,7 @@ export function Medicao() {
       {/*
         UM SCRIPT SÓ, E ISSO NÃO É ECONOMIA — É A GARANTIA DE ORDEM.
 
-        O consentimento negado por omissão precisa estar no `dataLayer` ANTES de
+        A declaração de consentimento precisa estar no `dataLayer` ANTES de
         qualquer etiqueta rodar; depois já não adianta. A primeira versão usava
         dois blocos, um `beforeInteractive` e outro `afterInteractive`, e
         dependia de o carregador respeitar a ordem entre eles — suposição que o
@@ -138,18 +166,26 @@ export function Medicao() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
 
+          /*
+            CONCEDIDO POR OMISSÃO — decisão do mantenedor em 14/08/2026.
+
+            "wait_for_update" saiu junto, e a saída é o ponto: ele mandava o
+            gtag segurar os hits por 500 ms esperando uma atualização de
+            consentimento vinda de uma plataforma que não existe. Sem nada a
+            esperar, esperar é só atrasar a primeira medição da visita — que é
+            exatamente a que mais se perde, porque o visitante pode sair antes.
+          */
           gtag('consent', 'default', {
-            ad_storage: 'denied',
-            ad_user_data: 'denied',
-            ad_personalization: 'denied',
-            analytics_storage: 'denied',
-            functionality_storage: 'denied',
-            personalization_storage: 'denied',
-            security_storage: 'granted',
-            wait_for_update: 500
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+            analytics_storage: 'granted',
+            functionality_storage: 'granted',
+            personalization_storage: 'granted',
+            security_storage: 'granted'
           });
           gtag('set', 'url_passthrough', false);
-          gtag('set', 'ads_data_redaction', true);
+          gtag('set', 'ads_data_redaction', false);
 
           /*
             A SANITIZAÇÃO QUE NÃO DEPENDE DO PAINEL.

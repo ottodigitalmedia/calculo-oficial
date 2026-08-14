@@ -169,7 +169,19 @@ calcular(entradas: EntradasDaCalculadora, dataReferencia: Data)
 | INT-002 | Plataforma de consentimento | Sempre, antes de qualquer outro terceiro | Nenhum terceiro carrega. Produto funciona integralmente |
 | INT-003 | Rede de anúncio | Somente após consentimento | Slot permanece com a altura reservada e vazio. Sem deslocamento (`RNF-002`) |
 | INT-004 | Registro de erro | Sempre, sem cookie | Erro não é reportado. Nenhum impacto ao usuário |
-| INT-005 | **Google Tag Manager + GA4** (revisto em 07/08/2026) | Sempre; **sem cookie até haver consentimento**, por Consent Mode v2 negado por omissão | Evento perdido. Nenhum impacto |
+| INT-005 | **Google Tag Manager + GA4** (revisto em 07/08 e em 14/08/2026) | Sempre; **com cookie**, por Consent Mode v2 concedido por omissão | Evento perdido. Nenhum impacto |
+
+> **Por que o consentimento deixou de ser negado por omissão (14/08/2026).** A
+> configuração anterior produzia *ping sem cookie*, que o GA4 recebe e **não
+> reporta** como usuário nem sessão — a modelagem comportamental que os
+> aproveitaria exige limiares de tráfego inalcançáveis para um site recém-lançado.
+> O resultado medido foi quinze dias no ar com coleta funcionando e **zero visita
+> no relatório**. O mantenedor liberou a medição, com base no legítimo interesse
+> de medição de audiência da LGPD.
+>
+> **Isto não afrouxa `RN-030`.** O consentimento decide se há cookie; ele nunca
+> decidiu o que vai dentro do hit. A sanitização de `page_location` e
+> `page_referrer` é anterior e independente, e `tests/leak/` continua cobrando-a.
 
 **Regra R-4.** Nenhuma integração de terceiro participa do caminho crítico de renderização ou de cálculo. `RNF-007` exige que o produto funcione integralmente com todas elas bloqueadas.
 

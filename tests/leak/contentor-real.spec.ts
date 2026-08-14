@@ -26,6 +26,12 @@ import { expect, test } from '@playwright/test'
  *     dr=                                                    (vazio)
  *     gcs=G100  npa=1  pscdl=denied                          (consentimento)
  *
+ * > **`gcs=G100` era o estado de então, e mudou em 14/08/2026.** O mantenedor
+ * > liberou o consentimento por omissão, e a sonda passa a ver `gcs=G111`. As
+ * > duas primeiras linhas — que são o que ela existe para vigiar — **não
+ * > mudam**: a sanitização é independente do consentimento. Se `dl` voltar a
+ * > trazer query, a defesa caiu, e é isso que se lê aqui.
+ *
  * O `gtag('set', {page_location, page_referrer})` de `Medicao.tsx` entra na
  * fila antes de o contêiner subir, e o gtag.js o aplica a todo evento seguinte.
  * **Isso é mecanismo, não configuração** — e é o que torna a garantia

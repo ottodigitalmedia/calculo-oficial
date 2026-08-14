@@ -19,6 +19,15 @@
 > teste (§8.0 D). **Comece por §8.0** — ela lista o que ficou aberto e de quem
 > é cada item.
 >
+> **Sessão de 14/08/2026 — a medição que media e não reportava.** O mantenedor
+> perguntou por que o site tinha zero visita e suspeitava de bloqueio. Não havia
+> bloqueio: o GA4 coletava com o consentimento **negado por omissão**, e ping sem
+> cookie não vira visita no relatório. O consentimento foi liberado, a CSP ganhou
+> os hosts que a concessão aciona, e as páginas legais — que negavam por escrito
+> um tratamento em curso — foram reescritas. **§7.78**, e o item A-3 de §8.0
+> fechou. O Search Console está verificado por DNS; o zero dele é falta de
+> índice, não bloqueio.
+>
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
 
@@ -3256,6 +3265,92 @@ chamado `fix(guia)`.
 
 ---
 
+### 7.78 Quinze dias medindo, zero visita — e a coleta funcionava o tempo todo
+
+O mantenedor perguntou em **14/08/2026** por que o site tinha zero visita, e
+suspeitava de bloqueio. **Não havia bloqueio nenhum.** Havia duas causas
+distintas, uma para cada painel, e nenhuma das duas era o que ele imaginava.
+
+**Google Analytics — o consentimento negado por omissão.** Medido no navegador,
+em produção: o GTM e o GA4 carregam, a etiqueta dispara, e o hit sai de verdade
+para `www.google-analytics.com`. A CSP não bloqueava nada. O hit saía com
+`gcs=G100`, isto é, consentimento negado — porque `Medicao.tsx` negava tudo por
+omissão esperando a plataforma de consentimento (`INT-002`) do item A-2, que
+nunca foi construída. Consentimento negado produz *ping sem cookie*, e o GA4
+**recebe e não reporta** esses pings como usuário nem sessão: a modelagem
+comportamental que os aproveitaria exige limiares de tráfego que um site de
+quinze dias não alcança — e que dependem, eles próprios, de tráfego já
+consentido.
+
+> **O formato do defeito é o mais caro que existe.** Tudo verde: contêiner
+> carregando, etiqueta disparando, hit saindo, sanitização funcionando, teste de
+> vazamento passando. Nenhum sinal de erro em lugar nenhum, e o relatório vazio.
+> É o §7.5 outra vez, com outra roupa — só que aqui o verificador que sempre
+> passava era a **ausência de alarme**.
+
+**Search Console — não estava bloqueado nem por verificar.** O
+`google-site-verification` está no DNS do domínio desde antes, o `robots.txt`
+libera tudo, o sitemap responde com 121 URLs, a canônica e o `meta robots` estão
+corretos. O zero é falta de índice: `site:calculoficial.com.br` não devolve nada
+no Bing nem no DuckDuckGo. Domínio novo, duas semanas no ar, e o único canal de
+aquisição é o que mais demora a responder.
+
+**O que mudou nesta sessão**, por decisão do mantenedor — liberar tudo que
+pudesse ser liberado:
+
+| Onde | O quê |
+|---|---|
+| `components/Medicao.tsx` | Consent Mode v2 passa a **conceder** por omissão. `wait_for_update` saiu junto: ele segurava os hits por 500 ms esperando uma plataforma inexistente |
+| `next.config.ts` | `connect-src` e `img-src` ganharam `region1.google-analytics.com`, `stats.g.doubleclick.net` e `td.doubleclick.net` — **hosts exatos, nunca curinga** |
+| `/cookies`, `/privacidade` | Reescritas. Ver abaixo |
+| `06-api-spec` INT-005, `07-security` §11.1 e §11.2, `03-functional-spec` §5 | Corrigidos |
+| `tests/leak/vazamento.spec.ts` | A asserção `toContain('denied')` virou verificação estrutural de `url_passthrough` |
+
+**A asserção que reprovaria a decisão, e o que a substituiu.** O teste exigia
+`denied` no `dataLayer`, e mantê-lo faria a suíte reprovar uma decisão
+registrada do mantenedor. Mas o que ele protegia era o **cookie**, não o
+vazamento — e este arquivo é de vazamento. O que entrou no lugar é a asserção
+certa para ele: `url_passthrough` desligado, que é o que impede o Google de
+recolar parâmetro na URL onde `RF-006` guarda o salário. **Vale nos dois estados
+de consentimento; a anterior não valia em nenhum.**
+
+E ela quase entrou inútil. A primeira versão procurava a string
+`"url_passthrough",true` no `dataLayer` serializado — que **nunca casaria**,
+porque `gtag()` empurra o objeto `arguments` e ele serializa como
+`{"0":"set","1":"url_passthrough","2":false}`. Teria passado sempre. É §7.5
+pela terceira vez neste documento, e desta vez foi pega antes de commitar.
+
+**A regra que não se afrouxou, e a que precisou ser dita em voz alta.**
+`RN-030` não foi tocada: consentimento decide se há **cookie**, nunca o que vai
+**dentro** do hit. A sanitização de `page_location` e `page_referrer` é anterior
+e independente das duas coisas, e continua sendo mecanismo — não configuração de
+painel.
+
+**O item A-3 deixou de ser opinião e virou risco.** As páginas legais diziam
+*"não grava cookies · não carrega script de terceiro · não há medição de
+audiência"*. As duas últimas eram falsas desde 07/08/2026; a primeira só era
+verdadeira **por causa do consentimento negado**, e a liberação a tornou falsa
+também. O mantenedor tinha mandado ignorar em 08/08, mas ignorar uma imprecisão
+é diferente de manter, por escrito e em página de política, a negação de um
+tratamento em curso. Foram reescritas para descrever o que existe: qual
+ferramenta, qual cookie, qual base legal (legítimo interesse de medição de
+audiência), **o que não é enviado e por quê**, e como recusar.
+
+> **O texto legal ficou melhor do que era antes de mentir.** A página velha
+> dizia "não usamos" em três linhas. A nova explica que o endereço é limpo antes
+> de a medição carregar, que isso está no código e não num painel, e que há teste
+> reprovando a publicação se a limpeza cair. Num produto cuja tese é a
+> auditabilidade, isso é conteúdo — não é passivo.
+
+**Uma suspeita minha que a medição derrubou.** Eu havia relatado ao mantenedor
+que a navegação interna provavelmente não era contada, por depender de uma
+etiqueta no gatilho `pagina_vista` que ninguém garantia existir no painel. Medi:
+**é contada**. Clicando da home para `/calculadora/salario-liquido` saem dois
+`page_view`, ambos com `dl` sanitizado. A etiqueta existe. Registrado porque a
+suspeita chegou a ser comunicada como problema.
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 ### 8.0 Retomada em 09/08/2026 — leia isto primeiro
@@ -3273,8 +3368,8 @@ o dono de cada item — porque três dos seis não são código.
 | # | O quê | Por que importa | Onde |
 |---|---|---|---|
 | A-1 | **Credenciais de SMTP no painel** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | **O formulário de contato não envia hoje.** Faltando qualquer uma, `api/contato` responde "indisponível" e mostra o e-mail direto. Comportamento correto (`RNF-007`), resultado inútil | `13-deployment` §5 |
-| A-2 | **Anúncio e consentimento** | `D-01` diz "monetização exclusiva por anúncio" e **não existe uma unidade sequer**. MR-3 cai por volta de 29/10/2026 e decide continuar, reposicionar ou descontinuar — com HIP-03 sem dado nenhum. O gatilho do roadmap é circular: pede sinal do painel de anúncios para justificar construir o anúncio | `11-roadmap` §5 item 5 |
-| A-3 | **`/cookies` e `/privacidade` afirmam que não há medição de audiência** | O GTM e o GA4 rodam desde 07/08/2026 — verificado no navegador em 08/08. É declaração pública que nega tratamento em curso. **O mantenedor mandou ignorar em 08/08/2026**; fica registrado por ser matéria de política, não de gosto | `src/app/cookies`, `src/app/privacidade` |
+| A-2 | **Anúncio e consentimento** | `D-01` diz "monetização exclusiva por anúncio" e **não existe uma unidade sequer**. MR-3 cai por volta de 29/10/2026 e decide continuar, reposicionar ou descontinuar — com HIP-03 sem dado nenhum. O gatilho do roadmap é circular: pede sinal do painel de anúncios para justificar construir o anúncio. **Em 14/08/2026 a parte de consentimento saiu do caminho crítico** (§7.78): a medição foi liberada por legítimo interesse, e `INT-002` deixou de ser pré-requisito para o GA4 reportar. Ela volta a ser pré-requisito **no dia em que o anúncio entrar**, porque publicidade personalizada continua exigindo consentimento — `07-security` §11.2 | `11-roadmap` §5 item 5 |
+| ~~A-3~~ | ~~**`/cookies` e `/privacidade` afirmam que não há medição de audiência**~~ | ✅ **Resolvido em 14/08/2026 — §7.78.** Deixou de ser matéria de gosto quando a liberação do consentimento tornou falsa também a afirmação sobre cookie, que até então era a única verdadeira das três. As duas páginas foram reescritas | `src/app/cookies`, `src/app/privacidade` |
 
 ---
 

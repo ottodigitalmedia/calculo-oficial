@@ -343,7 +343,7 @@ Cada calculadora do v1 tem no mínimo 4 perguntas de FAQ, respondidas em até 3 
 
 | Página | Conteúdo essencial |
 |---|---|
-| Privacidade | Ausência de coleta de dado de cálculo (`RN-030`); análise sem cookie; base legal; contato |
+| Privacidade | Ausência de coleta de dado de cálculo (`RN-030`); análise de audiência com cookie, e o que ela **não** envia; base legal; contato |
 | Termos | Natureza informativa; ausência de vínculo; limitação de responsabilidade |
 | Cookies | Quais existem; consentimento; como revogar |
 | Aviso legal | Texto reforçando `RN-028`, com link a partir de cada calculadora |

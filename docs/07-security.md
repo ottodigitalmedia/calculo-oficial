@@ -187,14 +187,14 @@ Contra AM-06: proxy com limitação de conexões por origem; se a VPS se tornar 
 | Nome, e-mail, telefone, documento | **Não** | Não são solicitados em nenhum ponto |
 | Endereço IP | Indiretamente | Registro do servidor e da ferramenta de análise |
 | Identificador publicitário | Sim, se consentido | Tratado pela rede de anúncio, na condição de controladora própria |
-| Cookies | Somente os da rede de anúncio e os do GA4, **ambos após consentimento** | Consent Mode v2 entra negado por omissão, o que mantém o GA4 sem cookie até haver aceite (revisto em 07/08/2026) |
+| Cookies | Os do GA4, **desde o primeiro acesso**; os da rede de anúncio, quando ela existir | Consent Mode v2 entra **concedido por omissão** desde 14/08/2026. Negado, o GA4 só produzia ping sem cookie — que ele não reporta como visita, e o relatório ficava vazio com a coleta funcionando |
 
 ### 11.2 Bases legais
 
 | Tratamento | Base legal |
 |---|---|
 | Registro técnico de servidor | Legítimo interesse — segurança e operação |
-| Análise de uso agregada e sem cookie | Legítimo interesse |
+| Análise de uso agregada, com cookie próprio do domínio | Legítimo interesse — medição de audiência, sem perfil e sem cadastro |
 | Publicidade personalizada | **Consentimento**, coletado antes de qualquer carregamento |
 | Mensagem enviada pelo formulário de contato | Consentimento, no ato do envio |
 
