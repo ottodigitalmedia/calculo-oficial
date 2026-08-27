@@ -130,6 +130,13 @@ test('não há armadilha de foco: a tabulação atravessa a página inteira', as
   await page.goto('/calculadora/salario-liquido')
   await page.getByLabel('Salário bruto mensal').fill('3000,00')
 
+  // O RESULTADO PRECISA EXISTIR ANTES DA MARCAÇÃO.
+  //
+  // Ele traz três botões que a página vazia não tem — memória de cálculo,
+  // imprimir e copiar link. Marcar antes deles renderizarem deixava os três
+  // sem número, e o `??` abaixo os colapsava numa identidade só.
+  await expect(page.getByText('Salário líquido estimado')).toBeVisible()
+
   // Cada focável recebe um número. Identificar pelo texto não serve: o rodapé
   // repete os títulos dos guias, e dois elementos DIFERENTES com o mesmo texto
   // pareciam ser o mesmo elemento retendo o foco.
@@ -147,7 +154,24 @@ test('não há armadilha de foco: a tabulação atravessa a página inteira', as
     const atual = await page.evaluate(() => {
       const e = document.activeElement
       if (!e || e === document.body) return 'BODY'
-      return e.getAttribute('data-foco') ?? `SEM-MARCA:${e.tagName}`
+
+      // IDENTIDADE PRÓPRIA PARA QUEM NASCEU DEPOIS DA MARCAÇÃO.
+      //
+      // A versão anterior devolvia `SEM-MARCA:${e.tagName}` — e isso é
+      // exatamente o defeito que o comentário acima diz ter corrigido para o
+      // caso do texto, cometido de novo por outra via: TODO botão não marcado
+      // virava a mesma string, então três botões distintos em sequência
+      // pareciam um só elemento retendo o foco.
+      //
+      // Encontrado em 27/08/2026, reprovando um produto correto — verificado no
+      // navegador: os três têm `tabIndex 0`, nenhum `disabled`, nenhum handler
+      // de teclado, e o foco atravessa os três. §7.10: quando o teste e o
+      // produto discordam, descubra qual dos dois está errado.
+      const marca = e.getAttribute('data-foco')
+      if (marca !== null) return marca
+      const nova = `tardio-${document.querySelectorAll('[data-foco]').length}`
+      e.setAttribute('data-foco', nova)
+      return nova
     })
 
     // Armadilha é o MESMO elemento retendo o foco tabulação após tabulação.
