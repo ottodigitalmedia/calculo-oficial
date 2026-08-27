@@ -11,6 +11,28 @@ const nextConfig: NextConfig = {
   // um sem o outro produz um servidor que sobe e serve página sem estilo.
   output: 'standalone',
 
+  // A RAIZ DO RASTREAMENTO É ESTE PROJETO, E NÃO O QUE O NEXT ADIVINHAR.
+  //
+  // Sem esta linha, o Next escolhe a raiz procurando lockfiles ACIMA do
+  // projeto — e o que ele encontra depende da máquina de quem builda. Em
+  // 27/08/2026 um `package-lock.json` órfão e vazio em `C:\Users\<usuário>`
+  // venceu a eleição, e a saída autônoma foi parar em
+  // `.next/standalone/Documents/CLAUDE CODE/.../server.js`.
+  //
+  // O sintoma não aponta para a causa: `scripts/serve-standalone.mjs` reclama
+  // *"Saída autônoma ausente. Rode `npm run build` antes"* — e o build tinha
+  // acabado de rodar, com as 126 páginas geradas. Toda a suíte de ponta a ponta
+  // reprova, com aparência de defeito de aplicação.
+  //
+  // **O CI nunca viu isso**, porque lá não existe lockfile acima de `/app`. Ou
+  // seja: um build quebrado só na máquina de quem escreve, que é o pior lugar
+  // para um defeito morar. Fixar a raiz torna o build igual nos dois.
+  //
+  // `process.cwd()` e não `__dirname`: o build sempre roda a partir da pasta do
+  // `package.json` — `/app` no contêiner, a raiz do repositório aqui —, e isso
+  // vale tanto para o config carregado como CJS quanto como ESM.
+  outputFileTracingRoot: process.cwd(),
+
   // O rastreador de arquivos do Next inclui `typescript` na saída autônoma
   // porque este próprio arquivo é .ts. São 8,7 MB de dependência de
   // DESENVOLVIMENTO dentro da imagem de produção — violação direta de D-1,
