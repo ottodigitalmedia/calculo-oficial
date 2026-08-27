@@ -3351,6 +3351,119 @@ suspeita chegou a ser comunicada como problema.
 
 ---
 
+### 7.79 A suíte inteira passou sem testar o código — e o que ela escondia
+
+Auditoria pedida em **27/08/2026**. O achado de método é este: **`npm run check`
+vinha verde testando um servidor de build antigo**, e três defeitos se
+escondiam atrás disso.
+
+**A raiz do rastreamento não era o projeto.** O Next escolhe
+`outputFileTracingRoot` procurando lockfiles ACIMA da pasta, e um
+`package-lock.json` órfão e vazio em `C:\Users\<usuário>` — de 25/08, alheio ao
+projeto — venceu a eleição. A saída autônoma passou a ser gravada em
+`.next/standalone/Documents/CLAUDE CODE/.../server.js`.
+
+E `next build` **não limpa** `.next/standalone`: escreve por cima. O
+`server.js` da raiz, de um build anterior, sobrevivia — e era esse que
+`serve-standalone.mjs` subia. **As 875 e2e rodavam contra código velho, e
+passavam.**
+
+> **O sintoma não aponta para a causa, e é isso que o torna caro.** Quando o
+> `server.js` residual finalmente sumiu, a mensagem foi *"Saída autônoma
+> ausente. Rode `npm run build` antes"* — logo depois de um build que gerou as
+> 126 páginas sem erro. Parece defeito de script; é lockfile em pasta pessoal.
+> O aviso do Next está no log (`inferred your workspace root`), abaixo de
+> centenas de linhas de `NO_COLOR`.
+>
+> **O CI nunca viu nada disso**, porque lá não existe lockfile acima de `/app`.
+> Build quebrado só na máquina de quem escreve é o pior lugar para um defeito
+> morar: o verificador local mente e o remoto não confirma nem desmente.
+
+`outputFileTracingRoot: process.cwd()` fixa a raiz e iguala os dois ambientes.
+É §7.5 pela quarta vez neste documento — e a primeira em que o verificador que
+sempre passava era **a suíte inteira**.
+
+**O teste de foco reprovava um produto correto.** Com a suíte finalmente
+exercitando a página real, `acessibilidade.spec.ts` acusou armadilha de foco.
+Não havia: verificado no navegador, os três botões que nascem com o resultado —
+memória, imprimir, copiar link — têm `tabIndex 0`, nenhum `disabled` e nenhum
+handler de teclado. O teste marcava os focáveis **antes** de o resultado
+renderizar e devolvia `SEM-MARCA:${tagName}` para os não marcados, colapsando
+três botões distintos numa identidade só.
+
+> **É o defeito que o próprio comentário do teste declarava ter corrigido**,
+> cometido de novo por outra porta: ali dizia que identificar pelo texto não
+> servia porque *"dois elementos DIFERENTES com o mesmo texto pareciam ser o
+> mesmo elemento"*. Trocar texto por tag não resolveu — reduziu a colisão, e
+> colisão reduzida volta quando a página cresce. Agora quem nasce depois ganha
+> identidade própria no momento em que recebe o foco.
+
+**O que a auditoria mediu, e que está saudável.** 121 de 121 páginas em 200;
+123 links internos, zero quebrado; 60 ms de resposta e 209 ms até o
+carregamento completo; 126 kB no total; mobile sem rolagem horizontal, sem alvo
+abaixo de 24 px; títulos e descrições únicos; `FAQPage`, `BreadcrumbList`,
+`WebApplication` e `Article` marcados. O cálculo foi conferido por fora e bate
+ao centavo.
+
+#### O que o Search Console mostrou, e por que a média engana
+
+**Posição média 21,8 é um número que não descreve nada.** As consultas com
+volume estão em posição **60 a 90** — `calculo rescisao domestica` em 87,6,
+`calcular rescisão empregada domestica` em 90,4, `o que é salario bruto` em
+68,9. A média é puxada por consultas raras onde o site rankeia bem, como
+`calculadora independencia financeira`, em 3,0.
+
+**Por página, o quadro se inverte, e é aqui que está o achado:**
+
+| Página | Impressões | Posição | Cliques |
+|---|---|---|---|
+| `conversor-de-unidades` | 1.124 | 7,9 | 1 |
+| `divisao-de-conta` | 972 | 7,4 | **0** |
+| `quanto-rende-por-mes` | 337 | 8,4 | **0** |
+| `poder-de-compra` | 256 | 7,9 | **0** |
+
+Primeira página do Google, ~2.700 impressões somadas, quase nenhum clique —
+onde a posição 7 renderia dezenas. Filtrando as consultas de `divisao-de-conta`,
+o Search Console devolve **"Nenhum dado"**; em `conversor-de-unidades`, **uma
+única** consulta é identificável entre 1.124 impressões.
+
+**A leitura:** milhares de buscas distintas com 1 ou 2 impressões cada — o
+padrão de *"quantos ml numa xícara"*, *"3 km em metros"*. São exatamente as
+perguntas que o Google responde sozinho, com widget no topo. **O volume do site
+está concentrado em tráfego que estruturalmente não clica**, enquanto as
+calculadoras de alto valor — rescisão, salário líquido, demissão — estão na
+posição 80 a 90.
+
+Isso não se resolve com ajuste técnico, e convém não confundir as duas coisas na
+próxima sessão: o site está tecnicamente correto.
+
+**Core Web Vitals não tem dados** — *"uso insuficiente nos últimos 90 dias"*,
+celular e computador. O relatório precisa de visitantes reais; é consequência do
+tráfego, não causa. As medições de laboratório acima são o único dado disponível.
+
+#### Título e descrição fora do limite exibido
+
+28 títulos passavam de 60 caracteres e 21 descrições de 160 — cortados na busca,
+sempre no fim, que é onde mora o que distingue a página. Nada quebrava, nenhum
+teste reclamava: o prejuízo acontecia fora do repositório.
+
+`tituloDeBusca` passou a acrescentar `· Cálculo Oficial` **só quando cabe** —
+o sufixo sozinho consome 18 dos 60 caracteres, e omiti-lo resolveu 26 dos 28 sem
+tocar numa palavra do texto editorial. Os dois restantes ganharam `tituloSeo`,
+campo novo e opcional do guia, que preserva o `titulo` para o `h1`. As 21
+descrições foram encurtadas. `tests/unit/seo.test.ts` cobra os dois limites, com
+prova de mutação.
+
+> **Um erro meu no caminho, e a régua que ele deixou.** Rodei `npx prettier`
+> para formatar os arquivos editados sem verificar que **o projeto não usa
+> prettier** — não há config nem dependência, o lint é `eslint .`. Ele
+> reformatou 43 arquivos para aspas duplas e ponto e vírgula, 2.582 linhas.
+> Revertido com `git checkout` e reaplicado sem ele; o diff ficou em 25 arquivos
+> e 88 linhas. **Ferramenta de formatação que o repositório não declara não é
+> ferramenta do repositório.**
+
+---
+
 ## 8. Sugestão de ordem para a próxima sessão
 
 ### 8.0 Retomada em 09/08/2026 — leia isto primeiro
