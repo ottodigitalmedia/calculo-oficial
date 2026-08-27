@@ -12,10 +12,12 @@ import type { Guia } from './tipos'
 export const DECLARACAO_ANUAL: Guia = {
   slug: 'declaracao-anual-do-imposto-de-renda',
   titulo: 'A declaração anual: restituição, modelos e o que dá para deduzir',
+  // 64 caracteres — passa do limite mesmo sem a marca. Ver `tituloDeBusca`.
+  tituloSeo: 'Declaração anual: restituição e deduções',
   subtitulo:
     'A restituição não é um prêmio: é a devolução do que foi retido a mais durante o ano.',
   descricaoSeo:
-    'Como funciona o ajuste anual do Imposto de Renda: por que dá restituição ou imposto a pagar, a diferença entre o modelo simplificado e o completo, e quais despesas são dedutíveis.',
+    'O ajuste anual do Imposto de Renda: por que dá restituição ou imposto a pagar, a diferença entre o modelo simplificado e o completo, e o que é dedutível.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['restituicao-irpf', 'simplificado-ou-completo', 'carne-leao'],
 

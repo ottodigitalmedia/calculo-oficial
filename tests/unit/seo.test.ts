@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest'
 
 import { CALCULADORAS } from '../../src/lib/calculadoras'
 import { GUIAS } from '../../src/lib/guias'
-import { SITE_URL, absoluto, rotasIndexaveis } from '../../src/lib/seo'
+import { SITE_URL, absoluto, rotasIndexaveis, tituloDeBusca } from '../../src/lib/seo'
 
 const rotas = rotasIndexaveis()
 const caminhos = rotas.map((r) => r.caminho)
@@ -115,5 +115,68 @@ describe('origem do site', () => {
   it('é HTTPS e não termina em barra', () => {
     expect(SITE_URL).toMatch(/^https:\/\//)
     expect(SITE_URL).not.toMatch(/\/$/)
+  })
+})
+
+/**
+ * O que o buscador EXIBE — e por que isto precisa ser teste.
+ *
+ * Título comprido e descrição comprida não quebram nada: a página abre, o
+ * cálculo funciona, nenhuma suíte reclama. O prejuízo acontece fora do
+ * repositório, no resultado de busca, cortado com reticências — e busca
+ * orgânica é o único canal de aquisição do produto (`01-prd` §5).
+ *
+ * Foi assim que 28 títulos e 21 descrições passaram do limite sem ninguém
+ * notar, até a varredura de 27/08/2026 medir as 121 páginas publicadas. É a
+ * mesma família de defeito silencioso que o resto deste arquivo vigia.
+ */
+describe('limites do resultado de busca', () => {
+  /** ~60 caracteres é o corte usual do Google. Ver `tituloDeBusca`. */
+  const LIMITE_TITULO = 60
+  /** ~160 para a descrição, pelo mesmo motivo. */
+  const LIMITE_DESCRICAO = 160
+
+  it('nenhum título de calculadora passa do limite', () => {
+    for (const c of CALCULADORAS) {
+      const titulo = tituloDeBusca(c.nome)
+      expect(
+        titulo.length,
+        `"${titulo}" tem ${titulo.length} caracteres e será cortado na busca. ` +
+          'Encurte o nome da calculadora.',
+      ).toBeLessThanOrEqual(LIMITE_TITULO)
+    }
+  })
+
+  it('nenhum título de guia passa do limite', () => {
+    for (const g of GUIAS) {
+      const titulo = tituloDeBusca(g.tituloSeo ?? g.titulo)
+      expect(
+        titulo.length,
+        `"${titulo}" tem ${titulo.length} caracteres e será cortado na busca. ` +
+          'Declare um `tituloSeo` curto no guia — o `titulo` continua servindo ao h1.',
+      ).toBeLessThanOrEqual(LIMITE_TITULO)
+    }
+  })
+
+  it('nenhuma descrição passa do limite', () => {
+    const todas = [
+      ...CALCULADORAS.map((c) => [`calculadora "${c.slug}"`, c.descricaoSeo] as const),
+      ...GUIAS.map((g) => [`guia "${g.slug}"`, g.descricaoSeo] as const),
+    ]
+    for (const [onde, descricao] of todas) {
+      expect(
+        descricao.length,
+        `${onde}: descrição com ${descricao.length} caracteres, será cortada na busca`,
+      ).toBeLessThanOrEqual(LIMITE_DESCRICAO)
+    }
+  })
+
+  it('a marca entra no título quando há folga, e sai quando não há', () => {
+    // Prova de mutação: sem esta dupla, `tituloDeBusca` poderia devolver o
+    // título cru sempre e os casos acima continuariam passando.
+    expect(tituloDeBusca('Salário líquido')).toBe('Salário líquido · Cálculo Oficial')
+
+    const comprido = 'a'.repeat(50)
+    expect(tituloDeBusca(comprido)).toBe(comprido)
   })
 })

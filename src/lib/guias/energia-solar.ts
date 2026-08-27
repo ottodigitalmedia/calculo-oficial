@@ -15,7 +15,7 @@ export const ENERGIA_SOLAR: Guia = {
   subtitulo:
     'A proposta mostra a economia. Ela raramente mostra o que a lei passou a cobrar sobre a energia que você injeta.',
   descricaoSeo:
-    'O que considerar antes de instalar energia solar: a cobrança do Fio B que cresce a cada ano, o excedente que vira crédito e não dinheiro, e o mínimo que a fatura continua cobrando.',
+    'O que considerar antes de instalar energia solar: a cobrança do Fio B que cresce a cada ano, o excedente que vira crédito e o mínimo que a fatura cobra.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['retorno-energia-solar', 'consumo-de-energia'],
 

@@ -15,10 +15,13 @@ import type { Guia } from './tipos'
 export const IR_NA_VENDA_DE_IMOVEL: Guia = {
   slug: 'ir-na-venda-de-imovel',
   titulo: 'IR na venda de imóvel: as isenções e os fatores que quase ninguém aplica',
+  // 72 caracteres — o Google cortaria em 'os fatores que…', perdendo justamente
+  // o que distingue este guia. Ver `tituloDeBusca` em `lib/seo`.
+  tituloSeo: 'IR na venda de imóvel: isenções e reduções',
   subtitulo:
     'Antes de calcular o imposto, vale verificar se ele é devido — e, se for, se a base não pode encolher pela metade.',
   descricaoSeo:
-    'Como funciona o imposto sobre o ganho de capital na venda de imóvel: as isenções, os fatores de redução por tempo de posse e o reinvestimento que zera o imposto.',
+    'Imposto sobre ganho de capital na venda de imóvel: as isenções, os fatores de redução por tempo de posse e o reinvestimento que zera o imposto.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['ganho-de-capital-imovel', 'custo-de-aquisicao-de-imovel', 'rentabilidade-de-aluguel'],
 

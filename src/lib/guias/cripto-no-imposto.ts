@@ -15,7 +15,7 @@ export const CRIPTO_NO_IMPOSTO: Guia = {
   subtitulo:
     'O limite que isenta olha quanto você vendeu, não quanto você lucrou — e essa distinção decide quase todos os casos.',
   descricaoSeo:
-    'Como funciona o imposto sobre venda de criptoativos: o teto mensal de isenção, por que ele é degrau e não desconto, e por que trocar uma moeda por outra já é fato gerador.',
+    'O imposto sobre venda de criptoativos: o teto mensal de isenção, por que ele é degrau e não desconto, e por que trocar uma moeda por outra já gera imposto.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['imposto-sobre-criptoativos', 'ganho-de-capital-imovel'],
 

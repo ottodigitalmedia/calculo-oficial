@@ -15,7 +15,7 @@ export const VIVER_DE_RENDA: Guia = {
   subtitulo:
     'A conta é mais simples do que parece — e o número que ela devolve costuma ser maior do que se espera.',
   descricaoSeo:
-    'Como calcular o patrimônio necessário para viver de renda, por que a taxa de retirada importa mais que o rendimento, e o que a inflação faz com a meta ao longo do tempo.',
+    'Como calcular o patrimônio necessário para viver de renda, por que a taxa de retirada importa mais que o rendimento, e o que a inflação faz com a meta.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['independencia-financeira', 'quanto-rende-por-mes', 'dividend-yield'],
 

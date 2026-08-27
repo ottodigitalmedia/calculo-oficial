@@ -18,7 +18,7 @@ export const FGTS_GUIA: Guia = {
   subtitulo:
     'O depósito não sai do seu salário, e a indenização da dispensa não incide sobre o saldo que aparece hoje no extrato.',
   descricaoSeo:
-    'Como o depósito mensal do FGTS é formado, por que ele não reduz o salário líquido, sobre o que incide a multa rescisória e por que a estimativa fica abaixo do saldo real do extrato.',
+    'Como o depósito mensal do FGTS é formado, por que não reduz o salário líquido, sobre o que incide a multa e por que a estimativa fica abaixo do extrato.',
   atualizadoEm: '2026-08-06',
   calculadoras: ['fgts', 'rescisao-sem-justa-causa', 'rescisao-acordo-mutuo'],
 

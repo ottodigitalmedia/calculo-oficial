@@ -17,7 +17,7 @@ export const CONSIGNADO: Guia = {
   subtitulo:
     'É o crédito mais barato disponível para quem tem carteira assinada — e o cálculo da margem engana quase todo mundo.',
   descricaoSeo:
-    'Como funciona o empréstimo consignado: sobre o que a margem é calculada, por que ela é menor do que parece, e por que aposentados e servidores seguem regra diferente.',
+    'Como funciona o empréstimo consignado: sobre o que a margem é calculada, por que ela é menor do que parece, e por que aposentados seguem outra regra.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['emprestimo-consignado', 'cet-custo-efetivo-total', 'plano-de-quitacao'],
 

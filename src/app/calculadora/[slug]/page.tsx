@@ -12,6 +12,7 @@ import {
 import { IconeSeta } from '@/components/Marca'
 import { CALCULADORAS, porSlug } from '@/lib/calculadoras'
 import { formularioDe } from '@/lib/calculadoras/tipos'
+import { tituloDeBusca } from '@/lib/seo'
 import { TODOS_OS_CONJUNTOS } from '@/lib/params/data/todos'
 import { construirRegistro } from '@/lib/params/registry'
 import { aplicarSugestao } from '@/lib/series/sugestao'
@@ -58,7 +59,9 @@ export async function generateMetadata({
   const c = porSlug(slug)
   if (!c) return {}
   return {
-    title: c.nome,
+    // `absolute` porque o sufixo passa a ser condicional: o template do layout
+    // acrescenta sempre, e não sabe medir. Ver `tituloDeBusca`.
+    title: { absolute: tituloDeBusca(c.nome) },
     description: c.descricaoSeo,
     alternates: { canonical: `/calculadora/${c.slug}` },
     openGraph: {

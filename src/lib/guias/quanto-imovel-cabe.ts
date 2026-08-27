@@ -16,7 +16,7 @@ export const QUANTO_IMOVEL_CABE: Guia = {
   subtitulo:
     'O banco aprova pela renda; o orçamento aprova pelo que sobra. Os dois números raramente coincidem.',
   descricaoSeo:
-    'Como se calcula a capacidade de financiamento de um imóvel, por que o valor aprovado pelo banco não é o valor que cabe no seu orçamento, e o que a entrada precisa cobrir além do preço.',
+    'Como se calcula a capacidade de financiamento de um imóvel, por que o valor aprovado pelo banco não é o que cabe no orçamento, e o que a entrada cobre.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['capacidade-de-financiamento', 'custo-de-aquisicao-de-imovel', 'financiamento-imobiliario'],
 

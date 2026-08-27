@@ -14,7 +14,7 @@ export const QUAL_COMBUSTIVEL_COMPENSA: Guia = {
   subtitulo:
     'A regra dos setenta por cento resolve o primeiro caso. O segundo exige uma conta bem maior.',
   descricaoSeo:
-    'Como decidir entre álcool e gasolina pela relação de preço e consumo, e como comparar um carro elétrico com um a combustão considerando energia, manutenção e preço de compra.',
+    'Como decidir entre álcool e gasolina pela relação de preço e consumo, e como comparar um carro elétrico com um a combustão de forma honesta.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['alcool-ou-gasolina', 'eletrico-ou-combustao', 'custo-mensal-do-carro'],
 

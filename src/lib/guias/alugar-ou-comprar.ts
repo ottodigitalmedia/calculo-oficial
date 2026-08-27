@@ -17,7 +17,7 @@ export const ALUGAR_OU_COMPRAR: Guia = {
   subtitulo:
     'Comparar aluguel com parcela é a forma errada de decidir — e é a forma como quase todo mundo decide.',
   descricaoSeo:
-    'Por que comparar aluguel com prestação leva à conclusão errada, o que entra de verdade na conta de comprar, e como comparar os dois caminhos pelo patrimônio ao fim do prazo.',
+    'Por que comparar aluguel com prestação leva à conclusão errada, o que entra de verdade na conta de comprar, e como comparar pelo patrimônio final.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['alugar-ou-comprar', 'capacidade-de-financiamento', 'rentabilidade-de-aluguel'],
 

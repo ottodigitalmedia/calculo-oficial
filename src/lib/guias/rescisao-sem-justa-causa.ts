@@ -19,7 +19,7 @@ export const RESCISAO_SEM_JUSTA_CAUSA: Guia = {
   subtitulo:
     'O total não é um número só: são várias verbas de naturezas diferentes, e é a natureza de cada uma que decide se ela sofre desconto.',
   descricaoSeo:
-    'O que entra no acerto da dispensa sem justa causa: saldo de salário, aviso prévio, férias, décimo terceiro e multa do FGTS — e por que só algumas dessas verbas sofrem INSS e Imposto de Renda.',
+    'O que entra no acerto da dispensa sem justa causa: saldo, aviso prévio, férias, 13º e multa do FGTS — e quais verbas sofrem INSS e Imposto de Renda.',
   atualizadoEm: '2026-08-06',
   calculadoras: ['rescisao-sem-justa-causa', 'fgts', 'seguro-desemprego'],
 

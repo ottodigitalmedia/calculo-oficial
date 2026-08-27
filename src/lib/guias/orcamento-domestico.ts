@@ -16,7 +16,7 @@ export const ORCAMENTO_DOMESTICO: Guia = {
   subtitulo:
     'A proporção serve para diagnosticar, não para julgar — e o diagnóstico costuma ser mais útil que a meta.',
   descricaoSeo:
-    'Como usar a divisão do orçamento doméstico em necessidades, escolhas e futuro, o que entra em cada grupo, e por que ela é ponto de partida e não regra a cumprir.',
+    'Como usar a divisão do orçamento em necessidades, escolhas e futuro, o que entra em cada grupo, e por que ela é ponto de partida e não regra.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['orcamento-domestico', 'plano-de-quitacao', 'reserva-de-emergencia'],
 

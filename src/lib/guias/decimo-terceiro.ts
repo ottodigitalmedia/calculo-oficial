@@ -18,7 +18,7 @@ export const DECIMO_TERCEIRO: Guia = {
   subtitulo:
     'A segunda parcela vir bem menor que a primeira não é erro da folha — é onde os dois descontos do ano inteiro são cobrados de uma vez.',
   descricaoSeo:
-    'Como o décimo terceiro é calculado por avos, por que a primeira parcela não tem desconto, por que a segunda concentra INSS e Imposto de Renda, e por que ela pode chegar a zero.',
+    'Como o 13º é calculado por avos, por que a primeira parcela não tem desconto, por que a segunda concentra INSS e Imposto de Renda, e quando ela zera.',
   atualizadoEm: '2026-08-06',
   calculadoras: ['decimo-terceiro', 'ferias', 'salario-liquido'],
 

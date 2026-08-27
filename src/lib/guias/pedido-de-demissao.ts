@@ -18,7 +18,7 @@ export const PEDIDO_DE_DEMISSAO: Guia = {
   subtitulo:
     'Sair por vontade própria não zera o acerto — muda três coisas nele, e uma delas pode virar desconto em vez de crédito.',
   descricaoSeo:
-    'O que continua sendo pago quando o pedido de saída parte do trabalhador, o que deixa de ser, e por que o aviso prévio pode aparecer como desconto no termo de rescisão.',
+    'O que continua sendo pago quando a saída parte do trabalhador, o que deixa de ser, e por que o aviso prévio pode aparecer como desconto na rescisão.',
   atualizadoEm: '2026-08-06',
   calculadoras: [
     'rescisao-pedido-demissao',

@@ -17,7 +17,7 @@ export const CONTRATO_INTERMITENTE: Guia = {
   subtitulo:
     'Aqui não se espera o fim do contrato para receber — cada período trabalhado se encerra com pagamento próprio.',
   descricaoSeo:
-    'Como funciona o pagamento no contrato intermitente: o que entra no acerto de cada convocação, por que férias e décimo terceiro são pagos na hora, e o que a lei deixou sem resposta.',
+    'O pagamento no contrato intermitente: o que entra no acerto de cada convocação, por que férias e 13º são pagos na hora, e o que a lei não resolveu.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['contrato-intermitente', 'rescisao-sem-justa-causa'],
 

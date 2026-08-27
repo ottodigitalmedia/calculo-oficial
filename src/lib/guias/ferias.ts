@@ -19,7 +19,7 @@ export const FERIAS: Guia = {
   subtitulo:
     'O valor das férias não é o salário do mês — e a parte vendida segue regra de desconto oposta à parte descansada.',
   descricaoSeo:
-    'Como se forma o valor das férias: período aquisitivo, adicional constitucional, férias proporcionais, venda de parte do período e por que o abono não sofre os mesmos descontos.',
+    'Como se forma o valor das férias: período aquisitivo, adicional de um terço, férias proporcionais, venda de parte do período e os descontos do abono.',
   atualizadoEm: '2026-08-06',
   calculadoras: ['ferias', 'salario-liquido', 'decimo-terceiro'],
 

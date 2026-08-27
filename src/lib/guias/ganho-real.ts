@@ -16,7 +16,7 @@ export const GANHO_REAL: Guia = {
   subtitulo:
     'Render dez por cento num ano em que os preços subiram nove não é ganhar dez — é ganhar quase nada.',
   descricaoSeo:
-    'A diferença entre rendimento nominal e ganho real, como corrigir valores pela inflação, e por que o mesmo salário compra menos a cada ano sem que nada tenha mudado.',
+    'A diferença entre rendimento nominal e ganho real, como corrigir valores pela inflação, e por que o mesmo salário compra menos a cada ano.',
   atualizadoEm: '2026-08-07',
   calculadoras: [
     'tesouro-ipca-mais',

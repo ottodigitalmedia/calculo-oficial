@@ -33,6 +33,46 @@ export function absoluto(rota: string): string {
 }
 
 /**
+ * O limite prático do título no resultado de busca.
+ *
+ * O Google corta por largura em pixels, não por caractere — 60 é a aproximação
+ * usual, e é aproximação mesmo. Errar para menos custa espaço não usado; errar
+ * para mais custa a frase cortada no meio.
+ */
+const LIMITE_DO_TITULO = 60
+
+const SUFIXO = ` · ${NOME_DO_SITE}`
+
+/**
+ * O título da aba e do resultado de busca — **com a marca só quando ela couber**.
+ *
+ * ## O DEFEITO QUE ISTO CORRIGE, MEDIDO EM 27/08/2026
+ *
+ * O template de `layout.tsx` acrescentava `· Cálculo Oficial` a todo título,
+ * sem olhar o comprimento. Varrendo as 121 páginas publicadas: **28 títulos
+ * passavam de 60 caracteres** e chegavam ao Google cortados — um deles com 90.
+ * O corte cai no fim, que é onde mora a parte que distingue a página:
+ * *"IR na venda de imóvel: as isenções e os fatores que quase ninguém aplica"*
+ * virava *"IR na venda de imóvel: as isenções e os fatores que…"*.
+ *
+ * ## POR QUE OMITIR A MARCA, E NÃO ENCURTAR O TÍTULO
+ *
+ * Dos 28, **26 cabem inteiros assim que o sufixo sai** — ele sozinho consome 18
+ * dos 60 caracteres. Reescrever 26 títulos editoriais para acomodar uma
+ * assinatura repetida seria deixar a ferramenta mandar no texto. Os dois que
+ * ainda não cabiam ganharam `tituloSeo` próprio, na origem.
+ *
+ * A marca não se perde: segue no título de toda página com folga, no domínio
+ * exibido acima do resultado e nos dados estruturados.
+ *
+ * Coberto por `tests/unit/seo.test.ts`, que reprova se um título voltar a
+ * passar do limite — o defeito é invisível daqui, só aparece na busca.
+ */
+export function tituloDeBusca(titulo: string): string {
+  return titulo.length + SUFIXO.length <= LIMITE_DO_TITULO ? `${titulo}${SUFIXO}` : titulo
+}
+
+/**
  * Rota indexável.
  *
  * `atualizadoEm` só existe quando há uma data real. As páginas sem revisão

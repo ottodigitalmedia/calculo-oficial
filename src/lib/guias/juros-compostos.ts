@@ -22,7 +22,7 @@ export const JUROS_COMPOSTOS: Guia = {
   subtitulo:
     'Dobrar a taxa dobra o rendimento; dobrar o prazo faz muito mais que dobrar — e é essa assimetria que quase ninguém sente na intuição.',
   descricaoSeo:
-    'A diferença entre juros simples e compostos, por que o prazo pesa mais que a taxa, como os aportes mensais mudam a conta e o erro de unidade que subestima qualquer simulação.',
+    'A diferença entre juros simples e compostos, por que o prazo pesa mais que a taxa, como os aportes mudam a conta e o erro de unidade que engana.',
   atualizadoEm: '2026-08-06',
   calculadoras: ['juros-compostos', 'valor-futuro-corrigido', 'reserva-de-emergencia'],
 

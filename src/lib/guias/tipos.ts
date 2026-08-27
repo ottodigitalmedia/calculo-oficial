@@ -69,6 +69,20 @@ export interface Guia {
   readonly subtitulo: string
   readonly descricaoSeo: string
   /**
+   * Título para o resultado de busca, quando o `titulo` não cabe nos ~60
+   * caracteres que o Google exibe.
+   *
+   * **Opcional de propósito, e quase nenhum guia precisa dele.** Medido em
+   * 27/08/2026, só dois títulos passavam do limite mesmo depois de
+   * `tituloDeBusca` omitir a marca — e para esses dois, encurtar o `titulo`
+   * empobreceria o `h1`, que é onde o leitor já está e tem espaço de sobra.
+   *
+   * O critério de quem for usá-lo é caber, não ser bonito: o Google corta o fim
+   * da frase, e é no fim que costuma estar a palavra que distingue um guia de
+   * outro.
+   */
+  readonly tituloSeo?: string
+  /**
    * Data da última revisão do texto.
    *
    * Alimenta o `lastModified` do sitemap e o `dateModified` dos dados

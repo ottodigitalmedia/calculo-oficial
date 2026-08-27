@@ -9,6 +9,7 @@ import { porSlug } from '@/lib/calculadoras'
 import { GUIAS, guiaPorSlug } from '@/lib/guias'
 import { formatarData } from '@/lib/format/moeda'
 import { GRADE } from '@/lib/layout'
+import { tituloDeBusca } from '@/lib/seo'
 
 /**
  * EP-006 — `/guia/{slug}`.
@@ -31,7 +32,9 @@ export async function generateMetadata({
   const guia = guiaPorSlug(slug)
   if (!guia) return {}
   return {
-    title: guia.titulo,
+    // `absolute` pelo mesmo motivo da rota de calculadora. É aqui que o corte
+    // doía mais: os guias têm os títulos mais longos do site.
+    title: { absolute: tituloDeBusca(guia.tituloSeo ?? guia.titulo) },
     description: guia.descricaoSeo,
     alternates: { canonical: `/guia/${guia.slug}` },
     openGraph: {

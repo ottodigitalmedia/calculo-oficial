@@ -13,7 +13,7 @@ export const BRUTO_E_LIQUIDO: Guia = {
   titulo: 'Salário bruto e líquido: por que a diferença surpreende',
   subtitulo: 'O valor combinado na entrevista e o valor que cai na conta nunca são o mesmo — e a distância entre eles cresce mais rápido que o salário.',
   descricaoSeo:
-    'Por que o salário líquido é bem menor que o bruto: quais descontos são obrigatórios, quais dependem do contrato e o que aparece no holerite sem reduzir o que você recebe.',
+    'Por que o salário líquido é bem menor que o bruto: quais descontos são obrigatórios, quais dependem do contrato e o que aparece no holerite sem reduzir.',
   atualizadoEm: '2026-07-31',
   calculadoras: ['salario-liquido', 'inss', 'irrf'],
 

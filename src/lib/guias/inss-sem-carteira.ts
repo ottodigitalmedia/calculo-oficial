@@ -16,7 +16,7 @@ export const INSS_SEM_CARTEIRA: Guia = {
   subtitulo:
     'São três alíquotas diferentes, e a escolha entre elas decide a que benefícios você terá direito.',
   descricaoSeo:
-    'Como contribuir para o INSS sendo autônomo, facultativo ou sócio: as alíquotas, o que cada uma dá direito, e como funciona a complementação para não perder a aposentadoria por tempo de contribuição.',
+    'Como contribuir para o INSS como autônomo, facultativo ou sócio: as alíquotas, o que cada uma dá direito e como funciona a complementação.',
   atualizadoEm: '2026-08-07',
   calculadoras: ['inss-autonomo-e-facultativo', 'pro-labore', 'carne-leao'],
 

@@ -18,7 +18,7 @@ export const HORAS_EXTRAS: Guia = {
   subtitulo:
     'A hora extra não termina nela mesma: ela repercute no repouso semanal, e a hora da madrugada dura menos que sessenta minutos.',
   descricaoSeo:
-    'Como se calcula a hora extra a partir do salário mensal, por que ela reflete no descanso semanal remunerado e por que a hora noturna reduzida faz o adicional crescer.',
+    'Como se calcula a hora extra a partir do salário mensal, por que ela reflete no descanso semanal remunerado e por que a hora noturna é reduzida.',
   atualizadoEm: '2026-08-06',
   calculadoras: ['horas-extras', 'banco-de-horas', 'salario-liquido'],
 
