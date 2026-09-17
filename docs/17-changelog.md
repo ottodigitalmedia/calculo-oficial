@@ -74,6 +74,19 @@ responde:**
   não pela data de referência da página — um filho nascido em 30/12/2026 e outro
   em 01/01/2027 têm durações diferentes.
 
+### Corrigido · a data que a licença anunciava
+
+Medido em produção logo depois de publicar: a licença-paternidade abria em
+**"parâmetros legais vigentes em 15/06/2028"** — o ano mais recente da
+cobertura, porque as vigências da lei nova vão até 2028 — e oferecia um seletor
+de período que não mudava resultado nenhum. A duração é a da data do
+nascimento.
+
+A definição passou a declarar `vigenciaPelaData`: o seletor some, o aviso cita
+o campo que decide e a memória de cálculo registra a data do fato, não a da
+página. É a mesma família do defeito do MEI em §7.48 — cadastrar vigência futura
+de um parâmetro muda o que a página **diz**, mesmo quando o número está certo.
+
 ### Auditoria · casos-ouro com prova de mutação
 
 39 casos-ouro novos, com a contagem de calendário ou a conta ao lado de cada

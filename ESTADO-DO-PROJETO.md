@@ -3578,6 +3578,19 @@ que a norma diz: a equiparação a filho inclui o menor sob guarda (Lei nº
 15.108/2025), e a Súmula 188 fala em prorrogação dentro de noventa dias, não em
 "uma" prorrogação — quem limita a uma é o art. 451.
 
+#### O defeito que só apareceu em produção
+
+A conferência pós-deploy pegou a licença-paternidade anunciando "parâmetros
+legais vigentes em **15/06/2028**": a página abre no ano mais recente da
+cobertura, e a lei nova cadastra vigências até 2028. O número estava certo — a
+duração vem da data do nascimento —, a frase é que alegava outra coisa, e havia
+um seletor de ano que não mudava nada.
+
+Corrigido com `vigenciaPelaData` na definição (`lib/calculadoras/tipos.ts`),
+mais um teste de unidade. **A lição é de ordem:** a verificação em produção não
+é formalidade de fim de lote — foi ela, e só ela, que pegou este. Nenhum teste
+reprovava, porque nenhum deles lê a frase de aviso.
+
 #### Dois tropeços de ferramenta
 
 - **Os arquivos de registro estão em CRLF na cópia de trabalho**, embora o
