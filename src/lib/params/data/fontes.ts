@@ -1973,6 +1973,213 @@ export const TST_SUMULA_428: Fonte = {
   orgao: 'Tribunal Superior do Trabalho',
 }
 
+// ---------------------------------------------------------------------------
+// Lote 3 do catálogo v5 — rescisão por justa causa (CALC-092)
+// ---------------------------------------------------------------------------
+
+/**
+ * 13º proporcional na rescisão — Lei nº 4.090/1962, art. 3º.
+ *
+ * > "Ocorrendo rescisão, sem justa causa, do contrato de trabalho, o empregado
+ * > receberá a gratificação devida nos termos dos parágrafos 1º e 2º do art. 1º
+ * > desta Lei, calculada sobre a remuneração do mês da rescisão."
+ *
+ * É o dispositivo que NÃO alcança a justa causa: por isso a calculadora de
+ * CALC-092 não paga 13º proporcional, e diz onde isso está escrito.
+ */
+export const LEI_4090_ART_3: Fonte = {
+  id: 'lei-4090-1962-art-3',
+  norma: 'Lei nº 4.090, de 13 de julho de 1962',
+  dispositivo: 'Art. 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l4090.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Férias proporcionais e justa causa — Súmula 171 do TST.
+ *
+ * > "Salvo na hipótese de dispensa do empregado por justa causa, a extinção do
+ * > contrato de trabalho sujeita o empregador ao pagamento da remuneração das
+ * > férias proporcionais, ainda que incompleto o período aquisitivo de 12 (doze)
+ * > meses (art. 147 da CLT)."
+ */
+export const TST_SUMULA_171: Fonte = {
+  id: 'tst-sumula-171',
+  norma: 'Súmula 171 do Tribunal Superior do Trabalho',
+  dispositivo: 'Republicada em razão de erro material, DJ 05.05.2004',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+/**
+ * Hipóteses de saque do FGTS — Lei nº 8.036/1990, art. 20.
+ *
+ * > "A conta vinculada do trabalhador no FGTS poderá ser movimentada nas
+ * > seguintes situações: I - despedida sem justa causa, inclusive a indireta,
+ * > de culpa recíproca e de força maior [...]"
+ *
+ * A dispensa por justa causa não está na lista — é o fundamento de CALC-092
+ * para não exibir saque nem multa.
+ */
+export const LEI_8036_ART_20: Fonte = {
+  id: 'lei-8036-1990-art-20',
+  norma: 'Lei nº 8.036, de 11 de maio de 1990',
+  dispositivo: 'Art. 20, I',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8036consol.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Ganhos em bolsa — Lei nº 11.033/2004, art. 2º (CALC-093).
+ *
+ * > "[...] os ganhos líquidos auferidos em operações realizadas em bolsas de
+ * > valores, de mercadorias, de futuros, e assemelhadas, inclusive day trade
+ * > [...] serão tributados às seguintes alíquotas: I - 20% (vinte por cento),
+ * > no caso de operação day trade; II - 15% (quinze por cento), nas demais
+ * > hipóteses."
+ *
+ * O § 1º sujeita as operações que não são day trade à retenção na fonte de
+ * 0,005% — o "dedo-duro". Efeitos a partir de 1º/01/2005 (art. 23, I).
+ *
+ * **Uma medida provisória quase mudou tudo isto e caducou**: a MP nº 1.303/2025
+ * poria alíquota única e acabaria com a isenção mensal. O texto compilado do
+ * Planalto traz "Vigência encerrada" ao lado de cada remissão a ela, e por isso
+ * as alíquotas abaixo continuam sendo as vigentes.
+ */
+export const LEI_11033_ART_2: Fonte = {
+  id: 'lei-11033-2004-art-2',
+  norma: 'Lei nº 11.033, de 21 de dezembro de 2004',
+  dispositivo: 'Art. 2º, I e II, e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Isenção das vendas de até R$ 20.000,00 no mês — Lei nº 11.033/2004, art. 3º, I.
+ *
+ * > "Ficam isentos do imposto de renda: I - os ganhos líquidos auferidos por
+ * > pessoa física em operações no mercado à vista de ações nas bolsas de valores
+ * > e em operações com ouro ativo financeiro cujo valor das alienações,
+ * > realizadas em cada mês, seja igual ou inferior a R$ 20.000,00 (vinte mil
+ * > reais), para o conjunto de ações e para o ouro ativo financeiro
+ * > respectivamente."
+ *
+ * O limite é do valor VENDIDO no mês, não do lucro — é o erro mais comum de
+ * quem calcula de cabeça. E ele nunca foi corrigido desde 2005.
+ */
+export const LEI_11033_ART_3_I: Fonte = {
+  id: 'lei-11033-2004-art-3-i',
+  norma: 'Lei nº 11.033, de 21 de dezembro de 2004',
+  dispositivo: 'Art. 3º, I',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Retenção na fonte do day trade — Lei nº 9.959/2000, art. 8º.
+ *
+ * > "Os rendimentos auferidos em operações de day trade realizadas em bolsas de
+ * > valores, de mercadorias, de futuros e assemelhadas, por qualquer
+ * > beneficiário, inclusive pessoa jurídica isenta, sujeitam-se à incidência do
+ * > imposto de renda na fonte à alíquota de um por cento."
+ *
+ * Efeitos a partir de 1º/01/2000 (art. 12).
+ */
+export const LEI_9959_ART_8: Fonte = {
+  id: 'lei-9959-2000-art-8',
+  norma: 'Lei nº 9.959, de 27 de janeiro de 2000',
+  dispositivo: 'Art. 8º e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9959.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Piso do DARF — Lei nº 9.430/1996, art. 68.
+ *
+ * > "É vedada a utilização de Documento de Arrecadação de Receitas Federais
+ * > para o pagamento de tributos e contribuições de valor inferior a R$ 10,00
+ * > (dez reais)."
+ *
+ * O § 1º manda somar o valor apurado abaixo do piso ao do período seguinte, no
+ * mesmo código de receita, até alcançá-lo.
+ */
+export const LEI_9430_ART_68: Fonte = {
+  id: 'lei-9430-1996-art-68',
+  norma: 'Lei nº 9.430, de 27 de dezembro de 1996',
+  dispositivo: 'Art. 68, caput e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9430.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regime regressivo da previdência complementar — Lei nº 11.053/2004, art. 1º.
+ *
+ * > "[...] a opção por regime de tributação no qual os valores pagos aos
+ * > próprios participantes ou aos assistidos, a título de benefícios ou
+ * > resgates de valores acumulados, sujeitam-se à incidência de imposto de
+ * > renda na fonte às seguintes alíquotas: I - 35% [...] para recursos com
+ * > prazo de acumulação inferior ou igual a 2 (dois) anos; [...] VI - 10% [...]
+ * > para recursos com prazo de acumulação superior a 10 (dez) anos."
+ *
+ * O § 2º torna o imposto DEFINITIVO, e o § 3º define prazo de acumulação como o
+ * tempo entre o aporte e o pagamento. Efeitos a partir de 1º/01/2005 (art. 8º).
+ */
+export const LEI_11053_ART_1: Fonte = {
+  id: 'lei-11053-2004-art-1',
+  norma: 'Lei nº 11.053, de 29 de dezembro de 2004',
+  dispositivo: 'Art. 1º, I a VI, e §§ 2º e 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11053.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regime progressivo no resgate — Lei nº 11.053/2004, art. 3º.
+ *
+ * > "[...] os resgates, parciais ou totais, de recursos acumulados relativos a
+ * > participantes dos planos mencionados no art. 1º desta Lei que não tenham
+ * > efetuado a opção nele mencionada sujeitam-se à incidência de imposto de
+ * > renda na fonte à alíquota de 15% (quinze por cento), como antecipação do
+ * > devido na declaração de ajuste da pessoa física, calculado sobre: I - os
+ * > valores de resgate, no caso de planos de previdência, inclusive FAPI; II -
+ * > os rendimentos, no caso de seguro de vida com cláusula de cobertura por
+ * > sobrevivência."
+ *
+ * O inciso II é o que separa o VGBL do PGBL: num, a base é o rendimento; no
+ * outro, o valor resgatado inteiro.
+ */
+export const LEI_11053_ART_3: Fonte = {
+  id: 'lei-11053-2004-art-3',
+  norma: 'Lei nº 11.053, de 29 de dezembro de 2004',
+  dispositivo: 'Art. 3º, I e II',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11053.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Saque-aniversário do FGTS — Lei nº 8.036/1990, arts. 20-A a 20-D e Anexo,
+ * incluídos pela Lei nº 13.932/2019 (DOU de 12/12/2019; em vigor na publicação
+ * quanto a estes dispositivos, art. 11, III).
+ *
+ * > Art. 20-D: "o valor do saque será determinado: I - pela aplicação da
+ * > alíquota correspondente, estabelecida no Anexo desta Lei, à soma de todos os
+ * > saldos das contas vinculadas do titular, apurados na data do débito; e II -
+ * > pelo acréscimo da parcela adicional correspondente, estabelecida no Anexo
+ * > desta Lei, ao valor apurado de acordo com o disposto no inciso I".
+ *
+ * O art. 20-A, § 2º, II, é o que muda a vida de quem opta: na sistemática do
+ * saque-aniversário aplicam-se as hipóteses de movimentação do art. 20 "à
+ * exceção das estabelecidas nos incisos I, I-A, II, IX e X" — e o inciso I é a
+ * despedida sem justa causa. O art. 20-C fixa o retorno à outra sistemática
+ * para o primeiro dia do vigésimo quinto mês seguinte ao pedido.
+ */
+export const LEI_8036_ART_20_D: Fonte = {
+  id: 'lei-8036-1990-art-20-d',
+  norma: 'Lei nº 8.036, de 11 de maio de 1990, com os dispositivos incluídos pela Lei nº 13.932, de 2019',
+  dispositivo: 'Arts. 20-A a 20-D e Anexo',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8036consol.htm',
+  orgao: 'Congresso Nacional',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -2070,4 +2277,14 @@ export const FONTES: readonly Fonte[] = [
   CLT_ART_469,
   CLT_ART_244,
   TST_SUMULA_428,
+  LEI_4090_ART_3,
+  TST_SUMULA_171,
+  LEI_8036_ART_20,
+  LEI_11033_ART_2,
+  LEI_11033_ART_3_I,
+  LEI_9959_ART_8,
+  LEI_9430_ART_68,
+  LEI_11053_ART_1,
+  LEI_11053_ART_3,
+  LEI_8036_ART_20_D,
 ]

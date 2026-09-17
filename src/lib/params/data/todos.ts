@@ -24,6 +24,7 @@
 import { ADICIONAIS } from './adicionais'
 import { APRENDIZAGEM } from './aprendizagem'
 import { BANCO_DE_HORAS } from './banco-de-horas'
+import { BOLSA } from './bolsa'
 import { CONSIGNADO } from './consignado'
 import { CREDITO } from './credito'
 import { DIVIDENDOS } from './dividendos'
@@ -38,10 +39,12 @@ import { INSS_INDIVIDUAL } from './inss-individual'
 import { IRRF } from './irrf'
 import { MEI } from './mei'
 import { PLR } from './plr'
+import { PREVIDENCIA_PRIVADA } from './previdencia-privada'
 import { RENDA_FIXA } from './renda-fixa'
 import { DISPONIBILIDADE } from './disponibilidade'
 import { LICENCAS } from './licencas'
 import { SALARIO_FAMILIA } from './salario-familia'
+import { SAQUE_ANIVERSARIO } from './saque-aniversario'
 import { SEGURO_DESEMPREGO } from './seguro-desemprego'
 import { SIMPLES_NACIONAL } from './simples-nacional'
 import { TRABALHISTA } from './trabalhista'
@@ -74,4 +77,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   LICENCAS,
   SALARIO_FAMILIA,
   DISPONIBILIDADE,
+  BOLSA,
+  PREVIDENCIA_PRIVADA,
+  SAQUE_ANIVERSARIO,
 ]

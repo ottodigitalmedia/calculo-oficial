@@ -98,6 +98,18 @@ export interface Faixa {
   readonly aliquotaBp: number
   /** Presente quando a tabela usa parcela a deduzir, como a do imposto. */
   readonly parcelaDeduzirCentavos?: number
+  /**
+   * Presente quando a tabela SOMA uma parcela à aplicação da alíquota — o caso
+   * do saque-aniversário do FGTS (CALC-095), cujo Anexo à Lei nº 8.036/1990 traz
+   * uma "parcela adicional" por faixa.
+   *
+   * **Campo próprio, e não parcela a deduzir com sinal trocado.** Guardar
+   * −R$ 150,00 em `parcelaDeduzirCentavos` faria a tabela calcular certo e
+   * MENTIR na leitura: quem auditasse o cadastro leria "deduzir" onde a lei diz
+   * "adicional", e o validador que exige parcela não negativa deixaria de valer
+   * para todas as outras tabelas.
+   */
+  readonly parcelaAdicionalCentavos?: number
 }
 
 // ---------------------------------------------------------------------------

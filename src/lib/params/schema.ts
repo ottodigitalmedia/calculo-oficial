@@ -96,7 +96,14 @@ export const faixaSchema = z.object({
   limiteSuperiorCentavos: inteiro.min(0).nullable(),
   aliquotaBp: inteiro.min(0),
   parcelaDeduzirCentavos: inteiro.min(0).optional(),
+  // Ver a nota em `tipos.ts`: parcela SOMADA, de tabela como a do
+  // saque-aniversário. Nunca as duas na mesma faixa.
+  parcelaAdicionalCentavos: inteiro.min(0).optional(),
 })
+  .refine(
+    (f) => f.parcelaDeduzirCentavos === undefined || f.parcelaAdicionalCentavos === undefined,
+    'faixa não pode ter parcela a deduzir E parcela adicional — uma subtrai, a outra soma',
+  )
 
 export const valorSchema = z.discriminatedUnion('tipo', [
   z.object({ tipo: z.literal('valor_monetario'), centavos: inteiro }),
