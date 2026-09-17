@@ -14,8 +14,8 @@ export const BRUTO_E_LIQUIDO: Guia = {
   subtitulo: 'O valor combinado na entrevista e o valor que cai na conta nunca são o mesmo — e a distância entre eles cresce mais rápido que o salário.',
   descricaoSeo:
     'Por que o salário líquido é bem menor que o bruto: quais descontos são obrigatórios, quais dependem do contrato e o que aparece no holerite sem reduzir.',
-  atualizadoEm: '2026-07-31',
-  calculadoras: ['salario-liquido', 'inss', 'irrf'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: ['salario-liquido', 'inss', 'irrf', 'vale-transporte'],
 
   secoes: [
     {
@@ -38,6 +38,22 @@ export const BRUTO_E_LIQUIDO: Guia = {
           tipo: 'paragrafo',
           texto:
             'Uma estimativa de líquido só considera os legais. Os contratuais só quem tem o holerite em mãos consegue somar.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O vale-transporte é o desconto contratual com regra mais rígida. A parte do empregado tem um teto sobre o salário básico, e quem gasta menos que esse teto desconta só o que gasta — nunca o teto inteiro. O que passa do teto é pago pelo empregador.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'vale-transporte-cota-do-empregado',
+          legenda: 'Parcela máxima do custo do transporte que pode ser descontada do empregado, sobre o salário básico.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'vale-transporte',
+          texto:
+            'A calculadora de vale-transporte compara o custo das passagens com esse teto e mostra quanto fica com cada um.',
         },
       ],
     },

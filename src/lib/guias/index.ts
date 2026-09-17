@@ -6,6 +6,7 @@
  */
 
 import { ALUGAR_OU_COMPRAR } from './alugar-ou-comprar'
+import { APRENDIZ_E_ESTAGIARIO } from './aprendiz-e-estagiario'
 import { AS_CONTAS_DA_CASA } from './as-contas-da-casa'
 import { AVISO_PREVIO } from './aviso-previo'
 import { BRUTO_E_LIQUIDO } from './bruto-e-liquido'
@@ -44,6 +45,7 @@ import { VIVER_DE_RENDA } from './viver-de-renda'
 import { ROTATIVO_E_CHEQUE_ESPECIAL } from './rotativo-e-cheque-especial'
 import { SAC_OU_PRICE } from './sac-ou-price'
 import type { Guia } from './tipos'
+import { INSALUBRIDADE_E_PERICULOSIDADE } from './insalubridade-e-periculosidade'
 
 /**
  * Ordem de exibição em `/guias`: do mais geral para o mais específico.
@@ -114,6 +116,8 @@ export const GUIAS: readonly Guia[] = [
 
   // Utilitárias, num guia só — §11.2 explica por que não são seis.
   MATEMATICA_DO_DIA_A_DIA,
+  INSALUBRIDADE_E_PERICULOSIDADE,
+  APRENDIZ_E_ESTAGIARIO,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {

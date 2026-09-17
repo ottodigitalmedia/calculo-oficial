@@ -104,6 +104,60 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto tempo você tem para compensar — e quanto o saldo vale se não compensar.',
   },
   {
+    slug: 'adicional-noturno',
+    nome: 'Adicional noturno',
+    linhaDeContexto:
+      'Quanto vale o trabalho à noite, na cidade ou no campo, com a hora noturna de cada regra.',
+  },
+  {
+    slug: 'insalubridade',
+    nome: 'Adicional de insalubridade',
+    linhaDeContexto:
+      'Quanto rende o adicional em cada grau, calculado sobre a base que a lei manda usar.',
+  },
+  {
+    slug: 'periculosidade',
+    nome: 'Adicional de periculosidade',
+    linhaDeContexto:
+      'O adicional sobre o salário básico, e a comparação com a insalubridade quando cabem os dois.',
+  },
+  {
+    slug: 'dsr-sobre-comissoes',
+    nome: 'DSR sobre comissões',
+    linhaDeContexto:
+      'O repouso semanal que as comissões e as horas extras do mês geram, além do valor delas.',
+  },
+  {
+    slug: 'desconto-de-faltas',
+    nome: 'Desconto de faltas no salário',
+    linhaDeContexto:
+      'Quanto uma falta sem justificativa tira do salário, contando o dia e o descanso semanal.',
+  },
+  {
+    slug: 'vale-transporte',
+    nome: 'Desconto do vale-transporte',
+    linhaDeContexto:
+      'Quanto sai do seu salário pelo vale-transporte, e quanto o empregador paga do resto.',
+  },
+  {
+    slug: 'jovem-aprendiz',
+    nome: 'Salário do jovem aprendiz',
+    linhaDeContexto:
+      'Quanto o aprendiz recebe pela jornada contratada, com os descontos e o FGTS da aprendizagem.',
+  },
+  {
+    slug: 'recesso-de-estagio',
+    nome: 'Recesso de estágio',
+    linhaDeContexto:
+      'Quantos dias de recesso o estágio já garantiu, e quanto eles valem quando há bolsa.',
+  },
+  {
+    slug: 'imposto-sobre-plr',
+    nome: 'Imposto sobre a PLR',
+    linhaDeContexto:
+      'Quanto de imposto sai da participação nos lucros, pela tabela própria da PLR.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

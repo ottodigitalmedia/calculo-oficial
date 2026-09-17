@@ -13,6 +13,15 @@ import { AMORTIZACAO } from './amortizacao'
 import { AMORTIZACAO_EXTRA } from './amortizacao-extra'
 import { AVISO_PREVIO } from './aviso-previo'
 import { BANCO_DE_HORAS } from './banco-de-horas'
+import { ADICIONAL_NOTURNO } from './adicional-noturno'
+import { INSALUBRIDADE } from './insalubridade'
+import { PERICULOSIDADE } from './periculosidade'
+import { DSR_SOBRE_COMISSOES } from './dsr-sobre-comissoes'
+import { DESCONTO_DE_FALTAS } from './desconto-de-faltas'
+import { VALE_TRANSPORTE_CALC } from './vale-transporte'
+import { JOVEM_APRENDIZ } from './jovem-aprendiz'
+import { RECESSO_DE_ESTAGIO } from './recesso-de-estagio'
+import { IMPOSTO_SOBRE_PLR } from './imposto-sobre-plr'
 import { BOTIJAO } from './botijao'
 import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
@@ -98,6 +107,15 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   DECIMO_TERCEIRO,
   HORAS_EXTRAS,
   BANCO_DE_HORAS,
+  ADICIONAL_NOTURNO,
+  INSALUBRIDADE,
+  PERICULOSIDADE,
+  DSR_SOBRE_COMISSOES,
+  DESCONTO_DE_FALTAS,
+  VALE_TRANSPORTE_CALC,
+  JOVEM_APRENDIZ,
+  RECESSO_DE_ESTAGIO,
+  IMPOSTO_SOBRE_PLR,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

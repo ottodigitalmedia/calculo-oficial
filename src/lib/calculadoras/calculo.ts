@@ -498,6 +498,60 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './conversor-de-unidades'
     ).then((m) => m.calcular),
+  'adicional-noturno': () =>
+    import(
+      /* webpackChunkName: "calc-adicional-noturno" */
+      /* webpackExports: ["calcular"] */
+      './adicional-noturno'
+    ).then((m) => m.calcular),
+  'insalubridade': () =>
+    import(
+      /* webpackChunkName: "calc-insalubridade" */
+      /* webpackExports: ["calcular"] */
+      './insalubridade'
+    ).then((m) => m.calcular),
+  'periculosidade': () =>
+    import(
+      /* webpackChunkName: "calc-periculosidade" */
+      /* webpackExports: ["calcular"] */
+      './periculosidade'
+    ).then((m) => m.calcular),
+  'dsr-sobre-comissoes': () =>
+    import(
+      /* webpackChunkName: "calc-dsr-sobre-comissoes" */
+      /* webpackExports: ["calcular"] */
+      './dsr-sobre-comissoes'
+    ).then((m) => m.calcular),
+  'desconto-de-faltas': () =>
+    import(
+      /* webpackChunkName: "calc-desconto-de-faltas" */
+      /* webpackExports: ["calcular"] */
+      './desconto-de-faltas'
+    ).then((m) => m.calcular),
+  'vale-transporte': () =>
+    import(
+      /* webpackChunkName: "calc-vale-transporte" */
+      /* webpackExports: ["calcular"] */
+      './vale-transporte'
+    ).then((m) => m.calcular),
+  'jovem-aprendiz': () =>
+    import(
+      /* webpackChunkName: "calc-jovem-aprendiz" */
+      /* webpackExports: ["calcular"] */
+      './jovem-aprendiz'
+    ).then((m) => m.calcular),
+  'recesso-de-estagio': () =>
+    import(
+      /* webpackChunkName: "calc-recesso-de-estagio" */
+      /* webpackExports: ["calcular"] */
+      './recesso-de-estagio'
+    ).then((m) => m.calcular),
+  'imposto-sobre-plr': () =>
+    import(
+      /* webpackChunkName: "calc-imposto-sobre-plr" */
+      /* webpackExports: ["calcular"] */
+      './imposto-sobre-plr'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

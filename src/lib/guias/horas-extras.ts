@@ -19,8 +19,15 @@ export const HORAS_EXTRAS: Guia = {
     'A hora extra não termina nela mesma: ela repercute no repouso semanal, e a hora da madrugada dura menos que sessenta minutos.',
   descricaoSeo:
     'Como se calcula a hora extra a partir do salário mensal, por que ela reflete no descanso semanal remunerado e por que a hora noturna é reduzida.',
-  atualizadoEm: '2026-08-06',
-  calculadoras: ['horas-extras', 'banco-de-horas', 'salario-liquido'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: [
+    'horas-extras',
+    'banco-de-horas',
+    'salario-liquido',
+    'adicional-noturno',
+    'dsr-sobre-comissoes',
+    'desconto-de-faltas',
+  ],
 
   secoes: [
     {
@@ -125,6 +132,51 @@ export const HORAS_EXTRAS: Guia = {
           tipo: 'paragrafo',
           texto:
             'A consequência prática é que um turno noturno rende mais horas contadas do que horas passadas no relógio. Quem converte o tempo de plantão direto em horas comuns paga menos que o devido, e a diferença não é pequena.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'No campo a regra é outra. A lei do trabalho rural define um horário noturno próprio — diferente na lavoura e na pecuária — e um adicional maior que o urbano, mas não reduz a hora: ali, uma hora noturna dura uma hora de relógio.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'adicional-noturno-rural',
+          legenda: 'Acréscimo sobre a remuneração normal do trabalho noturno na lavoura e na pecuária.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'adicional-noturno',
+          texto:
+            'A calculadora de adicional noturno aplica a regra urbana ou a rural e mostra a conversão das horas quando ela existe.',
+        },
+      ],
+    },
+
+    {
+      id: 'quando-o-repouso-muda',
+      titulo: 'Comissões aumentam o repouso, e faltas o tiram',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O mesmo repouso semanal que recebe o reflexo das horas extras também recebe o da remuneração variável. Quem ganha comissão tem o descanso e os feriados pagos sobre ela, e o valor sai da própria comissão do mês: dividida pelos dias trabalhados, ela dá o valor de um dia de repouso.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'dsr-sobre-comissoes',
+          texto:
+            'A calculadora de DSR sobre comissões divide o variável do mês pelos dias úteis e multiplica pelos domingos e feriados, arredondando uma vez só.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O caminho inverso também existe. A falta sem motivo justificado custa o dia não trabalhado e, além dele, o repouso remunerado daquela semana. Faltas justificadas — atestado médico, casamento, falecimento na família e as demais hipóteses da lei — não produzem nenhum dos dois descontos.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'desconto-de-faltas',
+          texto:
+            'A calculadora de desconto de faltas separa o valor dos dias e o do repouso perdido, semana a semana.',
         },
       ],
     },

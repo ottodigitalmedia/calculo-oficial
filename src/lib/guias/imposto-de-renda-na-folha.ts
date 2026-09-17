@@ -13,8 +13,8 @@ export const IMPOSTO_DE_RENDA_NA_FOLHA: Guia = {
   subtitulo: 'O imposto não incide sobre o salário. Incide sobre a base — e chegar até ela é metade do trabalho.',
   descricaoSeo:
     'Como o Imposto de Renda Retido na Fonte é calculado no salário: a base de cálculo, as deduções legais, o desconto simplificado e a parcela a deduzir da tabela.',
-  atualizadoEm: '2026-07-31',
-  calculadoras: ['irrf', 'salario-liquido'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: ['irrf', 'salario-liquido', 'imposto-sobre-plr'],
 
   secoes: [
     {
@@ -144,7 +144,14 @@ export const IMPOSTO_DE_RENDA_NA_FOLHA: Guia = {
             'O décimo terceiro é tributado separadamente, em apuração exclusiva, e não se soma ao salário do mês.',
             'Férias gozadas entram na base do mês em que são pagas, o que costuma elevar a retenção daquele mês.',
             'Rendimentos de mais de um emprego são somados só na declaração, não na folha de cada um.',
+            'A participação nos lucros também fica fora: tem tabela anual própria, é retida em separado e não entra na declaração de ajuste.',
           ],
+        },
+        {
+          tipo: 'chamada',
+          slug: 'imposto-sobre-plr',
+          texto:
+            'A calculadora de imposto sobre a PLR aplica a tabela própria da participação e refaz a conta quando há mais de uma parcela no ano.',
         },
         {
           tipo: 'chamada',
