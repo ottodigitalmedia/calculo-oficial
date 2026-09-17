@@ -21,6 +21,8 @@
  * tabela legal não custa quilobyte a ninguém.
  */
 
+import { ADICIONAIS } from './adicionais'
+import { APRENDIZAGEM } from './aprendizagem'
 import { BANCO_DE_HORAS } from './banco-de-horas'
 import { CONSIGNADO } from './consignado'
 import { CREDITO } from './credito'
@@ -35,6 +37,7 @@ import { IRPF_ANUAL } from './irpf-anual'
 import { INSS_INDIVIDUAL } from './inss-individual'
 import { IRRF } from './irrf'
 import { MEI } from './mei'
+import { PLR } from './plr'
 import { RENDA_FIXA } from './renda-fixa'
 import { SEGURO_DESEMPREGO } from './seguro-desemprego'
 import { SIMPLES_NACIONAL } from './simples-nacional'
@@ -62,4 +65,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   DOMESTICO,
   RENDA_FIXA,
   BANCO_DE_HORAS,
+  ADICIONAIS,
+  APRENDIZAGEM,
+  PLR,
 ]

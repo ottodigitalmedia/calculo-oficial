@@ -1398,6 +1398,357 @@ export const CLT_ART_59_REFORMA: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+// ===========================================================================
+// Lote 1 da expansão do catálogo — trabalhistas, 17/09/2026
+//
+// Todos os dispositivos abaixo foram lidos no texto consolidado do Planalto em
+// 17/09/2026, com os trechos riscados (redação revogada) REMOVIDOS antes da
+// leitura — a lição de §7.42: o Planalto empilha redações, e a vigente é a que
+// não está riscada. As datas de publicação das leis antigas foram conferidas
+// na ficha de legislação da Câmara dos Deputados, porque o texto do Planalto
+// traz a data da lei e não a do Diário Oficial.
+// ===========================================================================
+
+/**
+ * Insalubridade — CLT, art. 192, com a redação da Lei nº 6.514/1977.
+ *
+ * > "O exercício de trabalho em condições insalubres, acima dos limites de
+ * > tolerância estabelecidos pelo Ministério do Trabalho, assegura a percepção
+ * > de adicional respectivamente de 40% (quarenta por cento), 20% (vinte por
+ * > cento) e 10% (dez por cento) do salário-mínimo da região, segundo se
+ * > classifiquem nos graus máximo, médio e mínimo."
+ *
+ * A Lei nº 6.514 entrou em vigor na data da publicação (art. 5º): Diário
+ * Oficial da União, Seção 1, de 23/12/1977, p. 17777.
+ */
+export const CLT_ART_192: Fonte = {
+  id: 'clt-art-192',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 6.514, de 1977',
+  dispositivo: 'Art. 192',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Periculosidade — CLT, art. 193, § 1º, incluído pela Lei nº 6.514/1977.
+ *
+ * > "O trabalho em condições de periculosidade assegura ao empregado um
+ * > adicional de 30% (trinta por cento) sobre o salário sem os acréscimos
+ * > resultantes de gratificações, prêmios ou participações nos lucros da
+ * > empresa."
+ *
+ * § 2º: "O empregado poderá optar pelo adicional de insalubridade que
+ * porventura lhe seja devido." § 4º (Lei nº 12.997/2014): "São também
+ * consideradas perigosas as atividades de trabalhador em motocicleta."
+ */
+export const CLT_ART_193: Fonte = {
+  id: 'clt-art-193',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 6.514, de 1977',
+  dispositivo: 'Art. 193, §§ 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Trabalho noturno rural — Lei nº 5.889/1973, art. 7º.
+ *
+ * > "considera-se trabalho noturno o executado entre as vinte e uma horas de um
+ * > dia e as cinco horas do dia seguinte, na lavoura, e entre as vinte horas de
+ * > um dia e as quatro horas do dia seguinte, na atividade pecuária."
+ * > "Parágrafo único. Todo trabalho noturno será acrescido de 25% (vinte e cinco
+ * > por cento) sobre a remuneração normal."
+ *
+ * **A lei rural não reduz a hora.** A hora de 52min30s é do art. 73, § 1º, da
+ * CLT, e a Lei nº 5.889 não a reproduz — por isso a calculadora não converte
+ * horas de relógio quando o trabalho é rural. Em vigor na publicação (art. 21):
+ * Diário Oficial da União, Seção 1, de 11/06/1973, p. 5585.
+ */
+export const LEI_5889_ART_7: Fonte = {
+  id: 'lei-5889-1973-art-7',
+  norma: 'Lei nº 5.889, de 8 de junho de 1973',
+  dispositivo: 'Art. 7º e parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l5889.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Perda do repouso por falta injustificada — Lei nº 605/1949, art. 6º.
+ *
+ * > "Não será devida a remuneração quando, sem motivo justificado, o empregado
+ * > não tiver trabalhado durante toda a semana anterior, cumprindo
+ * > integralmente o seu horário de trabalho."
+ *
+ * O § 1º lista os motivos justificados — entre eles os do art. 473 da CLT, a
+ * doença comprovada e o acidente do trabalho. É a lista que decide se a falta
+ * custa só o dia ou o dia e o repouso.
+ */
+export const LEI_605_ART_6: Fonte = {
+  id: 'lei-605-1949-art-6',
+  norma: 'Lei nº 605, de 5 de janeiro de 1949',
+  dispositivo: 'Art. 6º, caput e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l0605.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Repouso de quem ganha por produção — Lei nº 605/1949, art. 7º, "c".
+ *
+ * > "para os que trabalham por tarefa ou peça, o equivalente ao salário
+ * > correspondente às tarefas ou peças feitas durante a semana, no horário
+ * > normal de trabalho, dividido pelos dias de serviço efetivamente prestados
+ * > ao empregador"
+ *
+ * É a regra que dá a FORMA da conta da remuneração variável: o ganho do
+ * período dividido pelos dias trabalhados é o valor de um dia de repouso. A
+ * alínea "a", já cadastrada em `LEI_605_ART_7`, é a do salário fixo.
+ */
+export const LEI_605_ART_7_C: Fonte = {
+  id: 'lei-605-1949-art-7-c',
+  norma: 'Lei nº 605, de 5 de janeiro de 1949',
+  dispositivo: 'Art. 7º, "c"',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l0605.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Súmulas do TST lidas no "Livro de Súmulas, OJs e PNs" publicado pelo
+ * tribunal, em 17/09/2026 — o mesmo documento que já sustenta as Súmulas 172 e
+ * 431. Textos transcritos:
+ *
+ * - **27**: "É devida a remuneração do repouso semanal e dos dias feriados ao
+ *   empregado comissionista, ainda que pracista."
+ * - **60**: "I - O adicional noturno, pago com habitualidade, integra o salário
+ *   do empregado para todos os efeitos. II - Cumprida integralmente a jornada
+ *   no período noturno e prorrogada esta, devido é também o adicional quanto
+ *   às horas prorrogadas."
+ * - **139**: "Enquanto percebido, o adicional de insalubridade integra a
+ *   remuneração para todos os efeitos legais."
+ * - **191, I**: "O adicional de periculosidade incide apenas sobre o salário
+ *   básico e não sobre este acrescido de outros adicionais." Os itens II e III
+ *   tratam do eletricitário contratado antes da Lei nº 12.740/2012.
+ * - **364, I**: devido na exposição permanente ou intermitente; "Indevido,
+ *   apenas, quando o contato dá-se de forma eventual".
+ */
+export const TST_SUMULA_27: Fonte = {
+  id: 'tst-sumula-27',
+  norma: 'Súmula 27 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 121/2003, DJ 19, 20 e 21.11.2003',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+export const TST_SUMULA_60: Fonte = {
+  id: 'tst-sumula-60',
+  norma: 'Súmula 60 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 129/2005, DJ 20, 22 e 25.04.2005',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+export const TST_SUMULA_139: Fonte = {
+  id: 'tst-sumula-139',
+  norma: 'Súmula 139 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 129/2005, DJ 20, 22 e 25.04.2005',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+export const TST_SUMULA_191: Fonte = {
+  id: 'tst-sumula-191',
+  norma: 'Súmula 191 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 214/2016, DEJT 30.11.2016 e 01 e 02.12.2016',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+export const TST_SUMULA_364: Fonte = {
+  id: 'tst-sumula-364',
+  norma: 'Súmula 364 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 209/2016, DEJT 01, 02 e 03.06.2016',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
+/**
+ * Aprendiz — CLT, arts. 428, § 2º, e 432.
+ *
+ * > Art. 428, § 2º (red. Lei nº 13.420/2017): "Ao aprendiz, salvo condição
+ * > mais favorável, será garantido o salário mínimo hora."
+ * > Art. 432 (red. Lei nº 10.097/2000): "A duração do trabalho do aprendiz não
+ * > excederá de seis horas diárias, sendo vedadas a prorrogação e a
+ * > compensação de jornada." § 1º: até oito horas para quem já completou o
+ * > ensino fundamental, "se nelas forem computadas as horas destinadas à
+ * > aprendizagem teórica".
+ */
+export const CLT_ART_428: Fonte = {
+  id: 'clt-art-428',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 13.420, de 2017',
+  dispositivo: 'Art. 428, § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+export const CLT_ART_432: Fonte = {
+  id: 'clt-art-432',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 10.097, de 2000',
+  dispositivo: 'Art. 432, caput e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * FGTS do aprendiz — Lei nº 8.036/1990, art. 15, § 7º, incluído pela Lei nº
+ * 10.097/2000.
+ *
+ * > "Os contratos de aprendizagem terão a alíquota a que se refere o caput deste
+ * > artigo reduzida para dois por cento."
+ *
+ * A nota de `fgts-aliquota-2022` já registrava este parágrafo como "fora do
+ * escopo de CALC-002". Com o aprendiz no catálogo, ele entra. Lei nº 10.097 em
+ * vigor na publicação (art. 4º): DOU de 20/12/2000.
+ */
+export const LEI_8036_ART_15_P7: Fonte = {
+  id: 'lei-8036-1990-art-15-p7',
+  norma: 'Lei nº 8.036, de 11 de maio de 1990, com a redação da Lei nº 10.097, de 2000',
+  dispositivo: 'Art. 15, § 7º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8036consol.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Salário mínimo HORÁRIO — fixado pelo decreto anual, e não derivado.
+ *
+ * **Por que é parâmetro próprio, e não o mensal dividido por 220.** O decreto
+ * fixa o valor horário arredondado, e o art. 428, § 2º, garante ao aprendiz
+ * "o salário mínimo hora" — o valor do decreto. Dividir o mensal daria
+ * R$ 6,8999… em 2025 e R$ 7,3681… em 2026: um centavo de diferença por hora,
+ * que vira quase dois reais num mês de aprendiz, e na direção de pagar menos.
+ *
+ * > Decreto nº 12.342/2024, art. 1º, parágrafo único: "o valor diário do
+ * > salário mínimo corresponderá a R$ 50,60 (cinquenta reais e sessenta
+ * > centavos) e o valor horário, a R$ 6,90 (seis reais e noventa centavos)."
+ * > Art. 2º: em vigor em 1º de janeiro de 2025.
+ *
+ * > Decreto nº 12.797/2025, art. 1º, parágrafo único: valor horário "a R$ 7,37
+ * > (sete reais e trinta e sete centavos)". Art. 2º: em vigor em 1º de janeiro
+ * > de 2026.
+ */
+export const DECRETO_12342_2024: Fonte = {
+  id: 'decreto-12342-2024',
+  norma: 'Decreto nº 12.342, de 30 de dezembro de 2024',
+  dispositivo: 'Art. 1º, parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2024/decreto/D12342.htm',
+  orgao: 'Presidência da República',
+}
+
+export const DECRETO_12797_2025: Fonte = {
+  id: 'decreto-12797-2025',
+  norma: 'Decreto nº 12.797, de 23 de dezembro de 2025',
+  dispositivo: 'Art. 1º, parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/decreto/d12797.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * Recesso do estagiário — Lei nº 11.788/2008, art. 13.
+ *
+ * > "É assegurado ao estagiário, sempre que o estágio tenha duração igual ou
+ * > superior a 1 (um) ano, período de recesso de 30 (trinta) dias, a ser gozado
+ * > preferencialmente durante suas férias escolares.
+ * > § 1º O recesso de que trata este artigo deverá ser remunerado quando o
+ * > estagiário receber bolsa ou outra forma de contraprestação.
+ * > § 2º Os dias de recesso previstos neste artigo serão concedidos de maneira
+ * > proporcional, nos casos de o estágio ter duração inferior a 1 (um) ano."
+ *
+ * Em vigor na publicação (art. 21): DOU de 26/09/2008.
+ */
+export const LEI_11788_ART_13: Fonte = {
+  id: 'lei-11788-2008-art-13',
+  norma: 'Lei nº 11.788, de 25 de setembro de 2008',
+  dispositivo: 'Art. 13, caput e §§ 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2008/lei/l11788.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * PLR — Lei nº 10.101/2000, art. 3º, §§ 5º a 7º, com a redação da Lei nº
+ * 12.832/2013.
+ *
+ * > § 5º: "será tributada pelo imposto sobre a renda exclusivamente na fonte, em
+ * > separado dos demais rendimentos recebidos, no ano do recebimento ou crédito,
+ * > com base na tabela progressiva anual constante do Anexo e não integrará a
+ * > base de cálculo do imposto devido pelo beneficiário na Declaração de Ajuste
+ * > Anual."
+ * > § 7º: "Na hipótese de pagamento de mais de 1 (uma) parcela referente a um
+ * > mesmo ano-calendário, o imposto deve ser recalculado, com base no total da
+ * > participação nos lucros recebida no ano-calendário, mediante a utilização
+ * > da tabela constante do Anexo, deduzindo-se do imposto assim apurado o valor
+ * > retido anteriormente."
+ * > § 10: "Na determinação da base de cálculo da participação dos trabalhadores
+ * > nos lucros ou resultados, poderão ser deduzidas as importâncias pagas em
+ * > dinheiro a título de pensão alimentícia em face das normas do Direito de
+ * > Família, quando em cumprimento de decisão judicial, de acordo homologado
+ * > judicialmente ou de separação ou divórcio consensual realizado por
+ * > escritura pública, desde que correspondentes a esse rendimento, não podendo
+ * > ser utilizada a mesma parcela para a determinação da base de cálculo dos
+ * > demais rendimentos."
+ *
+ * E o caput, que decide as outras incidências: a participação "não substitui
+ * ou complementa a remuneração devida a qualquer empregado, nem constitui base
+ * de incidência de qualquer encargo trabalhista, não se lhe aplicando o
+ * princípio da habitualidade."
+ */
+export const LEI_10101_ART_3: Fonte = {
+  id: 'lei-10101-2000-art-3',
+  norma: 'Lei nº 10.101, de 19 de dezembro de 2000, com a redação da Lei nº 12.832, de 2013',
+  dispositivo: 'Art. 3º, caput e §§ 5º, 7º e 10',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l10101.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * A tabela da PLR VIGENTE — publicada pela Receita Federal.
+ *
+ * **O que foi encontrado, e o que NÃO foi, dito com clareza.** O texto
+ * consolidado da Lei nº 10.101 no Planalto ainda exibe no Anexo a tabela
+ * original de 2013 (isenção até R$ 6.000,00): as atualizações posteriores não
+ * foram incorporadas ao Anexo publicado ali. A Lei nº 15.191/2025, que
+ * atualizou a tabela mensal do IRPF em maio de 2025, **não menciona** a Lei nº
+ * 10.101 — a busca por "10.101", "lucros" e pelos valores novos no texto dela
+ * voltou vazia.
+ *
+ * A tabela vigente foi lida, então, na página de tabelas da Receita Federal —
+ * órgão competente pela arrecadação —, que publica as DUAS da mesma forma nas
+ * páginas de 2025 e de 2026: "De janeiro a abril de 2025" (isenção até
+ * R$ 7.640,80) e "A partir de maio de 2025" (isenção até R$ 8.214,40). A
+ * página de 2026 repete a de maio de 2025, sem tabela nova.
+ *
+ * **A conferência que dá confiança é aritmética, e fecha nas duas tabelas.**
+ * Tabela progressiva com parcela a deduzir é contínua: nos limites de cada
+ * faixa, a conta pela faixa de baixo e pela de cima dá o mesmo imposto.
+ *
+ *   maio/2025:  8.214,40 × 7,5%  = 616,08  → parcela da 2ª faixa   ✅
+ *               9.922,28 × 7,5%  − 616,08   = 128,09
+ *               9.922,28 × 15%   − 1.360,25 = 128,09                ✅
+ *              13.167,00 × 15%   − 1.360,25 = 614,80
+ *              13.167,00 × 22,5% − 2.347,78 = 614,80 (614,795)      ✅
+ *              16.380,38 × 22,5% − 2.347,78 = 1.337,81
+ *              16.380,38 × 27,5% − 3.166,80 = 1.337,80              ✅ (1 centavo de arredondamento da própria tabela)
+ *   jan-abr/25: 7.640,80 × 7,5%  = 573,06  → parcela da 2ª faixa   ✅
+ *
+ * Um erro de transcrição em qualquer das parcelas quebraria uma dessas
+ * igualdades. O ato normativo que alterou o Anexo em 2025 fica registrado como
+ * NÃO LOCALIZADO — para a próxima auditoria achá-lo sem repetir esta busca.
+ */
+export const RFB_TABELA_PLR: Fonte = {
+  id: 'rfb-tabela-plr',
+  norma:
+    'Tabela de tributação exclusiva na fonte da participação nos lucros ou resultados, publicada pela Receita Federal na forma do art. 3º, § 5º, da Lei nº 10.101/2000',
+  dispositivo: 'Tabelas 2025 e 2026 · Participação nos Lucros ou Resultados',
+  url: 'https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2026',
+  orgao: 'Receita Federal do Brasil',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -1465,4 +1816,22 @@ export const FONTES: readonly Fonte[] = [
   LEI_11033_ART_3,
   CLT_ART_59,
   CLT_ART_59_REFORMA,
+  CLT_ART_192,
+  CLT_ART_193,
+  LEI_5889_ART_7,
+  LEI_605_ART_6,
+  LEI_605_ART_7_C,
+  TST_SUMULA_27,
+  TST_SUMULA_60,
+  TST_SUMULA_139,
+  TST_SUMULA_191,
+  TST_SUMULA_364,
+  CLT_ART_428,
+  CLT_ART_432,
+  LEI_8036_ART_15_P7,
+  DECRETO_12342_2024,
+  DECRETO_12797_2025,
+  LEI_11788_ART_13,
+  LEI_10101_ART_3,
+  RFB_TABELA_PLR,
 ]
