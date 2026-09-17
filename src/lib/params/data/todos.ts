@@ -41,6 +41,7 @@ import { INSS_INDIVIDUAL } from './inss-individual'
 import { IRRF } from './irrf'
 import { MEI } from './mei'
 import { PLR } from './plr'
+import { PREVIDENCIA_RGPS } from './previdencia-rgps'
 import { PREVIDENCIA_PRIVADA } from './previdencia-privada'
 import { RENDA_FIXA } from './renda-fixa'
 import { DISPONIBILIDADE } from './disponibilidade'
@@ -86,4 +87,5 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   FUNDOS_IMOBILIARIOS,
   TRANSITO,
   COME_COTAS,
+  PREVIDENCIA_RGPS,
 ]

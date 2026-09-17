@@ -2342,6 +2342,121 @@ export const LEI_14754_ART_17: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+// ---------------------------------------------------------------------------
+// Lote 5 do catálogo v5 — benefícios do INSS (CALC-100 a CALC-103)
+// ---------------------------------------------------------------------------
+
+/**
+ * Pensão por morte — EC nº 103/2019, art. 23 (DOU de 13/11/2019; em vigor na
+ * publicação, art. 36, III).
+ *
+ * > "A pensão por morte concedida a dependente de segurado do Regime Geral de
+ * > Previdência Social [...] será equivalente a uma cota familiar de 50%
+ * > (cinquenta por cento) do valor da aposentadoria recebida pelo segurado [...]
+ * > ou daquela a que teria direito se fosse aposentado por incapacidade
+ * > permanente na data do óbito, acrescida de cotas de 10 (dez) pontos
+ * > percentuais por dependente, até o máximo de 100% (cem por cento)."
+ *
+ * O § 1º diz que as cotas cessam com a perda da qualidade de dependente e não
+ * são reversíveis — mas preserva 100% quando restarem cinco ou mais. O § 2º
+ * garante 100% quando há dependente inválido ou com deficiência.
+ */
+export const EC_103_ART_23: Fonte = {
+  id: 'ec-103-2019-art-23',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 23, caput e §§ 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regra de transição por pontos — EC nº 103/2019, art. 15.
+ *
+ * > "Ao segurado filiado ao Regime Geral de Previdência Social até a data de
+ * > entrada em vigor desta Emenda Constitucional, fica assegurado o direito à
+ * > aposentadoria quando forem preenchidos, cumulativamente, os seguintes
+ * > requisitos: I - 30 (trinta) anos de contribuição, se mulher, e 35 (trinta e
+ * > cinco) anos de contribuição, se homem; e II - somatório da idade e do tempo
+ * > de contribuição, incluídas as frações, equivalente a 86 (oitenta e seis)
+ * > pontos, se mulher, e 96 (noventa e seis) pontos, se homem [...]"
+ * > § 1º: "A partir de 1º de janeiro de 2020, a pontuação [...] será acrescida a
+ * > cada ano de 1 (um) ponto, até atingir o limite de 100 (cem) pontos, se
+ * > mulher, e de 105 (cento e cinco) pontos, se homem."
+ *
+ * O § 2º manda apurar idade e tempo de contribuição EM DIAS — as frações
+ * contam, e é por isso que a calculadora aceita meses.
+ */
+export const EC_103_ART_15: Fonte = {
+  id: 'ec-103-2019-art-15',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 15, caput, I e II, e §§ 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Auxílio por incapacidade temporária — Lei nº 8.213/1991, art. 61 (red. Lei nº
+ * 9.032/1995, DOU extra de 29/04/1995) e art. 29, § 10.
+ *
+ * > Art. 61: o benefício "consistirá numa renda mensal correspondente a 91%
+ * > (noventa e um por cento) do salário-de-benefício".
+ * > Art. 29, § 10: "O auxílio-doença não poderá exceder a média aritmética
+ * > simples dos últimos doze salários-de-contribuição, inclusive no caso de
+ * > remuneração variável, ou, se não alcançado o número de doze, a média
+ * > aritmética simples dos salários-de-contribuição existentes."
+ *
+ * O salário de benefício é a média de 100% do período contributivo desde julho
+ * de 1994 (EC nº 103/2019, art. 26).
+ */
+export const LEI_8213_ART_61: Fonte = {
+  id: 'lei-8213-1991-art-61',
+  norma: 'Lei nº 8.213, de 24 de julho de 1991, com a redação da Lei nº 9.032, de 1995',
+  dispositivo: 'Art. 61 e art. 29, § 10',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Salário-maternidade pago pela Previdência — Lei nº 8.213/1991, art. 73 (red.
+ * Lei nº 10.710/2003), com o parágrafo único incluído pela Lei nº 13.846/2019.
+ *
+ * > "Assegurado o valor de um salário-mínimo, o salário-maternidade para as
+ * > demais seguradas, pago diretamente pela Previdência Social, consistirá:
+ * > I - em um valor correspondente ao do seu último salário-de-contribuição,
+ * > para a segurada empregada doméstica; II - em um doze avos do valor sobre o
+ * > qual incidiu sua última contribuição anual, para a segurada especial;
+ * > III - em um doze avos da soma dos doze últimos salários-de-contribuição,
+ * > apurados em um período não superior a quinze meses, para as demais
+ * > seguradas."
+ *
+ * O parágrafo único estende o inciso III à segurada desempregada que mantém a
+ * qualidade de segurada.
+ */
+export const LEI_8213_ART_73: Fonte = {
+  id: 'lei-8213-1991-art-73',
+  norma: 'Lei nº 8.213, de 24 de julho de 1991, com a redação da Lei nº 10.710, de 2003',
+  dispositivo: 'Art. 73, I a III, e parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Piso dos benefícios — CF, art. 201, § 2º.
+ *
+ * > "Nenhum benefício que substitua o salário de contribuição ou o rendimento
+ * > do trabalho do segurado terá valor mensal inferior ao salário mínimo."
+ *
+ * É a regra que impede qualquer estimativa de benefício abaixo do mínimo — e
+ * ela aparece na memória de cálculo sempre que o piso é acionado.
+ */
+export const CF_ART_201_P2: Fonte = {
+  id: 'cf-1988-art-201-p2',
+  norma: 'Constituição da República Federativa do Brasil de 1988, com a redação da Emenda Constitucional nº 20, de 1998',
+  dispositivo: 'Art. 201, § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm',
+  orgao: 'Congresso Nacional',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -2456,4 +2571,9 @@ export const FONTES: readonly Fonte[] = [
   CTB_ART_261,
   CTB_ART_284,
   LEI_14754_ART_17,
+  EC_103_ART_23,
+  EC_103_ART_15,
+  LEI_8213_ART_61,
+  LEI_8213_ART_73,
+  CF_ART_201_P2,
 ]
