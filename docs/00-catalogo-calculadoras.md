@@ -53,16 +53,16 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
 | TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 30 |
-| TRI | Tributos Pessoa Física | Volume sazonal intenso | 10 |
-| CRD | Crédito e Dívidas | Âncora de receita | 9 |
+| TRI | Tributos Pessoa Física | Volume sazonal intenso | 12 |
+| CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
 | INV | Investimentos e Renda Fixa | Âncora de receita | 8 |
 | AUT | Autônomo, MEI e PJ | Ponte entre trabalhista e tributário | 7 |
-| VEI | Veículos | Receita média, manutenção baixa | 6 |
+| VEI | Veículos | Receita média, manutenção baixa | 7 |
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| | **Total** | | **95** |
+| | **Total** | | **99** |
 
 ---
 
@@ -138,6 +138,8 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-085 | Imposto sobre a PLR (tabela exclusiva) | 🔸 | M | P | Média | v5 |
 | CALC-093 | Imposto sobre ganhos em bolsa (ações e day trade) | 🔥 | A | P | Média | v5 |
 | CALC-094 | Imposto no resgate da previdência privada | 🔸 | M | P | Baixa | v5 |
+| CALC-096 | Imposto em fundos imobiliários (rendimentos e ganho) | 🔥 | A | P | Média | v5 |
+| CALC-098 | Come-cotas do fundo de investimento | 🔸 | A | P | Baixa | v5 |
 
 > ⚠️ VERIFICAR: a regra vigente de IRRF combina tabela progressiva com mecanismo de redução para faixas intermediárias. Confirmar contra a lei e a orientação da Receita Federal antes de implementar CALC-015 — é o parâmetro de maior impacto e maior risco de erro do projeto inteiro.
 
@@ -156,6 +158,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-024 | CET — custo efetivo total de um empréstimo | 🔸 | A | — | Nula | v2 |
 | CALC-025 | Amortização — tabela completa SAC vs. Price | 🔥 | A | — | Nula | v2 |
 | CALC-026 | Quitação antecipada — economia de juros | 🔸 | A | — | Nula | v3 |
+| CALC-099 | Consórcio ou financiamento — comparador | 🔥 | A | — | Nula | v5 |
 | CALC-027 | Empréstimo consignado — margem e parcela | 🔸 | A | P | Média | v3 |
 | CALC-028 | Plano de quitação (bola de neve vs. avalanche) | 🔸 | A | — | Nula | v3 |
 | CALC-029 | Portabilidade de crédito — vale a pena? | ▫️ | A | — | Nula | v4 |
@@ -229,6 +232,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-057 | Custo mensal real de ter um carro | 🔸 | A | — | Nula | v3 |
 | CALC-058 | Carro elétrico vs. combustão — custo por km | 🔸 | M | — | Nula | v4 |
 | CALC-059 | Depreciação de veículo | ▫️ | M | — | Nula | v4 |
+| CALC-097 | Multa de trânsito e pontos na carteira | 🔥 | M | P | Média | v5 |
 
 > ❌ IPVA fica fora: alíquota e base variam por unidade federativa e a tabela de valor venal tem restrição de licenciamento. Ver §14.
 
@@ -324,8 +328,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 19 | — | Expansão de cobertura — lotes 1 a 3 de §18 |
-| | **95** | 10 | |
+| **v5** | 23 | — | Expansão de cobertura — lotes 1 a 4 de §18 |
+| | **99** | 10 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -475,7 +479,29 @@ saque-aniversário, que é do agente operador e não da lei; e os fundos
 imobiliários, adiados por pesquisa — as condições de isenção mudaram em 2023 e
 exigem conferência de número de cotistas e de participação por cotista.
 
-### 18.5 Candidatas dos próximos lotes
+### 18.5 Lote 4 — fundos, trânsito e consórcio, publicado em 17/09/2026
+
+CALC-096 a CALC-099, nas tabelas de §5, §6 e §10. Quatro calculadoras e quatro
+guias ampliados: imposto na bolsa (fundos imobiliários), IR na renda fixa
+(come-cotas), custo de ter um carro (multas) e CET (consórcio).
+
+**O lote fechou a pendência declarada do lote 3.** Os fundos imobiliários
+voltaram com as condições de isenção separadas por redação: vale a da Lei nº
+14.754/2023, com efeitos desde 2024, e a MP nº 1.184/2024 — que exigia mais
+cotistas — está marcada no Planalto como de vigência encerrada. A cobertura das
+condições começa em 2024, e o cadastro diz por quê.
+
+**Três categorias diferentes, de propósito.** Depois de três lotes concentrados
+em trabalhista e tributário, o lote 4 abriu VEI (multa de trânsito) e CRD
+(consórcio × financiamento) — as duas com volume de busca alto e nenhuma
+dependência de dado hiperlocal, que é o que §14 exclui.
+
+**O que ficou declarado como fora da conta:** os fundos de prazo médio curto, com
+alíquota periódica e tabela próprias; o lance do consórcio e o reajuste da
+parcela pelo preço do bem; e a janela operacional de pagamento das multas, que é
+do órgão autuador.
+
+### 18.6 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -485,11 +511,11 @@ valor dela veio de site de terceiro.
 | Categoria | Candidatas |
 |---|---|
 | TRB | férias vencidas em dobro · rescisão por justa causa · jornada 12×36 e feriados · provisão mensal de férias e 13º |
-| TRI | IR sobre fundos imobiliários (conferir as condições de isenção alteradas em 2023) · come-cotas · IR sobre aluguel recebido de pessoa jurídica |
+| TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
 | Previdência | aposentadoria pelas regras de transição da EC nº 103/2019 · tempo de contribuição · valor do auxílio por incapacidade · pensão por morte (cotas) · salário-maternidade pago pelo INSS |
-| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · consórcio ou financiamento · antecipação do saque-aniversário |
+| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
-| VEI | multa de trânsito e pontos na CNH (valores do Código de Trânsito) |
+| VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
 | UTI | juros simples · horas entre horários · desconto e acréscimo percentual em série |
 
 > **A conta que a expansão precisa ter à vista.** Somadas, as candidatas

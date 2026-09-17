@@ -29,9 +29,9 @@
 > índice, não bloqueio.
 >
 > **Sessão de 17/09/2026 — o catálogo reabriu.** O mantenedor decidiu expandir a
-> cobertura (v5). Lotes 1, 2 e 3 no ar: dezenove calculadoras, CALC-077 a
-> CALC-095, e o catálogo passa de 76 para **95**. **Comece por §8.00**; §7.80 a
-> §7.82 registram o que a conferência pegou em cada lote antes de publicar.
+> cobertura (v5). Lotes 1 a 4 no ar: vinte e três calculadoras, CALC-077 a
+> CALC-099, e o catálogo passa de 76 para **99**. **Comece por §8.00**; §7.80 a
+> §7.83 registram o que a conferência pegou em cada lote antes de publicar.
 >
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
@@ -3597,10 +3597,12 @@ reprovava, porque nenhum deles lê a frase de aviso.
   repositório normalize para LF (`.gitattributes`). `grep -c 
 ### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
 
-**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 a §7.82 acima).
-Lotes 1, 2 e 3 publicados — dezenove calculadoras novas. **Antes do lote 4,
-medir** no Search Console o que elas trouxeram (regra 3 de §18.1): impressões,
-posição média e cliques, comparando com a linha de base de 17/09.
+**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 a §7.83 acima).
+Lotes 1 a 4 publicados — vinte e três calculadoras novas, de 76 para 99.
+**Antes do lote 5, medir** no Search Console o que elas trouxeram (regra 3 de
+§18.1): impressões, posição média e cliques, comparando com a linha de base de
+17/09. A medição é a única coisa que diz se a expansão está funcionando — e
+quatro lotes seguidos sem ela já é mais do que a régua previa.
 
 **Pendências datadas que o lote 2 criou:**
 
@@ -4141,6 +4143,47 @@ cotista —, e o texto compilado traz redações sobrepostas de três normas
 diferentes, uma delas de MP com vigência encerrada. Publicar antes de separar
 qual vale seria publicar com chance de errar a isenção, que é justamente o que o
 leitor procura.
+
+---
+
+### 7.83 Lote 4 — fundos imobiliários, trânsito, come-cotas e consórcio
+
+**No ar: CALC-096 a CALC-099**, em três categorias diferentes, com quatro guias
+ampliados. O catálogo passa de 95 para **99**.
+
+#### A pendência do lote 3 foi fechada lendo as redações sobrepostas
+
+O que adiou os fundos imobiliários era um texto compilado com quatro redações do
+mesmo inciso na tela — 50 cotistas (2005), 50 (2021), 100 (2023) e 500 (MP de
+2024, marcada como de vigência encerrada). A saída não foi escolher a mais
+recente: foi **ler a cláusula de vigência de cada uma** e cadastrar a que produz
+efeitos hoje, declarando no arquivo por que a cobertura começa em 2024.
+
+**A régua que isto deixa:** num texto compilado, redação mais abaixo na página
+não significa redação vigente. Quem decide é a cláusula de efeitos da norma que
+alterou — e medida provisória caducada aparece igualzinha às outras.
+
+#### Três normas, três datas, na mesma calculadora
+
+A multa de trânsito mostra o caso mais didático de cobertura combinada do
+catálogo: o valor vem de uma lei de 2016, os pontos do texto original do Código
+(1998) e o limite de suspensão de uma lei de 2020. As três datas foram
+**calculadas** a partir das cláusulas de vigência — "180 dias após a publicação"
+sobre o DOU correto —, e não estimadas.
+
+#### O que o consórcio ensinou sobre o limite do cadastro
+
+Taxa de administração e fundo de reserva não são norma: são preço. A calculadora
+entrou sem nenhum parâmetro legal, e o valor que ela entrega é a **taxa mensal
+equivalente** — o mesmo truque do CET, aplicado a um produto que se vende como
+"sem juros". É o tipo de conta em que o diferencial do projeto aparece sem
+depender de `lib/params/`.
+
+#### O que ficou declarado como fora da conta
+
+Fundos de prazo médio curto (alíquota periódica e tabela próprias); lance e
+reajuste da parcela no consórcio; janela operacional de pagamento das multas. Os
+três estão nas notas das páginas, não só aqui.
 
 ---
 

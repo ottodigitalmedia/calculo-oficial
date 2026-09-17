@@ -29,6 +29,51 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 17/09/2026 — expansão do catálogo, lote 4
+
+### Adicionado · quatro calculadoras em três categorias
+
+CALC-096 imposto em fundos imobiliários · CALC-097 multa de trânsito e pontos ·
+CALC-098 come-cotas · CALC-099 consórcio ou financiamento.
+
+Nenhum guia novo: quatro ampliados, cada um onde a pergunta já morava — imposto
+na bolsa (fundos imobiliários), IR na renda fixa (come-cotas), custo de ter um
+carro (multas) e CET (consórcio, que é o mesmo problema do custo efetivo com
+outro nome).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `fii-aliquota-rendimentos` · `-ganho` | 20% · 20% | desde 20/01/1999 | Lei nº 8.668/1993, arts. 17 e 18 (red. Lei nº 9.779/1999) |
+| `fii-isencao-minimo-cotistas` | 100 cotistas | desde 01/01/2024 | Lei nº 11.033/2004, art. 3º, § 1º, I (red. Lei nº 14.754/2023) |
+| `fii-isencao-participacao-maxima` · `-ligados` | 10% · 30% | desde 01/01/2024 | Lei nº 11.033/2004, art. 3º, § 1º, II e III |
+| `come-cotas-aliquota-periodica` | 15% | desde 01/01/2024 | Lei nº 14.754/2023, art. 17, § 1º, I, "a" |
+| `multa-*-valor` | R$ 293,47 · R$ 195,23 · R$ 130,16 · R$ 88,38 | desde 01/11/2016 | CTB, art. 258 (red. Lei nº 13.281/2016) |
+| `multa-*-pontos` | 7 · 5 · 4 · 3 | desde 22/01/1998 | CTB, art. 259 |
+| `suspensao-limite-*` | 20 · 30 · 40 pontos | desde 12/04/2021 | CTB, art. 261, I (red. Lei nº 14.071/2020) |
+| `multa-desconto-vencimento` · `-notificacao-eletronica` | 80% · 60% | desde 22/01/1998 · 20/06/2023 | CTB, art. 284, caput e § 1º |
+
+**As datas foram calculadas a partir das cláusulas de vigência, e não supostas.**
+A Lei nº 13.281/2016 vige 180 dias após o DOU de 05/05/2016; a Lei nº
+14.071/2020, 180 dias após o DOU de 14/10/2020; o Código de Trânsito, 120 dias
+após o DOU de 24/09/1997. Três normas, três datas — e a cobertura combinada faz
+a página recusar o que está fora delas.
+
+**O consórcio não tem parâmetro legal e isso está declarado**: taxa de
+administração, fundo de reserva e juros são preço de contrato (`ADR-006`). O que
+a calculadora garante é a aritmética e a comparabilidade — inclusive a taxa
+mensal equivalente do consórcio, calculada pelo mesmo caminho do CET.
+
+### Auditoria · casos-ouro
+
+56 casos-ouro novos: 14 dos fundos imobiliários, 16 da multa de trânsito, 12 do
+come-cotas e 14 do consórcio. As fronteiras das tabelas — faixas de pontos,
+prazos da tabela regressiva e limites de participação — são testadas duas a
+duas, porque é nelas que um sinal trocado passa despercebido.
+
+---
+
 ## Ciclo de 17/09/2026 — expansão do catálogo, lote 3
 
 ### Adicionado · quatro calculadoras, duas trabalhistas e duas tributárias
