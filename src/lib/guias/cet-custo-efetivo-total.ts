@@ -17,8 +17,8 @@ export const CET_CUSTO_EFETIVO_TOTAL: Guia = {
     'Duas propostas com a mesma taxa podem custar valores bem diferentes — e o número que revela isso não é a taxa.',
   descricaoSeo:
     'O que é o Custo Efetivo Total, por que ele é sempre maior que a taxa de juros anunciada, o que entra nele e como usá-lo para comparar propostas de crédito.',
-  atualizadoEm: '2026-08-07',
-  calculadoras: ['cet-custo-efetivo-total', 'portabilidade-de-credito', 'amortizacao-sac-price'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: ['cet-custo-efetivo-total', 'portabilidade-de-credito', 'amortizacao-sac-price', 'consorcio-ou-financiamento'],
 
   secoes: [
     {
@@ -97,6 +97,34 @@ export const CET_CUSTO_EFETIVO_TOTAL: Guia = {
           tipo: 'paragrafo',
           texto:
             'Um detalhe que muda a conta: o que importa é o valor que efetivamente cai na sua conta, não o valor do contrato. Quando as tarifas são financiadas junto, o contrato é maior que o dinheiro recebido — e é sobre o dinheiro recebido que o custo deve ser medido.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-consorcio-e-o-mesmo-problema',
+      titulo: 'Consórcio: o mesmo problema, com outro nome',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            '"Consórcio não tem juros" é verdade literal e conclusão errada. Não há juros, há taxa de administração — e, em muitos grupos, fundo de reserva. Os dois são percentuais sobre o valor da carta, diluídos nas parcelas, e produzem exatamente o que os juros produzem: um total pago maior que o bem.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A forma de comparar é a mesma do custo efetivo: transformar o plano numa taxa. Pergunte qual taxa mensal faria um empréstimo do valor da carta ter aquelas parcelas — e compare com a do banco. O número costuma ser menor que o do financiamento, mas raramente é zero.',
+        },
+        {
+          tipo: 'destaque',
+          texto:
+            'E há um custo que não é financeiro: no financiamento o bem chega hoje; no consórcio, na contemplação. Quem paga aluguel enquanto espera precisa somar esse aluguel à conta.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'consorcio-ou-financiamento',
+          texto:
+            'O comparador mostra os dois totais, o custo embutido de cada um e a taxa mensal equivalente do consórcio.',
         },
       ],
     },

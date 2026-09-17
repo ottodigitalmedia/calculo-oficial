@@ -16,8 +16,8 @@ export const CUSTO_DE_TER_UM_CARRO: Guia = {
     'O maior custo do carro não aparece em nenhum boleto — e é justamente por isso que ele é ignorado.',
   descricaoSeo:
     'O custo real de manter um carro: depreciação, seguro, impostos, manutenção e combustível, e por que a conta por quilômetro é a única comparável.',
-  atualizadoEm: '2026-08-07',
-  calculadoras: ['custo-mensal-do-carro', 'depreciacao-de-veiculo', 'custo-de-viagem'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: ['custo-mensal-do-carro', 'depreciacao-de-veiculo', 'custo-de-viagem', 'multa-de-transito'],
 
   secoes: [
     {
@@ -72,6 +72,39 @@ export const CUSTO_DE_TER_UM_CARRO: Guia = {
           tipo: 'chamada',
           slug: 'custo-mensal-do-carro',
           texto: 'A calculadora soma as parcelas e devolve o custo mensal e o custo por quilômetro.',
+        },
+      ],
+    },
+
+    {
+      id: 'as-multas',
+      titulo: 'A multa que ninguém coloca na planilha',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Multa não é custo fixo, mas também não é acidente raro: para quem roda muito, ela aparece com regularidade suficiente para entrar na conta do ano. O valor depende da natureza da infração, e algumas delas multiplicam a multa por um fator previsto no próprio Código.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'multa-gravissima-valor',
+          legenda: 'Valor base da multa de natureza gravíssima.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'multa-leve-valor',
+          legenda: 'Valor base da multa de natureza leve.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Pagar dentro do prazo reduz o valor, e aderir à notificação eletrônica reduz mais — em troca do reconhecimento da infração. O outro custo, que não aparece no boleto, é a pontuação: acumulada em doze meses, ela leva à suspensão do direito de dirigir, com limites que variam conforme o número de infrações gravíssimas.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'multa-de-transito',
+          texto:
+            'A calculadora de multa mostra o valor com e sem desconto e quanto a infração aproxima do limite de pontos.',
         },
       ],
     },

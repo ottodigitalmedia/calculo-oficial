@@ -25,6 +25,10 @@ import { IMPOSTO_SOBRE_PLR } from './imposto-sobre-plr'
 import { LICENCA_MATERNIDADE } from './licenca-maternidade'
 import { IR_EM_BOLSA } from './ir-em-bolsa'
 import { RESGATE_PREVIDENCIA_PRIVADA } from './resgate-previdencia-privada'
+import { IR_EM_FUNDOS_IMOBILIARIOS } from './ir-em-fundos-imobiliarios'
+import { COME_COTAS_CALC } from './come-cotas'
+import { CONSORCIO_OU_FINANCIAMENTO } from './consorcio-ou-financiamento'
+import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
 import { LICENCA_PATERNIDADE } from './licenca-paternidade'
@@ -136,6 +140,10 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   IR_EM_BOLSA,
   RESGATE_PREVIDENCIA_PRIVADA,
   SAQUE_ANIVERSARIO_FGTS,
+  IR_EM_FUNDOS_IMOBILIARIOS,
+  MULTA_DE_TRANSITO,
+  COME_COTAS_CALC,
+  CONSORCIO_OU_FINANCIAMENTO,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

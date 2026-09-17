@@ -186,6 +186,11 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
    * e exigir um campo específico inventaria uma operação que a pessoa não fez.
    */
   'ir-em-bolsa-de-valores': '?vendasComuns=2500000&ganhoComum=300000',
+  /**
+   * Mesmo caso do imposto em bolsa: o mês pode ter só rendimento, só venda de
+   * cotas, ou os dois. Nenhum campo é obrigatório isoladamente.
+   */
+  'ir-em-fundos-imobiliarios': '?rendimentos=100000&cotistas=200&emBolsa=sim',
 }
 
 for (const c of CALCULADORAS) {

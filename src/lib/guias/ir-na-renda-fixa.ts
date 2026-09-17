@@ -16,8 +16,8 @@ export const IR_NA_RENDA_FIXA: Guia = {
     'Duas aplicações com o mesmo rendimento anunciado podem entregar valores bem diferentes — e a diferença é o imposto.',
   descricaoSeo:
     'Como funciona a tabela regressiva do imposto de renda na renda fixa, quais aplicações são isentas, e por que comparar rendimento bruto leva à escolha errada.',
-  atualizadoEm: '2026-08-07',
-  calculadoras: ['ir-renda-fixa', 'cdb-lci-lca', 'onde-render-mais', 'rendimento-da-poupanca'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: ['ir-renda-fixa', 'cdb-lci-lca', 'onde-render-mais', 'rendimento-da-poupanca', 'come-cotas'],
 
   secoes: [
     {
@@ -94,6 +94,34 @@ export const IR_NA_RENDA_FIXA: Guia = {
           tipo: 'paragrafo',
           texto:
             'Vale conferir também a carência: várias isentas exigem prazo mínimo antes do resgate, e liquidez baixa tem custo — o dinheiro que não sai quando você precisa pode obrigar a recorrer a crédito caro.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-come-cotas',
+      titulo: 'Nos fundos, o imposto chega antes: o come-cotas',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Título comprado direto — CDB, Tesouro, debênture — só é tributado no resgate ou no vencimento. Fundo de investimento é diferente: duas vezes por ano, no último dia útil de maio e de novembro, o administrador retém imposto sobre o rendimento que ainda não foi tributado. A cobrança é feita em cotas, e é por isso que a quantidade delas cai sem que ninguém tenha vendido nada.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'come-cotas-aliquota-periodica',
+          legenda: 'Alíquota da retenção semestral nos fundos da regra geral.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Essa retenção não é imposto adicional: ela antecipa a mesma tabela regressiva acima. No resgate, cobra-se apenas o percentual que falta para chegar à alíquota do prazo. O custo verdadeiro está em outro lugar — o valor antecipado sai do fundo e deixa de render, e essa diferença cresce com o tempo.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'come-cotas',
+          texto:
+            'A calculadora de come-cotas mostra a retenção do semestre, a alíquota final pelo prazo e o complemento que sobra para o resgate.',
         },
       ],
     },

@@ -21,7 +21,7 @@ export const IMPOSTO_NA_BOLSA: Guia = {
   descricaoSeo:
     'Como funciona o imposto sobre ações: a isenção pelo valor vendido no mês, a apuração separada do day trade, a compensação de prejuízo e o DARF.',
   atualizadoEm: '2026-09-17',
-  calculadoras: ['ir-em-bolsa-de-valores'],
+  calculadoras: ['ir-em-bolsa-de-valores', 'ir-em-fundos-imobiliarios'],
 
   secoes: [
     {
@@ -108,6 +108,44 @@ export const IMPOSTO_NA_BOLSA: Guia = {
             'Mês dentro da isenção com prejuízo: a perda continua aproveitável, desde que informada.',
             'Venda fora de bolsa segue a regra de ganho de capital, e não entra nesta compensação.',
           ],
+        },
+      ],
+    },
+
+    {
+      id: 'fundos-imobiliarios',
+      titulo: 'Fundos imobiliários jogam outro jogo',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Cota de fundo imobiliário é renda variável, mas com regras próprias. Os rendimentos distribuídos são isentos para a pessoa física quando três condições se somam: cotas negociadas exclusivamente em bolsa ou balcão organizado, fundo com o número mínimo de cotistas e investidor abaixo do limite de participação. Faltando uma delas, o administrador retém o imposto na fonte.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'fii-isencao-minimo-cotistas',
+          legenda: 'Número mínimo de cotistas do fundo para a isenção dos rendimentos.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'fii-isencao-participacao-maxima',
+          legenda: 'Participação a partir da qual o cotista pessoa física perde a isenção.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O ganho na VENDA das cotas é outra história: ele é tributado sempre, e a isenção mensal das ações não vale aqui. Quem vendeu cotas com lucro apura e paga por conta própria, ainda que o valor vendido tenha sido pequeno.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'fii-aliquota-ganho',
+          legenda: 'Alíquota sobre o ganho na alienação de cotas de fundo imobiliário.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'ir-em-fundos-imobiliarios',
+          texto:
+            'A calculadora de fundos imobiliários confere as condições da isenção e calcula o imposto do ganho na venda.',
         },
       ],
     },

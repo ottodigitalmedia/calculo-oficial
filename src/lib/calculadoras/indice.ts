@@ -218,6 +218,30 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto sai da conta no seu mês de aniversário — e quanto fica preso lá dentro.',
   },
   {
+    slug: 'ir-em-fundos-imobiliarios',
+    nome: 'Imposto em fundos imobiliários',
+    linhaDeContexto:
+      'Quando o rendimento é mesmo isento, e quanto o ganho na venda de cotas paga.',
+  },
+  {
+    slug: 'multa-de-transito',
+    nome: 'Multa de trânsito e pontos na carteira',
+    linhaDeContexto:
+      'O valor com e sem desconto, e quanto a infração aproxima da suspensão.',
+  },
+  {
+    slug: 'come-cotas',
+    nome: 'Come-cotas do fundo de investimento',
+    linhaDeContexto:
+      'Quanto a retenção de maio e novembro leva, e quanto ainda falta pagar no resgate.',
+  },
+  {
+    slug: 'consorcio-ou-financiamento',
+    nome: 'Consórcio ou financiamento',
+    linhaDeContexto:
+      'O total de cada caminho, o custo embutido e quando o bem chega em cada um.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

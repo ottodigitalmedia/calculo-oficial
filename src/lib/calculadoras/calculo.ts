@@ -612,6 +612,30 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './saque-aniversario'
     ).then((m) => m.calcular),
+  'ir-em-fundos-imobiliarios': () =>
+    import(
+      /* webpackChunkName: "calc-ir-em-fundos-imobiliarios" */
+      /* webpackExports: ["calcular"] */
+      './ir-em-fundos-imobiliarios'
+    ).then((m) => m.calcular),
+  'multa-de-transito': () =>
+    import(
+      /* webpackChunkName: "calc-multa-de-transito" */
+      /* webpackExports: ["calcular"] */
+      './multa-de-transito'
+    ).then((m) => m.calcular),
+  'come-cotas': () =>
+    import(
+      /* webpackChunkName: "calc-come-cotas" */
+      /* webpackExports: ["calcular"] */
+      './come-cotas'
+    ).then((m) => m.calcular),
+  'consorcio-ou-financiamento': () =>
+    import(
+      /* webpackChunkName: "calc-consorcio-ou-financiamento" */
+      /* webpackExports: ["calcular"] */
+      './consorcio-ou-financiamento'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */
