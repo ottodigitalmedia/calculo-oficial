@@ -1749,6 +1749,230 @@ export const RFB_TABELA_PLR: Fonte = {
   orgao: 'Receita Federal do Brasil',
 }
 
+// ---------------------------------------------------------------------------
+// Lote 2 do catálogo v5 — licenças, salário-família, contrato a prazo,
+// transferência e sobreaviso (CALC-086 a CALC-091)
+// ---------------------------------------------------------------------------
+
+/**
+ * Licença-maternidade — CF, art. 7º, XVIII.
+ *
+ * > "licença à gestante, sem prejuízo do emprego e do salário, com a duração de
+ * > cento e vinte dias"
+ */
+export const CF_ART_7_XVIII: Fonte = {
+  id: 'cf-1988-art-7-xviii',
+  norma: 'Constituição da República Federativa do Brasil de 1988',
+  dispositivo: 'Art. 7º, XVIII',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Início do afastamento — CLT, art. 392, § 1º (red. Lei nº 10.421/2002).
+ *
+ * > "A empregada deve, mediante atestado médico, notificar o seu empregador da
+ * > data do início do afastamento do emprego, que poderá ocorrer entre o 28º
+ * > (vigésimo oitavo) dia antes do parto e ocorrência deste."
+ *
+ * § 2º: os repousos antes e depois do parto podem ser aumentados de duas
+ * semanas cada, por atestado. § 7º (Lei nº 15.222/2025): internação que supere
+ * essas duas semanas estende a licença em até 120 dias após a alta. Fundamento,
+ * não parâmetro: a calculadora conta a partir da data informada.
+ */
+export const CLT_ART_392: Fonte = {
+  id: 'clt-art-392',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 10.421, de 2002',
+  dispositivo: 'Art. 392, caput e §§ 1º, 2º e 7º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Licença-paternidade até 31/12/2026 — ADCT, art. 10, § 1º.
+ *
+ * > "Até que a lei venha a disciplinar o disposto no art. 7º, XIX, da
+ * > Constituição, o prazo da licença-paternidade a que se refere o inciso é de
+ * > cinco dias."
+ *
+ * A lei que disciplina é a Lei nº 15.371/2026, em vigor em 1º/01/2027 (art. 14).
+ */
+export const ADCT_ART_10_P1: Fonte = {
+  id: 'adct-art-10-p1',
+  norma: 'Ato das Disposições Constitucionais Transitórias da Constituição de 1988',
+  dispositivo: 'Art. 10, § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Licença-paternidade a partir de 2027 — Lei nº 15.371/2026, art. 11. DOU de
+ * 1º/04/2026; vigência em 1º/01/2027 (art. 14).
+ *
+ * > "A licença-paternidade e o salário-paternidade, considerados isoladamente,
+ * > terão a duração total de: I – 10 (dez) dias, a partir de 1º de janeiro de
+ * > 2027; II – 15 (quinze) dias, a partir de 1º de janeiro de 2028; III – 20
+ * > (vinte) dias, a partir de 1º de janeiro de 2029."
+ *
+ * O inciso III depende do cumprimento de meta fiscal (§§ 1º e 2º) e por isso
+ * NÃO está cadastrado: a data em que ele passa a valer não é conhecida hoje.
+ * Art. 2º, § 1º: o período é "contado da data de nascimento de filho, de adoção
+ * ou de guarda judicial para fins de adoção". Art. 12: acréscimo de um terço
+ * no nascimento ou adoção de criança ou adolescente com deficiência.
+ */
+export const LEI_15371_ART_11: Fonte = {
+  id: 'lei-15371-2026-art-11',
+  norma: 'Lei nº 15.371, de 31 de março de 2026',
+  dispositivo: 'Art. 2º, § 1º, art. 11 e art. 12',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/lei/l15371.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Programa Empresa Cidadã — Lei nº 11.770/2008, art. 1º (red. Lei nº
+ * 13.257/2016).
+ *
+ * > "É instituído o Programa Empresa Cidadã, destinado a prorrogar: I - por 60
+ * > (sessenta) dias a duração da licença-maternidade [...]; II - por 15 (quinze)
+ * > dias a duração da licença-paternidade, nos termos desta Lei, além dos 5
+ * > (cinco) dias estabelecidos no § 1º do art. 10 do [ADCT]."
+ *
+ * A data de produção de efeitos é condicionada (art. 8º da Lei nº 11.770 e art.
+ * 40 da Lei nº 13.257) e não aparece no texto — por isso a cobertura cadastrada
+ * começa em 2025, quando a regra está comprovadamente em vigor, e não antes.
+ */
+export const LEI_11770_ART_1: Fonte = {
+  id: 'lei-11770-2008-art-1',
+  norma: 'Lei nº 11.770, de 9 de setembro de 2008, com a redação da Lei nº 13.257, de 2016',
+  dispositivo: 'Art. 1º, I e II, e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2008/lei/l11770.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Empresa Cidadã a partir de 2027 — Lei nº 15.371/2026, art. 10.
+ *
+ * > "II – por 15 (quinze) dias a duração da licença-paternidade, além do período
+ * > obrigatório fixado em lei."
+ *
+ * Mesmo número de dias, agora somado ao período novo do art. 11.
+ */
+export const LEI_15371_ART_10: Fonte = {
+  id: 'lei-15371-2026-art-10',
+  norma: 'Lei nº 11.770, de 9 de setembro de 2008, com a redação da Lei nº 15.371, de 2026',
+  dispositivo: 'Art. 1º, II',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/lei/l15371.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Salário-família — Portarias Interministeriais MPS/MF, art. 4º.
+ *
+ * > 2025 (Portaria nº 6): cota de "R$ 65,00 (sessenta e cinco reais)" por filho
+ * > ou equiparado até 14 anos, ou inválido de qualquer idade, "para o segurado
+ * > com remuneração mensal não superior a R$ 1.906,04".
+ * > 2026 (Portaria nº 13): R$ 67,54, para remuneração não superior a R$ 1.980,38.
+ *
+ * § 3º: o 13º salário e o adicional de férias não entram na remuneração. § 4º:
+ * a cota é proporcional no mês de admissão e no de demissão — a portaria não
+ * fixa o divisor, e a calculadora não inventa um.
+ */
+export const PORTARIA_MPS_MF_6_2025_ART_4: Fonte = {
+  id: 'portaria-mps-mf-6-2025-art-4',
+  norma: 'Portaria Interministerial MPS/MF nº 6, de 10 de janeiro de 2025',
+  dispositivo: 'Art. 4º',
+  url: 'https://www.gov.br/previdencia/pt-br/assuntos/rpps/legislacao-dos-rpps/2025/PortariaInterministerialMPSMFn6de10jan2025.pdf',
+  orgao: 'Ministério da Previdência Social',
+}
+
+export const PORTARIA_MPS_MF_13_2026_ART_4: Fonte = {
+  id: 'portaria-mps-mf-13-2026-art-4',
+  norma: 'Portaria Interministerial MPS/MF nº 13, de 9 de janeiro de 2026',
+  dispositivo: 'Art. 4º',
+  url: 'https://www.gov.br/previdencia/pt-br/assuntos/rpps/documentos/PortariaInterministerialMPSMF13de9dejaneirode2026.pdf',
+  orgao: 'Ministério da Previdência Social',
+}
+
+/**
+ * Contrato por prazo determinado — CLT, arts. 479, 480 e 481.
+ *
+ * > Art. 479: "Nos contratos que tenham termo estipulado, o empregador que, sem
+ * > justa causa, despedir o empregado será obrigado a pagar-lhe, a titulo de
+ * > indenização, e por metade, a remuneração a que teria direito até o termo do
+ * > contrato."
+ *
+ * Art. 480: o empregado que se desliga sem justa causa indeniza "os prejuízos
+ * que desse fato lhe resultarem". O § 1º, que limitava essa indenização, foi
+ * REVOGADO pela Lei nº 6.533/1978 — não há teto legal a calcular.
+ *
+ * Art. 481: com cláusula assecuratória do direito recíproco de rescisão,
+ * aplicam-se "os princípios que regem a rescisão dos contratos por prazo
+ * indeterminado".
+ */
+export const CLT_ART_479: Fonte = {
+  id: 'clt-art-479',
+  norma: 'Consolidação das Leis do Trabalho',
+  dispositivo: 'Arts. 479, 480 e 481',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Adicional de transferência — CLT, art. 469, § 3º, incluído pela Lei nº
+ * 6.203/1975 (DOU de 18/04/1975, em vigor na publicação — art. 5º).
+ *
+ * > "[...] ficará obrigado a um pagamento suplementar, nunca inferior a 25%
+ * > (vinte e cinco por cento) dos salários que o empregado percebia naquela
+ * > localidade, enquanto durar essa situação."
+ */
+export const CLT_ART_469: Fonte = {
+  id: 'clt-art-469',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 6.203, de 1975',
+  dispositivo: 'Art. 469, § 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Sobreaviso e prontidão — CLT, art. 244, §§ 2º e 3º, restaurados pelo
+ * Decreto-lei nº 5/1966 (DOU de 05/04/1966, em vigor na publicação — art. 43).
+ *
+ * > § 2º: "Cada escala de 'sobre-aviso' será, no máximo, de vinte e quatro
+ * > horas. As horas de 'sobre-aviso', para todos os efeitos, serão contadas à
+ * > razão de 1/3 (um terço) do salário normal."
+ * > § 3º: "A escala de prontidão será, no máximo, de doze horas. As horas de
+ * > prontidão serão, para todos os efeitos, contadas à razão de 2/3 (dois
+ * > terços) do salário-hora normal."
+ *
+ * O texto é dos ferroviários. A aplicação do sobreaviso fora da ferrovia vem da
+ * Súmula 428 do TST; para a prontidão não há súmula equivalente.
+ */
+export const CLT_ART_244: Fonte = {
+  id: 'clt-art-244',
+  norma: 'Consolidação das Leis do Trabalho, restaurada pelo Decreto-lei nº 5, de 1966',
+  dispositivo: 'Art. 244, §§ 2º e 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Súmula 428 do TST — o sobreaviso fora da ferrovia.
+ *
+ * > "I - O uso de instrumentos telemáticos ou informatizados fornecidos pela
+ * > empresa ao empregado, por si só, não caracteriza o regime de sobreaviso.
+ * > II - Considera-se em sobreaviso o empregado que, à distância e submetido a
+ * > controle patronal por instrumentos telemáticos ou informatizados,
+ * > permanecer em regime de plantão ou equivalente, aguardando a qualquer
+ * > momento o chamado para o serviço durante o período de descanso."
+ */
+export const TST_SUMULA_428: Fonte = {
+  id: 'tst-sumula-428',
+  norma: 'Súmula 428 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 185/2012, DEJT divulgado em 25, 26 e 27.09.2012',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -1834,4 +2058,16 @@ export const FONTES: readonly Fonte[] = [
   LEI_11788_ART_13,
   LEI_10101_ART_3,
   RFB_TABELA_PLR,
+  CF_ART_7_XVIII,
+  CLT_ART_392,
+  ADCT_ART_10_P1,
+  LEI_15371_ART_11,
+  LEI_11770_ART_1,
+  LEI_15371_ART_10,
+  PORTARIA_MPS_MF_6_2025_ART_4,
+  PORTARIA_MPS_MF_13_2026_ART_4,
+  CLT_ART_479,
+  CLT_ART_469,
+  CLT_ART_244,
+  TST_SUMULA_428,
 ]
