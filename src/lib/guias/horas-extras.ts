@@ -27,6 +27,7 @@ export const HORAS_EXTRAS: Guia = {
     'adicional-noturno',
     'dsr-sobre-comissoes',
     'desconto-de-faltas',
+    'sobreaviso-e-prontidao',
   ],
 
   secoes: [
@@ -200,6 +201,42 @@ export const HORAS_EXTRAS: Guia = {
           slug: 'banco-de-horas',
           texto:
             'A calculadora de banco de horas mostra o prazo aplicável a cada forma de acordo e o que acontece com o saldo vencido.',
+        },
+      ],
+    },
+
+    {
+      id: 'sobreaviso-e-prontidao',
+      titulo: 'Horas de espera não são horas extras',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Ficar à disposição sem trabalhar tem regra própria. No sobreaviso o empregado espera em casa, ou à distância, podendo ser chamado a qualquer momento; na prontidão, espera nas dependências do empregador, aguardando ordens. As horas de espera não são pagas como horas normais nem como extras, e sim por uma fração do valor da hora.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'sobreaviso-fracao',
+          legenda: 'Fração do salário normal pela qual são contadas as horas de sobreaviso.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'prontidao-fracao',
+          legenda: 'Fração do salário-hora normal pela qual são contadas as horas de prontidão.',
+        },
+        {
+          tipo: 'lista',
+          itens: [
+            'A regra da CLT foi escrita para os ferroviários. Para as demais categorias, o TST reconhece o sobreaviso de quem fica à distância, sob controle do empregador por celular ou outro meio, em plantão ou escala equivalente.',
+            'Ter celular da empresa, sozinho, não caracteriza sobreaviso.',
+            'Se o chamado acontece e o empregado trabalha, o tempo trabalhado deixa de ser espera e é pago como hora normal ou extra.',
+          ],
+        },
+        {
+          tipo: 'chamada',
+          slug: 'sobreaviso-e-prontidao',
+          texto:
+            'A calculadora de sobreaviso e prontidão aplica a fração de cada regime sobre o valor da hora da sua jornada.',
         },
       ],
     },

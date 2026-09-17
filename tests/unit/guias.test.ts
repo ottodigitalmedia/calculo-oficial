@@ -83,7 +83,7 @@ describe('G-2 · blocos de parâmetro resolvem', () => {
           it(`${guia.slug} · ${bloco.parametroId} tem valor exibível`, () => {
             const resolvida = registro.maisRecente(bloco.parametroId)
             expect(resolvida, `parâmetro "${bloco.parametroId}" não existe`).not.toBeNull()
-            expect(['valor_monetario', 'percentual', 'inteiro']).toContain(
+            expect(['valor_monetario', 'percentual', 'inteiro', 'fracao']).toContain(
               resolvida?.vigencia.valor.tipo,
             )
             expect(resolvida?.fonte.url).toMatch(/^https:\/\//)

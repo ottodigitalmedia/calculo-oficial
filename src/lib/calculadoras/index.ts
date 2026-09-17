@@ -22,6 +22,12 @@ import { VALE_TRANSPORTE_CALC } from './vale-transporte'
 import { JOVEM_APRENDIZ } from './jovem-aprendiz'
 import { RECESSO_DE_ESTAGIO } from './recesso-de-estagio'
 import { IMPOSTO_SOBRE_PLR } from './imposto-sobre-plr'
+import { LICENCA_MATERNIDADE } from './licenca-maternidade'
+import { LICENCA_PATERNIDADE } from './licenca-paternidade'
+import { SALARIO_FAMILIA_CALC } from './salario-familia'
+import { RESCISAO_CONTRATO_DE_EXPERIENCIA } from './rescisao-contrato-de-experiencia'
+import { ADICIONAL_DE_TRANSFERENCIA } from './adicional-de-transferencia'
+import { SOBREAVISO_E_PRONTIDAO } from './sobreaviso-e-prontidao'
 import { BOTIJAO } from './botijao'
 import { CAMBIO } from './cambio'
 import { CAPACIDADE } from './capacidade'
@@ -116,6 +122,12 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   JOVEM_APRENDIZ,
   RECESSO_DE_ESTAGIO,
   IMPOSTO_SOBRE_PLR,
+  LICENCA_MATERNIDADE,
+  LICENCA_PATERNIDADE,
+  SALARIO_FAMILIA_CALC,
+  RESCISAO_CONTRATO_DE_EXPERIENCIA,
+  ADICIONAL_DE_TRANSFERENCIA,
+  SOBREAVISO_E_PRONTIDAO,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

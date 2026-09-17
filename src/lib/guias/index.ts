@@ -46,6 +46,7 @@ import { ROTATIVO_E_CHEQUE_ESPECIAL } from './rotativo-e-cheque-especial'
 import { SAC_OU_PRICE } from './sac-ou-price'
 import type { Guia } from './tipos'
 import { INSALUBRIDADE_E_PERICULOSIDADE } from './insalubridade-e-periculosidade'
+import { LICENCAS_MATERNIDADE_E_PATERNIDADE } from './licencas-maternidade-e-paternidade'
 
 /**
  * Ordem de exibição em `/guias`: do mais geral para o mais específico.
@@ -116,8 +117,11 @@ export const GUIAS: readonly Guia[] = [
 
   // Utilitárias, num guia só — §11.2 explica por que não são seis.
   MATEMATICA_DO_DIA_A_DIA,
+
+  // Catálogo v5 — trabalhistas dos lotes 1 e 2 (`00-catalogo` §18).
   INSALUBRIDADE_E_PERICULOSIDADE,
   APRENDIZ_E_ESTAGIARIO,
+  LICENCAS_MATERNIDADE_E_PATERNIDADE,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {

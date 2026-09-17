@@ -158,6 +158,42 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto de imposto sai da participação nos lucros, pela tabela própria da PLR.',
   },
   {
+    slug: 'licenca-maternidade',
+    nome: 'Licença-maternidade',
+    linhaDeContexto:
+      'Quando a licença termina e quando é a volta ao trabalho, com ou sem a prorrogação da Empresa Cidadã.',
+  },
+  {
+    slug: 'licenca-paternidade',
+    nome: 'Licença-paternidade',
+    linhaDeContexto:
+      'Quantos dias de licença pela data do nascimento, com a lei nova de 2027 e a Empresa Cidadã.',
+  },
+  {
+    slug: 'salario-familia',
+    nome: 'Salário-família',
+    linhaDeContexto:
+      'Se a remuneração cabe no limite, e quanto as cotas por filho somam no mês.',
+  },
+  {
+    slug: 'rescisao-contrato-de-experiencia',
+    nome: 'Rescisão antecipada do contrato de experiência',
+    linhaDeContexto:
+      'A indenização de metade dos dias que faltavam, quando a empresa encerra o contrato a prazo antes do fim.',
+  },
+  {
+    slug: 'adicional-de-transferencia',
+    nome: 'Adicional de transferência',
+    linhaDeContexto:
+      'O pagamento suplementar de quem é transferido para outra cidade por necessidade do serviço.',
+  },
+  {
+    slug: 'sobreaviso-e-prontidao',
+    nome: 'Sobreaviso e prontidão',
+    linhaDeContexto:
+      'Quanto valem as horas de plantão à distância e as horas de espera no local de trabalho.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

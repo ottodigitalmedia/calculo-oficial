@@ -552,6 +552,42 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './imposto-sobre-plr'
     ).then((m) => m.calcular),
+  'licenca-maternidade': () =>
+    import(
+      /* webpackChunkName: "calc-licenca-maternidade" */
+      /* webpackExports: ["calcular"] */
+      './licenca-maternidade'
+    ).then((m) => m.calcular),
+  'licenca-paternidade': () =>
+    import(
+      /* webpackChunkName: "calc-licenca-paternidade" */
+      /* webpackExports: ["calcular"] */
+      './licenca-paternidade'
+    ).then((m) => m.calcular),
+  'salario-familia': () =>
+    import(
+      /* webpackChunkName: "calc-salario-familia" */
+      /* webpackExports: ["calcular"] */
+      './salario-familia'
+    ).then((m) => m.calcular),
+  'rescisao-contrato-de-experiencia': () =>
+    import(
+      /* webpackChunkName: "calc-rescisao-contrato-de-experiencia" */
+      /* webpackExports: ["calcular"] */
+      './rescisao-contrato-de-experiencia'
+    ).then((m) => m.calcular),
+  'adicional-de-transferencia': () =>
+    import(
+      /* webpackChunkName: "calc-adicional-de-transferencia" */
+      /* webpackExports: ["calcular"] */
+      './adicional-de-transferencia'
+    ).then((m) => m.calcular),
+  'sobreaviso-e-prontidao': () =>
+    import(
+      /* webpackChunkName: "calc-sobreaviso-e-prontidao" */
+      /* webpackExports: ["calcular"] */
+      './sobreaviso-e-prontidao'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

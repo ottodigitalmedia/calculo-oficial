@@ -20,8 +20,8 @@ export const RESCISAO_SEM_JUSTA_CAUSA: Guia = {
     'O total não é um número só: são várias verbas de naturezas diferentes, e é a natureza de cada uma que decide se ela sofre desconto.',
   descricaoSeo:
     'O que entra no acerto da dispensa sem justa causa: saldo, aviso prévio, férias, 13º e multa do FGTS — e quais verbas sofrem INSS e Imposto de Renda.',
-  atualizadoEm: '2026-08-06',
-  calculadoras: ['rescisao-sem-justa-causa', 'fgts', 'seguro-desemprego'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: ['rescisao-sem-justa-causa', 'fgts', 'seguro-desemprego', 'rescisao-contrato-de-experiencia'],
 
   secoes: [
     {
@@ -173,6 +173,32 @@ export const RESCISAO_SEM_JUSTA_CAUSA: Guia = {
           slug: 'seguro-desemprego',
           texto:
             'O número de parcelas e o valor de cada uma seguem regra própria — a calculadora de seguro-desemprego mostra a faixa aplicada.',
+        },
+      ],
+    },
+
+    {
+      id: 'contrato-com-data-para-acabar',
+      titulo: 'Quando o contrato tinha data para acabar',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O contrato de experiência e os demais contratos por prazo determinado seguem outra regra quando a empresa os encerra antes da data final sem justa causa. No lugar do aviso prévio, a CLT manda pagar uma indenização: metade da remuneração que o empregado receberia até o fim do contrato.',
+        },
+        {
+          tipo: 'lista',
+          itens: [
+            'A indenização é somada ao saldo de salário, às férias e ao 13º proporcionais, que continuam devidos.',
+            'Se o contrato tem cláusula que permite a qualquer das partes encerrá-lo antes do prazo, a indenização não se aplica: valem as regras do contrato sem prazo, com aviso prévio.',
+            'Quando é o empregado que sai antes, a lei manda indenizar os prejuízos que a saída causar ao empregador, sem fixar valor.',
+          ],
+        },
+        {
+          tipo: 'chamada',
+          slug: 'rescisao-contrato-de-experiencia',
+          texto:
+            'A calculadora de rescisão antecipada do contrato de experiência conta os dias que faltavam e aplica a metade sobre a remuneração.',
         },
       ],
     },

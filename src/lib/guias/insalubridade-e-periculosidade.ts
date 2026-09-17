@@ -20,7 +20,7 @@ export const INSALUBRIDADE_E_PERICULOSIDADE: Guia = {
   descricaoSeo:
     'A diferença entre insalubridade e periculosidade: a base de cada adicional, os graus, quem define a exposição e como escolher quando cabem os dois.',
   atualizadoEm: '2026-09-17',
-  calculadoras: ['insalubridade', 'periculosidade'],
+  calculadoras: ['insalubridade', 'periculosidade', 'adicional-de-transferencia'],
 
   secoes: [
     {
@@ -129,6 +129,34 @@ export const INSALUBRIDADE_E_PERICULOSIDADE: Guia = {
           slug: 'periculosidade',
           texto:
             'A calculadora de periculosidade compara os dois adicionais no grau que você informar e mostra qual é maior no período escolhido.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-adicional-de-transferencia',
+      titulo: 'Outro adicional da CLT: a transferência provisória',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Nem todo adicional paga por risco. Quem é transferido para outra localidade por necessidade de serviço, com mudança de domicílio, recebe um pagamento suplementar sobre o salário que tinha na origem, enquanto durar a transferência. Mudança dentro da mesma cidade, sem mudança de domicílio, não conta como transferência.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'transferencia-adicional-minimo',
+          legenda: 'Pagamento suplementar mínimo sobre os salários da localidade de origem.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O percentual da lei é piso: contrato ou convenção podem prever mais. E o adicional não se confunde com as despesas da mudança, que correm por conta do empregador e são reembolso.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'adicional-de-transferencia',
+          texto:
+            'A calculadora de adicional de transferência aplica o mínimo legal, ou o percentual combinado, sobre o salário de origem.',
         },
       ],
     },

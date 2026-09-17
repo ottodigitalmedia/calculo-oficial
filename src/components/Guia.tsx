@@ -146,7 +146,10 @@ function ValorVigente({ parametroId, legenda }: { readonly parametroId: string; 
         ? formatarPercentual(valor.aliquotaBp)
         : valor.tipo === 'inteiro'
           ? String(valor.valor)
-          : null
+          : // Fração como a norma a escreve (`ADR-007` F-2) — o sobreaviso é "1/3", não 33,33%.
+            valor.tipo === 'fracao'
+            ? `${valor.numerador}/${valor.denominador}`
+            : null
 
   if (exibicao === null) return <Ausente />
 

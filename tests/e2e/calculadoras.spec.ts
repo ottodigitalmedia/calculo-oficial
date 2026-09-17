@@ -171,6 +171,15 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
    * que a pessoa não tem.
    */
   'financiamento-de-reforma': '?valorDaObra=3000000&prazoMeses=24&garantiaImovel=120&pessoal=600',
+  /**
+   * As duas datas interagem: o fim previsto do contrato precisa ser posterior à
+   * dispensa. O preenchedor dá a mesma data aos dois campos, e a calculadora
+   * recusa com razão — contrato que chegou ao termo não gera a indenização.
+   */
+  'rescisao-contrato-de-experiencia': '?salario=300000&dataRescisao=2026-03-10&dataTermo=2026-04-09',
+  // Mesmo caso do banco de horas: sobreaviso OU prontidão, nenhum dos dois
+  // obrigatório isoladamente.
+  'sobreaviso-e-prontidao': '?salario=220000&jornadaSemanal=44&horasSobreaviso=3000',
 }
 
 for (const c of CALCULADORAS) {
