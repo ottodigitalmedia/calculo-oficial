@@ -25,6 +25,7 @@ import { ADICIONAIS } from './adicionais'
 import { APRENDIZAGEM } from './aprendizagem'
 import { BANCO_DE_HORAS } from './banco-de-horas'
 import { BOLSA } from './bolsa'
+import { COME_COTAS } from './come-cotas'
 import { CONSIGNADO } from './consignado'
 import { CREDITO } from './credito'
 import { DIVIDENDOS } from './dividendos'
@@ -32,6 +33,7 @@ import { DOMESTICO } from './domestico'
 import { EMPREGADOR } from './empregador'
 import { ENERGIA_DISTRIBUIDA } from './energia-distribuida'
 import { FERIADOS } from './feriados'
+import { FUNDOS_IMOBILIARIOS } from './fundos-imobiliarios'
 import { GANHO_DE_CAPITAL } from './ganho-de-capital'
 import { INSS } from './inss'
 import { IRPF_ANUAL } from './irpf-anual'
@@ -47,6 +49,7 @@ import { SALARIO_FAMILIA } from './salario-familia'
 import { SAQUE_ANIVERSARIO } from './saque-aniversario'
 import { SEGURO_DESEMPREGO } from './seguro-desemprego'
 import { SIMPLES_NACIONAL } from './simples-nacional'
+import { TRANSITO } from './transito'
 import { TRABALHISTA } from './trabalhista'
 import { VALE_TRANSPORTE } from './vale-transporte'
 import type { ConjuntoDeParametros } from '../tipos'
@@ -80,4 +83,7 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   BOLSA,
   PREVIDENCIA_PRIVADA,
   SAQUE_ANIVERSARIO,
+  FUNDOS_IMOBILIARIOS,
+  TRANSITO,
+  COME_COTAS,
 ]

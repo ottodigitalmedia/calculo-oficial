@@ -2180,6 +2180,168 @@ export const LEI_8036_ART_20_D: Fonte = {
   orgao: 'Congresso Nacional',
 }
 
+/**
+ * Fundos imobiliários — Lei nº 8.668/1993, arts. 17 a 19, com a redação da Lei
+ * nº 9.779/1999 (DOU de 20/01/1999; em vigor na publicação).
+ *
+ * > Art. 17: "Os rendimentos e ganhos de capital auferidos, apurados segundo o
+ * > regime de caixa, quando distribuídos pelos Fundos de Investimento
+ * > Imobiliário a qualquer beneficiário, inclusive pessoa jurídica isenta,
+ * > sujeitam-se à incidência do imposto de renda na fonte, à alíquota de vinte
+ * > por cento."
+ * > Art. 18: "Os ganhos de capital e rendimentos auferidos na alienação ou no
+ * > resgate de quotas dos fundos de investimento imobiliário [...] sujeitam-se à
+ * > incidência do imposto de renda à alíquota de vinte por cento: I - na fonte,
+ * > no caso de resgate; II - às mesmas normas aplicáveis aos ganhos de capital
+ * > ou ganhos líquidos auferidos em operações de renda variável, nos demais
+ * > casos."
+ *
+ * O art. 19, II, faz dessa tributação EXCLUSIVA para a pessoa física — o ganho
+ * na venda de cotas não volta a ser ajustado na declaração anual.
+ */
+export const LEI_8668_ART_17_18: Fonte = {
+  id: 'lei-8668-1993-art-17-18',
+  norma: 'Lei nº 8.668, de 25 de junho de 1993, com a redação da Lei nº 9.779, de 1999',
+  dispositivo: 'Arts. 17, 18 e 19',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8668.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Isenção dos rendimentos distribuídos por fundo imobiliário — Lei nº
+ * 11.033/2004, art. 3º, III e § 1º.
+ *
+ * > III (red. Lei nº 14.130/2021): "na fonte e na declaração de ajuste anual das
+ * > pessoas físicas, os rendimentos distribuídos pelos Fundos de Investimento
+ * > Imobiliário e pelos Fundos de Investimento nas Cadeias Produtivas
+ * > Agroindustriais (Fiagro) cujas cotas sejam admitidas à negociação
+ * > exclusivamente em bolsas de valores ou no mercado de balcão organizado".
+ * > § 1º, I (red. Lei nº 14.754/2023): o benefício "será concedido somente nos
+ * > casos em que os Fundos [...] possuam, no mínimo, 100 (cem) cotistas".
+ * > § 1º, II: não é concedido ao cotista pessoa física com 10% ou mais das
+ * > cotas, ou cujas cotas lhe derem direito a mais de 10% dos rendimentos.
+ * > § 1º, III (incluído pela Lei nº 14.754/2023): mesma exclusão para o conjunto
+ * > de cotistas pessoas físicas ligadas que alcance 30%.
+ *
+ * **A MP nº 1.184/2024 chegou a exigir 500 cotistas e está marcada no Planalto
+ * como de vigência encerrada** — vale a redação da Lei nº 14.754/2023, com
+ * efeitos a partir de 1º/01/2024 (art. 49, II).
+ */
+export const LEI_11033_ART_3_III: Fonte = {
+  id: 'lei-11033-2004-art-3-iii',
+  norma: 'Lei nº 11.033, de 21 de dezembro de 2004, com a redação das Leis nº 14.130, de 2021, e nº 14.754, de 2023',
+  dispositivo: 'Art. 3º, III, e § 1º, I a III',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Valores das multas de trânsito — CTB, art. 258, na redação da Lei nº
+ * 13.281/2016 (DOU de 05/05/2016; em vigor 180 dias depois, em 01/11/2016).
+ *
+ * > "As infrações punidas com multa classificam-se, de acordo com sua
+ * > gravidade, em quatro categorias: I - infração de natureza gravíssima,
+ * > punida com multa no valor de R$ 293,47 [...]; II - [...] grave [...] R$
+ * > 195,23 [...]; III - [...] média [...] R$ 130,16 [...]; IV - [...] leve
+ * > [...] R$ 88,38."
+ *
+ * O § 2º ressalva a multa agravada, cujo fator multiplicador está no próprio
+ * Código, infração a infração.
+ */
+export const CTB_ART_258: Fonte = {
+  id: 'ctb-art-258',
+  norma: 'Lei nº 9.503, de 23 de setembro de 1997 — Código de Trânsito Brasileiro, com a redação da Lei nº 13.281, de 2016',
+  dispositivo: 'Art. 258, I a IV, e § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Pontuação por infração — CTB, art. 259 (texto original; o Código entrou em
+ * vigor em 22/01/1998, cento e vinte dias após o DOU de 24/09/1997).
+ *
+ * > "A cada infração cometida são computados os seguintes números de pontos:
+ * > I - gravíssima - sete pontos; II - grave - cinco pontos; III - média -
+ * > quatro pontos; IV - leve - três pontos."
+ */
+export const CTB_ART_259: Fonte = {
+  id: 'ctb-art-259',
+  norma: 'Lei nº 9.503, de 23 de setembro de 1997 — Código de Trânsito Brasileiro',
+  dispositivo: 'Art. 259, I a IV',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Limites de pontos para a suspensão do direito de dirigir — CTB, art. 261, I,
+ * na redação da Lei nº 14.071/2020 (DOU de 14/10/2020; em vigor 180 dias
+ * depois, em 12/04/2021).
+ *
+ * > "I - sempre que, conforme a pontuação prevista no art. 259 deste Código, o
+ * > infrator atingir, no período de 12 (doze) meses, a seguinte contagem de
+ * > pontos: a) 20 (vinte) pontos, caso constem 2 (duas) ou mais infrações
+ * > gravíssimas na pontuação; b) 30 (trinta) pontos, caso conste 1 (uma)
+ * > infração gravíssima na pontuação; c) 40 (quarenta) pontos, caso não conste
+ * > nenhuma infração gravíssima na pontuação."
+ */
+export const CTB_ART_261: Fonte = {
+  id: 'ctb-art-261',
+  norma: 'Lei nº 9.503, de 23 de setembro de 1997 — Código de Trânsito Brasileiro, com a redação da Lei nº 14.071, de 2020',
+  dispositivo: 'Art. 261, I, "a" a "c"',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Descontos no pagamento da multa — CTB, art. 284.
+ *
+ * > Caput: "O pagamento da multa poderá ser efetuado até a data do vencimento
+ * > expressa na notificação, por oitenta por cento do seu valor."
+ * > § 1º (red. Lei nº 14.599/2023, DOU de 20/06/2023, em vigor na publicação):
+ * > "Caso o infrator declare pelo sistema de notificação eletrônica [...] a
+ * > opção por não apresentar defesa prévia nem recurso, reconhecendo o
+ * > cometimento da infração, o pagamento da multa poderá ser efetuado por 60%
+ * > (sessenta por cento) do seu valor [...] desde que a adesão ao sistema seja
+ * > realizada antes do correspondente envio da notificação da autuação."
+ */
+export const CTB_ART_284: Fonte = {
+  id: 'ctb-art-284',
+  norma: 'Lei nº 9.503, de 23 de setembro de 1997 — Código de Trânsito Brasileiro, com a redação da Lei nº 14.599, de 2023',
+  dispositivo: 'Art. 284, caput e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Come-cotas — Lei nº 14.754/2023, art. 17 (DOU de 13/12/2023; efeitos a partir
+ * de 1º/01/2024, art. 49, II).
+ *
+ * > "Os rendimentos das aplicações em fundos de investimento ficarão sujeitos à
+ * > retenção na fonte do IRRF nas seguintes datas: I - no último dia útil dos
+ * > meses de maio e novembro; ou II - na data da distribuição de rendimentos,
+ * > da amortização ou do resgate de cotas, caso ocorra antes."
+ * > § 1º, I: "como regra geral: a) 15% (quinze por cento), na data da tributação
+ * > periódica [...]; e b) o percentual complementar necessário para totalizar a
+ * > alíquota prevista nos incisos I, II, III e IV do caput do art. 1º da Lei nº
+ * > 11.033, de 21 de dezembro de 2004, na data da [...] do resgate de cotas".
+ *
+ * O § 5º, I, define a base da tributação periódica: a diferença positiva entre
+ * o valor patrimonial da cota e o custo de aquisição — que o § 2º, II, manda
+ * acrescer do que já foi tributado antes. É por isso que o come-cotas não
+ * tributa duas vezes o mesmo rendimento.
+ *
+ * Os fundos de prazo médio curto (art. 6º da Lei nº 11.053/2004) têm alíquotas
+ * próprias — 20% na periódica e tabela de 22,5% e 20% no resgate — e ficam fora
+ * desta calculadora, que declara isso.
+ */
+export const LEI_14754_ART_17: Fonte = {
+  id: 'lei-14754-2023-art-17',
+  norma: 'Lei nº 14.754, de 12 de dezembro de 2023',
+  dispositivo: 'Art. 17, caput e §§ 1º, 2º e 5º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14754.htm',
+  orgao: 'Congresso Nacional',
+}
+
 /** Todas as fontes, para conferência de conjunto. */
 export const FONTES: readonly Fonte[] = [
   PORTARIA_MPS_MF_6_2025,
@@ -2287,4 +2449,11 @@ export const FONTES: readonly Fonte[] = [
   LEI_11053_ART_1,
   LEI_11053_ART_3,
   LEI_8036_ART_20_D,
+  LEI_8668_ART_17_18,
+  LEI_11033_ART_3_III,
+  CTB_ART_258,
+  CTB_ART_259,
+  CTB_ART_261,
+  CTB_ART_284,
+  LEI_14754_ART_17,
 ]
