@@ -29,6 +29,55 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 17/09/2026 — expansão do catálogo, lote 1
+
+### Adicionado · nove calculadoras trabalhistas
+
+CALC-077 adicional noturno (urbano e rural) · CALC-078 insalubridade · CALC-079
+periculosidade, com comparação com a insalubridade · CALC-080 DSR sobre
+comissões · CALC-081 desconto de faltas · CALC-082 desconto do vale-transporte ·
+CALC-083 salário do jovem aprendiz · CALC-084 recesso do estágio · CALC-085
+imposto sobre a PLR.
+
+Dois guias novos — *Insalubridade e periculosidade* e *Aprendiz e estagiário* — e
+três ampliados: horas extras (trabalho noturno rural, comissões e faltas),
+salário bruto e líquido (vale-transporte) e imposto de renda na folha (PLR).
+
+### Parâmetro · vigências novas
+
+Todas lidas no texto consolidado do Planalto com a redação revogada removida
+antes da leitura. As datas de publicação das leis antigas foram conferidas na
+ficha de legislação da Câmara, porque o Planalto traz a data da lei e não a do
+Diário Oficial.
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `insalubridade-grau-maximo` · `-medio` · `-minimo` | 40% · 20% · 10% | desde 23/12/1977 | CLT, art. 192 |
+| `periculosidade-adicional` | 30% | desde 23/12/1977 | CLT, art. 193, § 1º |
+| `adicional-noturno-rural` | 25% | desde 11/06/1973 | Lei nº 5.889/1973, art. 7º |
+| `salario-minimo-hora` | R$ 6,90 · R$ 7,37 | 2025 · 2026 | Decretos nº 12.342/2024 e 12.797/2025 |
+| `fgts-aliquota-aprendiz` | 2% | desde 20/12/2000 | Lei nº 8.036/1990, art. 15, § 7º |
+| `aprendiz-jornada-diaria` · `-estendida` | 6h · 8h | desde 20/12/2000 | CLT, art. 432 |
+| `estagio-recesso-dias` | 30 dias | desde 26/09/2008 | Lei nº 11.788/2008, art. 13 |
+| `plr-tabela-exclusiva` | duas tabelas | jan–abr/2025 · maio/2025 em diante | Receita Federal, tabelas 2025 e 2026 |
+
+**A tabela da PLR tem uma lacuna de fonte declarada.** O Anexo da Lei nº
+10.101/2000 no Planalto ainda mostra a tabela de 2013, e a Lei nº 15.191/2025
+não menciona a PLR. A tabela vigente foi lida na publicação da Receita, e o ato
+que alterou o Anexo em 2025 fica registrado como não localizado em
+`RFB_TABELA_PLR`, com a conferência aritmética de continuidade entre as faixas
+que dá confiança à transcrição.
+
+### Auditoria · casos-ouro com prova de mutação
+
+92 casos-ouro novos, derivados à mão da norma, com a conta ao lado de cada
+asserção — 69 de valor e 23 de entrada recusada e de data sem cobertura
+(`RN-003`), acrescentados quando a cobertura de ramos caiu abaixo do mínimo. Duas mutações deliberadas confirmaram que eles pegam erro de
+transcrição: um centavo a mais numa parcela da PLR derrubou dois casos, e o
+percentual rural trocado derrubou três.
+
+---
+
 ## Ciclo de 08/08/2026
 
 ### Adicionado · imprimir o cálculo, e salvar em PDF pelo navegador

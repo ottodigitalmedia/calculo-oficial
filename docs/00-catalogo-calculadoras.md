@@ -52,8 +52,8 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 14 |
-| TRI | Tributos Pessoa Física | Volume sazonal intenso | 7 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 22 |
+| TRI | Tributos Pessoa Física | Volume sazonal intenso | 8 |
 | CRD | Crédito e Dívidas | Âncora de receita | 9 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
 | INV | Investimentos e Renda Fixa | Âncora de receita | 8 |
@@ -62,7 +62,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| | **Total** | | **76** |
+| | **Total** | | **85** |
 
 ---
 
@@ -89,6 +89,14 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-012 | Rescisão — empregado doméstico (LC 150/2015) | ▫️ | M | P | Alta | v3 |
 | CALC-013 | Banco de horas e jornada acumulada | ▫️ | B | — | Nula | v3 |
 | CALC-014 | Rescisão — contrato intermitente (art. 452-A) | ▫️ | M | P | Alta | v4 |
+| CALC-077 | Adicional noturno — urbano e rural | 🔸 | M | P | Baixa | v5 |
+| CALC-078 | Adicional de insalubridade | 🔥 | M | P | Média | v5 |
+| CALC-079 | Adicional de periculosidade, com comparação | 🔸 | M | P | Baixa | v5 |
+| CALC-080 | DSR sobre comissões e variáveis | 🔸 | M | — | Nula | v5 |
+| CALC-081 | Desconto de faltas e perda do DSR | 🔸 | M | — | Nula | v5 |
+| CALC-082 | Desconto do vale-transporte | 🔸 | M | P | Baixa | v5 |
+| CALC-083 | Salário do jovem aprendiz | 🔥 | M | P | Alta | v5 |
+| CALC-084 | Recesso do estágio | ▫️ | M | P | Nula | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
 
@@ -119,6 +127,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-019 | Comparador: modelo simplificado vs. completo | 🔸 | M | P | Alta | v3 |
 | CALC-020 | IR sobre ganho de capital em venda de imóvel | ▫️ | A | P | Média | v3 |
 | CALC-021 | IR sobre criptoativos | ▫️ | A | P | Média | v4 |
+| CALC-085 | Imposto sobre a PLR (tabela exclusiva) | 🔸 | M | P | Média | v5 |
 
 > ⚠️ VERIFICAR: a regra vigente de IRRF combina tabela progressiva com mecanismo de redução para faixas intermediárias. Confirmar contra a lei e a orientação da Receita Federal antes de implementar CALC-015 — é o parâmetro de maior impacto e maior risco de erro do projeto inteiro.
 
@@ -305,7 +314,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| | **76** | 10 | |
+| **v5** | 9 | — | Expansão de cobertura — lote 1 de §18 |
+| | **85** | 10 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -370,3 +380,69 @@ Nove calculadoras já catalogadas têm manutenção `Alta` sem demanda `🔥` ne
 3. **Remover** — o ID permanece reservado (regra 2 de §16).
 
 **Por que isto importa.** Sete das nove são trabalhistas ou previdenciárias, ou seja, `Alta` porque mudam todo exercício. Mantidas todas, o custo de auditoria anual cresce sem contrapartida de tráfego nem de receita — que é exatamente o mecanismo que HIP-04 testa e o limite que §9 de `04-architecture` descreve.
+
+---
+
+## 18. v5 — a expansão de cobertura
+
+Decidida pelo mantenedor em **17/09/2026**, depois de a medição mostrar que o
+site perdia espaço de busca aos poucos. O ponto de partida foi o de
+`00-product-brief` §5.1: os agregadores generalistas têm **cobertura quatro
+vezes maior**, e para toda busca fora do catálogo eles ganham por padrão.
+
+### 18.1 As regras que a expansão manteve
+
+Decisões do mantenedor na mesma data:
+
+1. **As cinco categorias de §14 continuam excluídas.** Nenhuma foi reaberta.
+2. **Prioridade para cálculo de várias entradas e alto valor** nas categorias
+   ativas. Cálculo de resposta de uma linha fica por último — a medição de
+   27/08/2026 mostrou o conversor de unidades com 1.259 impressões e nenhum
+   clique, porque o buscador responde sozinho (`00-product-brief` §5.4).
+3. **Lotes de 10 a 15**, publicados um a um, medidos no Search Console antes de
+   acelerar o ritmo.
+4. **Tudo o que §16 já exigia continua valendo**: ID atribuído, fonte oficial,
+   casos-ouro antes de considerar pronto, guia ligado.
+
+### 18.2 Lote 1 — trabalhistas, publicado em 17/09/2026
+
+CALC-077 a CALC-085, nas tabelas de §4 e §5. Nove calculadoras, dois guias
+novos e três guias ampliados.
+
+**Duas que saíram do lote antes de começar, e por quê:**
+
+| Candidata | Motivo |
+|---|---|
+| Licença-maternidade | A Lei nº 15.371/2026 cria a nova licença-paternidade e reescreve o art. 392 da CLT **a partir de 01/01/2027**. Publicar agora seria publicar com prazo para ficar errada em janeiro. Vai para o lote 2, junto com a paternidade e com as vigências por ano |
+| Salário-família | A cota e o limite estão na portaria interministerial, cujo PDF é digitalizado e exige leitura por imagem (§5.2 de `ESTADO-DO-PROJETO`). Vai para o lote 2 |
+
+### 18.3 Candidatas dos próximos lotes
+
+**Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
+candidata é classificada por §16; atribuir agora reservaria números para
+calculadoras que a pesquisa pode descartar. A lista é mapa de temas, e nenhum
+valor dela veio de site de terceiro.
+
+| Categoria | Candidatas |
+|---|---|
+| TRB | licença-maternidade e paternidade (Lei nº 15.371/2026) · salário-família · férias vencidas em dobro · rescisão por justa causa · rescisão de contrato por prazo determinado (arts. 479 e 480) · adicional de transferência · sobreaviso · jornada 12×36 e feriados · provisão mensal de férias e 13º |
+| TRI | IR sobre ações (operação comum e day trade) · IR sobre fundos imobiliários · IR sobre previdência privada (tabela regressiva) · come-cotas · IR sobre aluguel recebido de pessoa jurídica |
+| Previdência | aposentadoria pelas regras de transição da EC nº 103/2019 · tempo de contribuição · valor do auxílio por incapacidade · pensão por morte (cotas) · salário-maternidade pago pelo INSS |
+| CRD | juros de mora e multa por atraso · juros simples · consórcio ou financiamento · saque-aniversário do FGTS e a antecipação |
+| INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
+| VEI | multa de trânsito e pontos na CNH (valores do Código de Trânsito) |
+| UTI | juros simples · horas entre horários · desconto e acréscimo percentual em série |
+
+> **A conta que a expansão precisa ter à vista.** Somadas, as candidatas
+> legítimas dentro das dez categorias ativas ficam na casa de **quarenta a
+> sessenta** — e não das duzentas e poucas que faltariam para trezentas. A
+> distância é explicada por §14: boa parte dos catálogos com trezentas
+> calculadoras é saúde, jurídico-documental, dado municipal e ruído, que este
+> projeto excluiu com motivo registrado. Chegar a trezentas exigiria reabrir
+> §14, e essa é decisão do mantenedor, não desta seção.
+
+> **Previdência entra como grupo próprio, com cuidado próprio.** A
+> aposentadoria é a pergunta de maior volume da lista e também a de maior risco:
+> as regras de transição da EC nº 103/2019 combinam idade, tempo, pontos e
+> pedágio, e mudam a cada ano. Ela só entra com pesquisa dedicada e casos-ouro
+> tirados dos exemplos oficiais do INSS — nunca como item de fim de lote.

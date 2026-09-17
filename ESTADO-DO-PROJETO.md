@@ -28,6 +28,12 @@
 > fechou. O Search Console está verificado por DNS; o zero dele é falta de
 > índice, não bloqueio.
 >
+> **Sessão de 17/09/2026 — o catálogo reabriu.** O mantenedor decidiu expandir a
+> cobertura (v5). Lote 1 no ar: nove trabalhistas, CALC-077 a CALC-085, e o
+> catálogo passa de 76 para **85**. **Comece por §8.00**, e leia §7.80 antes do
+> lote 2 — ela registra a lei de 2026 que tirou a licença-maternidade do lote e
+> os erros que a conferência pegou antes de publicar.
+>
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
 
@@ -3462,9 +3468,104 @@ prova de mutação.
 > e 88 linhas. **Ferramenta de formatação que o repositório não declara não é
 > ferramenta do repositório.**
 
+### 7.80 O catálogo reabriu — v5, lote 1
+
+Em **17/09/2026** a medição mostrou o site perdendo espaço de busca aos poucos
+(impressões semanais caindo pela metade entre o fim de agosto e meados de
+setembro, posições das trabalhistas descendo de 1 a 13 lugares), e o mantenedor
+decidiu retomar a construção: **expandir a cobertura rumo ao catálogo mais
+completo do país**, com as regras de `00-catalogo` §18.1 — nenhuma categoria de
+§14 reaberta, prioridade para cálculo de várias entradas, lotes de 10 a 15 com
+medição entre eles.
+
+**Lote 1 no ar: CALC-077 a CALC-085**, nove trabalhistas, dois guias novos e
+três ampliados. O catálogo passa de 76 para **85**.
+
+#### O que a pesquisa em fonte decidiu antes do código
+
+Três achados mudaram o lote antes de ele existir, e são o tipo de coisa que só
+aparece lendo a norma inteira:
+
+1. **A Lei nº 15.371/2026 tirou a licença-maternidade do lote.** O cabeçalho da
+   Lei nº 11.770 no Planalto remete a ela, com vigência própria. Ela cria a nova
+   licença-paternidade — 10 dias em 2027, 15 em 2028, 20 em 2029, condicionada
+   a meta fiscal — e **reescreve o art. 392 da CLT a partir de 01/01/2027**.
+   Publicar a calculadora agora seria publicá-la com data para errar. Vai para o
+   lote 2, junto com a paternidade, com vigências por ano.
+2. **O salário mínimo HORÁRIO é parâmetro próprio, não o mensal dividido por
+   220.** O decreto fixa o valor arredondado, e é esse o piso do aprendiz: R$
+   1.621 ÷ 220 dá R$ 7,368…, o decreto diz R$ 7,37. O centavo por hora vira
+   quase dois reais num mês de aprendiz, na direção de pagar menos.
+3. **A tabela da PLR tem fonte mais fraca que o resto**, e isso está declarado em
+   `RFB_TABELA_PLR`: o Anexo da Lei nº 10.101 no Planalto parou em 2013, e o ato
+   que o atualizou em 2025 não foi localizado. A transcrição da Receita foi
+   conferida por continuidade entre as faixas, que fecha nas duas tabelas.
+
+#### Os erros que a conferência pegou antes de publicar
+
+**Quatro afirmações de FAQ estavam erradas ou sem fonte**, e foram corrigidas
+depois de ler a norma — não antes, que é o que precisa mudar:
+
+| Eu tinha escrito | A fonte diz |
+|---|---|
+| mínimo hora × 220 = mínimo mensal | em 2026 dá R$ 1.621,40, e não R$ 1.621,00 |
+| vale-transporte em dinheiro "por convenção coletiva" | o art. 110 do Decreto nº 10.854/2021 **proíbe**, exceto para o empregador doméstico |
+| "há decisões nos dois sentidos" sobre o recesso não gozado | afirmação sem verificação — removida |
+| a Lei nº 12.740 de "dezembro de 2012", e o adicional cessando com "mudança de função" | o mês não foi confirmado; o art. 194 fala em eliminação do risco, não em função |
+
+> **A régua que isto deixou para os próximos lotes.** O motor e os casos-ouro
+> foram escritos com a norma aberta; as FAQs foram escritas de memória e
+> conferidas depois. É a ordem errada, e três dos quatro erros eram
+> plausíveis o bastante para passar numa leitura. **FAQ é texto legal publicado,
+> e se escreve com a fonte aberta, como o parâmetro.**
+
+**E dois defeitos de ferramenta, os dois silenciosos:**
+
+- **O registro das calculadoras falhou pela metade sem erro nenhum.** Os
+  arquivos de registro usam CRLF, e a substituição procurava LF: entraram os
+  imports, não as entradas das listas. Os testes de catálogo **passaram** —
+  porque as nove não estavam registradas, e um teste de paridade não reprova o
+  que não existe dos dois lados. Só a contagem de pedaços adiados (76 em vez de
+  85) denunciou. É §7.5 com outra roupa.
+- **Um `indexOf(']')` quebrou o registro de guias** — achou o `[]` do tipo
+  `Guia[]` antes do fim da lista. A suíte de guias parou de carregar e a
+  contagem de testes caiu de 452 para 351, **sem nenhum "failed"**: arquivo que
+  não compila não reprova, some. **Contagem de testes que cai é falha, mesmo
+  quando tudo está verde.**
+
+#### O que a expansão encontrou sobre o tamanho possível do catálogo
+
+Listando as candidatas honestas dos próximos lotes (§18.3 do catálogo), dentro
+das dez categorias ativas, a conta fica na casa de **quarenta a sessenta** a
+mais — não das duzentas e poucas que levariam a trezentas. A distância é §14:
+catálogos de trezentas calculadoras são, em boa parte, saúde,
+jurídico-documental, dado municipal e ruído. **Chegar a trezentas exige reabrir
+§14**, e isso é decisão do mantenedor, registrada como pendente em §8.0.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
+
+### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
+
+**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 acima). Lote 1
+publicado; o próximo passo é o lote 2.
+
+**Lote 2 — já com a pesquisa de partida feita:**
+
+| Candidata | O que já se sabe |
+|---|---|
+| Licença-maternidade e paternidade | Lei nº 15.371/2026, lida em 17/09/2026: paternidade de 10 dias em 2027, 15 em 2028 e 20 em 2029 (condicionada a meta fiscal, art. 11, §§ 1º e 2º); art. 392 da CLT reescrito; vigência da lei em 01/01/2027. Precisa de vigências por ano e de ler o novo art. 392 inteiro antes de modelar |
+| Salário-família | Cota e limite estão na Portaria Interministerial MPS/MF de cada ano — a de 2026 é a nº 13, PDF digitalizado; ler por imagem, como em §5.2 |
+| Demais trabalhistas | férias vencidas em dobro · rescisão por justa causa · contrato por prazo determinado (arts. 479 e 480) · adicional de transferência · sobreaviso · 12×36 |
+
+**Decisão pendente do mantenedor.** Dentro das dez categorias ativas, a
+expansão honesta cabe em quarenta a sessenta calculadoras a mais (§7.80). Chegar
+perto de trezentas exige reabrir alguma categoria de `00-catalogo` §14 — e cada
+uma foi excluída com motivo registrado.
+
+**Régua deixada pelo lote 1:** FAQ se escreve com a fonte aberta, como o
+parâmetro — e contagem de testes que cai é falha, mesmo com tudo verde.
 
 ### 8.0 Retomada em 09/08/2026 — leia isto primeiro
 
