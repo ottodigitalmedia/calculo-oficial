@@ -29,9 +29,9 @@
 > índice, não bloqueio.
 >
 > **Sessão de 17/09/2026 — o catálogo reabriu.** O mantenedor decidiu expandir a
-> cobertura (v5). Lotes 1 e 2 no ar: quinze trabalhistas, CALC-077 a CALC-091,
-> e o catálogo passa de 76 para **91**. **Comece por §8.00**; §7.80 e §7.81
-> registram o que a conferência pegou em cada lote antes de publicar.
+> cobertura (v5). Lotes 1, 2 e 3 no ar: dezenove calculadoras, CALC-077 a
+> CALC-095, e o catálogo passa de 76 para **95**. **Comece por §8.00**; §7.80 a
+> §7.82 registram o que a conferência pegou em cada lote antes de publicar.
 >
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
@@ -3597,9 +3597,10 @@ reprovava, porque nenhum deles lê a frase de aviso.
   repositório normalize para LF (`.gitattributes`). `grep -c 
 ### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
 
-**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 e §7.81 acima).
-Lotes 1 e 2 publicados. Antes do lote 3, **medir** no Search Console as quinze
-novas (regra 3 de §18.1).
+**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 a §7.82 acima).
+Lotes 1, 2 e 3 publicados — dezenove calculadoras novas. **Antes do lote 4,
+medir** no Search Console o que elas trouxeram (regra 3 de §18.1): impressões,
+posição média e cliques, comparando com a linha de base de 17/09.
 
 **Pendências datadas que o lote 2 criou:**
 
@@ -3839,7 +3840,8 @@ O que sobrou, em ordem:
 > verificação de saúde e rollback automático, que o clique manual não tinha.
 > `13-deployment` §4 descrevia o deploy manual como decisão; a decisão continua
 > válida para o **painel**, mas o caminho pelo pipeline é melhor e já existia.
-
+
+
 ### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
 
 **O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 acima). Lote 1
@@ -4086,6 +4088,59 @@ O que sobrou, em ordem:
   campos de data e só preenche obrigatórios. Duas calculadoras novas recusaram
   com razão — termo igual à dispensa, e nenhuma hora de espera — e entraram em
   `ENTRADAS_QUE_INTERAGEM`, como o banco de horas.
+
+---
+
+### 7.82 Lote 3 — justa causa, bolsa, previdência e saque-aniversário
+
+**No ar: CALC-092 a CALC-095**, duas trabalhistas e duas tributárias, dois guias
+novos e dois ampliados. O catálogo passa de 91 para **95**. O detalhe das
+vigências está no changelog; aqui fica o que não cabe lá.
+
+#### A primeira mudança de modelo de dados desde o lançamento
+
+O Anexo da Lei nº 8.036/1990 — a tabela do saque-aniversário — **soma** uma
+parcela ao resultado da alíquota. Todas as tabelas do sistema até aqui
+**deduziam**. Havia dois caminhos:
+
+1. guardar a parcela adicional como dedução negativa: calcularia certo hoje e
+   mentiria para sempre na auditoria, além de derrubar a verificação que exige
+   parcela não negativa nas outras tabelas;
+2. dar um campo próprio a ela.
+
+Foi o segundo. `Faixa` ganhou `parcelaAdicionalCentavos`, o esquema recusa uma
+faixa com as duas parcelas, e a tabela dos guias passou a rotular a coluna
+conforme o caso. **A regra que isto confirma:** quando o dado não cabe no
+formato, o formato cresce — encodar valor em campo de outro significado é o
+defeito que §7.30 já registrou.
+
+#### O que a leitura da norma mudou nas duas tributárias
+
+- **Uma MP caducada quase entrou como direito vigente.** A MP nº 1.303/2025
+  poria alíquota única em bolsa e acabaria com a isenção mensal. O texto do
+  Planalto traz "Vigência encerrada" ao lado de cada remissão — e é essa
+  observação, e não a memória, que decidiu o cadastro.
+- **A retenção de até R$ 1,00 é dispensada** (art. 2º, § 4º), somadas as
+  operações do mês (§ 5º). Sem essa regra, a estimativa descontaria do DARF um
+  imposto que a corretora não reteve. Ela só apareceu porque a leitura foi até
+  os parágrafos, e não parou no caput.
+- **A perda de mês isento continua aproveitável.** A dúvida era real e a
+  resposta veio da publicação de perguntas e respostas da Receita, lida no PDF
+  oficial: o demonstrativo é dispensado nas operações isentas, "exceto no caso de
+  pretender compensar as perdas". Quem quer usar, declara.
+- **A janela do saque-aniversário não está na lei.** A lei diz "anualmente, no
+  mês de aniversário"; os dois meses seguintes, que todo site repete, são regra
+  do agente operador. A FAQ foi reescrita para dizer isso, em vez de afirmar o
+  que não se conferiu.
+
+#### O que foi adiado, com o motivo
+
+**Fundos imobiliários.** A isenção dos rendimentos distribuídos depende de
+condições que mudaram em 2023 — número mínimo de cotistas e participação de cada
+cotista —, e o texto compilado traz redações sobrepostas de três normas
+diferentes, uma delas de MP com vigência encerrada. Publicar antes de separar
+qual vale seria publicar com chance de errar a isenção, que é justamente o que o
+leitor procura.
 
 ---
 

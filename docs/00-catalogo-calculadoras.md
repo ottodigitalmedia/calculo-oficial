@@ -52,8 +52,8 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 28 |
-| TRI | Tributos Pessoa Física | Volume sazonal intenso | 8 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 30 |
+| TRI | Tributos Pessoa Física | Volume sazonal intenso | 10 |
 | CRD | Crédito e Dívidas | Âncora de receita | 9 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
 | INV | Investimentos e Renda Fixa | Âncora de receita | 8 |
@@ -62,7 +62,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| | **Total** | | **91** |
+| | **Total** | | **95** |
 
 ---
 
@@ -103,6 +103,8 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-089 | Rescisão antecipada do contrato de experiência (art. 479) | 🔸 | M | P | Nula | v5 |
 | CALC-090 | Adicional de transferência (art. 469, § 3º) | ▫️ | M | P | Nula | v5 |
 | CALC-091 | Sobreaviso e prontidão (art. 244) | 🔸 | M | P | Nula | v5 |
+| CALC-092 | Rescisão por justa causa — o que resta e o que sai | 🔥 | M | P | Alta | v5 |
+| CALC-095 | Saque-aniversário do FGTS | 🔥 | B | P | Média | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
 
@@ -134,6 +136,8 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-020 | IR sobre ganho de capital em venda de imóvel | ▫️ | A | P | Média | v3 |
 | CALC-021 | IR sobre criptoativos | ▫️ | A | P | Média | v4 |
 | CALC-085 | Imposto sobre a PLR (tabela exclusiva) | 🔸 | M | P | Média | v5 |
+| CALC-093 | Imposto sobre ganhos em bolsa (ações e day trade) | 🔥 | A | P | Média | v5 |
+| CALC-094 | Imposto no resgate da previdência privada | 🔸 | M | P | Baixa | v5 |
 
 > ⚠️ VERIFICAR: a regra vigente de IRRF combina tabela progressiva com mecanismo de redução para faixas intermediárias. Confirmar contra a lei e a orientação da Receita Federal antes de implementar CALC-015 — é o parâmetro de maior impacto e maior risco de erro do projeto inteiro.
 
@@ -320,8 +324,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 15 | — | Expansão de cobertura — lotes 1 e 2 de §18 |
-| | **91** | 10 | |
+| **v5** | 19 | — | Expansão de cobertura — lotes 1 a 3 de §18 |
+| | **95** | 10 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -448,7 +452,30 @@ acréscimo por deficiência nas licenças; a proporção do salário-família no
 de admissão e de demissão, cujo divisor a portaria não fixa; e a indenização do
 art. 480, cujo teto foi revogado em 1978.
 
-### 18.4 Candidatas dos próximos lotes
+### 18.4 Lote 3 — justa causa, bolsa, previdência e FGTS, publicado em 17/09/2026
+
+CALC-092 a CALC-095, nas tabelas de §4 e §5. Quatro calculadoras, dois guias
+novos — *Imposto na bolsa* e *Previdência privada* — e dois ampliados: rescisão
+sem justa causa e FGTS.
+
+**O lote saiu do trabalhista e abriu o tributário de investimento.** A razão é a
+regra 2 de §18.1: cálculo de várias entradas e alto valor primeiro. O imposto em
+bolsa tem três decisões encadeadas — isenção pelo valor vendido, day trade
+apartado, prejuízo compensado —, e é o tipo de conta que o buscador não responde
+sozinho.
+
+**Uma mudança de modelo de dados entrou junto, e está registrada.** O Anexo da
+Lei nº 8.036/1990 traz uma parcela ADICIONAL por faixa, somada ao resultado da
+alíquota — o inverso da parcela a deduzir das tabelas de imposto. `Faixa` ganhou
+`parcelaAdicionalCentavos`, com verificação que impede uma faixa de ter as duas.
+
+**O que ficou declarado como fora da conta:** a apuração por lote de aportes na
+previdência (cada aporte tem o seu prazo); a janela operacional do
+saque-aniversário, que é do agente operador e não da lei; e os fundos
+imobiliários, adiados por pesquisa — as condições de isenção mudaram em 2023 e
+exigem conferência de número de cotistas e de participação por cotista.
+
+### 18.5 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -458,9 +485,9 @@ valor dela veio de site de terceiro.
 | Categoria | Candidatas |
 |---|---|
 | TRB | férias vencidas em dobro · rescisão por justa causa · jornada 12×36 e feriados · provisão mensal de férias e 13º |
-| TRI | IR sobre ações (operação comum e day trade) · IR sobre fundos imobiliários · IR sobre previdência privada (tabela regressiva) · come-cotas · IR sobre aluguel recebido de pessoa jurídica |
+| TRI | IR sobre fundos imobiliários (conferir as condições de isenção alteradas em 2023) · come-cotas · IR sobre aluguel recebido de pessoa jurídica |
 | Previdência | aposentadoria pelas regras de transição da EC nº 103/2019 · tempo de contribuição · valor do auxílio por incapacidade · pensão por morte (cotas) · salário-maternidade pago pelo INSS |
-| CRD | juros de mora e multa por atraso · juros simples · consórcio ou financiamento · saque-aniversário do FGTS e a antecipação |
+| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · consórcio ou financiamento · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
 | VEI | multa de trânsito e pontos na CNH (valores do Código de Trânsito) |
 | UTI | juros simples · horas entre horários · desconto e acréscimo percentual em série |

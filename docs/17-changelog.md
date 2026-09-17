@@ -29,6 +29,58 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 17/09/2026 — expansão do catálogo, lote 3
+
+### Adicionado · quatro calculadoras, duas trabalhistas e duas tributárias
+
+CALC-092 rescisão por justa causa · CALC-093 imposto sobre ganhos em bolsa
+(ações e day trade) · CALC-094 imposto no resgate da previdência privada ·
+CALC-095 saque-aniversário do FGTS.
+
+Dois guias novos — *Imposto na bolsa* e *Previdência privada: PGBL, VGBL e os
+dois regimes* — e dois ampliados: rescisão sem justa causa (o que a justa causa
+retira) e FGTS (saque-aniversário, com a tabela do Anexo).
+
+### Alterado · o modelo de dados aceita parcela ADICIONAL por faixa
+
+O Anexo da Lei nº 8.036/1990 soma uma parcela ao resultado da alíquota, em vez
+de deduzi-la. `Faixa` ganhou `parcelaAdicionalCentavos`, com verificação que
+recusa uma faixa contendo as duas parcelas, e a tabela dos guias passou a
+exibir a coluna certa para cada caso. Guardar a parcela adicional no campo de
+dedução com sinal trocado calcularia certo e mentiria na auditoria.
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `bolsa-aliquota-comum` · `-day-trade` | 15% · 20% | desde 01/01/2005 | Lei nº 11.033/2004, art. 2º, I e II |
+| `bolsa-isencao-vendas-mes` | R$ 20.000,00 | desde 01/01/2005 | Lei nº 11.033/2004, art. 3º, I |
+| `bolsa-irrf-comum` · `-day-trade` · `-dispensa` | 5/100.000 · 1% · R$ 1,00 | desde 01/01/2005 (day trade, desde 01/01/2000) | Lei nº 11.033/2004, art. 2º, §§ 1º e 4º · Lei nº 9.959/2000, art. 8º |
+| `darf-valor-minimo` | R$ 10,00 | desde 01/01/1997 | Lei nº 9.430/1996, art. 68 |
+| `previdencia-regressiva-*` | 35% a 10%, em degraus de 2 anos | desde 01/01/2005 | Lei nº 11.053/2004, art. 1º, I a VI |
+| `previdencia-progressiva-antecipacao` | 15% | desde 01/01/2005 | Lei nº 11.053/2004, art. 3º |
+| `fgts-saque-aniversario-tabela` | 7 faixas, de 50% a 5%, com parcela adicional | desde 12/12/2019 | Lei nº 8.036/1990, Anexo (Lei nº 13.932/2019) |
+
+**Duas leituras de fonte que mudaram a conta:**
+
+- **A MP nº 1.303/2025 caducou.** Ela poria alíquota única em bolsa e acabaria
+  com a isenção mensal; o texto compilado do Planalto marca cada remissão a ela
+  como de vigência encerrada, e as alíquotas antigas seguem valendo. Está
+  registrado no cadastro, não só aqui.
+- **Perda em mês isento continua aproveitável.** A publicação de perguntas e
+  respostas da Receita dispensa o demonstrativo nas operações isentas "exceto no
+  caso de pretender compensar as perdas apuradas com ganhos auferidos em
+  operações realizadas em bolsa sujeitas à incidência do imposto" — ou seja,
+  quem quer usar a perda, declara e usa. A calculadora transporta o prejuízo.
+
+### Auditoria · casos-ouro
+
+61 casos-ouro novos: 14 da justa causa, 17 da bolsa, 15 da previdência e 15 do
+saque-aniversário — estes últimos cobrindo as sete faixas e as fronteiras entre
+elas, onde a parcela adicional impede o saque de cair quando o saldo sobe.
+
+---
+
 ## Ciclo de 17/09/2026 — expansão do catálogo, lote 2
 
 ### Adicionado · seis calculadoras trabalhistas
