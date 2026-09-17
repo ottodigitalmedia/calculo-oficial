@@ -47,6 +47,8 @@ import { SAC_OU_PRICE } from './sac-ou-price'
 import type { Guia } from './tipos'
 import { INSALUBRIDADE_E_PERICULOSIDADE } from './insalubridade-e-periculosidade'
 import { IMPOSTO_NA_BOLSA } from './imposto-na-bolsa'
+import { APOSENTADORIA_REGRA_DE_PONTOS } from './aposentadoria-regra-de-pontos'
+import { BENEFICIOS_DO_INSS } from './beneficios-do-inss'
 import { PREVIDENCIA_PRIVADA_GUIA } from './previdencia-privada'
 import { LICENCAS_MATERNIDADE_E_PATERNIDADE } from './licencas-maternidade-e-paternidade'
 
@@ -126,6 +128,10 @@ export const GUIAS: readonly Guia[] = [
   LICENCAS_MATERNIDADE_E_PATERNIDADE,
   IMPOSTO_NA_BOLSA,
   PREVIDENCIA_PRIVADA_GUIA,
+
+  // Bloco de previdência — lote 5 de `00-catalogo` §18.
+  BENEFICIOS_DO_INSS,
+  APOSENTADORIA_REGRA_DE_PONTOS,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {

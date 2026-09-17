@@ -28,6 +28,10 @@ import { RESGATE_PREVIDENCIA_PRIVADA } from './resgate-previdencia-privada'
 import { IR_EM_FUNDOS_IMOBILIARIOS } from './ir-em-fundos-imobiliarios'
 import { COME_COTAS_CALC } from './come-cotas'
 import { CONSORCIO_OU_FINANCIAMENTO } from './consorcio-ou-financiamento'
+import { PENSAO_POR_MORTE } from './pensao-por-morte'
+import { AUXILIO_POR_INCAPACIDADE } from './auxilio-por-incapacidade'
+import { SALARIO_MATERNIDADE_DO_INSS } from './salario-maternidade-do-inss'
+import { APOSENTADORIA_POR_PONTOS } from './aposentadoria-por-pontos'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -144,6 +148,10 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   MULTA_DE_TRANSITO,
   COME_COTAS_CALC,
   CONSORCIO_OU_FINANCIAMENTO,
+  PENSAO_POR_MORTE,
+  AUXILIO_POR_INCAPACIDADE,
+  SALARIO_MATERNIDADE_DO_INSS,
+  APOSENTADORIA_POR_PONTOS,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

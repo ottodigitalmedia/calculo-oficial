@@ -636,6 +636,30 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './consorcio-ou-financiamento'
     ).then((m) => m.calcular),
+  'pensao-por-morte': () =>
+    import(
+      /* webpackChunkName: "calc-pensao-por-morte" */
+      /* webpackExports: ["calcular"] */
+      './pensao-por-morte'
+    ).then((m) => m.calcular),
+  'auxilio-por-incapacidade': () =>
+    import(
+      /* webpackChunkName: "calc-auxilio-por-incapacidade" */
+      /* webpackExports: ["calcular"] */
+      './auxilio-por-incapacidade'
+    ).then((m) => m.calcular),
+  'salario-maternidade-do-inss': () =>
+    import(
+      /* webpackChunkName: "calc-salario-maternidade-do-inss" */
+      /* webpackExports: ["calcular"] */
+      './salario-maternidade-do-inss'
+    ).then((m) => m.calcular),
+  'aposentadoria-por-pontos': () =>
+    import(
+      /* webpackChunkName: "calc-aposentadoria-por-pontos" */
+      /* webpackExports: ["calcular"] */
+      './aposentadoria-por-pontos'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

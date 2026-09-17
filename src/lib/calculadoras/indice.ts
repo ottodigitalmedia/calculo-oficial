@@ -242,6 +242,30 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'O total de cada caminho, o custo embutido e quando o bem chega em cada um.',
   },
   {
+    slug: 'pensao-por-morte',
+    nome: 'Pensão por morte do INSS',
+    linhaDeContexto:
+      'Quanto a família recebe, pela cota familiar mais as cotas de cada dependente.',
+  },
+  {
+    slug: 'auxilio-por-incapacidade',
+    nome: 'Auxílio por incapacidade temporária',
+    linhaDeContexto:
+      'Quanto o antigo auxílio-doença paga, com o limite que quase ninguém conhece.',
+  },
+  {
+    slug: 'salario-maternidade-do-inss',
+    nome: 'Salário-maternidade pago pelo INSS',
+    linhaDeContexto:
+      'Quanto recebe quem não é empregada com carteira: doméstica, autônoma, MEI ou desempregada.',
+  },
+  {
+    slug: 'aposentadoria-por-pontos',
+    nome: 'Aposentadoria pela regra de pontos',
+    linhaDeContexto:
+      'Se a soma de idade e contribuição já basta — e, se não basta, em que ano vai bastar.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

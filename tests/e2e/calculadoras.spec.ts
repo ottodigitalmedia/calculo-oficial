@@ -191,6 +191,12 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
    * cotas, ou os dois. Nenhum campo é obrigatório isoladamente.
    */
   'ir-em-fundos-imobiliarios': '?rendimentos=100000&cotistas=200&emBolsa=sim',
+  /**
+   * O campo que a calculadora exige depende da categoria escolhida, e o
+   * preenchedor genérico não sabe disso: só a segurada especial dispensa
+   * valor, porque o benefício dela é o piso.
+   */
+  'salario-maternidade-do-inss': '?categoria=demais&somaDoze=3600000',
 }
 
 for (const c of CALCULADORAS) {
