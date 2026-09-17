@@ -52,7 +52,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 22 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 28 |
 | TRI | Tributos Pessoa Física | Volume sazonal intenso | 8 |
 | CRD | Crédito e Dívidas | Âncora de receita | 9 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
@@ -62,7 +62,7 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| | **Total** | | **85** |
+| | **Total** | | **91** |
 
 ---
 
@@ -97,6 +97,12 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-082 | Desconto do vale-transporte | 🔸 | M | P | Baixa | v5 |
 | CALC-083 | Salário do jovem aprendiz | 🔥 | M | P | Alta | v5 |
 | CALC-084 | Recesso do estágio | ▫️ | M | P | Nula | v5 |
+| CALC-086 | Licença-maternidade — término e retorno, com Empresa Cidadã | 🔥 | M | P | Baixa | v5 |
+| CALC-087 | Licença-paternidade — duração pela data do nascimento (Lei 15.371/2026) | 🔥 | M | P | Média | v5 |
+| CALC-088 | Salário-família — cota e limite de remuneração | 🔸 | M | P | Alta | v5 |
+| CALC-089 | Rescisão antecipada do contrato de experiência (art. 479) | 🔸 | M | P | Nula | v5 |
+| CALC-090 | Adicional de transferência (art. 469, § 3º) | ▫️ | M | P | Nula | v5 |
+| CALC-091 | Sobreaviso e prontidão (art. 244) | 🔸 | M | P | Nula | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
 
@@ -314,8 +320,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 9 | — | Expansão de cobertura — lote 1 de §18 |
-| | **85** | 10 | |
+| **v5** | 15 | — | Expansão de cobertura — lotes 1 e 2 de §18 |
+| | **91** | 10 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -416,7 +422,33 @@ novos e três guias ampliados.
 | Licença-maternidade | A Lei nº 15.371/2026 cria a nova licença-paternidade e reescreve o art. 392 da CLT **a partir de 01/01/2027**. Publicar agora seria publicar com prazo para ficar errada em janeiro. Vai para o lote 2, junto com a paternidade e com as vigências por ano |
 | Salário-família | A cota e o limite estão na portaria interministerial, cujo PDF é digitalizado e exige leitura por imagem (§5.2 de `ESTADO-DO-PROJETO`). Vai para o lote 2 |
 
-### 18.3 Candidatas dos próximos lotes
+### 18.3 Lote 2 — trabalhistas, publicado em 17/09/2026
+
+CALC-086 a CALC-091, na tabela de §4. Seis calculadoras, um guia novo —
+*Licença-maternidade e paternidade* — e três ampliados: rescisão sem justa causa
+(contrato a prazo), horas extras (sobreaviso e prontidão) e insalubridade e
+periculosidade (transferência).
+
+**Menor que a regra 3 de §18.1 pede, e por quê.** As candidatas trabalhistas
+restantes de §18.4 com fonte oficial conferível e conta fechada eram estas seis.
+Completar o lote com as outras significaria publicar antes de a pesquisa
+terminar: férias em dobro e rescisão por justa causa dependem de conferir o
+estado atual de súmulas do TST depois de decisões do STF, e a jornada 12×36
+depende de convenção coletiva para boa parte da conta.
+
+**As duas pendências do lote 1 estão resolvidas assim:**
+
+| Candidata | Como entrou |
+|---|---|
+| Licença-maternidade e paternidade | Com vigências por data do nascimento: cinco dias pelo ADCT até 31/12/2026, dez em 2027 e quinze em 2028 (Lei nº 15.371/2026, art. 11). Os vinte dias de 2029 dependem de meta fiscal e **não** estão cadastrados — nascimento a partir de 2029 bloqueia o cálculo (`RN-003`) |
+| Salário-família | Cota e limite lidos no art. 4º das duas portarias, pela mesma leitura por imagem que conferiu o Anexo II |
+
+**O que ficou declarado como fora da conta:** a prorrogação por internação e o
+acréscimo por deficiência nas licenças; a proporção do salário-família no mês
+de admissão e de demissão, cujo divisor a portaria não fixa; e a indenização do
+art. 480, cujo teto foi revogado em 1978.
+
+### 18.4 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -425,7 +457,7 @@ valor dela veio de site de terceiro.
 
 | Categoria | Candidatas |
 |---|---|
-| TRB | licença-maternidade e paternidade (Lei nº 15.371/2026) · salário-família · férias vencidas em dobro · rescisão por justa causa · rescisão de contrato por prazo determinado (arts. 479 e 480) · adicional de transferência · sobreaviso · jornada 12×36 e feriados · provisão mensal de férias e 13º |
+| TRB | férias vencidas em dobro · rescisão por justa causa · jornada 12×36 e feriados · provisão mensal de férias e 13º |
 | TRI | IR sobre ações (operação comum e day trade) · IR sobre fundos imobiliários · IR sobre previdência privada (tabela regressiva) · come-cotas · IR sobre aluguel recebido de pessoa jurídica |
 | Previdência | aposentadoria pelas regras de transição da EC nº 103/2019 · tempo de contribuição · valor do auxílio por incapacidade · pensão por morte (cotas) · salário-maternidade pago pelo INSS |
 | CRD | juros de mora e multa por atraso · juros simples · consórcio ou financiamento · saque-aniversário do FGTS e a antecipação |

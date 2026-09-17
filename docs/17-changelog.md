@@ -29,6 +29,60 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 17/09/2026 — expansão do catálogo, lote 2
+
+### Adicionado · seis calculadoras trabalhistas
+
+CALC-086 licença-maternidade · CALC-087 licença-paternidade · CALC-088
+salário-família · CALC-089 rescisão antecipada do contrato de experiência ·
+CALC-090 adicional de transferência · CALC-091 sobreaviso e prontidão.
+
+Um guia novo — *Licença-maternidade e paternidade* — e três ampliados: rescisão
+sem justa causa (contrato com data para acabar), horas extras (horas de espera)
+e insalubridade e periculosidade (transferência). O bloco de valor vigente dos
+guias passou a exibir fração como a norma a escreve, para o sobreaviso aparecer
+como a CLT o fixa, e não arredondado em percentual.
+
+### Parâmetro · vigências novas
+
+Textos lidos no Planalto; datas de publicação das normas antigas conferidas na
+ficha de publicação original da Câmara.
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `licenca-maternidade-dias` | 120 dias | desde 05/10/1988 | CF, art. 7º, XVIII |
+| `licenca-maternidade-inicio-antes-do-parto` | 28 dias | desde 16/04/2002 | CLT, art. 392, § 1º (Lei nº 10.421/2002) |
+| `licenca-paternidade-dias` | 5 · 10 · 15 dias | até 31/12/2026 · 2027 · 2028 | ADCT, art. 10, § 1º · Lei nº 15.371/2026, art. 11 |
+| `empresa-cidada-maternidade-dias` | 60 dias | cobertura desde 01/01/2025 | Lei nº 11.770/2008, art. 1º, I |
+| `empresa-cidada-paternidade-dias` | 15 dias | cobertura desde 01/01/2025 | Lei nº 11.770/2008, art. 1º, II · a partir de 2027, com a redação da Lei nº 15.371/2026 |
+| `salario-familia-cota` · `-limite` | R$ 65,00 e R$ 1.906,04 · R$ 67,54 e R$ 1.980,38 | 2025 · 2026 | Portarias MPS/MF nº 6/2025 e nº 13/2026, art. 4º |
+| `contrato-prazo-indenizacao-fracao` | 1/2 | desde a CLT | CLT, art. 479 |
+| `transferencia-adicional-minimo` | 25% | desde 18/04/1975 | CLT, art. 469, § 3º (Lei nº 6.203/1975) |
+| `sobreaviso-fracao` · `prontidao-fracao` | 1/3 · 2/3 | desde 05/04/1966 | CLT, art. 244, §§ 2º e 3º (Decreto-lei nº 5/1966) |
+
+**Três escolhas de cadastro declaradas, porque mudam o que a calculadora
+responde:**
+
+- **A licença-paternidade de 2028 fecha em 31/12/2028.** A lei prevê vinte dias
+  em 2029 só se a meta fiscal for cumprida; nascimento a partir de 2029 bloqueia
+  o cálculo (`RN-003`) em vez de escolher entre quinze e vinte.
+- **A Empresa Cidadã tem cobertura a partir de 2025, e não da lei.** A produção
+  de efeitos das duas prorrogações foi condicionada à estimativa de renúncia
+  fiscal, e a data resultante não está no texto de nenhuma das leis. Antes de
+  2025, a opção bloqueia; a licença sem prorrogação continua calculando.
+- **As licenças resolvem a vigência pela data do nascimento ou do início**, e
+  não pela data de referência da página — um filho nascido em 30/12/2026 e outro
+  em 01/01/2027 têm durações diferentes.
+
+### Auditoria · casos-ouro com prova de mutação
+
+39 casos-ouro novos, com a contagem de calendário ou a conta ao lado de cada
+asserção. Quatro mutações deliberadas — a prorrogação da maternidade, a
+paternidade de 2027, a fração da prontidão e a cota do salário-família —
+derrubaram sete casos, e os arquivos voltaram ao valor da norma.
+
+---
+
 ## Ciclo de 17/09/2026 — expansão do catálogo, lote 1
 
 ### Adicionado · nove calculadoras trabalhistas

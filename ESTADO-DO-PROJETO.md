@@ -29,10 +29,9 @@
 > índice, não bloqueio.
 >
 > **Sessão de 17/09/2026 — o catálogo reabriu.** O mantenedor decidiu expandir a
-> cobertura (v5). Lote 1 no ar: nove trabalhistas, CALC-077 a CALC-085, e o
-> catálogo passa de 76 para **85**. **Comece por §8.00**, e leia §7.80 antes do
-> lote 2 — ela registra a lei de 2026 que tirou a licença-maternidade do lote e
-> os erros que a conferência pegou antes de publicar.
+> cobertura (v5). Lotes 1 e 2 no ar: quinze trabalhistas, CALC-077 a CALC-091,
+> e o catálogo passa de 76 para **91**. **Comece por §8.00**; §7.80 e §7.81
+> registram o que a conferência pegou em cada lote antes de publicar.
 >
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
@@ -3535,12 +3534,545 @@ depois de ler a norma — não antes, que é o que precisa mudar:
 
 #### O que a expansão encontrou sobre o tamanho possível do catálogo
 
-Listando as candidatas honestas dos próximos lotes (§18.3 do catálogo), dentro
+Listando as candidatas honestas dos próximos lotes (§18.4 do catálogo), dentro
 das dez categorias ativas, a conta fica na casa de **quarenta a sessenta** a
 mais — não das duzentas e poucas que levariam a trezentas. A distância é §14:
 catálogos de trezentas calculadoras são, em boa parte, saúde,
 jurídico-documental, dado municipal e ruído. **Chegar a trezentas exige reabrir
 §14**, e isso é decisão do mantenedor, registrada como pendente em §8.0.
+
+---
+
+### 7.81 Lote 2 — licenças, salário-família, contrato a prazo e horas de espera
+
+**No ar: CALC-086 a CALC-091**, seis trabalhistas, um guia novo e três
+ampliados. O catálogo passa de 85 para **91**. O detalhe dos parâmetros está no
+changelog; aqui fica o que não cabe lá.
+
+#### O que a leitura da norma mudou antes do código
+
+1. **O teto da indenização do empregado foi revogado em 1978.** O § 1º do art.
+   480 da CLT, que limitava o que o empregado paga ao sair antes do prazo, foi
+   revogado pela Lei nº 6.533/1978. A calculadora de contrato a prazo calcula só
+   o lado do empregador (art. 479) e diz por que não há conta para o outro.
+2. **A paternidade de 2029 não é data, é condição.** Cadastrar vinte dias a
+   partir de 2029 seria publicar número que pode não valer; deixar os quinze
+   abertos seria o mesmo erro ao contrário. A vigência de 2028 fecha e a data
+   seguinte bloqueia. **Quando a meta fiscal for apurada, é uma vigência a
+   acrescentar** — sem mexer em código.
+3. **A janela de início da maternidade é parâmetro.** O primeiro rascunho do
+   motor tinha o "28º dia antes do parto" como constante; é texto de lei, e foi
+   para `lib/params/` com a data da Lei nº 10.421/2002.
+4. **A Empresa Cidadã não tem data de efeito no texto.** As duas leis
+   condicionam os efeitos à estimativa da renúncia fiscal. A cobertura começa em
+   2025, declarada no cadastro — pela mesma régua de `RN-003`: bloquear o que
+   não se confirma.
+
+#### O que a conferência das FAQs pegou — desta vez antes de escrever
+
+A régua de §7.80 foi seguida: cada afirmação conferida no texto aberto. Ainda
+assim, três frases saíram do rascunho por não terem fonte à mão — "se pai e mãe
+são segurados, os dois recebem o salário-família", "o adicional de transferência
+sofre INSS" e a extensão da prontidão por analogia. E duas foram reescritas pelo
+que a norma diz: a equiparação a filho inclui o menor sob guarda (Lei nº
+15.108/2025), e a Súmula 188 fala em prorrogação dentro de noventa dias, não em
+"uma" prorrogação — quem limita a uma é o art. 451.
+
+#### Dois tropeços de ferramenta
+
+- **Os arquivos de registro estão em CRLF na cópia de trabalho**, embora o
+  repositório normalize para LF (`.gitattributes`). `grep -c 
+### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
+
+**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 e §7.81 acima).
+Lotes 1 e 2 publicados. Antes do lote 3, **medir** no Search Console as quinze
+novas (regra 3 de §18.1).
+
+**Pendências datadas que o lote 2 criou:**
+
+| Quando | O quê |
+|---|---|
+| Janeiro de 2027 | Portaria interministerial de 2027: nova vigência de `salario-familia-cota` e `-limite`, junto com INSS e salário mínimo |
+| Quando a meta fiscal de 2028 for apurada | Acrescentar a vigência de 2029 de `licenca-paternidade-dias` — vinte dias, ou a data adiada pelo art. 11, § 2º, da Lei nº 15.371/2026 |
+
+**Trabalhistas que sobraram para o lote 3**, cada uma com a pesquisa que falta:
+férias vencidas em dobro (conferir o estado da Súmula 450 do TST depois da ADPF
+501 no STF — **não citar a súmula como vigente sem isso**) · rescisão por justa
+causa · jornada 12×36 e feriados · provisão mensal de férias e 13º.
+
+**Decisão pendente do mantenedor.** Dentro das dez categorias ativas, a
+expansão honesta cabe em quarenta a sessenta calculadoras a mais (§7.80). Chegar
+perto de trezentas exige reabrir alguma categoria de `00-catalogo` §14 — e cada
+uma foi excluída com motivo registrado.
+
+**Régua deixada pelo lote 1:** FAQ se escreve com a fonte aberta, como o
+parâmetro — e contagem de testes que cai é falha, mesmo com tudo verde.
+
+### 8.0 Retomada em 09/08/2026 — leia isto primeiro
+
+O ciclo de 08 e 09/08/2026 foi de **auditoria e acabamento**, não de catálogo:
+nenhuma calculadora nova entrou. O que mudou está em §7.76 e §7.77.
+
+**Nada aqui bloqueia trabalho novo.** A lista abaixo é o que ficou aberto, com
+o dono de cada item — porque três dos seis não são código.
+
+---
+
+#### A · Depende do mantenedor, não de código
+
+| # | O quê | Por que importa | Onde |
+|---|---|---|---|
+| A-1 | **Credenciais de SMTP no painel** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | **O formulário de contato não envia hoje.** Faltando qualquer uma, `api/contato` responde "indisponível" e mostra o e-mail direto. Comportamento correto (`RNF-007`), resultado inútil | `13-deployment` §5 |
+| A-2 | **Anúncio e consentimento** | `D-01` diz "monetização exclusiva por anúncio" e **não existe uma unidade sequer**. MR-3 cai por volta de 29/10/2026 e decide continuar, reposicionar ou descontinuar — com HIP-03 sem dado nenhum. O gatilho do roadmap é circular: pede sinal do painel de anúncios para justificar construir o anúncio. **Em 14/08/2026 a parte de consentimento saiu do caminho crítico** (§7.78): a medição foi liberada por legítimo interesse, e `INT-002` deixou de ser pré-requisito para o GA4 reportar. Ela volta a ser pré-requisito **no dia em que o anúncio entrar**, porque publicidade personalizada continua exigindo consentimento — `07-security` §11.2 | `11-roadmap` §5 item 5 |
+| ~~A-3~~ | ~~**`/cookies` e `/privacidade` afirmam que não há medição de audiência**~~ | ✅ **Resolvido em 14/08/2026 — §7.78.** Deixou de ser matéria de gosto quando a liberação do consentimento tornou falsa também a afirmação sobre cookie, que até então era a única verdadeira das três. As duas páginas foram reescritas | `src/app/cookies`, `src/app/privacidade` |
+
+---
+
+#### B · Código, e pequeno
+
+| # | O quê | Estado |
+|---|---|---|
+| B-1 | **Evento de memória expandida** | HIP-02 se mede pela taxa de expansão da memória "desde o lançamento" (`00-product-brief`), e o evento **nunca foi instrumentado**. Não carrega nada digitado — só a calculadora e o tipo de interação —, então cabe em `RN-031` **sem exceção**. É o menor trabalho da lista com efeito no MR-3 |
+| B-2 | **`busca_sem_resultado`** | Continua sendo comentário em `lib/calculadoras/sinonimos.ts`. Diferente de B-1, ele **carrega o termo digitado** — é exceção a `RN-031` e precisa de decisão, não de commit |
+| B-3 | **Hierarquia de títulos com a memória aberta** | Latente e pré-existente: o `h3` da memória cria salto de `h1` para `h3` em calculadoras sem `h2` antes. Só aparece com a memória **expandida**, e por isso `acessibilidade.spec.ts` não o pega. Descoberto em 09/08 ao tentar deixá-la sempre no DOM (§7.76) |
+| B-4 | **Duas etiquetas `robots` no 404 sob `/calculadora/`** | A do layout vem primeiro dizendo `index, follow`. Não é falha de proteção — o status **404** é o que decide, e o buscador aplica a diretiva mais restritiva. Documentado em `tests/e2e/pagina-404.spec.ts` |
+
+---
+
+#### C · A investigação que ficou aberta
+
+**Por que `.next/static/<BUILD_ID>/` não existe dentro do contêiner.**
+
+A prova de troca de contêiner por identificador de build foi construída,
+**funcionou no servidor autônomo local** (200 para o id certo, 404 para um
+inexistente) e **falhou no contêiner publicado** — reprovando um deploy que
+tinha dado certo. Revertida em 09/08/2026; ver §7.77.
+
+O que já se sabe, para não refazer o caminho:
+
+- o argumento **chega ao build**: o log traz `--build-arg BUILD_ID=1460b3d0…`;
+- o `ARG`/`ENV` está no estágio `builder`, antes de `RUN npm run build`;
+- `next.config.ts` só aplica `generateBuildId` quando a variável existe;
+- localmente, `BUILD_ID=x npm run build` grava `.next/BUILD_ID` e cria
+  `.next/static/x/_buildManifest.js`;
+- produção **não referencia** `_next/static/<id>/` em lugar nenhum do HTML —
+  só `chunks/` e `css/`.
+
+**Hipótese não testada:** cache de camada do BuildKit (`type=gha`) reaproveitando
+o `RUN npm run build` de uma execução anterior.
+
+> **Regra que esta investigação deixou:** ela precisa acontecer **fora do
+> caminho de publicação** — construindo a imagem localmente e inspecionando-a —,
+> e não empurrando tentativas para o site no ar. Foi por isso que a mudança foi
+> revertida em vez de ajustada.
+
+O defeito que ela resolvia **volta declarado**: o passo `Implantar` pode aprovar
+contra o contêiner antigo (§7.63). O `HEALTH_TOKEN` continua sendo o caminho
+alternativo, e exige o segredo no repositório **e** a variável de mesmo nome no
+painel do EasyPanel.
+
+---
+
+#### D · Três lições operacionais desta sessão
+
+Custaram horas e não estão em nenhum teste:
+
+1. **`pkill` não funciona no Windows.** Um `serve-standalone.mjs` sobrevivente
+   segurou `.next/standalone` e travou **todas** as builds seguintes, com
+   sintomas que pareciam de código. Encerrar por `Stop-Process` e conferir.
+2. **`next dev` e `next build` disputam o mesmo `.next`.** Não dá para deixar o
+   servidor de teste no ar enquanto a verificação roda.
+3. **`curl` não hidrata.** Duas conclusões erradas nesta sessão vieram de ler o
+   HTML servido: "não há medição em produção" (havia) e "o botão de imprimir não
+   subiu" (tinha subido). O que é renderizado no cliente só se verifica com
+   navegador.
+
+---
+
+
+Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
+fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
+~~decidir a sobreposição com o projeto irmão~~ ✅ (§6.4) · ~~servir `www`~~ ✅.
+
+Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
+~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8) ·
+~~CALC-023~~ ✅ (§7.11) · ~~CALC-010~~ ✅ · ~~CALC-008~~ ✅ (§7.15) ·
+~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14) · ~~CALC-031~~ ✅ (§7.30),
+que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2 · e as
+fila do bloco A: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
+~~CALC-071~~ ✅ · ~~CALC-055~~ ✅ · ~~CALC-057~~ ✅ · ~~CALC-043~~ ✅ ·
+~~CALC-065~~ ✅ · ~~CALC-069~~ ✅ · ~~CALC-049~~ ✅ · e ~~o recorte fixo que fazia
+`verificar-orcamento.ts` falhar por limite próprio~~ ✅ (§7.31).
+
+O que sobrou, em ordem:
+
+1. ~~**Implementar `ADR-006`**~~ ✅ **feito em 02/08/2026.** A coleta está no
+   pipeline, o cache é versionado, o plano de falha foi exercitado de verdade, e
+   **as doze que ele destrava estão no ar**: CALC-060, CALC-061,
+   CALC-063, CALC-037, CALC-042, CALC-041, CALC-064, CALC-045, CALC-039, CALC-040,
+   CALC-034 e CALC-062 — esta última **sem** a alíquota de IOF, pela razão em
+   §7.33.
+
+   **Nenhuma falta.**
+
+   | ID | Calculadora | O que falta |
+   |---|---|---|
+
+   > **O padrão que CALC-041 abriu vale para as próximas.** A regra de
+   > remuneração da poupança está em lei, e transcrevê-la criaria constante legal
+   > fora de `lib/params/`. Em vez disso, a calculadora usa a taxa que o Banco
+   > Central **já publica apurada**. Antes de cadastrar parâmetro para uma
+   > calculadora de investimento, verifique se a série não entrega o número
+   > pronto.
+
+   ~~**Selic e TR na correção por índice continuam pendentes** de uma decisão~~
+   ✅ **resolvido em 07/08/2026, e a premissa estava metade errada** — §7.69.
+   A Selic está no ar em CALC-060: a série 4390 publica o acumulado mensal
+   pronto, e não havia convenção a definir. **A TR continua declarada como "Em
+   breve"**, agora por motivo medido — a série 226 devolve uma observação por
+   dia, cada uma valendo o mês que começa naquele dia.
+2. ~~**Fechar a fonte da tabela do seguro-desemprego**~~ ✅ **feito em
+   06/08/2026, e o resultado foi que não havia portaria a achar** — §5.5. A
+   Resolução CODEFAT nº 957/2022 manda reajustar e atribui a *divulgação* à
+   Secretaria; a publicação do órgão é o ato. Entraram a resolução como fonte, o
+   anexo assinado de 2025 e a conferência por reprodução, que fecha ao centavo.
+
+   **Sobrou um pedaço, e ele é pequeno:** cadastrar a vigência de 2025, que
+   depende de ler o dia de início em fonte oficial. Não foi inferido por
+   analogia — o porquê está em §5.5.
+3. ~~**CALC-017 · restituição estimada do IRPF anual.**~~ ✅ **feita em
+   06/08/2026, com CALC-019 junto.** A tabela do ano-calendário 2025 estava na
+   página de tabelas da Receita do ano correspondente — §6.6.2 conta por que a
+   sondagem anterior não a encontrou, e §7.65 registra o erro de método.
+
+   A leitura da norma encolheu o escopo, e isso foi bom: a Lei nº 15.270/2025
+   revogou o art. 11 da Lei nº 9.250/1995, então **2026 é outra estrutura**. As
+   duas calculadoras cobrem 2024 e 2025, com vigências fechadas e bloqueio
+   declarado para os demais anos — §7.64.
+
+4. ~~**O campo de LISTA**~~ ✅ **feito em 06/08/2026.** `Campo` modelava um valor
+   por campo, e **três** calculadoras publicáveis dependiam de grupo repetido:
+   CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N notas). §7.4 diz que
+   duas que precisam é medida e uma é palpite — com três, o contrato cresceu, e
+   **as três estão no ar**. O caminho e os dois defeitos que ele revelou estão em
+   §7.29, §7.35 e §7.36.
+
+   > **O desenho não é trivial, e é por isso que ele merece sessão própria.** As
+   > três precisam de lista de **registros**, não de escalares: CALC-028 pede
+   > trios (saldo, taxa, parcela), CALC-075 pede pares (nota, peso). E o valor
+   > precisa continuar serializável para a URL (`RF-006`) e validável por campo.
+   > Tocar `tipos.ts`, `campos.tsx`, `Calculadora.tsx` e `url-state.ts` de uma
+   > vez é o tipo de mudança que não se faz no fim de uma sessão longa.
+
+   > **Correção de um erro deste documento.** Uma versão anterior desta seção
+   > dizia que CALC-040 também precisava do campo de lista, e citava §7.29 como
+   > apoio. **Não precisa**, e §7.29 não diz isso: `docs/18` §7 lista quatro
+   > calculadoras com essa necessidade — CALC-028, CALC-073, CALC-075 e, em menor
+   > grau, CALC-074 —, e CALC-040 não está entre elas. Ela compara três produtos
+   > fixos. O erro mantinha uma calculadora na fila errada.
+5. ~~**`/api/health` que responde igual em toda versão.**~~ ✅ **feito em
+   07/08/2026, pelo segundo caminho da tabela abaixo** — a rota devolve `rev`
+   só a quem apresenta `x-health-token`, e a resposta pública continua sendo
+   `{"status":"ok"}` e mais nada. `EP-016` não precisou ser revisto, e quatro
+   casos de `tests/e2e/cabecalhos.spec.ts` sustentam a distinção.
+
+   > **Este item ficou marcado como "parado por escolha" por um dia depois de
+   > pronto**, e a auditoria de 08/08/2026 o encontrou assim (§7.76). A tabela
+   > de decisão abaixo fica como registro do raciocínio — foi ela que produziu a
+   > escolha certa, e o texto original dizia bem por que o primeiro caminho
+   > tinha piorado depois que o repositório passou a ser público.
+
+   > ⚠️ **Este item colide com uma decisão já registrada, e a colisão não tinha
+   > sido notada.** `06-api-spec` §EP-016 diz, sobre esta rota: *"Não devolve
+   > versão, ambiente nem configuração — a rota é pública, e enumerar o que roda
+   > aqui só orienta quem procura o que atacar."* A mesma frase está no
+   > cabeçalho de `app/api/health/route.ts`.
+   >
+   > Publicar o hash do commit é exatamente devolver versão. **Não dá para fazer
+   > este item sem rever aquela decisão**, e rever decisão registrada de
+   > segurança é o que `CLAUDE.md` reserva ao mantenedor.
+   >
+   > As saídas possíveis, para quando ele decidir:
+   >
+   > | Caminho | O que custa |
+   > |---|---|
+   > | Publicar `rev` no corpo | Revê §EP-016. ⚠️ **O atenuante desapareceu:** medido em 07/08/2026, o repositório está **público**. O hash agora mapeia direto para o código-fonte, e qualquer um lê a árvore exata que roda em produção. Este caminho ficou mais caro do que quando foi escrito |
+   > | Responder `rev` só com segredo no cabeçalho | Preserva a resposta pública intacta; custa um segredo novo e um caminho a mais na única rota dinâmica |
+   > | Não fazer | O passo de saúde continua podendo aprovar o contêiner velho. Nunca causou incidente registrado |
+   >
+   > Enquanto não houver decisão, o item fica **parado por escolha**, e não por
+   > esquecimento.
+   >
+   > **Recomendação, agora que o repositório é público:** o segundo caminho. Ele
+   > entrega ao pipeline exatamente o que falta — saber se o contêiner que
+   > respondeu é o novo — sem tocar na resposta pública nem em §EP-016. O
+   > primeiro caminho trocaria uma decisão de segurança registrada por
+   > conveniência de verificação, e ficou pior depois que o código passou a ser
+   > legível por qualquer um.
+   >
+   > **O custo de não fazer é conhecido e pequeno:** o passo de saúde pode
+   > aprovar o contêiner velho, o que já foi observado (§7.63) e nunca causou
+   > incidente — a conferência em produção por `curl` cobre o buraco, e é o que
+   > vem sendo feito a cada entrega.
+6. ~~**Um comparativo "acordo vs. dispensa"**~~ ✅ **decidido pelo mantenedor e
+   construído em 07/08/2026** — é CALC-076, e o catálogo fechou em 76. Ver §7.72.
+7. ~~**Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer~~ ✅ **feito em
+   07/08/2026.** A fonte não precisou aparecer: estava no Planalto desde 1985 — §7.70.
+8. ~~**Os 7 guias restantes**~~ ✅ **feitos em 06/08/2026** — §4.6. Dez de dez.
+
+> **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
+> variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o
+> passo `Implantar` do pipeline dispara sozinho a cada push em `main` — com
+> verificação de saúde e rollback automático, que o clique manual não tinha.
+> `13-deployment` §4 descrevia o deploy manual como decisão; a decisão continua
+> válida para o **painel**, mas o caminho pelo pipeline é melhor e já existia.
+
+### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
+
+**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 acima). Lote 1
+publicado; o próximo passo é o lote 2.
+
+**Lote 2 — já com a pesquisa de partida feita:**
+
+| Candidata | O que já se sabe |
+|---|---|
+| Licença-maternidade e paternidade | Lei nº 15.371/2026, lida em 17/09/2026: paternidade de 10 dias em 2027, 15 em 2028 e 20 em 2029 (condicionada a meta fiscal, art. 11, §§ 1º e 2º); art. 392 da CLT reescrito; vigência da lei em 01/01/2027. Precisa de vigências por ano e de ler o novo art. 392 inteiro antes de modelar |
+| Salário-família | Cota e limite estão na Portaria Interministerial MPS/MF de cada ano — a de 2026 é a nº 13, PDF digitalizado; ler por imagem, como em §5.2 |
+| Demais trabalhistas | férias vencidas em dobro · rescisão por justa causa · contrato por prazo determinado (arts. 479 e 480) · adicional de transferência · sobreaviso · 12×36 |
+
+**Decisão pendente do mantenedor.** Dentro das dez categorias ativas, a
+expansão honesta cabe em quarenta a sessenta calculadoras a mais (§7.80). Chegar
+perto de trezentas exige reabrir alguma categoria de `00-catalogo` §14 — e cada
+uma foi excluída com motivo registrado.
+
+**Régua deixada pelo lote 1:** FAQ se escreve com a fonte aberta, como o
+parâmetro — e contagem de testes que cai é falha, mesmo com tudo verde.
+
+### 8.0 Retomada em 09/08/2026 — leia isto primeiro
+
+O ciclo de 08 e 09/08/2026 foi de **auditoria e acabamento**, não de catálogo:
+nenhuma calculadora nova entrou. O que mudou está em §7.76 e §7.77.
+
+**Nada aqui bloqueia trabalho novo.** A lista abaixo é o que ficou aberto, com
+o dono de cada item — porque três dos seis não são código.
+
+---
+
+#### A · Depende do mantenedor, não de código
+
+| # | O quê | Por que importa | Onde |
+|---|---|---|---|
+| A-1 | **Credenciais de SMTP no painel** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | **O formulário de contato não envia hoje.** Faltando qualquer uma, `api/contato` responde "indisponível" e mostra o e-mail direto. Comportamento correto (`RNF-007`), resultado inútil | `13-deployment` §5 |
+| A-2 | **Anúncio e consentimento** | `D-01` diz "monetização exclusiva por anúncio" e **não existe uma unidade sequer**. MR-3 cai por volta de 29/10/2026 e decide continuar, reposicionar ou descontinuar — com HIP-03 sem dado nenhum. O gatilho do roadmap é circular: pede sinal do painel de anúncios para justificar construir o anúncio. **Em 14/08/2026 a parte de consentimento saiu do caminho crítico** (§7.78): a medição foi liberada por legítimo interesse, e `INT-002` deixou de ser pré-requisito para o GA4 reportar. Ela volta a ser pré-requisito **no dia em que o anúncio entrar**, porque publicidade personalizada continua exigindo consentimento — `07-security` §11.2 | `11-roadmap` §5 item 5 |
+| ~~A-3~~ | ~~**`/cookies` e `/privacidade` afirmam que não há medição de audiência**~~ | ✅ **Resolvido em 14/08/2026 — §7.78.** Deixou de ser matéria de gosto quando a liberação do consentimento tornou falsa também a afirmação sobre cookie, que até então era a única verdadeira das três. As duas páginas foram reescritas | `src/app/cookies`, `src/app/privacidade` |
+
+---
+
+#### B · Código, e pequeno
+
+| # | O quê | Estado |
+|---|---|---|
+| B-1 | **Evento de memória expandida** | HIP-02 se mede pela taxa de expansão da memória "desde o lançamento" (`00-product-brief`), e o evento **nunca foi instrumentado**. Não carrega nada digitado — só a calculadora e o tipo de interação —, então cabe em `RN-031` **sem exceção**. É o menor trabalho da lista com efeito no MR-3 |
+| B-2 | **`busca_sem_resultado`** | Continua sendo comentário em `lib/calculadoras/sinonimos.ts`. Diferente de B-1, ele **carrega o termo digitado** — é exceção a `RN-031` e precisa de decisão, não de commit |
+| B-3 | **Hierarquia de títulos com a memória aberta** | Latente e pré-existente: o `h3` da memória cria salto de `h1` para `h3` em calculadoras sem `h2` antes. Só aparece com a memória **expandida**, e por isso `acessibilidade.spec.ts` não o pega. Descoberto em 09/08 ao tentar deixá-la sempre no DOM (§7.76) |
+| B-4 | **Duas etiquetas `robots` no 404 sob `/calculadora/`** | A do layout vem primeiro dizendo `index, follow`. Não é falha de proteção — o status **404** é o que decide, e o buscador aplica a diretiva mais restritiva. Documentado em `tests/e2e/pagina-404.spec.ts` |
+
+---
+
+#### C · A investigação que ficou aberta
+
+**Por que `.next/static/<BUILD_ID>/` não existe dentro do contêiner.**
+
+A prova de troca de contêiner por identificador de build foi construída,
+**funcionou no servidor autônomo local** (200 para o id certo, 404 para um
+inexistente) e **falhou no contêiner publicado** — reprovando um deploy que
+tinha dado certo. Revertida em 09/08/2026; ver §7.77.
+
+O que já se sabe, para não refazer o caminho:
+
+- o argumento **chega ao build**: o log traz `--build-arg BUILD_ID=1460b3d0…`;
+- o `ARG`/`ENV` está no estágio `builder`, antes de `RUN npm run build`;
+- `next.config.ts` só aplica `generateBuildId` quando a variável existe;
+- localmente, `BUILD_ID=x npm run build` grava `.next/BUILD_ID` e cria
+  `.next/static/x/_buildManifest.js`;
+- produção **não referencia** `_next/static/<id>/` em lugar nenhum do HTML —
+  só `chunks/` e `css/`.
+
+**Hipótese não testada:** cache de camada do BuildKit (`type=gha`) reaproveitando
+o `RUN npm run build` de uma execução anterior.
+
+> **Regra que esta investigação deixou:** ela precisa acontecer **fora do
+> caminho de publicação** — construindo a imagem localmente e inspecionando-a —,
+> e não empurrando tentativas para o site no ar. Foi por isso que a mudança foi
+> revertida em vez de ajustada.
+
+O defeito que ela resolvia **volta declarado**: o passo `Implantar` pode aprovar
+contra o contêiner antigo (§7.63). O `HEALTH_TOKEN` continua sendo o caminho
+alternativo, e exige o segredo no repositório **e** a variável de mesmo nome no
+painel do EasyPanel.
+
+---
+
+#### D · Três lições operacionais desta sessão
+
+Custaram horas e não estão em nenhum teste:
+
+1. **`pkill` não funciona no Windows.** Um `serve-standalone.mjs` sobrevivente
+   segurou `.next/standalone` e travou **todas** as builds seguintes, com
+   sintomas que pareciam de código. Encerrar por `Stop-Process` e conferir.
+2. **`next dev` e `next build` disputam o mesmo `.next`.** Não dá para deixar o
+   servidor de teste no ar enquanto a verificação roda.
+3. **`curl` não hidrata.** Duas conclusões erradas nesta sessão vieram de ler o
+   HTML servido: "não há medição em produção" (havia) e "o botão de imprimir não
+   subiu" (tinha subido). O que é renderizado no cliente só se verifica com
+   navegador.
+
+---
+
+
+Feito na sessão de 31/07/2026, pós-lançamento: ~~ativar HSTS~~ ✅ · ~~trocar a
+fonte do INSS 2026~~ ✅ · ~~reduzir o pacote da rota de calculadora~~ ✅ ·
+~~decidir a sobreposição com o projeto irmão~~ ✅ (§6.4) · ~~servir `www`~~ ✅.
+
+Feito em 01/08/2026: ~~CALC-026~~ ✅ · ~~CALC-070~~ ✅ · ~~CALC-054~~ ✅ ·
+~~o aviso de estimativa que alegava parâmetro legal onde não havia~~ ✅ (§7.8) ·
+~~CALC-023~~ ✅ (§7.11) · ~~CALC-010~~ ✅ · ~~CALC-008~~ ✅ (§7.15) ·
+~~o pipeline que ficava verde sem implantar~~ ✅ (§7.14) · ~~CALC-031~~ ✅ (§7.30),
+que **fechou o v2 até onde ele ia sem dependência externa** — ver §4.2 · e as
+fila do bloco A: ~~CALC-036~~ ✅ · ~~CALC-035~~ ✅ · ~~CALC-044~~ ✅ ·
+~~CALC-071~~ ✅ · ~~CALC-055~~ ✅ · ~~CALC-057~~ ✅ · ~~CALC-043~~ ✅ ·
+~~CALC-065~~ ✅ · ~~CALC-069~~ ✅ · ~~CALC-049~~ ✅ · e ~~o recorte fixo que fazia
+`verificar-orcamento.ts` falhar por limite próprio~~ ✅ (§7.31).
+
+O que sobrou, em ordem:
+
+1. ~~**Implementar `ADR-006`**~~ ✅ **feito em 02/08/2026.** A coleta está no
+   pipeline, o cache é versionado, o plano de falha foi exercitado de verdade, e
+   **as doze que ele destrava estão no ar**: CALC-060, CALC-061,
+   CALC-063, CALC-037, CALC-042, CALC-041, CALC-064, CALC-045, CALC-039, CALC-040,
+   CALC-034 e CALC-062 — esta última **sem** a alíquota de IOF, pela razão em
+   §7.33.
+
+   **Nenhuma falta.**
+
+   | ID | Calculadora | O que falta |
+   |---|---|---|
+
+   > **O padrão que CALC-041 abriu vale para as próximas.** A regra de
+   > remuneração da poupança está em lei, e transcrevê-la criaria constante legal
+   > fora de `lib/params/`. Em vez disso, a calculadora usa a taxa que o Banco
+   > Central **já publica apurada**. Antes de cadastrar parâmetro para uma
+   > calculadora de investimento, verifique se a série não entrega o número
+   > pronto.
+
+   ~~**Selic e TR na correção por índice continuam pendentes** de uma decisão~~
+   ✅ **resolvido em 07/08/2026, e a premissa estava metade errada** — §7.69.
+   A Selic está no ar em CALC-060: a série 4390 publica o acumulado mensal
+   pronto, e não havia convenção a definir. **A TR continua declarada como "Em
+   breve"**, agora por motivo medido — a série 226 devolve uma observação por
+   dia, cada uma valendo o mês que começa naquele dia.
+2. ~~**Fechar a fonte da tabela do seguro-desemprego**~~ ✅ **feito em
+   06/08/2026, e o resultado foi que não havia portaria a achar** — §5.5. A
+   Resolução CODEFAT nº 957/2022 manda reajustar e atribui a *divulgação* à
+   Secretaria; a publicação do órgão é o ato. Entraram a resolução como fonte, o
+   anexo assinado de 2025 e a conferência por reprodução, que fecha ao centavo.
+
+   **Sobrou um pedaço, e ele é pequeno:** cadastrar a vigência de 2025, que
+   depende de ler o dia de início em fonte oficial. Não foi inferido por
+   analogia — o porquê está em §5.5.
+3. ~~**CALC-017 · restituição estimada do IRPF anual.**~~ ✅ **feita em
+   06/08/2026, com CALC-019 junto.** A tabela do ano-calendário 2025 estava na
+   página de tabelas da Receita do ano correspondente — §6.6.2 conta por que a
+   sondagem anterior não a encontrou, e §7.65 registra o erro de método.
+
+   A leitura da norma encolheu o escopo, e isso foi bom: a Lei nº 15.270/2025
+   revogou o art. 11 da Lei nº 9.250/1995, então **2026 é outra estrutura**. As
+   duas calculadoras cobrem 2024 e 2025, com vigências fechadas e bloqueio
+   declarado para os demais anos — §7.64.
+
+4. ~~**O campo de LISTA**~~ ✅ **feito em 06/08/2026.** `Campo` modelava um valor
+   por campo, e **três** calculadoras publicáveis dependiam de grupo repetido:
+   CALC-028 (N dívidas), CALC-073 (N pessoas) e CALC-075 (N notas). §7.4 diz que
+   duas que precisam é medida e uma é palpite — com três, o contrato cresceu, e
+   **as três estão no ar**. O caminho e os dois defeitos que ele revelou estão em
+   §7.29, §7.35 e §7.36.
+
+   > **O desenho não é trivial, e é por isso que ele merece sessão própria.** As
+   > três precisam de lista de **registros**, não de escalares: CALC-028 pede
+   > trios (saldo, taxa, parcela), CALC-075 pede pares (nota, peso). E o valor
+   > precisa continuar serializável para a URL (`RF-006`) e validável por campo.
+   > Tocar `tipos.ts`, `campos.tsx`, `Calculadora.tsx` e `url-state.ts` de uma
+   > vez é o tipo de mudança que não se faz no fim de uma sessão longa.
+
+   > **Correção de um erro deste documento.** Uma versão anterior desta seção
+   > dizia que CALC-040 também precisava do campo de lista, e citava §7.29 como
+   > apoio. **Não precisa**, e §7.29 não diz isso: `docs/18` §7 lista quatro
+   > calculadoras com essa necessidade — CALC-028, CALC-073, CALC-075 e, em menor
+   > grau, CALC-074 —, e CALC-040 não está entre elas. Ela compara três produtos
+   > fixos. O erro mantinha uma calculadora na fila errada.
+5. ~~**`/api/health` que responde igual em toda versão.**~~ ✅ **feito em
+   07/08/2026, pelo segundo caminho da tabela abaixo** — a rota devolve `rev`
+   só a quem apresenta `x-health-token`, e a resposta pública continua sendo
+   `{"status":"ok"}` e mais nada. `EP-016` não precisou ser revisto, e quatro
+   casos de `tests/e2e/cabecalhos.spec.ts` sustentam a distinção.
+
+   > **Este item ficou marcado como "parado por escolha" por um dia depois de
+   > pronto**, e a auditoria de 08/08/2026 o encontrou assim (§7.76). A tabela
+   > de decisão abaixo fica como registro do raciocínio — foi ela que produziu a
+   > escolha certa, e o texto original dizia bem por que o primeiro caminho
+   > tinha piorado depois que o repositório passou a ser público.
+
+   > ⚠️ **Este item colide com uma decisão já registrada, e a colisão não tinha
+   > sido notada.** `06-api-spec` §EP-016 diz, sobre esta rota: *"Não devolve
+   > versão, ambiente nem configuração — a rota é pública, e enumerar o que roda
+   > aqui só orienta quem procura o que atacar."* A mesma frase está no
+   > cabeçalho de `app/api/health/route.ts`.
+   >
+   > Publicar o hash do commit é exatamente devolver versão. **Não dá para fazer
+   > este item sem rever aquela decisão**, e rever decisão registrada de
+   > segurança é o que `CLAUDE.md` reserva ao mantenedor.
+   >
+   > As saídas possíveis, para quando ele decidir:
+   >
+   > | Caminho | O que custa |
+   > |---|---|
+   > | Publicar `rev` no corpo | Revê §EP-016. ⚠️ **O atenuante desapareceu:** medido em 07/08/2026, o repositório está **público**. O hash agora mapeia direto para o código-fonte, e qualquer um lê a árvore exata que roda em produção. Este caminho ficou mais caro do que quando foi escrito |
+   > | Responder `rev` só com segredo no cabeçalho | Preserva a resposta pública intacta; custa um segredo novo e um caminho a mais na única rota dinâmica |
+   > | Não fazer | O passo de saúde continua podendo aprovar o contêiner velho. Nunca causou incidente registrado |
+   >
+   > Enquanto não houver decisão, o item fica **parado por escolha**, e não por
+   > esquecimento.
+   >
+   > **Recomendação, agora que o repositório é público:** o segundo caminho. Ele
+   > entrega ao pipeline exatamente o que falta — saber se o contêiner que
+   > respondeu é o novo — sem tocar na resposta pública nem em §EP-016. O
+   > primeiro caminho trocaria uma decisão de segurança registrada por
+   > conveniência de verificação, e ficou pior depois que o código passou a ser
+   > legível por qualquer um.
+   >
+   > **O custo de não fazer é conhecido e pequeno:** o passo de saúde pode
+   > aprovar o contêiner velho, o que já foi observado (§7.63) e nunca causou
+   > incidente — a conferência em produção por `curl` cobre o buraco, e é o que
+   > vem sendo feito a cada entrega.
+6. ~~**Um comparativo "acordo vs. dispensa"**~~ ✅ **decidido pelo mantenedor e
+   construído em 07/08/2026** — é CALC-076, e o catálogo fechou em 76. Ver §7.72.
+7. ~~**Vale-transporte (`RN-027`)** em CALC-001, se a fonte aparecer~~ ✅ **feito em
+   07/08/2026.** A fonte não precisou aparecer: estava no Planalto desde 1985 — §7.70.
+8. ~~**Os 7 guias restantes**~~ ✅ **feitos em 06/08/2026** — §4.6. Dez de dez.
+
+> **O deploy deixou de ser um clique.** O segredo `DEPLOY_WEBHOOK_URL` e a
+> variável `NEXT_PUBLIC_SITE_URL` estão configurados no repositório, então o
+> passo `Implantar` do pipeline dispara sozinho a cada push em `main` — com
+> verificação de saúde e rollback automático, que o clique manual não tinha.
+> `13-deployment` §4 descrevia o deploy manual como decisão; a decisão continua
+> válida para o **painel**, mas o caminho pelo pipeline é melhor e já existia.
+` no Git
+  Bash devolveu zero e enganou; `file` mostrou a verdade. O script de registro
+  normaliza antes de substituir e falha alto se não achar a âncora.
+- **O preenchedor genérico do teste ponta a ponta** dá a mesma data a todos os
+  campos de data e só preenche obrigatórios. Duas calculadoras novas recusaram
+  com razão — termo igual à dispensa, e nenhuma hora de espera — e entraram em
+  `ENTRADAS_QUE_INTERAGEM`, como o banco de horas.
 
 ---
 
