@@ -90,6 +90,8 @@ function TabelaDeFaixas({ parametroId, legenda }: { readonly parametroId: string
 
   const faixas = resolvida.vigencia.valor.faixas
   const temParcela = faixas.some((f) => f.parcelaDeduzirCentavos !== undefined)
+  // Tabela que SOMA parcela — o saque-aniversário. Ver `params/tipos.ts`.
+  const temAdicional = faixas.some((f) => f.parcelaAdicionalCentavos !== undefined)
 
   return (
     <figure className="my-7">
@@ -106,6 +108,9 @@ function TabelaDeFaixas({ parametroId, legenda }: { readonly parametroId: string
               {temParcela ? (
                 <th scope="col" className="px-4 py-3 font-semibold">Parcela a deduzir</th>
               ) : null}
+              {temAdicional ? (
+                <th scope="col" className="px-4 py-3 font-semibold">Parcela adicional</th>
+              ) : null}
             </tr>
           </thead>
           <tbody>
@@ -118,6 +123,11 @@ function TabelaDeFaixas({ parametroId, legenda }: { readonly parametroId: string
                 {temParcela ? (
                   <td className="px-4 py-3 tabular-nums">
                     {faixa.parcelaDeduzirCentavos ? formatarReal(faixa.parcelaDeduzirCentavos) : '—'}
+                  </td>
+                ) : null}
+                {temAdicional ? (
+                  <td className="px-4 py-3 tabular-nums">
+                    {faixa.parcelaAdicionalCentavos ? formatarReal(faixa.parcelaAdicionalCentavos) : '—'}
                   </td>
                 ) : null}
               </tr>

@@ -23,6 +23,10 @@ import { JOVEM_APRENDIZ } from './jovem-aprendiz'
 import { RECESSO_DE_ESTAGIO } from './recesso-de-estagio'
 import { IMPOSTO_SOBRE_PLR } from './imposto-sobre-plr'
 import { LICENCA_MATERNIDADE } from './licenca-maternidade'
+import { IR_EM_BOLSA } from './ir-em-bolsa'
+import { RESGATE_PREVIDENCIA_PRIVADA } from './resgate-previdencia-privada'
+import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
+import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
 import { LICENCA_PATERNIDADE } from './licenca-paternidade'
 import { SALARIO_FAMILIA_CALC } from './salario-familia'
 import { RESCISAO_CONTRATO_DE_EXPERIENCIA } from './rescisao-contrato-de-experiencia'
@@ -128,6 +132,10 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   RESCISAO_CONTRATO_DE_EXPERIENCIA,
   ADICIONAL_DE_TRANSFERENCIA,
   SOBREAVISO_E_PRONTIDAO,
+  RESCISAO_JUSTA_CAUSA,
+  IR_EM_BOLSA,
+  RESGATE_PREVIDENCIA_PRIVADA,
+  SAQUE_ANIVERSARIO_FGTS,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

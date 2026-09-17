@@ -180,6 +180,12 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   // Mesmo caso do banco de horas: sobreaviso OU prontidão, nenhum dos dois
   // obrigatório isoladamente.
   'sobreaviso-e-prontidao': '?salario=220000&jornadaSemanal=44&horasSobreaviso=3000',
+  /**
+   * Nenhum campo é obrigatório isoladamente: o mês pode ter só operação comum,
+   * só day trade, lucro ou prejuízo. O que a calculadora exige é UM resultado —
+   * e exigir um campo específico inventaria uma operação que a pessoa não fez.
+   */
+  'ir-em-bolsa-de-valores': '?vendasComuns=2500000&ganhoComum=300000',
 }
 
 for (const c of CALCULADORAS) {

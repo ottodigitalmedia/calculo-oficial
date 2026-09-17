@@ -588,6 +588,30 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './sobreaviso-e-prontidao'
     ).then((m) => m.calcular),
+  'rescisao-justa-causa': () =>
+    import(
+      /* webpackChunkName: "calc-rescisao-justa-causa" */
+      /* webpackExports: ["calcular"] */
+      './rescisao-justa-causa'
+    ).then((m) => m.calcular),
+  'ir-em-bolsa-de-valores': () =>
+    import(
+      /* webpackChunkName: "calc-ir-em-bolsa-de-valores" */
+      /* webpackExports: ["calcular"] */
+      './ir-em-bolsa'
+    ).then((m) => m.calcular),
+  'resgate-de-previdencia-privada': () =>
+    import(
+      /* webpackChunkName: "calc-resgate-de-previdencia-privada" */
+      /* webpackExports: ["calcular"] */
+      './resgate-previdencia-privada'
+    ).then((m) => m.calcular),
+  'saque-aniversario-do-fgts': () =>
+    import(
+      /* webpackChunkName: "calc-saque-aniversario-do-fgts" */
+      /* webpackExports: ["calcular"] */
+      './saque-aniversario'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

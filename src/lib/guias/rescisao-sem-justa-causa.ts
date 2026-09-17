@@ -21,7 +21,7 @@ export const RESCISAO_SEM_JUSTA_CAUSA: Guia = {
   descricaoSeo:
     'O que entra no acerto da dispensa sem justa causa: saldo, aviso prévio, férias, 13º e multa do FGTS — e quais verbas sofrem INSS e Imposto de Renda.',
   atualizadoEm: '2026-09-17',
-  calculadoras: ['rescisao-sem-justa-causa', 'fgts', 'seguro-desemprego', 'rescisao-contrato-de-experiencia'],
+  calculadoras: ['rescisao-sem-justa-causa', 'fgts', 'seguro-desemprego', 'rescisao-contrato-de-experiencia', 'rescisao-justa-causa'],
 
   secoes: [
     {
@@ -173,6 +173,33 @@ export const RESCISAO_SEM_JUSTA_CAUSA: Guia = {
           slug: 'seguro-desemprego',
           texto:
             'O número de parcelas e o valor de cada uma seguem regra própria — a calculadora de seguro-desemprego mostra a faixa aplicada.',
+        },
+      ],
+    },
+
+    {
+      id: 'quando-a-dispensa-e-por-justa-causa',
+      titulo: 'Quando a dispensa é por justa causa',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A justa causa muda a lista inteira. Continuam devidos o saldo dos dias trabalhados e as férias já adquiridas com o terço — o artigo que trata delas manda pagá-las qualquer que seja a causa da cessação do contrato. Saem da conta o aviso prévio, o 13º proporcional, as férias proporcionais, a multa do FGTS e o saque.',
+        },
+        {
+          tipo: 'lista',
+          itens: [
+            'O 13º proporcional é previsto para a rescisão sem justa causa; a súmula que garante as férias proporcionais abre exceção expressa para a justa causa.',
+            'O FGTS não é perdido: os depósitos ficam na conta vinculada e podem ser movimentados nas outras hipóteses da lei.',
+            'Não há seguro-desemprego, porque o programa é do trabalhador dispensado sem justa causa.',
+            'Discordando do motivo, a discussão é judicial — e a reversão restabelece as verbas da dispensa comum.',
+          ],
+        },
+        {
+          tipo: 'chamada',
+          slug: 'rescisao-justa-causa',
+          texto:
+            'A calculadora de rescisão por justa causa mostra o que sobra e, ao lado, a norma de cada exclusão.',
         },
       ],
     },

@@ -19,8 +19,8 @@ export const FGTS_GUIA: Guia = {
     'O depósito não sai do seu salário, e a indenização da dispensa não incide sobre o saldo que aparece hoje no extrato.',
   descricaoSeo:
     'Como o depósito mensal do FGTS é formado, por que não reduz o salário líquido, sobre o que incide a multa e por que a estimativa fica abaixo do extrato.',
-  atualizadoEm: '2026-08-06',
-  calculadoras: ['fgts', 'rescisao-sem-justa-causa', 'rescisao-acordo-mutuo'],
+  atualizadoEm: '2026-09-17',
+  calculadoras: ['fgts', 'rescisao-sem-justa-causa', 'rescisao-acordo-mutuo', 'saque-aniversario-do-fgts'],
 
   secoes: [
     {
@@ -140,6 +140,39 @@ export const FGTS_GUIA: Guia = {
           slug: 'rescisao-acordo-mutuo',
           texto:
             'A calculadora de acordo mútuo aplica as duas frações e mostra o saque disponível ao lado do acerto.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-saque-aniversario',
+      titulo: 'Saque-aniversário: o que se ganha e o que se abre mão',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Quem adere ao saque-aniversário passa a retirar, uma vez por ano, uma fatia do saldo somado de todas as suas contas. A fatia sai de uma tabela da própria lei: uma alíquota por faixa de saldo, mais uma parcela adicional. Quanto maior o saldo, menor a proporção sacada.',
+        },
+        {
+          tipo: 'tabelaDeFaixas',
+          parametroId: 'fgts-saque-aniversario-tabela',
+          legenda: 'Alíquota e parcela adicional por faixa de saldo, no saque-aniversário.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O preço da adesão está do outro lado: a despedida sem justa causa deixa de liberar o saldo da conta. A multa rescisória continua devida pelo empregador, e as demais hipóteses de saque seguem valendo — mas o dinheiro depositado ao longo dos anos fica lá. E voltar à sistemática anterior produz efeito só no primeiro dia do vigésimo quinto mês seguinte ao pedido.',
+        },
+        {
+          tipo: 'destaque',
+          texto:
+            'A comparação que decide não é "quanto eu saco agora", e sim "quanto eu não sacaria se fosse demitido no ano que vem".',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'saque-aniversario-do-fgts',
+          texto:
+            'A calculadora aplica a faixa do seu saldo, mostra o valor do saque e quanto permanece retido na conta.',
         },
       ],
     },

@@ -194,6 +194,30 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto valem as horas de plantão à distância e as horas de espera no local de trabalho.',
   },
   {
+    slug: 'rescisao-justa-causa',
+    nome: 'Rescisão por justa causa',
+    linhaDeContexto:
+      'O que ainda é devido quando a dispensa é por justa causa — e o que deixa de ser.',
+  },
+  {
+    slug: 'ir-em-bolsa-de-valores',
+    nome: 'Imposto sobre ganhos em bolsa',
+    linhaDeContexto:
+      'Se há DARF a pagar no mês, com a isenção das vendas, o day trade à parte e o prejuízo compensado.',
+  },
+  {
+    slug: 'resgate-de-previdencia-privada',
+    nome: 'Imposto no resgate da previdência privada',
+    linhaDeContexto:
+      'Quanto o imposto leva do resgate, conforme o regime escolhido e o tipo de plano.',
+  },
+  {
+    slug: 'saque-aniversario-do-fgts',
+    nome: 'Saque-aniversário do FGTS',
+    linhaDeContexto:
+      'Quanto sai da conta no seu mês de aniversário — e quanto fica preso lá dentro.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

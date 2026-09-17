@@ -46,6 +46,8 @@ import { ROTATIVO_E_CHEQUE_ESPECIAL } from './rotativo-e-cheque-especial'
 import { SAC_OU_PRICE } from './sac-ou-price'
 import type { Guia } from './tipos'
 import { INSALUBRIDADE_E_PERICULOSIDADE } from './insalubridade-e-periculosidade'
+import { IMPOSTO_NA_BOLSA } from './imposto-na-bolsa'
+import { PREVIDENCIA_PRIVADA_GUIA } from './previdencia-privada'
 import { LICENCAS_MATERNIDADE_E_PATERNIDADE } from './licencas-maternidade-e-paternidade'
 
 /**
@@ -122,6 +124,8 @@ export const GUIAS: readonly Guia[] = [
   INSALUBRIDADE_E_PERICULOSIDADE,
   APRENDIZ_E_ESTAGIARIO,
   LICENCAS_MATERNIDADE_E_PATERNIDADE,
+  IMPOSTO_NA_BOLSA,
+  PREVIDENCIA_PRIVADA_GUIA,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {
