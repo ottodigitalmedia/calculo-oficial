@@ -126,7 +126,10 @@ function contar(c: Comum, dataReferencia: DataISO, registro: Registro): Resultad
     unidade: 'numero',
   })
 
-  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: vigencias }
+  // A data da memória é a que decidiu as vigências — a do fato —, e não a de
+  // referência da página, que nestas duas calculadoras não escolhe nada.
+  void dataReferencia
+  const traco: Traco = { etapas, dataReferencia: inicioIso, vigenciasAplicadas: vigencias }
   return {
     ok: true,
     valores: {

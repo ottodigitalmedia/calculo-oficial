@@ -89,6 +89,7 @@ export const LICENCA_PATERNIDADE: DefinicaoCalculadora = {
   ],
 
   parametrosRequeridos: ['licenca-paternidade-dias', 'empresa-cidada-paternidade-dias'],
+  vigenciaPelaData: 'nascimento',
 
   rotuloResultado: 'Dias de licença',
 

@@ -101,6 +101,7 @@ export const LICENCA_MATERNIDADE: DefinicaoCalculadora = {
     'licenca-maternidade-inicio-antes-do-parto',
     'empresa-cidada-maternidade-dias',
   ],
+  vigenciaPelaData: 'inicio',
 
   rotuloResultado: 'Dias de licença',
 

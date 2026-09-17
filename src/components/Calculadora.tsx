@@ -101,6 +101,12 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
   // Resolvidos no servidor e entregues prontos — ver `formularioDe`.
   const cobertura = formulario.cobertura
   const anos = formulario.anosDisponiveis
+  /**
+   * Com a vigência resolvida por um campo de data, o ano da página não decide
+   * nada — oferecer o seletor seria oferecer uma escolha falsa.
+   */
+  const pelaData = formulario.vigenciaPelaData ?? null
+  const periodoEhEscolha = anos.length > 1 && pelaData === null
 
   /**
    * Abre no ano mais recente que sabemos calcular.
@@ -262,7 +268,7 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
         {/* Um seletor com uma opção só não é escolha. Aparece quando há mais de
             um exercício a comparar; do contrário, fica só a frase de cobertura —
             que continua sendo informação. */}
-        <div className={anos.length > 1 ? '' : 'hidden'}>
+        <div className={periodoEhEscolha ? '' : 'hidden'}>
           <label htmlFor="ref" className="block text-sm font-medium">
             Período de referência
           </label>
@@ -323,7 +329,8 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
           rotulo={formulario.rotuloResultado}
           dataReferencia={dataReferencia}
           cobertura={cobertura}
-          periodoEhEscolha={anos.length > 1}
+          periodoEhEscolha={periodoEhEscolha}
+          {...(pelaData ? { rotuloDaDataQueDecide: pelaData.rotulo } : {})}
           {...(formulario.avisoAdicional ? { avisoAdicional: formulario.avisoAdicional } : {})}
         />
       </div>
@@ -355,6 +362,7 @@ function Resultado({
   dataReferencia,
   cobertura,
   periodoEhEscolha,
+  rotuloDaDataQueDecide,
   avisoAdicional,
 }: {
   readonly estado: Estado
@@ -364,6 +372,8 @@ function Resultado({
   readonly cobertura: { readonly inicio: string; readonly fim: string | null } | null
   /** Verdadeiro quando há mais de um exercício a escolher. */
   readonly periodoEhEscolha: boolean
+  /** Rótulo do campo de data que decide a vigência, quando é ele e não o período. */
+  readonly rotuloDaDataQueDecide?: string
   readonly avisoAdicional?: string
 }) {
   /**
@@ -488,6 +498,12 @@ function Resultado({
               Estimativa com base exclusivamente nos dados que você informou — esta calculadora
               não consulta parâmetro legal com vigência. Confira se os valores digitados
               correspondem ao contrato ou à proposta.
+            </>
+          ) : rotuloDaDataQueDecide ? (
+            <>
+              Estimativa com base nos dados informados e nos parâmetros legais vigentes na data
+              informada em “{rotuloDaDataQueDecide}”. O valor final pode variar conforme acordos,
+              convenções coletivas e particularidades do seu contrato.
             </>
           ) : periodoEhEscolha ? (
             <>

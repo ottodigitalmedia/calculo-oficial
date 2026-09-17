@@ -375,6 +375,8 @@ export interface FormularioCalculadora {
   readonly cobertura: { readonly inicio: DataISO; readonly fim: DataISO | null } | null
   /** Presente quando a calculadora declara `sugestaoDeSerie` e há dado em cache. */
   readonly sugestao?: SugestaoDoFormulario
+  /** Presente quando a vigência é resolvida por um campo de data — ver `DefinicaoCalculadora`. */
+  readonly vigenciaPelaData?: { readonly campo: string; readonly rotulo: string }
 }
 
 export interface DefinicaoCalculadora {
@@ -413,6 +415,17 @@ export interface DefinicaoCalculadora {
    * quilobytes de histórico para toda rota de calculadora.
    */
   readonly sugestaoDeSerie?: { readonly campo: string; readonly serie: string }
+  /**
+   * Id do campo de data pelo qual o motor resolve as vigências, quando não é a
+   * data de referência da página.
+   *
+   * **Cresceu por CALC-087, e por uma frase enganosa medida em produção.** A
+   * licença-paternidade tem vigências até 2028, e a página abria no ano mais
+   * recente: "parâmetros legais vigentes em 15/06/2028", com um seletor de ano
+   * que não mudava resultado nenhum — a duração é a da data do nascimento. Com
+   * esta declaração o seletor some, e o aviso cita o campo que decide.
+   */
+  readonly vigenciaPelaData?: string
 }
 
 /**
@@ -434,7 +447,15 @@ export function formularioDe(
     ...(definicao.avisoAdicional ? { avisoAdicional: definicao.avisoAdicional } : {}),
     anosDisponiveis: registro.anosDisponiveis(definicao.parametrosRequeridos),
     cobertura: cobertura ? { inicio: cobertura.inicio, fim: cobertura.fim } : null,
+    ...vigenciaPelaDataDe(definicao),
   }
+}
+
+function vigenciaPelaDataDe(
+  definicao: DefinicaoCalculadora,
+): { readonly vigenciaPelaData?: { readonly campo: string; readonly rotulo: string } } {
+  const campo = definicao.campos.find((c) => c.id === definicao.vigenciaPelaData && c.tipo === 'data')
+  return campo ? { vigenciaPelaData: { campo: campo.id, rotulo: campo.rotulo } } : {}
 }
 
 // ---------------------------------------------------------------------------
