@@ -12,17 +12,46 @@
  * acréscimo e o teto. Cada ano tem a sua vigência, e o registro resolve pela
  * data como resolve qualquer outro parâmetro.
  *
- * **O que NÃO está aqui, de propósito:** as demais regras de transição da
- * Emenda (idade progressiva, pedágio de 50% e de 100%), a aposentadoria por
- * idade e o cálculo do valor da aposentadoria. Elas dependem de mais variáveis
- * e de conferência dedicada — `00-catalogo` §18.6 registra isso.
+ * **Lote 6 (CALC-104 a CALC-108)** acrescentou as demais regras de acesso:
+ * idade progressiva (art. 16), pedágio de 50% (art. 17), idade na transição
+ * (art. 18), regra permanente (art. 19) e pedágio de 100% (art. 20). Cada
+ * artigo tem os seus próprios parâmetros, mesmo quando o número coincide com o
+ * de outro — os trinta anos da mulher aparecem em quatro artigos, e a memória
+ * de cálculo precisa citar o artigo da regra que está sendo aplicada.
+ *
+ * **Idades ficam em MESES.** A idade progressiva e a da mulher no art. 18
+ * sobem seis meses por ano; guardar em anos obrigaria a fração.
+ *
+ * **O que NÃO está aqui, de propósito:** as regras do professor e da atividade
+ * especial, e o cálculo do VALOR da aposentadoria, que depende da média das
+ * contribuições desde julho de 1994 — dado que só o CNIS tem.
  */
 
 import type { ConjuntoDeParametros } from '../tipos'
-import { EC_103_ART_15, EC_103_ART_23, LEI_8213_ART_61, LEI_8213_ART_73 } from './fontes'
+import {
+  EC_103_ART_15,
+  EC_103_ART_16,
+  EC_103_ART_17,
+  EC_103_ART_18,
+  EC_103_ART_19,
+  EC_103_ART_20,
+  EC_103_ART_23,
+  LEI_8213_ART_61,
+  LEI_8213_ART_73,
+} from './fontes'
 
 export const PREVIDENCIA_RGPS: ConjuntoDeParametros = {
-  fontes: [EC_103_ART_23, EC_103_ART_15, LEI_8213_ART_61, LEI_8213_ART_73],
+  fontes: [
+    EC_103_ART_23,
+    EC_103_ART_15,
+    LEI_8213_ART_61,
+    LEI_8213_ART_73,
+    EC_103_ART_16,
+    EC_103_ART_17,
+    EC_103_ART_18,
+    EC_103_ART_19,
+    EC_103_ART_20,
+  ],
 
   parametros: [
     {
@@ -71,6 +100,126 @@ export const PREVIDENCIA_RGPS: ConjuntoDeParametros = {
       id: 'aposentadoria-tempo-minimo-homem',
       nome: 'Regra de pontos — tempo mínimo de contribuição do homem',
       descricao: 'Anos de contribuição exigidos do homem, além da pontuação.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-idade-progressiva-mulher',
+      nome: 'Idade progressiva — idade mínima da mulher',
+      descricao: 'Idade mínima exigida da mulher na regra da idade progressiva, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-idade-progressiva-homem',
+      nome: 'Idade progressiva — idade mínima do homem',
+      descricao: 'Idade mínima exigida do homem na regra da idade progressiva, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-idade-progressiva-tempo-mulher',
+      nome: 'Idade progressiva — tempo de contribuição da mulher',
+      descricao: 'Anos de contribuição exigidos da mulher na regra da idade progressiva.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-idade-progressiva-tempo-homem',
+      nome: 'Idade progressiva — tempo de contribuição do homem',
+      descricao: 'Anos de contribuição exigidos do homem na regra da idade progressiva.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-50-percentual',
+      nome: 'Pedágio de 50% — percentual',
+      descricao: 'Percentual do tempo que faltava em 13/11/2019 que precisa ser cumprido a mais.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'aposentadoria-pedagio-50-corte-mulher',
+      nome: 'Pedágio de 50% — tempo que a mulher precisava ter em 13/11/2019',
+      descricao: 'A mulher precisava ter MAIS do que estes anos de contribuição na data da Emenda.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-50-corte-homem',
+      nome: 'Pedágio de 50% — tempo que o homem precisava ter em 13/11/2019',
+      descricao: 'O homem precisava ter MAIS do que estes anos de contribuição na data da Emenda.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-50-tempo-mulher',
+      nome: 'Pedágio de 50% — tempo de contribuição da mulher',
+      descricao: 'Anos de contribuição exigidos da mulher, antes do pedágio.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-50-tempo-homem',
+      nome: 'Pedágio de 50% — tempo de contribuição do homem',
+      descricao: 'Anos de contribuição exigidos do homem, antes do pedágio.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-100-idade-mulher',
+      nome: 'Pedágio de 100% — idade mínima da mulher',
+      descricao: 'Idade mínima exigida da mulher na regra do pedágio de 100%, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-100-idade-homem',
+      nome: 'Pedágio de 100% — idade mínima do homem',
+      descricao: 'Idade mínima exigida do homem na regra do pedágio de 100%, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-100-tempo-mulher',
+      nome: 'Pedágio de 100% — tempo de contribuição da mulher',
+      descricao: 'Anos de contribuição exigidos da mulher, antes do pedágio.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-pedagio-100-tempo-homem',
+      nome: 'Pedágio de 100% — tempo de contribuição do homem',
+      descricao: 'Anos de contribuição exigidos do homem, antes do pedágio.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-idade-transicao-mulher',
+      nome: 'Aposentadoria por idade na transição — idade da mulher',
+      descricao: 'Idade mínima da mulher filiada até 13/11/2019, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-idade-transicao-homem',
+      nome: 'Aposentadoria por idade na transição — idade do homem',
+      descricao: 'Idade mínima do homem filiado até 13/11/2019, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-idade-transicao-tempo',
+      nome: 'Aposentadoria por idade na transição — tempo de contribuição',
+      descricao: 'Anos de contribuição exigidos, para os dois sexos, de quem era filiado até 13/11/2019.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-permanente-idade-mulher',
+      nome: 'Regra permanente — idade da mulher',
+      descricao: 'Idade mínima da mulher filiada depois de 13/11/2019, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-permanente-idade-homem',
+      nome: 'Regra permanente — idade do homem',
+      descricao: 'Idade mínima do homem filiado depois de 13/11/2019, em meses.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-permanente-tempo-mulher',
+      nome: 'Regra permanente — tempo de contribuição da mulher',
+      descricao: 'Anos de contribuição exigidos da mulher filiada depois de 13/11/2019.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'aposentadoria-permanente-tempo-homem',
+      nome: 'Regra permanente — tempo de contribuição do homem',
+      descricao: 'Anos de contribuição exigidos do homem filiado depois de 13/11/2019.',
       tipo: 'inteiro',
     },
   ],
@@ -331,6 +480,382 @@ export const PREVIDENCIA_RGPS: ConjuntoDeParametros = {
       inicio: '2019-11-13',
       fim: null,
       valor: { tipo: 'inteiro', valor: 35 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2019',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2019-11-13',
+      fim: '2019-12-31',
+      valor: { tipo: 'inteiro', valor: 672 },
+      observacao:
+        'Idade em meses: 56 anos na publicação da Emenda, mais seis meses a cada 1º de janeiro desde 2020 (§ 1º), até 62 anos. Cada ano é uma vigência — a escada é dado, não conta feita no motor.',
+    },
+    {
+      id: 'idade-progressiva-mulher-2020',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2020-01-01',
+      fim: '2020-12-31',
+      valor: { tipo: 'inteiro', valor: 678 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2021',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2021-01-01',
+      fim: '2021-12-31',
+      valor: { tipo: 'inteiro', valor: 684 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2022',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2022-01-01',
+      fim: '2022-12-31',
+      valor: { tipo: 'inteiro', valor: 690 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2023',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2023-01-01',
+      fim: '2023-12-31',
+      valor: { tipo: 'inteiro', valor: 696 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2024',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2024-01-01',
+      fim: '2024-12-31',
+      valor: { tipo: 'inteiro', valor: 702 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2025',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2025-01-01',
+      fim: '2025-12-31',
+      valor: { tipo: 'inteiro', valor: 708 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2026',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2026-01-01',
+      fim: '2026-12-31',
+      valor: { tipo: 'inteiro', valor: 714 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2027',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2027-01-01',
+      fim: '2027-12-31',
+      valor: { tipo: 'inteiro', valor: 720 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2028',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2028-01-01',
+      fim: '2028-12-31',
+      valor: { tipo: 'inteiro', valor: 726 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2029',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2029-01-01',
+      fim: '2029-12-31',
+      valor: { tipo: 'inteiro', valor: 732 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2030',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2030-01-01',
+      fim: '2030-12-31',
+      valor: { tipo: 'inteiro', valor: 738 },
+    },
+    {
+      id: 'idade-progressiva-mulher-2031',
+      parametroId: 'aposentadoria-idade-progressiva-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2031-01-01',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 744 },
+    },
+    {
+      id: 'idade-progressiva-homem-2019',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2019-11-13',
+      fim: '2019-12-31',
+      valor: { tipo: 'inteiro', valor: 732 },
+      observacao:
+        'Idade em meses: 61 anos na publicação da Emenda, mais seis meses a cada 1º de janeiro desde 2020 (§ 1º), até 65 anos.',
+    },
+    {
+      id: 'idade-progressiva-homem-2020',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2020-01-01',
+      fim: '2020-12-31',
+      valor: { tipo: 'inteiro', valor: 738 },
+    },
+    {
+      id: 'idade-progressiva-homem-2021',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2021-01-01',
+      fim: '2021-12-31',
+      valor: { tipo: 'inteiro', valor: 744 },
+    },
+    {
+      id: 'idade-progressiva-homem-2022',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2022-01-01',
+      fim: '2022-12-31',
+      valor: { tipo: 'inteiro', valor: 750 },
+    },
+    {
+      id: 'idade-progressiva-homem-2023',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2023-01-01',
+      fim: '2023-12-31',
+      valor: { tipo: 'inteiro', valor: 756 },
+    },
+    {
+      id: 'idade-progressiva-homem-2024',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2024-01-01',
+      fim: '2024-12-31',
+      valor: { tipo: 'inteiro', valor: 762 },
+    },
+    {
+      id: 'idade-progressiva-homem-2025',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2025-01-01',
+      fim: '2025-12-31',
+      valor: { tipo: 'inteiro', valor: 768 },
+    },
+    {
+      id: 'idade-progressiva-homem-2026',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2026-01-01',
+      fim: '2026-12-31',
+      valor: { tipo: 'inteiro', valor: 774 },
+    },
+    {
+      id: 'idade-progressiva-homem-2027',
+      parametroId: 'aposentadoria-idade-progressiva-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2027-01-01',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 780 },
+    },
+    {
+      id: 'idade-progressiva-tempo-mulher-2019',
+      parametroId: 'aposentadoria-idade-progressiva-tempo-mulher',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 30 },
+    },
+    {
+      id: 'idade-progressiva-tempo-homem-2019',
+      parametroId: 'aposentadoria-idade-progressiva-tempo-homem',
+      fonteId: 'ec-103-2019-art-16',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 35 },
+    },
+    {
+      id: 'pedagio-50-percentual-2019',
+      parametroId: 'aposentadoria-pedagio-50-percentual',
+      fonteId: 'ec-103-2019-art-17',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 5_000 },
+      observacao:
+        'Metade do tempo que, em 13/11/2019, faltava para os 30 anos (mulher) ou 35 (homem).',
+    },
+    {
+      id: 'pedagio-50-corte-mulher-2019',
+      parametroId: 'aposentadoria-pedagio-50-corte-mulher',
+      fonteId: 'ec-103-2019-art-17',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 28 },
+      observacao:
+        'O caput diz "mais de": quem tinha exatamente 28 anos de contribuição em 13/11/2019 não entra nesta regra.',
+    },
+    {
+      id: 'pedagio-50-corte-homem-2019',
+      parametroId: 'aposentadoria-pedagio-50-corte-homem',
+      fonteId: 'ec-103-2019-art-17',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 33 },
+      observacao:
+        'O caput diz "mais de": quem tinha exatamente 33 anos de contribuição em 13/11/2019 não entra nesta regra.',
+    },
+    {
+      id: 'pedagio-50-tempo-mulher-2019',
+      parametroId: 'aposentadoria-pedagio-50-tempo-mulher',
+      fonteId: 'ec-103-2019-art-17',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 30 },
+    },
+    {
+      id: 'pedagio-50-tempo-homem-2019',
+      parametroId: 'aposentadoria-pedagio-50-tempo-homem',
+      fonteId: 'ec-103-2019-art-17',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 35 },
+    },
+    {
+      id: 'pedagio-100-idade-mulher-2019',
+      parametroId: 'aposentadoria-pedagio-100-idade-mulher',
+      fonteId: 'ec-103-2019-art-20',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 684 },
+      observacao:
+        'Idade em meses: 57 anos. Fixa — ao contrário da idade progressiva, não sobe com os anos.',
+    },
+    {
+      id: 'pedagio-100-idade-homem-2019',
+      parametroId: 'aposentadoria-pedagio-100-idade-homem',
+      fonteId: 'ec-103-2019-art-20',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 720 },
+      observacao:
+        'Idade em meses: 60 anos. Fixa.',
+    },
+    {
+      id: 'pedagio-100-tempo-mulher-2019',
+      parametroId: 'aposentadoria-pedagio-100-tempo-mulher',
+      fonteId: 'ec-103-2019-art-20',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 30 },
+    },
+    {
+      id: 'pedagio-100-tempo-homem-2019',
+      parametroId: 'aposentadoria-pedagio-100-tempo-homem',
+      fonteId: 'ec-103-2019-art-20',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 35 },
+    },
+    {
+      id: 'idade-transicao-mulher-2019',
+      parametroId: 'aposentadoria-idade-transicao-mulher',
+      fonteId: 'ec-103-2019-art-18',
+      inicio: '2019-11-13',
+      fim: '2019-12-31',
+      valor: { tipo: 'inteiro', valor: 720 },
+      observacao:
+        'Idade em meses: 60 anos na publicação da Emenda, mais seis meses a cada 1º de janeiro desde 2020 (§ 1º), até 62 anos, alcançados em 2023.',
+    },
+    {
+      id: 'idade-transicao-mulher-2020',
+      parametroId: 'aposentadoria-idade-transicao-mulher',
+      fonteId: 'ec-103-2019-art-18',
+      inicio: '2020-01-01',
+      fim: '2020-12-31',
+      valor: { tipo: 'inteiro', valor: 726 },
+    },
+    {
+      id: 'idade-transicao-mulher-2021',
+      parametroId: 'aposentadoria-idade-transicao-mulher',
+      fonteId: 'ec-103-2019-art-18',
+      inicio: '2021-01-01',
+      fim: '2021-12-31',
+      valor: { tipo: 'inteiro', valor: 732 },
+    },
+    {
+      id: 'idade-transicao-mulher-2022',
+      parametroId: 'aposentadoria-idade-transicao-mulher',
+      fonteId: 'ec-103-2019-art-18',
+      inicio: '2022-01-01',
+      fim: '2022-12-31',
+      valor: { tipo: 'inteiro', valor: 738 },
+    },
+    {
+      id: 'idade-transicao-mulher-2023',
+      parametroId: 'aposentadoria-idade-transicao-mulher',
+      fonteId: 'ec-103-2019-art-18',
+      inicio: '2023-01-01',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 744 },
+    },
+    {
+      id: 'idade-transicao-homem-2019',
+      parametroId: 'aposentadoria-idade-transicao-homem',
+      fonteId: 'ec-103-2019-art-18',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 780 },
+      observacao:
+        'Idade em meses: 65 anos. O § 1º só escalona a idade da mulher.',
+    },
+    {
+      id: 'idade-transicao-tempo-2019',
+      parametroId: 'aposentadoria-idade-transicao-tempo',
+      fonteId: 'ec-103-2019-art-18',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 15 },
+      observacao:
+        'Quinze anos "para ambos os sexos" — o homem filiado depois da Emenda precisa de vinte (art. 19).',
+    },
+    {
+      id: 'permanente-idade-mulher-2019',
+      parametroId: 'aposentadoria-permanente-idade-mulher',
+      fonteId: 'ec-103-2019-art-19',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 744 },
+      observacao:
+        'Idade em meses: 62 anos.',
+    },
+    {
+      id: 'permanente-idade-homem-2019',
+      parametroId: 'aposentadoria-permanente-idade-homem',
+      fonteId: 'ec-103-2019-art-19',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 780 },
+      observacao:
+        'Idade em meses: 65 anos.',
+    },
+    {
+      id: 'permanente-tempo-mulher-2019',
+      parametroId: 'aposentadoria-permanente-tempo-mulher',
+      fonteId: 'ec-103-2019-art-19',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 15 },
+    },
+    {
+      id: 'permanente-tempo-homem-2019',
+      parametroId: 'aposentadoria-permanente-tempo-homem',
+      fonteId: 'ec-103-2019-art-19',
+      inicio: '2019-11-13',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 20 },
     },
   ],
 }

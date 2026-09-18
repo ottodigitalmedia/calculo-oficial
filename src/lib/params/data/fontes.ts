@@ -2577,3 +2577,126 @@ export const FONTES: readonly Fonte[] = [
   LEI_8213_ART_73,
   CF_ART_201_P2,
 ]
+
+/**
+ * Regra de transição da idade progressiva — EC nº 103/2019, art. 16. Vigência
+ * na publicação (art. 36, III), DOU de 13/11/2019.
+ *
+ * > "Ao segurado filiado ao Regime Geral de Previdência Social até a data de
+ * > entrada em vigor desta Emenda Constitucional fica assegurado o direito à
+ * > aposentadoria quando preencher, cumulativamente, os seguintes requisitos:
+ * > I - 30 (trinta) anos de contribuição, se mulher, e 35 (trinta e cinco) anos
+ * > de contribuição, se homem; e II - idade de 56 (cinquenta e seis) anos, se
+ * > mulher, e 61 (sessenta e um) anos, se homem."
+ * > § 1º "A partir de 1º de janeiro de 2020, a idade a que se refere o inciso II
+ * > do caput será acrescida de 6 (seis) meses a cada ano, até atingir 62
+ * > (sessenta e dois) anos de idade, se mulher, e 65 (sessenta e cinco) anos de
+ * > idade, se homem."
+ *
+ * O § 2º (professor) não está cadastrado — a calculadora declara isso.
+ */
+export const EC_103_ART_16: Fonte = {
+  id: 'ec-103-2019-art-16',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 16, caput, I e II, e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regra de transição do pedágio de 50% — EC nº 103/2019, art. 17.
+ *
+ * > "Ao segurado filiado ao Regime Geral de Previdência Social até a data de
+ * > entrada em vigor desta Emenda Constitucional e que na referida data contar
+ * > com mais de 28 (vinte e oito) anos de contribuição, se mulher, e 33 (trinta
+ * > e três) anos de contribuição, se homem, fica assegurado o direito à
+ * > aposentadoria quando preencher, cumulativamente, os seguintes requisitos:
+ * > I - 30 (trinta) anos de contribuição, se mulher, e 35 (trinta e cinco) anos
+ * > de contribuição, se homem; e II - cumprimento de período adicional
+ * > correspondente a 50% (cinquenta por cento) do tempo que, na data de entrada
+ * > em vigor desta Emenda Constitucional, faltaria para atingir 30 (trinta)
+ * > anos de contribuição, se mulher, e 35 (trinta e cinco) anos de
+ * > contribuição, se homem."
+ *
+ * "Mais de": quem tinha exatamente 28 (ou 33) anos não entra. O parágrafo único
+ * manda aplicar o fator previdenciário ao valor — fora desta conta, que trata
+ * do acesso e não do valor.
+ */
+export const EC_103_ART_17: Fonte = {
+  id: 'ec-103-2019-art-17',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 17, caput, I e II',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Aposentadoria por idade, na transição — EC nº 103/2019, art. 18.
+ *
+ * > "O segurado de que trata o inciso I do § 7º do art. 201 da Constituição
+ * > Federal filiado ao Regime Geral de Previdência Social até a data de entrada
+ * > em vigor desta Emenda Constitucional poderá aposentar-se quando preencher,
+ * > cumulativamente, os seguintes requisitos: I - 60 (sessenta) anos de idade,
+ * > se mulher, e 65 (sessenta e cinco) anos de idade, se homem; e II - 15
+ * > (quinze) anos de contribuição, para ambos os sexos."
+ * > § 1º "A partir de 1º de janeiro de 2020, a idade de 60 (sessenta) anos da
+ * > mulher, prevista no inciso I do caput, será acrescida em 6 (seis) meses a
+ * > cada ano, até atingir 62 (sessenta e dois) anos de idade."
+ *
+ * Quinze anos para os DOIS sexos — diferente da regra permanente do art. 19,
+ * que exige vinte do homem.
+ */
+export const EC_103_ART_18: Fonte = {
+  id: 'ec-103-2019-art-18',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 18, caput, I e II, e § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regra permanente, para quem se filiou depois da Emenda — EC nº 103/2019,
+ * art. 19, caput.
+ *
+ * > "Até que lei disponha sobre o tempo de contribuição a que se refere o inciso
+ * > I do § 7º do art. 201 da Constituição Federal, o segurado filiado ao Regime
+ * > Geral de Previdência Social após a data de entrada em vigor desta Emenda
+ * > Constitucional será aposentado aos 62 (sessenta e dois) anos de idade, se
+ * > mulher, 65 (sessenta e cinco) anos de idade, se homem, com 15 (quinze) anos
+ * > de tempo de contribuição, se mulher, e 20 (vinte) anos de tempo de
+ * > contribuição, se homem."
+ *
+ * O § 1º (atividade especial e professor) não está cadastrado.
+ */
+export const EC_103_ART_19: Fonte = {
+  id: 'ec-103-2019-art-19',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 19, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regra de transição do pedágio de 100% — EC nº 103/2019, art. 20.
+ *
+ * > "O segurado ou o servidor público federal que se tenha filiado ao Regime
+ * > Geral de Previdência Social ou ingressado no serviço público em cargo
+ * > efetivo até a data de entrada em vigor desta Emenda Constitucional poderá
+ * > aposentar-se voluntariamente quando preencher, cumulativamente, os
+ * > seguintes requisitos: I - 57 (cinquenta e sete) anos de idade, se mulher, e
+ * > 60 (sessenta) anos de idade, se homem; II - 30 (trinta) anos de
+ * > contribuição, se mulher, e 35 (trinta e cinco) anos de contribuição, se
+ * > homem; [...] IV - período adicional de contribuição correspondente ao tempo
+ * > que, na data de entrada em vigor desta Emenda Constitucional, faltaria para
+ * > atingir o tempo mínimo de contribuição referido no inciso II."
+ *
+ * O inciso III é do servidor público e não se aplica ao Regime Geral. O
+ * pedágio é o tempo que faltava, inteiro — não há percentual a cadastrar.
+ */
+export const EC_103_ART_20: Fonte = {
+  id: 'ec-103-2019-art-20',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 20, caput, I, II e IV',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
