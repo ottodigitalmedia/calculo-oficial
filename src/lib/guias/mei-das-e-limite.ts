@@ -17,7 +17,7 @@ export const MEI_DAS_E_LIMITE: Guia = {
   descricaoSeo:
     'Como se forma o DAS do MEI, o que ele já inclui, qual é o limite anual de faturamento e o que acontece quando o limite é ultrapassado, com ou sem tolerância.',
   atualizadoEm: '2026-08-07',
-  calculadoras: ['das-mei', 'limite-do-mei', 'clt-ou-pj'],
+  calculadoras: ['das-mei', 'limite-do-mei', 'clt-ou-pj', 'das-simples-nacional'],
 
   secoes: [
     {
@@ -115,6 +115,28 @@ export const MEI_DAS_E_LIMITE: Guia = {
           tipo: 'paragrafo',
           texto:
             'Quem percebe que vai passar tem duas saídas legítimas: adiar faturamento para o ano seguinte, quando o contrato permitir, ou preparar a migração para microempresa antes que o excesso ultrapasse a tolerância.',
+        },
+      ],
+    },
+
+    {
+      id: 'depois-do-mei',
+      titulo: 'Depois do MEI: o DAS do Simples Nacional',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Quem sai do MEI costuma ir para o Simples Nacional, e ali o DAS deixa de ser um valor fixo. Ele passa a ser uma porcentagem da receita do mês, e a porcentagem depende da atividade — que define o anexo — e da receita dos doze meses anteriores — que define a faixa.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A alíquota que aparece na tabela não é a que se paga. A lei manda descontar uma parcela fixa de cada faixa, e o resultado — a alíquota efetiva — é sempre menor que a nominal, a não ser na primeira faixa.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'das-simples-nacional',
+          texto: 'A calculadora do DAS do Simples escolhe o anexo, acha a faixa e aplica a alíquota efetiva sobre a receita do mês.',
         },
       ],
     },

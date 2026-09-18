@@ -44,6 +44,8 @@ import { FERIAS_EM_DOBRO } from './ferias-em-dobro'
 import { GANHO_DE_CAPITAL_NA_VENDA_DE_BENS } from './ganho-de-capital-na-venda-de-bens'
 import { IMPOSTO_SOBRE_ALUGUEL } from './imposto-sobre-aluguel'
 import { HORAS_TRABALHADAS } from './horas-trabalhadas'
+import { DAS_SIMPLES_NACIONAL } from './das-simples-nacional'
+import { DAE_DO_EMPREGADOR_DOMESTICO } from './dae-do-empregador-domestico'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -176,6 +178,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   GANHO_DE_CAPITAL_NA_VENDA_DE_BENS,
   IMPOSTO_SOBRE_ALUGUEL,
   HORAS_TRABALHADAS,
+  DAS_SIMPLES_NACIONAL,
+  DAE_DO_EMPREGADOR_DOMESTICO,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

@@ -18,7 +18,7 @@ export const EMPREGADO_DOMESTICO: Guia = {
   descricaoSeo:
     'O que muda na rescisão do empregado doméstico: a indenização compensatória no lugar da multa do FGTS, o aviso prévio com norma própria e o que permanece igual.',
   atualizadoEm: '2026-08-07',
-  calculadoras: ['rescisao-domestico', 'rescisao-sem-justa-causa', 'custo-do-funcionario'],
+  calculadoras: ['rescisao-domestico', 'rescisao-sem-justa-causa', 'custo-do-funcionario', 'dae-do-empregador-domestico'],
 
   secoes: [
     {
@@ -126,6 +126,21 @@ export const EMPREGADO_DOMESTICO: Guia = {
           tipo: 'paragrafo',
           texto:
             'Somados, esses itens fazem o custo mensal ficar bem acima do salário combinado — e é isso que costuma surpreender quem contrata pela primeira vez, sobretudo porque parte do valor é reserva para uma rescisão que talvez demore anos.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'domestico-contribuicao-patronal',
+          legenda: 'Contribuição patronal do empregador doméstico.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'domestico-seguro-acidente',
+          legenda: 'Seguro contra acidentes do trabalho, também a cargo do empregador.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'dae-do-empregador-domestico',
+          texto: 'A calculadora do DAE abre a guia em seis partes e separa o que é custo de quem contrata.',
         },
         {
           tipo: 'chamada',

@@ -732,6 +732,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './horas-trabalhadas'
     ).then((m) => m.calcular),
+  'das-simples-nacional': () =>
+    import(
+      /* webpackChunkName: "calc-das-simples-nacional" */
+      /* webpackExports: ["calcular"] */
+      './das-simples-nacional'
+    ).then((m) => m.calcular),
+  'dae-do-empregador-domestico': () =>
+    import(
+      /* webpackChunkName: "calc-dae-do-empregador-domestico" */
+      /* webpackExports: ["calcular"] */
+      './dae-do-empregador-domestico'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

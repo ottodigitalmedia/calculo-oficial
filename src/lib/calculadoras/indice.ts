@@ -338,6 +338,18 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Da entrada, da saída e do almoço: as horas do dia e da semana, o intervalo mínimo e o descanso entre jornadas.',
   },
   {
+    slug: 'das-simples-nacional',
+    nome: 'DAS do Simples Nacional',
+    linhaDeContexto:
+      'Quanto a empresa paga de Simples no mês: o anexo, a faixa e a alíquota efetiva — menor que a da tabela.',
+  },
+  {
+    slug: 'dae-do-empregador-domestico',
+    nome: 'DAE do empregador doméstico',
+    linhaDeContexto:
+      'O que vai na guia mensal de quem contrata doméstica, babá ou cuidador — e quanto ela custa de verdade.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

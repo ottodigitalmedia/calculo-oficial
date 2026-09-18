@@ -214,6 +214,8 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   // Lote 8: o custo não pode passar do preço de forma absurda, e os horários precisam de ordem.
   'ganho-de-capital-na-venda-de-bens': '?valorDeVenda=6000000&custo=4500000',
   'horas-trabalhadas': '?entradaHora=8&saidaHora=17&saidaMinuto=48&intervalo=60&dias=5',
+  // Lote 9: a receita do mês não pode passar do teto do Simples com o preenchedor genérico.
+  'das-simples-nacional': '?atividade=comercio&rbt12=50000000&receitaDoMes=4000000',
 }
 
 for (const c of CALCULADORAS) {
