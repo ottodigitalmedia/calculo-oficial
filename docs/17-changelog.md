@@ -29,6 +29,36 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — expansão do catálogo, lote 7
+
+### Adicionado · o valor da aposentadoria, o professor e as férias em dobro
+
+CALC-109 valor da aposentadoria · CALC-110 auxílio-acidente · CALC-111
+aposentadoria do professor · CALC-112 férias vencidas em dobro. Sem guia novo:
+seções novas nos guias *Regras de aposentadoria*, *Benefícios do INSS* e
+*Férias* (`00-catalogo` §18.8).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `aposentadoria-valor-*` | 60% + 2 p.p. por ano acima de 20 (homem) ou 15 (mulher); 100% nas hipóteses do § 3º | desde 13/11/2019 | EC nº 103/2019, art. 26 |
+| `auxilio-acidente-percentual` | 50% | desde 29/04/1995 | Lei nº 8.213/1991, art. 86, § 1º (red. Leis nº 9.032/1995 e 9.528/1997) |
+| `aposentadoria-professor-pontos-*` | 81 a 92 (mulher) e 91 a 100 (homem), um ponto por ano | 2019 a 2030 e 2019 a 2028, uma vigência por ano | EC nº 103/2019, art. 15, § 3º |
+| `aposentadoria-professor-idade-progressiva-*` | 51 a 57 (mulher) e 56 a 60 anos (homem), seis meses por ano | 2019 a 2031 e 2019 a 2027 | EC nº 103/2019, art. 16, § 2º |
+| `aposentadoria-professor-pedagio-100-*` | 52 · 55 anos; 25 · 30 anos de magistério | desde 13/11/2019 | EC nº 103/2019, art. 20, § 1º |
+| `aposentadoria-professor-permanente-*` | 57 · 60 anos; 25 de magistério | desde 13/11/2019 | EC nº 103/2019, art. 19, § 1º, II |
+| `ferias-periodo-aquisitivo-meses` · `-concessivo-meses` · `ferias-fora-do-prazo-fator` | 12 · 12 meses; em dobro | desde 01/05/1977 | CLT, arts. 130, 134 e 137 (red. Decreto-lei nº 1.535/1977, em vigor em 1º/05/1977) |
+
+### Auditoria · casos-ouro
+
+36 casos-ouro novos: 15 do valor e do auxílio-acidente, 9 do professor e 12 das
+férias em dobro — incluindo a média acima do teto, o coeficiente acima de 100%,
+o auxílio abaixo do mínimo, o 29 de fevereiro no período aquisitivo e férias
+que atravessam o fim do prazo.
+
+---
+
 ## Ciclo de 18/09/2026 — expansão do catálogo, lote 6
 
 ### Adicionado · as demais regras de aposentadoria

@@ -4309,6 +4309,37 @@ pontos. São parâmetros diferentes que hoje coincidem no valor.
 A regra que se cumpre primeiro pode pagar menos — o pedágio de 50% leva o fator
 previdenciário. A página, o guia e a última etapa da memória dizem isso.
 
+### 7.86 Lote 7 — o valor, o professor, o auxílio-acidente e as férias em dobro
+
+**CALC-109 a CALC-112**, sem guia novo. O catálogo passa de 108 para **112**.
+
+#### Duas candidatas saíram depois da pesquisa, e isso é o esperado
+
+O PGBL dependia da tabela anual do IR, cadastrada só até 2025: a Lei nº
+15.270/2025 mudou a estrutura a partir de 2026, e a calculadora não calcularia
+o ano corrente. O auxílio-reclusão dependia do limite de baixa renda da
+portaria anual, digitalizada. A seção de candidatas do catálogo prevê exatamente isto — ID só se atribui
+quando o lote abre, para que a pesquisa possa descartar sem deixar buraco.
+
+#### O terço dobra — e a fonte é a Constituição, não a súmula que parecia dizer isso
+
+A Súmula 450 do TST fala em dobra "incluído o terço constitucional", mas trata
+de PAGAMENTO fora do prazo — outra hipótese, que não foi conferida. A calculadora não
+se apoia nela: a dobra do art. 137 incide sobre "a respectiva remuneração", e a
+remuneração de férias inclui o terço (CF, art. 7º, XVII; Súmula 328).
+
+#### Uma FAQ que prometia o que outra calculadora não faz
+
+A primeira versão da FAQ de CALC-112 dizia que a calculadora de rescisão soma
+as férias vencidas em dobro. Ela soma de forma simples. O texto foi corrigido
+antes da publicação — e a dobra dentro da rescisão entrou em §18.9 como
+candidata.
+
+#### O Decreto-lei nº 1.535/1977 entrou em vigor em 1º de maio
+
+Foi publicado no DOU de 13/04/1977, mas o art. 3º adia a vigência para
+1º/05/1977. A vigência das três regras de férias começa ali.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão

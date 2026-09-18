@@ -52,7 +52,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 30 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 31 |
 | TRI | Tributos Pessoa Física | Volume sazonal intenso | 12 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
@@ -62,8 +62,8 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 9 |
-| | **Total** | | **108** |
+| PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
+| | **Total** | | **112** |
 
 ---
 
@@ -105,6 +105,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-090 | Adicional de transferência (art. 469, § 3º) | ▫️ | M | P | Nula | v5 |
 | CALC-091 | Sobreaviso e prontidão (art. 244) | 🔸 | M | P | Nula | v5 |
 | CALC-092 | Rescisão por justa causa — o que resta e o que sai | 🔥 | M | P | Alta | v5 |
+| CALC-112 | Férias vencidas em dobro (CLT, arts. 134 e 137; Súmula 81 do TST) | 🔥 | M | P | Nula | v5 |
 | CALC-095 | Saque-aniversário do FGTS | 🔥 | B | P | Média | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
@@ -311,6 +312,9 @@ seção evita renumerar §14 a §18, que são referenciadas em todo o projeto.
 | CALC-106 | Aposentadoria pelo pedágio de 100% (EC 103, art. 20) | 🔥 | M | P | Média | v5 |
 | CALC-107 | Aposentadoria por idade — transição e permanente (EC 103, arts. 18 e 19) | 🔥 | M | P | Média | v5 |
 | CALC-108 | Comparador de regras de aposentadoria (EC 103, arts. 15 a 20) | 🔥 | A | P | **Crítica** | v5 |
+| CALC-109 | Valor da aposentadoria (EC 103, art. 26) | 🔥 | A | P | Média | v5 |
+| CALC-110 | Auxílio-acidente (Lei 8.213, art. 86) | 🔸 | M | P | Baixa | v5 |
+| CALC-111 | Aposentadoria do professor (EC 103, arts. 15, 16, 19 e 20) | 🔥 | A | P | **Crítica** | v5 |
 
 > **CALC-103 tem manutenção crítica por construção.** A pontuação exigida sobe
 > um ponto por ano até 2033 (mulher) e 2028 (homem) — e toda a tabela já está
@@ -368,8 +372,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 32 | — | Expansão de cobertura — lotes 1 a 6 de §18 |
-| | **108** | 11 | |
+| **v5** | 36 | — | Expansão de cobertura — lotes 1 a 7 de §18 |
+| | **112** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -583,7 +587,39 @@ projeção das seis regras é mês a mês.
 **Continua fora, e declarado:** professor, atividade especial, pessoa com
 deficiência e o VALOR da aposentadoria.
 
-### 18.8 Candidatas dos próximos lotes
+### 18.8 Lote 7 — o valor da aposentadoria, o professor e as férias em dobro, publicado em 18/09/2026
+
+CALC-109 a CALC-111, na tabela de §13.1, e CALC-112, na tabela de TRB. Nenhum
+guia novo: as quatro respondem perguntas que três guias existentes já faziam —
+*Regras de aposentadoria*, *Benefícios do INSS* e *Férias* —, e ganharam seção
+neles.
+
+**O valor fecha o que o comparador declarava não fazer.** CALC-108 diz quando;
+CALC-109 diz quanto, pelo art. 26 da Emenda: 60% da média mais dois pontos por
+ano acima de vinte anos (homem) ou quinze (mulher), com a média limitada ao
+teto e o benefício entre o piso e o teto do art. 33 da Lei nº 8.213. O pedágio
+de 50% continua fora — o valor dele leva o fator previdenciário, que depende da
+tábua de mortalidade do ano.
+
+**As regras do professor reusam os motores do lote 6** com os parâmetros dos
+parágrafos próprios (arts. 15, § 3º; 16, § 2º; 19, § 1º, II; 20, § 1º). Cada
+parágrafo tem o seu cadastro, pela mesma razão do lote 6: a memória precisa
+citar o parágrafo do professor.
+
+**A dobra das férias é por dia** (Súmula 81 do TST), sobre a remuneração com o
+terço. A calculadora de rescisão soma as férias vencidas de forma simples, e a
+FAQ de CALC-112 diz isso em vez de prometer o que ela não faz.
+
+**Duas candidatas saíram do lote, com motivo:**
+
+- **PGBL** — a tabela anual do IR está cadastrada só para 2024 e 2025, porque a
+  Lei nº 15.270/2025 mudou a estrutura a partir de 2026. Uma calculadora de
+  dedução que não calcula o ano corrente não serve;
+- **auxílio-reclusão** — o limite de baixa renda sai da portaria anual,
+  digitalizada, e o valor segue a pensão com teto de um salário mínimo. Risco
+  alto para pouco retorno.
+
+### 18.9 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -592,9 +628,9 @@ valor dela veio de site de terceiro.
 
 | Categoria | Candidatas |
 |---|---|
-| TRB | férias vencidas em dobro · rescisão por justa causa · jornada 12×36 e feriados · provisão mensal de férias e 13º |
+| TRB | jornada 12×36 e feriados · provisão mensal de férias e 13º · dobra das férias vencidas dentro da rescisão |
 | TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
-| PRV | valor da aposentadoria a partir da média · regras do professor · auxílio-acidente · auxílio-reclusão |
+| PRV | auxílio-reclusão (depende da portaria anual) · valor pelo pedágio de 50%, com o fator previdenciário |
 | CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
