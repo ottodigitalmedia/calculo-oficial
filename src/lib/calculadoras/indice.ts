@@ -320,6 +320,24 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Tirou férias depois do prazo? Os dias de fora do prazo são pagos em dobro, com o terço.',
   },
   {
+    slug: 'ganho-de-capital-na-venda-de-bens',
+    nome: 'Imposto na venda de carro e outros bens',
+    linhaDeContexto:
+      'Vendeu com lucro um carro, joias ou cotas de empresa? Se o preço passou do teto, há imposto sobre o ganho.',
+  },
+  {
+    slug: 'imposto-sobre-aluguel',
+    nome: 'Imposto de renda sobre aluguel',
+    linhaDeContexto:
+      'Quanto de imposto sai do aluguel que você recebe — depois de tirar IPTU, condomínio e a taxa da imobiliária.',
+  },
+  {
+    slug: 'horas-trabalhadas',
+    nome: 'Horas trabalhadas e intervalo',
+    linhaDeContexto:
+      'Da entrada, da saída e do almoço: as horas do dia e da semana, o intervalo mínimo e o descanso entre jornadas.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

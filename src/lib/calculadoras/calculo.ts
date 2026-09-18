@@ -714,6 +714,24 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './ferias-em-dobro'
     ).then((m) => m.calcular),
+  'ganho-de-capital-na-venda-de-bens': () =>
+    import(
+      /* webpackChunkName: "calc-ganho-de-capital-na-venda-de-bens" */
+      /* webpackExports: ["calcular"] */
+      './ganho-de-capital-na-venda-de-bens'
+    ).then((m) => m.calcular),
+  'imposto-sobre-aluguel': () =>
+    import(
+      /* webpackChunkName: "calc-imposto-sobre-aluguel" */
+      /* webpackExports: ["calcular"] */
+      './imposto-sobre-aluguel'
+    ).then((m) => m.calcular),
+  'horas-trabalhadas': () =>
+    import(
+      /* webpackChunkName: "calc-horas-trabalhadas" */
+      /* webpackExports: ["calcular"] */
+      './horas-trabalhadas'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

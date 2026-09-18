@@ -17,7 +17,7 @@ export const IMOVEL_PARA_ALUGAR: Guia = {
   descricaoSeo:
     'Como calcular a rentabilidade real de um imóvel alugado: custos de posse, vacância, imposto sobre o aluguel e o reajuste anual pelo índice do contrato.',
   atualizadoEm: '2026-08-07',
-  calculadoras: ['rentabilidade-de-aluguel', 'reajuste-de-aluguel', 'alugar-ou-comprar'],
+  calculadoras: ['rentabilidade-de-aluguel', 'reajuste-de-aluguel', 'alugar-ou-comprar', 'imposto-sobre-aluguel'],
 
   secoes: [
     {
@@ -66,6 +66,28 @@ export const IMOVEL_PARA_ALUGAR: Guia = {
           slug: 'carne-leao',
           texto:
             'A calculadora de carnê-leão apura o imposto mensal sobre o aluguel recebido de pessoa física.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-imposto-do-aluguel',
+      titulo: 'O imposto sai depois das despesas do dono',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O aluguel é rendimento tributável pela tabela mensal do imposto de renda, como um salário. Mas nem tudo o que o inquilino paga é rendimento: o IPTU e as taxas do imóvel, o condomínio, a taxa da imobiliária e, na sublocação, o aluguel pago ao dono saem da base — quando são pagos pelo locador.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Se o inquilino é pessoa física, o próprio locador calcula e recolhe o imposto pelo carnê-leão. Se é empresa, ela retém na fonte, pela mesma tabela e com as mesmas exclusões.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'imposto-sobre-aluguel',
+          texto: 'A calculadora de imposto sobre aluguel tira as despesas da base e mostra o imposto do mês.',
         },
       ],
     },

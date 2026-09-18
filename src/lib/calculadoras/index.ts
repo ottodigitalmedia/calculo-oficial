@@ -41,6 +41,9 @@ import { VALOR_DA_APOSENTADORIA } from './valor-da-aposentadoria'
 import { AUXILIO_ACIDENTE } from './auxilio-acidente'
 import { APOSENTADORIA_DO_PROFESSOR } from './aposentadoria-do-professor'
 import { FERIAS_EM_DOBRO } from './ferias-em-dobro'
+import { GANHO_DE_CAPITAL_NA_VENDA_DE_BENS } from './ganho-de-capital-na-venda-de-bens'
+import { IMPOSTO_SOBRE_ALUGUEL } from './imposto-sobre-aluguel'
+import { HORAS_TRABALHADAS } from './horas-trabalhadas'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -170,6 +173,9 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   AUXILIO_ACIDENTE,
   APOSENTADORIA_DO_PROFESSOR,
   FERIAS_EM_DOBRO,
+  GANHO_DE_CAPITAL_NA_VENDA_DE_BENS,
+  IMPOSTO_SOBRE_ALUGUEL,
+  HORAS_TRABALHADAS,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

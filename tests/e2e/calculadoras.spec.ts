@@ -211,6 +211,9 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   // Lote 7: idade e magistério interagem; as férias exigem datas em ordem.
   'aposentadoria-do-professor': '?sexo=mulher&filiacao=antes&idadeAnos=50&tempoAnos=25&emendaAnos=19',
   'ferias-em-dobro': '?salario=300000&inicioAquisitivo=2024-03-10&inicioFerias=2026-02-24&dias=30',
+  // Lote 8: o custo não pode passar do preço de forma absurda, e os horários precisam de ordem.
+  'ganho-de-capital-na-venda-de-bens': '?valorDeVenda=6000000&custo=4500000',
+  'horas-trabalhadas': '?entradaHora=8&saidaHora=17&saidaMinuto=48&intervalo=60&dias=5',
 }
 
 for (const c of CALCULADORAS) {

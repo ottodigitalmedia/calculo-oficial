@@ -28,6 +28,7 @@ export const HORAS_EXTRAS: Guia = {
     'dsr-sobre-comissoes',
     'desconto-de-faltas',
     'sobreaviso-e-prontidao',
+    'horas-trabalhadas',
   ],
 
   secoes: [
@@ -50,6 +51,33 @@ export const HORAS_EXTRAS: Guia = {
           slug: 'horas-extras',
           texto:
             'A calculadora exibe o divisor usado e o valor da hora normal antes de aplicar qualquer adicional.',
+        },
+      ],
+    },
+
+    {
+      id: 'antes-da-hora-extra-a-jornada',
+      titulo: 'Antes da hora extra, a jornada',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Só existe hora extra quando a jornada passa do limite, e o limite é contado sem o intervalo: o almoço não é hora trabalhada. O intervalo, por sua vez, tem mínimo conforme a duração do trabalho, e o que faltar dele é pago à parte, com acréscimo.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'jornada-normal-diaria-minutos',
+          legenda: 'Duração normal do trabalho por dia, em minutos.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'jornada-normal-semanal-minutos',
+          legenda: 'Duração normal do trabalho por semana, em minutos.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'horas-trabalhadas',
+          texto: 'A calculadora de horas trabalhadas monta a jornada a partir da entrada, da saída e do intervalo.',
         },
       ],
     },

@@ -17,7 +17,7 @@ export const CRIPTO_NO_IMPOSTO: Guia = {
   descricaoSeo:
     'O imposto sobre venda de criptoativos: o teto mensal de isenção, por que ele é degrau e não desconto, e por que trocar uma moeda por outra já gera imposto.',
   atualizadoEm: '2026-08-07',
-  calculadoras: ['imposto-sobre-criptoativos', 'ganho-de-capital-imovel'],
+  calculadoras: ['imposto-sobre-criptoativos', 'ganho-de-capital-imovel', 'ganho-de-capital-na-venda-de-bens'],
 
   secoes: [
     {
@@ -77,6 +77,28 @@ export const CRIPTO_NO_IMPOSTO: Guia = {
           slug: 'ganho-de-capital-imovel',
           texto:
             'A mesma tabela vale para imóveis, e a calculadora de ganho de capital a aplica com os fatores de redução próprios daquele caso.',
+        },
+      ],
+    },
+
+    {
+      id: 'carro-joias-e-outros-bens',
+      titulo: 'Carro, joias e cotas de empresa seguem a mesma regra',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O teto e o degrau não são exclusividade dos criptoativos. A mesma regra de pequeno valor vale para a venda de carro, moto, joias, obras de arte e cotas de empresa: abaixo do teto, o ganho do mês é isento; acima, o ganho inteiro entra na tabela progressiva.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Na venda de carro, o caso mais comum é nem haver ganho: carro costuma ser vendido por menos do que custou. Quando há, e o preço passa do teto, o imposto incide só sobre a diferença entre venda e custo.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'ganho-de-capital-na-venda-de-bens',
+          texto: 'A calculadora de venda de bens aplica o teto do mês e a tabela sobre o ganho.',
         },
       ],
     },
