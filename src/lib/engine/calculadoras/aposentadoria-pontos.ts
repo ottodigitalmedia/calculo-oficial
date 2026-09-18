@@ -17,34 +17,31 @@
  *    entrada aceita anos e meses.
  *
  * A regra é de TRANSIÇÃO: vale para quem já era filiado ao Regime Geral em
- * 13/11/2019. Quem se filiou depois segue a regra permanente, que esta
- * calculadora não cobre e declara.
+ * 13/11/2019. Quem se filiou depois segue a regra permanente — CALC-107.
+ *
+ * **A projeção é mês a mês desde 18/09/2026** — ver `aposentadoria-comum.ts`.
+ * A versão anual errava por um ano quando o cumprimento caía no meio do ano.
  */
 
 import { citar, type Etapa, type Resultado, type Traco } from '../traco'
 import { centavos } from '../types'
-import type { DataISO, VigenciaResolvida } from '../../params/tipos'
+import type { DataISO } from '../../params/tipos'
 import type { Registro } from '../../params/registry'
+import {
+  MESES_MAXIMO,
+  MESES_NO_ANO,
+  inteiroDe,
+  mesAdiante,
+  primeiroMesQueCumpre,
+  rotuloDoMes,
+  type Sexo,
+} from './aposentadoria-comum'
+
+export type { Sexo }
 
 /** Escala das grandezas em unidade `'numero'` — ver `Unidade` em `traco.ts`. */
 // eslint-disable-next-line no-restricted-syntax -- unidade, não parâmetro legal (ADR-004 A-1)
 const CENTESIMOS_POR_UNIDADE = 100
-
-/** Meses de um ano. Unidade do calendário, não parâmetro legal. */
-const MESES_NO_ANO = 12
-
-/** Até quantos anos à frente a projeção procura o ano de cumprimento. */
-const HORIZONTE_DE_PROJECAO = 40
-
-export type Sexo = 'mulher' | 'homem'
-
-type Resolvido = { readonly valor: number; readonly resolvida: VigenciaResolvida } | null
-
-function inteiroDe(registro: Registro, id: string, data: DataISO): Resolvido {
-  const r = registro.resolver(id, data)
-  if (!r.ok || r.resolvida.vigencia.valor.tipo !== 'inteiro') return null
-  return { valor: r.resolvida.vigencia.valor.valor, resolvida: r.resolvida }
-}
 
 export interface EntradaRegraDePontos {
   readonly sexo: Sexo
@@ -64,13 +61,13 @@ export interface SaidaRegraDePontos {
   readonly cumpreTudo: boolean
   /** Ano em que os dois requisitos passam a ser cumpridos, mantida a contribuição. */
   readonly anoDeCumprimento: number | null
-  /** Quantos anos faltam até lá. Zero quando já cumpre. */
-  readonly anosAteLa: number
+  /** Mês (1 a 12) do cumprimento, no mesmo ano. */
+  readonly mesDeCumprimento: number | null
+  /** Quantos meses faltam até lá. Zero quando já cumpre. */
+  readonly mesesAteLa: number | null
   /** Pontuação exigida no ano de cumprimento. */
   readonly pontosExigidosNoAno: number | null
 }
-
-const MESES_MAXIMO = 11
 
 export function calcularRegraDePontos(
   entrada: EntradaRegraDePontos,
@@ -159,40 +156,38 @@ export function calcularRegraDePontos(
   ]
 
   // -------------------------------------------------------------------------
-  // Projeção: em que ano os dois requisitos se cumprem
+  // Projeção: em que MÊS os dois requisitos se cumprem
   // -------------------------------------------------------------------------
-  let anoDeCumprimento: number | null = null
+  let mesesAteLa: number | null
   let pontosExigidosNoAno: number | null = null
-  const anoDeReferencia = Number(dataReferencia.slice(0, 4))
 
   if (cumpreTudo) {
-    anoDeCumprimento = anoDeReferencia
+    mesesAteLa = 0
     pontosExigidosNoAno = pontos.valor
   } else {
-    for (let adiante = 1; adiante <= HORIZONTE_DE_PROJECAO; adiante += 1) {
-      const ano = anoDeReferencia + adiante
-      const exigido = inteiroDe(registro, idPontos, `${ano}-12-31` as DataISO)
-      if (exigido === null) break
-      const pontosNoAno = pontosEmMeses + adiante * 2 * MESES_NO_ANO
-      const tempoNoAno = tempoEmMeses + adiante * MESES_NO_ANO
-      if (pontosNoAno >= exigido.valor * MESES_NO_ANO && tempoNoAno >= tempoMinimo.valor * MESES_NO_ANO) {
-        anoDeCumprimento = ano
-        pontosExigidosNoAno = exigido.valor
-        break
-      }
-    }
+    mesesAteLa = primeiroMesQueCumpre(dataReferencia, (k, data) => {
+      const exigido = inteiroDe(registro, idPontos, data)
+      if (exigido === null) return false
+      // Cada mês soma um mês de idade e um de contribuição — dois na conta de pontos.
+      const cumpre = pontosEmMeses + 2 * k >= exigido.valor * MESES_NO_ANO && tempoEmMeses + k >= tempoMinimo.valor * MESES_NO_ANO
+      if (cumpre) pontosExigidosNoAno = exigido.valor
+      return cumpre
+    })
 
-    if (anoDeCumprimento !== null && pontosExigidosNoAno !== null) {
+    if (mesesAteLa !== null && pontosExigidosNoAno !== null) {
+      const quando = mesAdiante(dataReferencia, mesesAteLa)
       etapas.push({
-        rotulo: `Projeção — requisitos cumpridos em ${anoDeCumprimento}`,
+        rotulo: `Projeção — requisitos cumpridos em ${rotuloDoMes(quando)}`,
         formula: `mantida a contribuição, a exigência naquele ano é de ${pontosExigidosNoAno} pontos`,
         resultado: centavos(pontosExigidosNoAno * CENTESIMOS_POR_UNIDADE),
         unidade: 'numero',
         justificativa:
-          'A projeção supõe contribuição sem interrupção: cada ano acrescenta um ano de idade e um de contribuição. Interrupções adiam o resultado.',
+          'A projeção supõe contribuição sem interrupção: cada mês acrescenta um mês de idade e um de contribuição. Interrupções adiam o resultado.',
       })
     }
   }
+
+  const cumprimento = mesesAteLa === null ? null : mesAdiante(dataReferencia, mesesAteLa)
 
   const traco: Traco = {
     etapas,
@@ -209,8 +204,9 @@ export function calcularRegraDePontos(
       cumpreOsPontos,
       cumpreOTempo,
       cumpreTudo,
-      anoDeCumprimento,
-      anosAteLa: anoDeCumprimento === null ? 0 : Math.max(0, anoDeCumprimento - anoDeReferencia),
+      anoDeCumprimento: cumprimento?.ano ?? null,
+      mesDeCumprimento: cumprimento?.mes ?? null,
+      mesesAteLa,
       pontosExigidosNoAno,
     },
     traco,

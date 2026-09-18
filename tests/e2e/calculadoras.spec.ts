@@ -197,6 +197,17 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
    * valor, porque o benefício dela é o piso.
    */
   'salario-maternidade-do-inss': '?categoria=demais&somaDoze=3600000',
+  /**
+   * Lote 6: idade e tempo de contribuição interagem — tempo maior que a idade é
+   * recusado, e os pedágios exigem o tempo de 2019 menor ou igual ao de hoje e,
+   * no de 50%, acima da porta de entrada. O preenchedor genérico põe o mesmo
+   * número em tudo e cai nessas recusas, que estão certas.
+   */
+  'aposentadoria-idade-progressiva': '?sexo=mulher&idadeAnos=58&tempoAnos=30',
+  'aposentadoria-pedagio-50': '?sexo=mulher&emendaAnos=29&tempoAnos=30',
+  'aposentadoria-pedagio-100': '?sexo=mulher&idadeAnos=55&emendaAnos=25&tempoAnos=32',
+  'aposentadoria-por-idade': '?sexo=mulher&filiacao=antes&idadeAnos=61&tempoAnos=15',
+  'regras-de-aposentadoria': '?sexo=mulher&filiacao=antes&idadeAnos=57&tempoAnos=32&emendaAnos=25',
 }
 
 for (const c of CALCULADORAS) {

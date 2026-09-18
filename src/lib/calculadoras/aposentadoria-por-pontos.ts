@@ -10,7 +10,7 @@
 
 import { calcularRegraDePontos, type Sexo } from '../engine/calculadoras/aposentadoria-pontos'
 import { centavos } from '../engine/types'
-import { formatarComCasas } from '../format/moeda'
+import { formatarComCasas, nomeDoMes } from '../format/moeda'
 import { PREVIDENCIA_RGPS } from '../params/data/previdencia-rgps'
 import { construirRegistro } from '../params/registry'
 import { numero, texto, type DefinicaoCalculadora, type Destaque, type FuncaoCalculo } from './tipos'
@@ -44,9 +44,9 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
           ? 'Faltam anos de contribuição'
           : 'Faltam pontos',
     },
-    ...(v.anoDeCumprimento !== null && !v.cumpreTudo
+    ...(v.anoDeCumprimento !== null && v.mesDeCumprimento !== null && !v.cumpreTudo
       ? [
-          { rotulo: 'Ano em que cumpre', valor: `${v.anoDeCumprimento}` },
+          { rotulo: 'Quando cumpre', valor: `${nomeDoMes(v.mesDeCumprimento - 1)} de ${v.anoDeCumprimento}` },
           { rotulo: 'Pontos exigidos naquele ano', valor: `${v.pontosExigidosNoAno ?? '—'}` },
         ]
       : []),
@@ -64,9 +64,9 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         'Esta é uma das regras de TRANSIÇÃO: vale para quem já era filiado ao Regime Geral em 13 de novembro ' +
           'de 2019. Quem começou a contribuir depois segue a regra permanente, com idade mínima.',
         'Há outras regras de transição — idade progressiva, pedágio de 50% e pedágio de 100% —, e vale a mais ' +
-          'favorável no seu caso. Esta calculadora trata apenas da regra de pontos.',
-        'A projeção supõe contribuição sem interrupção. Cada ano acrescenta um ano de idade e um de ' +
-          'contribuição, enquanto a exigência sobe um ponto até o teto da Emenda.',
+          'favorável no seu caso. O comparador de regras de aposentadoria mostra todas lado a lado.',
+        'A projeção supõe contribuição sem interrupção. Cada mês acrescenta um mês de idade e um de ' +
+          'contribuição, enquanto a exigência sobe um ponto a cada 1º de janeiro até o teto da Emenda.',
         'O tempo de contribuição é o do extrato do CNIS, no Meu INSS, e pode incluir períodos que você não ' +
           'lembra — ou deixar de fora períodos que precisam ser acertados.',
       ],
@@ -176,5 +176,5 @@ export const APOSENTADORIA_POR_PONTOS: DefinicaoCalculadora = {
     },
   ],
 
-  relacionadas: ['inss', 'inss-autonomo-e-facultativo', 'pensao-por-morte', 'resgate-de-previdencia-privada'],
+  relacionadas: ['regras-de-aposentadoria', 'aposentadoria-idade-progressiva', 'aposentadoria-pedagio-50', 'aposentadoria-pedagio-100'],
 }

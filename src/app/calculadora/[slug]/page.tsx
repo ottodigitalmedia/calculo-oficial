@@ -132,7 +132,9 @@ export default async function PaginaCalculadora({
           FAQ e dos motores de todas as calculadoras. Ver
           `calculadoras/tipos.ts`, `FormularioCalculadora`. */}
       <section className="mt-8">
-        <Calculadora formulario={aplicarSugestao(formularioDe(definicao, registro), definicao)} />
+        <Calculadora
+          formulario={aplicarSugestao(formularioDe(definicao, registro, new Date().getFullYear()), definicao)}
+        />
       </section>
 
       {/* O slot de anúncio ficaria AQUI: abaixo do resultado e da memória,

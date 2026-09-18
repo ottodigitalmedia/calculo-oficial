@@ -660,6 +660,36 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './aposentadoria-por-pontos'
     ).then((m) => m.calcular),
+  'aposentadoria-idade-progressiva': () =>
+    import(
+      /* webpackChunkName: "calc-aposentadoria-idade-progressiva" */
+      /* webpackExports: ["calcular"] */
+      './aposentadoria-idade-progressiva'
+    ).then((m) => m.calcular),
+  'aposentadoria-pedagio-50': () =>
+    import(
+      /* webpackChunkName: "calc-aposentadoria-pedagio-50" */
+      /* webpackExports: ["calcular"] */
+      './aposentadoria-pedagio-50'
+    ).then((m) => m.calcular),
+  'aposentadoria-pedagio-100': () =>
+    import(
+      /* webpackChunkName: "calc-aposentadoria-pedagio-100" */
+      /* webpackExports: ["calcular"] */
+      './aposentadoria-pedagio-100'
+    ).then((m) => m.calcular),
+  'aposentadoria-por-idade': () =>
+    import(
+      /* webpackChunkName: "calc-aposentadoria-por-idade" */
+      /* webpackExports: ["calcular"] */
+      './aposentadoria-por-idade'
+    ).then((m) => m.calcular),
+  'regras-de-aposentadoria': () =>
+    import(
+      /* webpackChunkName: "calc-regras-de-aposentadoria" */
+      /* webpackExports: ["calcular"] */
+      './regras-de-aposentadoria'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

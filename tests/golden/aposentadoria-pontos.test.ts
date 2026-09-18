@@ -14,6 +14,13 @@
  * homem; o teto masculino de 105 é alcançado em 2028, e o feminino de 100 em
  * 2033.
  *
+ * **Correção de 18/09/2026.** Dois casos de projeção esperavam o ano seguinte
+ * ao certo — 2034 e 2032. O raciocínio deles contava anos inteiros a partir de
+ * junho e pulava os meses do meio: a mulher do primeiro caso alcança os 100
+ * pontos em DEZEMBRO de 2033, e o homem do segundo, os 105 em dezembro de 2031.
+ * O caso estava errado, não só o código; a conta mês a mês vai escrita em cada
+ * um.
+ *
  * Nenhum número foi lido de calculadora concorrente, blog, planilha de terceiro
  * ou resposta de modelo de linguagem (`CO-1`).
  */
@@ -94,7 +101,7 @@ describe('CALC-103 · os dois requisitos são cumulativos', () => {
     expect(v.cumpreOTempo).toBe(true)
     expect(v.cumpreTudo).toBe(true)
     expect(v.anoDeCumprimento).toBe(2026)
-    expect(v.anosAteLa).toBe(0)
+    expect(v.mesesAteLa).toBe(0)
   })
 
   /**
@@ -106,8 +113,10 @@ describe('CALC-103 · os dois requisitos são cumulativos', () => {
     expect(v.cumpreOsPontos).toBe(true)
     expect(v.cumpreOTempo).toBe(false)
     expect(v.cumpreTudo).toBe(false)
-    // Faltam 5 anos de contribuição: em 2031 ela terá 30 anos e 105 pontos.
+    // Faltam 5 anos de contribuição: em junho de 2031 ela terá 30 anos e 105 pontos.
     expect(v.anoDeCumprimento).toBe(2031)
+    expect(v.mesDeCumprimento).toBe(6)
+    expect(v.mesesAteLa).toBe(60)
   })
 
   /** As frações contam: 59 anos e 6 meses + 33 anos e 6 meses = 93 pontos exatos. */
@@ -127,29 +136,53 @@ describe('CALC-103 · os dois requisitos são cumulativos', () => {
 
 describe('CALC-103 · a projeção do ano de cumprimento', () => {
   /**
-   * Mulher com 55 anos e 30 de contribuição em 2026: 85 pontos contra 93.
-   * Cada ano soma dois pontos e a exigência sobe um — a diferença cai um por
-   * ano. Faltam 8 pontos: em 2034 ela terá 55+8 + 30+8 = 101 pontos, contra a
-   * exigência de 100, já no teto.
+   * Mulher com 55 anos e 30 de contribuição em junho de 2026: 85 pontos contra
+   * 93. Cada mês soma 1/6 de ponto (um mês de idade e um de contribuição).
+   *
+   * - dezembro de 2032, 78 meses adiante: 85 + 13 = 98 pontos, contra 99 — não;
+   * - dezembro de 2033, 90 meses adiante: 85 + 15 = 100 pontos, contra 100, já
+   *   no teto — cumpre.
    */
-  it('projeta o ano em que os requisitos se cumprem', () => {
+  it('projeta o mês em que os requisitos se cumprem', () => {
     const v = pontos({ idadeAnos: 55, tempoContribuicaoAnos: 30 })
     expect(v.cumpreTudo).toBe(false)
-    expect(v.anoDeCumprimento).toBe(2034)
-    expect(v.anosAteLa).toBe(8)
+    expect(v.anoDeCumprimento).toBe(2033)
+    expect(v.mesDeCumprimento).toBe(12)
+    expect(v.mesesAteLa).toBe(90)
     expect(v.pontosExigidosNoAno).toBe(100)
   })
 
   /**
-   * Homem com 58 anos e 36 de contribuição em 2026: 94 pontos contra 103.
-   * Em 2031: 63 + 41 = 104, contra o teto de 105 — ainda não. Em 2032: 64 + 42
-   * = 106 ≥ 105. O teto congela a exigência e a diferença passa a cair de dois
-   * em dois.
+   * A regressão que a projeção anual escondia. Mulher com 61 anos e 31 anos e
+   * 6 meses de contribuição em 15/09/2026: 92,5 pontos contra 93. Três meses
+   * depois, em dezembro de 2026, tem 93 — cumpre ainda em 2026. A projeção
+   * anual só testava setembro de cada ano e respondia 2027; a exigência de 94
+   * do ano seguinte não desfaz o que foi alcançado em dezembro.
+   */
+  it('o cumprimento pode cair no fim do ano, antes da nova exigência', () => {
+    const v = pontos(
+      { idadeAnos: 61, tempoContribuicaoAnos: 31, tempoContribuicaoMeses: 6 },
+      '2026-09-15' as DataISO,
+    )
+    expect(v.cumpreTudo).toBe(false)
+    expect(v.anoDeCumprimento).toBe(2026)
+    expect(v.mesDeCumprimento).toBe(12)
+    expect(v.mesesAteLa).toBe(3)
+    expect(v.pontosExigidosNoAno).toBe(93)
+  })
+
+  /**
+   * Homem com 58 anos e 36 de contribuição em junho de 2026: 94 pontos contra
+   * 103. O teto de 105 chega em 2028 e congela a exigência; daí em diante a
+   * diferença cai 1/6 de ponto por mês. Faltam 11 pontos: 66 meses, dezembro
+   * de 2031, com 105 pontos exatos.
    */
   it('o teto da exigência acelera o cumprimento', () => {
     const v = pontos({ sexo: 'homem', idadeAnos: 58, tempoContribuicaoAnos: 36 })
     expect(v.pontosExigidos).toBe(103)
-    expect(v.anoDeCumprimento).toBe(2032)
+    expect(v.anoDeCumprimento).toBe(2031)
+    expect(v.mesDeCumprimento).toBe(12)
+    expect(v.mesesAteLa).toBe(66)
     expect(v.pontosExigidosNoAno).toBe(105)
   })
 

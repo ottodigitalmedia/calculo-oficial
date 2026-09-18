@@ -23,7 +23,7 @@ export const APOSENTADORIA_REGRA_DE_PONTOS: Guia = {
     'A soma de idade e tempo de contribuição abre a aposentadoria — desde que o tempo mínimo também esteja cumprido.',
   descricaoSeo:
     'Como funciona a regra de pontos da aposentadoria: a soma de idade e contribuição, o tempo mínimo exigido e o aumento anual da pontuação.',
-  atualizadoEm: '2026-09-17',
+  atualizadoEm: '2026-09-18',
   calculadoras: ['aposentadoria-por-pontos'],
 
   secoes: [
@@ -82,7 +82,7 @@ export const APOSENTADORIA_REGRA_DE_PONTOS: Guia = {
           tipo: 'chamada',
           slug: 'aposentadoria-por-pontos',
           texto:
-            'A calculadora mostra seus pontos de hoje, a exigência do ano e em que ano os dois requisitos se cumprem, mantida a contribuição.',
+            'A calculadora mostra seus pontos de hoje, a exigência do ano e em que mês os dois requisitos se cumprem, mantida a contribuição.',
         },
       ],
     },
@@ -109,6 +109,11 @@ export const APOSENTADORIA_REGRA_DE_PONTOS: Guia = {
           tipo: 'paragrafo',
           texto:
             'Vale a regra mais favorável ao segurado, e a comparação depende do histórico completo de contribuições. Antes de decidir a data do pedido, vale conferir o extrato do CNIS e simular também as outras regras — inclusive porque o VALOR do benefício muda de uma para outra.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'regras-de-aposentadoria',
+          texto: 'O comparador de regras põe todas lado a lado e mostra em que mês cada uma se cumpre.',
         },
       ],
     },

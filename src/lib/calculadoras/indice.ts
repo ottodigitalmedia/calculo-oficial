@@ -266,6 +266,36 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Se a soma de idade e contribuição já basta — e, se não basta, em que ano vai bastar.',
   },
   {
+    slug: 'aposentadoria-idade-progressiva',
+    nome: 'Aposentadoria pela idade progressiva',
+    linhaDeContexto:
+      'A idade mínima sobe seis meses por ano — em que mês você a alcança, com o tempo de contribuição exigido.',
+  },
+  {
+    slug: 'aposentadoria-pedagio-50',
+    nome: 'Aposentadoria pelo pedágio de 50%',
+    linhaDeContexto:
+      'Para quem estava perto de completar o tempo em 2019: o pedágio, o total exigido e o mês de cumprimento.',
+  },
+  {
+    slug: 'aposentadoria-pedagio-100',
+    nome: 'Aposentadoria pelo pedágio de 100%',
+    linhaDeContexto:
+      'Idade mínima menor, em troca de contribuir o dobro do que faltava em 2019 — e em que mês isso se cumpre.',
+  },
+  {
+    slug: 'aposentadoria-por-idade',
+    nome: 'Aposentadoria por idade',
+    linhaDeContexto:
+      'A idade e o tempo mínimo exigidos de quem já contribuía antes da reforma — e de quem começou depois.',
+  },
+  {
+    slug: 'regras-de-aposentadoria',
+    nome: 'Comparador de regras de aposentadoria',
+    linhaDeContexto:
+      'Todas as regras da reforma lado a lado — e qual delas se cumpre primeiro no seu caso.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

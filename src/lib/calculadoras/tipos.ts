@@ -438,6 +438,7 @@ export interface DefinicaoCalculadora {
 export function formularioDe(
   definicao: DefinicaoCalculadora,
   registro: Registro,
+  anoCorrente?: number,
 ): FormularioCalculadora {
   const cobertura = registro.coberturaCombinada(definicao.parametrosRequeridos)
   return {
@@ -445,10 +446,29 @@ export function formularioDe(
     campos: definicao.campos,
     rotuloResultado: definicao.rotuloResultado,
     ...(definicao.avisoAdicional ? { avisoAdicional: definicao.avisoAdicional } : {}),
-    anosDisponiveis: registro.anosDisponiveis(definicao.parametrosRequeridos),
+    anosDisponiveis: semAnosFuturos(registro.anosDisponiveis(definicao.parametrosRequeridos), anoCorrente),
     cobertura: cobertura ? { inicio: cobertura.inicio, fim: cobertura.fim } : null,
     ...vigenciaPelaDataDe(definicao),
   }
+}
+
+/**
+ * Tira do seletor os anos que ainda não chegaram.
+ *
+ * O registro oferece até o ano da vigência mais recente, e isso é certo para
+ * tabela anual. Deixa de ser quando a norma publica o futuro de uma vez: a
+ * tabela de pontos da EC nº 103/2019 tem vigência cadastrada até 2033, e
+ * CALC-103 foi ao ar abrindo em 15/06/2033 — exigência de 100 pontos quando a do
+ * ano era 93, e a projeção deslocada em sete anos. O motor continua sem relógio
+ * (`C-M2`); quem informa o ano é a página, no servidor.
+ *
+ * Se todos os anos forem futuros, a lista fica como está: abrir bloqueado seria
+ * pior que abrir no primeiro ano coberto.
+ */
+function semAnosFuturos(anos: readonly number[], anoCorrente: number | undefined): readonly number[] {
+  if (anoCorrente === undefined) return anos
+  const ate = anos.filter((a) => a <= anoCorrente)
+  return ate.length > 0 ? ate : anos
 }
 
 function vigenciaPelaDataDe(

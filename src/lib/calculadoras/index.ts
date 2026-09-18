@@ -32,6 +32,11 @@ import { PENSAO_POR_MORTE } from './pensao-por-morte'
 import { AUXILIO_POR_INCAPACIDADE } from './auxilio-por-incapacidade'
 import { SALARIO_MATERNIDADE_DO_INSS } from './salario-maternidade-do-inss'
 import { APOSENTADORIA_POR_PONTOS } from './aposentadoria-por-pontos'
+import { APOSENTADORIA_IDADE_PROGRESSIVA } from './aposentadoria-idade-progressiva'
+import { APOSENTADORIA_PEDAGIO_50 } from './aposentadoria-pedagio-50'
+import { APOSENTADORIA_PEDAGIO_100 } from './aposentadoria-pedagio-100'
+import { APOSENTADORIA_POR_IDADE } from './aposentadoria-por-idade'
+import { REGRAS_DE_APOSENTADORIA } from './regras-de-aposentadoria'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -152,6 +157,11 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   AUXILIO_POR_INCAPACIDADE,
   SALARIO_MATERNIDADE_DO_INSS,
   APOSENTADORIA_POR_PONTOS,
+  APOSENTADORIA_IDADE_PROGRESSIVA,
+  APOSENTADORIA_PEDAGIO_50,
+  APOSENTADORIA_PEDAGIO_100,
+  APOSENTADORIA_POR_IDADE,
+  REGRAS_DE_APOSENTADORIA,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,
