@@ -29,9 +29,10 @@
 > índice, não bloqueio.
 >
 > **Sessão de 17/09/2026 — o catálogo reabriu.** O mantenedor decidiu expandir a
-> cobertura (v5). Lotes 1 a 4 no ar: vinte e três calculadoras, CALC-077 a
-> CALC-099, e o catálogo passa de 76 para **99**. **Comece por §8.00**; §7.80 a
-> §7.83 registram o que a conferência pegou em cada lote antes de publicar.
+> cobertura (v5). Lotes 1 a 5 no ar: vinte e sete calculadoras, CALC-077 a
+> CALC-103, e o catálogo passa de 76 para **103**, com uma categoria nova (PRV).
+> **Comece por §8.00**; §7.80 a §7.84 registram o que a conferência pegou em
+> cada lote antes de publicar.
 >
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
@@ -3597,8 +3598,9 @@ reprovava, porque nenhum deles lê a frase de aviso.
   repositório normalize para LF (`.gitattributes`). `grep -c 
 ### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
 
-**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 a §7.83 acima).
-Lotes 1 a 4 publicados — vinte e três calculadoras novas, de 76 para 99.
+**O trabalho em curso é o v5** (`00-catalogo` §18, e §7.80 a §7.84 acima).
+Lotes 1 a 5 publicados — vinte e sete calculadoras novas, de 76 para 103, e a
+categoria PRV aberta.
 **Antes do lote 5, medir** no Search Console o que elas trouxeram (regra 3 de
 §18.1): impressões, posição média e cliques, comparando com a linha de base de
 17/09. A medição é a única coisa que diz se a expansão está funcionando — e
@@ -4184,6 +4186,53 @@ depender de `lib/params/`.
 Fundos de prazo médio curto (alíquota periódica e tabela próprias); lance e
 reajuste da parcela no consórcio; janela operacional de pagamento das multas. Os
 três estão nas notas das páginas, não só aqui.
+
+---
+
+### 7.84 Lote 5 — previdência, e a primeira categoria nova desde o lançamento
+
+**No ar: CALC-100 a CALC-103**, com dois guias novos e a categoria **PRV**
+aberta em `00-catalogo` §13.1. O catálogo passa de 99 para **103**.
+
+#### Por que abrir categoria em vez de encaixar nas existentes
+
+Benefício previdenciário não é direito do trabalho nem tributo. Encaixá-lo em
+TRB misturaria rescisão com pensão; em TRI, imposto com auxílio. §18.6 já
+previa a previdência como grupo próprio — a decisão aqui foi executar isso,
+numerando a seção como **§13.1** para não renumerar §14 a §18, que são
+referenciadas em todo o projeto.
+
+#### A regra que a tabela de pontos confirmou
+
+O § 1º do art. 15 da Emenda acrescenta um ponto por ano. Escrever isso no motor
+custaria três linhas — e três constantes legais fora de `lib/params/`: o ponto
+de partida, o ano em que o acréscimo começa e o teto. **Vinte e cinco vigências
+depois, o motor não sabe nenhum número da regra**: ele pergunta ao registro
+quantos pontos o ano exige, inclusive para anos futuros, o que é justamente o
+que a projeção do ano de cumprimento precisa.
+
+#### O teto lido, não duplicado
+
+O teto do Regime Geral é o limite superior da última faixa da tabela do INSS. Ele
+poderia ter virado parâmetro novo — e passaria a divergir na primeira portaria
+que alguém atualizasse pela metade. O motor lê a tabela que já existe.
+
+#### O que ficou declarado como fora da conta
+
+As demais regras de transição, a aposentadoria por idade e o VALOR da
+aposentadoria (que depende da média das contribuições desde julho de 1994, dado
+que só o CNIS tem). As quatro páginas dizem isso nas notas, e o guia repete —
+porque a conclusão errada aqui não é "paguei imposto a mais", é "achei que não
+tinha direito".
+
+#### O deploy precisou de dois disparos, de novo
+
+A publicação do lote 4 ficou verde no pipeline com produção servindo a imagem
+anterior: o webhook responde 200, a verificação de saúde bate no contêiner
+antigo e responde `ok`. É o defeito de §7.76 — e a prova continua sendo
+comparar o que produção serve com o que foi publicado. **Enquanto o
+`HEALTH_TOKEN` não for configurado nos dois lados, conferir em produção não é
+zelo: é o único teste que existe para o deploy.**
 
 ---
 

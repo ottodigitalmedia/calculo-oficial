@@ -29,6 +29,47 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 17/09/2026 — expansão do catálogo, lote 5
+
+### Adicionado · a categoria PRV e quatro benefícios do INSS
+
+CALC-100 pensão por morte · CALC-101 auxílio por incapacidade temporária ·
+CALC-102 salário-maternidade pago pelo INSS · CALC-103 aposentadoria pela regra
+de pontos.
+
+Dois guias novos — *Benefícios do INSS* e *Aposentadoria pela regra de pontos* —
+e a abertura da categoria **PRV**, a primeira categoria nova desde o lançamento
+(`00-catalogo` §13.1).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `pensao-cota-familiar` · `-por-dependente` · `-maxima` | 50% · 10% · 100% | desde 13/11/2019 | EC nº 103/2019, art. 23 |
+| `auxilio-incapacidade-percentual` | 91% | desde 29/04/1995 | Lei nº 8.213/1991, art. 61 (red. Lei nº 9.032/1995) |
+| `aposentadoria-pontos-mulher` | 86 a 100, um ponto por ano | 2019 a 2033, uma vigência por ano | EC nº 103/2019, art. 15, § 1º |
+| `aposentadoria-pontos-homem` | 96 a 105, um ponto por ano | 2019 a 2028, uma vigência por ano | EC nº 103/2019, art. 15, § 1º |
+| `aposentadoria-tempo-minimo-mulher` · `-homem` | 30 · 35 anos | desde 13/11/2019 | EC nº 103/2019, art. 15, I |
+
+**Vinte e cinco vigências para uma regra só, e de propósito.** O acréscimo anual
+de um ponto caberia em três linhas de código — e seriam três constantes legais
+fora de `lib/params/`. Cada ano tem a sua vigência, e a pontuação de 2031 é
+resolvida pelo mesmo caminho que a de hoje.
+
+**O teto e o piso saem de onde já estavam.** O piso é o salário mínimo, com
+fundamento no art. 201, § 2º, da Constituição; o teto é o limite superior da
+última faixa da tabela do INSS, já cadastrada para CALC-016 — lido de lá em vez
+de duplicado, porque dois cadastros do mesmo valor divergem na primeira virada
+de exercício.
+
+### Auditoria · casos-ouro
+
+32 casos-ouro novos: 20 dos três benefícios e 12 da regra de pontos, com as
+fronteiras de cada tabela testadas uma a uma — incluindo a projeção do ano de
+cumprimento, conferida à mão para três perfis diferentes.
+
+---
+
 ## Ciclo de 17/09/2026 — expansão do catálogo, lote 4
 
 ### Adicionado · quatro calculadoras em três categorias

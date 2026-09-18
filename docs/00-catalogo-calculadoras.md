@@ -48,7 +48,7 @@ Documento de escopo. Define **todas** as calculadoras que o projeto terá, em qu
 
 ## 3. Categorias
 
-O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definitivo**.
+O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definitivo**. A décima primeira — PRV — foi aberta em 17/09/2026, no lote 5 do v5; ver §13.1 e §18.6.
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
@@ -62,7 +62,8 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| | **Total** | | **99** |
+| PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 4 |
+| | **Total** | | **103** |
 
 ---
 
@@ -283,6 +284,36 @@ O catálogo tem **10 categorias ativas** e **5 categorias excluídas em definiti
 
 ---
 
+## 13.1 PRV — Previdência e Benefícios do INSS
+
+**Papel.** A pergunta previdenciária tem volume alto e permanente — não depende
+de calendário fiscal nem de virada de exercício —, e é a que o buscador menos
+consegue responder sozinho: as regras combinam idade, tempo, médias e limites.
+
+**Risco.** É a categoria de maior risco de norma do catálogo. A EC nº 103/2019
+criou regras de transição que mudam de valor a cada ano, e há jurisprudência
+viva sobre vários pontos. Nada entra aqui sem cláusula de vigência lida e sem
+caso-ouro que trave as fronteiras.
+
+**Por que a categoria foi aberta.** §18.6 já previa a previdência como grupo
+próprio, "com cuidado próprio". Alocá-la em TRB misturaria direito do trabalho
+com benefício previdenciário; em TRI, tributo com benefício. A numeração desta
+seção evita renumerar §14 a §18, que são referenciadas em todo o projeto.
+
+| ID | Calculadora | Demanda | Valor | Fonte | Manut. | Fase |
+|---|---|---|---|---|---|---|
+| CALC-100 | Pensão por morte — cota familiar e cotas por dependente | 🔥 | M | P | Média | v5 |
+| CALC-101 | Auxílio por incapacidade temporária | 🔥 | M | P | Média | v5 |
+| CALC-102 | Salário-maternidade pago pelo INSS | 🔸 | M | P | Alta | v5 |
+| CALC-103 | Aposentadoria pela regra de pontos (EC 103, art. 15) | 🔥 | M | P | **Crítica** | v5 |
+
+> **CALC-103 tem manutenção crítica por construção.** A pontuação exigida sobe
+> um ponto por ano até 2033 (mulher) e 2028 (homem) — e toda a tabela já está
+> cadastrada, ano a ano, como vigência. A manutenção não é anual: é conferir, a
+> cada revisão, se nenhuma emenda mudou a regra.
+
+---
+
 ## 14. Categorias excluídas em definitivo
 
 Estas **não** são backlog. Não entram em nenhuma fase.
@@ -328,8 +359,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 23 | — | Expansão de cobertura — lotes 1 a 4 de §18 |
-| | **99** | 10 | |
+| **v5** | 27 | — | Expansão de cobertura — lotes 1 a 5 de §18 |
+| | **103** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -501,7 +532,25 @@ alíquota periódica e tabela próprias; o lance do consórcio e o reajuste da
 parcela pelo preço do bem; e a janela operacional de pagamento das multas, que é
 do órgão autuador.
 
-### 18.6 Candidatas dos próximos lotes
+### 18.6 Lote 5 — previdência, publicado em 17/09/2026
+
+CALC-100 a CALC-103, na tabela de §13.1. Quatro calculadoras, dois guias novos —
+*Benefícios do INSS* e *Aposentadoria pela regra de pontos* — e a **abertura da
+categoria PRV**, a primeira desde o lançamento.
+
+**A tabela de pontos entrou como DADO, ano a ano.** O § 1º do art. 15 da EC nº
+103/2019 acrescenta um ponto por ano, e escrever `86 + (ano − 2019)` no motor
+seria pôr três constantes legais no código — o ponto de partida, o ano inicial e
+o teto. Cada ano virou uma vigência: 25 no total, e o registro resolve pela data
+como resolve qualquer outro parâmetro.
+
+**O que a categoria PRV não cobre, e está declarado:** as demais regras de
+transição (idade progressiva e os dois pedágios), a aposentadoria por idade e o
+VALOR da aposentadoria — que depende da média das contribuições desde julho de
+1994, dado que só o extrato do CNIS tem. As páginas dizem isso, e os guias
+repetem.
+
+### 18.7 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -512,7 +561,7 @@ valor dela veio de site de terceiro.
 |---|---|
 | TRB | férias vencidas em dobro · rescisão por justa causa · jornada 12×36 e feriados · provisão mensal de férias e 13º |
 | TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
-| Previdência | aposentadoria pelas regras de transição da EC nº 103/2019 · tempo de contribuição · valor do auxílio por incapacidade · pensão por morte (cotas) · salário-maternidade pago pelo INSS |
+| PRV | demais regras de transição da EC nº 103/2019 (idade progressiva, pedágio menor e pedágio maior) · aposentadoria por idade · valor da aposentadoria a partir da média · auxílio-acidente · auxílio-reclusão |
 | CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
