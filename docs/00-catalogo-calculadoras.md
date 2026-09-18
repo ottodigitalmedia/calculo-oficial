@@ -52,7 +52,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 33 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 34 |
 | TRI | Tributos Pessoa Física | Volume sazonal intenso | 14 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
@@ -63,7 +63,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
 | PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
-| | **Total** | | **117** |
+| | **Total** | | **118** |
 
 ---
 
@@ -108,6 +108,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-112 | Férias vencidas em dobro (CLT, arts. 134 e 137; Súmula 81 do TST) | 🔥 | M | P | Nula | v5 |
 | CALC-115 | Horas trabalhadas e intervalo (CF, art. 7º, XIII; CLT, arts. 66 e 71) | 🔥 | M | P | Nula | v5 |
 | CALC-117 | DAE do empregador doméstico (LC 150, art. 34) | 🔥 | M | P | Alta | v5 |
+| CALC-118 | Abono salarial do PIS (Lei 7.998, art. 9º; CF, art. 239, § 3º) | 🔥 | M | P | **Crítica** | v5 |
 | CALC-095 | Saque-aniversário do FGTS | 🔥 | B | P | Média | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
@@ -377,8 +378,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 41 | — | Expansão de cobertura — lotes 1 a 9 de §18 |
-| | **117** | 11 | |
+| **v5** | 42 | — | Expansão de cobertura — lotes 1 a 10 de §18 |
+| | **118** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -665,7 +666,28 @@ isso** — em janeiro de 2027 ela bloqueia até os anexos novos serem cadastrado
 mas as regras de idade fracionária e de arredondamento do fator não foram
 confirmadas em fonte.
 
-### 18.11 Candidatas dos próximos lotes
+### 18.11 Lote 10 — o abono salarial e o seguro-desemprego do doméstico, publicado em 18/09/2026
+
+CALC-118, na tabela de §4, com guia novo — *Abono salarial do PIS* —, e o
+seguro-desemprego do doméstico como opção de CALC-009, e não página nova: a
+regra é curta (um salário mínimo, até três parcelas) e a pergunta já tem
+endereço.
+
+**O limite do abono é número do Ministério, não da lei.** A EC nº 135/2024
+manda corrigir dois salários mínimos de 2023 pelo INPC; o número de 2026 — R$
+2.766,00 — está na página oficial do serviço, e a vigência fecha no ano. O de
+2027 depende do INPC de 2025 e da publicação. **Manutenção crítica:** CALC-118
+bloqueia em 1º/01/2027 até o novo limite ser cadastrado.
+
+**A tabela oficial serviu de caso-ouro — e mostrou um erro.** Onze dos doze
+valores publicados pelo Ministério batem com a lei; o de cinco meses (R$ 675,00)
+não segue o arredondamento para cima do § 4º, que dá R$ 676,00. A calculadora
+segue a lei (`ESTADO-DO-PROJETO` §7.91).
+
+**O fator previdenciário continua fora**: nem o Decreto nº 3.048/1999 nem a IN
+nº 128/2022 fixam o arredondamento e o tratamento das frações de idade e tempo.
+
+### 18.12 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para

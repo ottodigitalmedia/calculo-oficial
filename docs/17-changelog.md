@@ -29,6 +29,30 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — expansão do catálogo, lote 10
+
+### Adicionado · abono salarial e seguro-desemprego do doméstico
+
+CALC-118 abono salarial do PIS, com o guia *Abono salarial do PIS*; CALC-009
+ganha a opção do empregado doméstico (LC nº 150/2015, arts. 26 e 28), e o guia
+*Empregado doméstico*, uma seção sobre ela (`00-catalogo` §18.11).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `abono-limite-remuneracao-media` | R$ 2.766,00 | pagamento de 2026 (01/01 a 31/12/2026) | Ministério do Trabalho — CF, art. 239, § 3º (red. EC nº 135/2024) |
+| `abono-fracao-por-mes` | 1/12 do salário mínimo do pagamento | desde o exercício de 2016 | Lei nº 7.998/1990, art. 9º, § 2º (red. Lei nº 13.134/2015) |
+| `seguro-desemprego-domestico-*` | 3 parcelas; 15 meses em 24 | desde 02/06/2015 | LC nº 150/2015, arts. 26 e 28, I |
+
+### Auditoria · casos-ouro
+
+10 casos-ouro novos, com a tabela oficial do Ministério por meses trabalhados —
+onze valores iguais e o de cinco meses divergente, declarado —, o limite de
+renda nos dois lados e o seguro do doméstico com catorze e quinze meses.
+
+---
+
 ## Ciclo de 18/09/2026 — expansão do catálogo, lote 9
 
 ### Adicionado · o DAS do Simples Nacional e o DAE do doméstico

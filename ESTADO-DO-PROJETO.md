@@ -4407,6 +4407,24 @@ sobre a remuneração inteira. O caso-ouro de R$ 10.000,00 trava a diferença.
 saúde lê o contêiner antigo — o defeito de §7.76, cada vez mais frequente. A
 correção que falta é do mantenedor: `HEALTH_TOKEN` no GitHub e no painel.
 
+### 7.91 Lote 10 — o abono salarial, e um erro na tabela oficial
+
+**CALC-118**, com guia novo, e o doméstico em CALC-009. O catálogo passa de 117
+para **118**.
+
+**A tabela do Ministério tem um valor fora da lei.** A página oficial do Abono
+Salarial publica, para o pagamento de 2026, R$ 675,00 a quem trabalhou cinco
+meses. Pela Lei nº 7.998/1990, art. 9º, R$ 1.621,00 × 5 ÷ 12 = R$ 675,4166…, e
+o § 4º manda suplementar as partes decimais "até a unidade inteira
+imediatamente superior": R$ 676,00. Os outros onze valores da mesma tabela saem
+exatamente assim — inclusive seis meses, que dá R$ 810,50 e é publicado como R$
+811,00. A calculadora segue a lei, a página diz isso na nota, e o caso-ouro
+registra a divergência. Se o pagamento efetivo for de R$ 675,00, a diferença é
+de um real — mas é a lei, e não a tabela, que o produto cita.
+
+**Duas tarefas com data para 1º/01/2027**, somadas à de §8.000: o limite do
+abono do pagamento de 2027 (INPC de 2025, publicação do Ministério).
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
@@ -4419,6 +4437,9 @@ CALC-116 (DAS do Simples) e CALC-048 (comparador CLT × PJ) bloqueiam por
 `RN-003`. O bloqueio é correto, mas tira do ar duas calculadoras de volume alto
 numa data conhecida. Ler os anexos novos, cadastrá-los com vigência a partir de
 01/01/2027 e escrever os casos-ouro — ver §7.90.
+
+**Cadastrar o limite do abono salarial do pagamento de 2027** — CALC-118
+bloqueia até ele existir. Ver §7.91.
 
 **Configurar o `HEALTH_TOKEN`** (mantenedor): sem ele, o deploy não prova que o
 contêiner trocou, e o lote 8 precisou de três disparos (§7.90).
