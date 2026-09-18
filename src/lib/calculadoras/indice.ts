@@ -296,6 +296,30 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Todas as regras da reforma lado a lado — e qual delas se cumpre primeiro no seu caso.',
   },
   {
+    slug: 'valor-da-aposentadoria',
+    nome: 'Valor da aposentadoria',
+    linhaDeContexto:
+      'Quanto a aposentadoria paga depois da reforma: o percentual da média e os limites do INSS.',
+  },
+  {
+    slug: 'auxilio-acidente',
+    nome: 'Auxílio-acidente',
+    linhaDeContexto:
+      'Metade do salário de benefício, somada ao salário — para quem ficou com sequela de acidente.',
+  },
+  {
+    slug: 'aposentadoria-do-professor',
+    nome: 'Aposentadoria do professor',
+    linhaDeContexto:
+      'As regras do magistério depois da reforma — com cinco anos a menos — e qual se cumpre primeiro.',
+  },
+  {
+    slug: 'ferias-em-dobro',
+    nome: 'Férias vencidas em dobro',
+    linhaDeContexto:
+      'Tirou férias depois do prazo? Os dias de fora do prazo são pagos em dobro, com o terço.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

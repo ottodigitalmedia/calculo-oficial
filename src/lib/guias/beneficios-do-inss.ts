@@ -23,8 +23,8 @@ export const BENEFICIOS_DO_INSS: Guia = {
     'Pensão por morte, auxílio por incapacidade e salário-maternidade partem de bases diferentes — e quase nenhuma delas é o seu último salário.',
   descricaoSeo:
     'Como o INSS calcula a pensão por morte, o auxílio por incapacidade temporária e o salário-maternidade, com o piso do salário mínimo e o teto do regime.',
-  atualizadoEm: '2026-09-17',
-  calculadoras: ['pensao-por-morte', 'auxilio-por-incapacidade', 'salario-maternidade-do-inss'],
+  atualizadoEm: '2026-09-18',
+  calculadoras: ['pensao-por-morte', 'auxilio-por-incapacidade', 'salario-maternidade-do-inss', 'auxilio-acidente'],
 
   secoes: [
     {
@@ -122,6 +122,33 @@ export const BENEFICIOS_DO_INSS: Guia = {
           slug: 'auxilio-por-incapacidade',
           texto:
             'A calculadora de auxílio por incapacidade aplica o percentual, o limite dos últimos doze, o teto e o piso — nessa ordem.',
+        },
+      ],
+    },
+
+    {
+      id: 'auxilio-acidente',
+      titulo: 'Auxílio-acidente: o benefício que se soma ao salário',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Quem volta ao trabalho com uma sequela de acidente que reduz a capacidade para a atividade habitual recebe o auxílio-acidente. Ele não substitui o salário: é indenização, pago junto com ele, e por isso não tem o piso do salário mínimo.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'auxilio-acidente-percentual',
+          legenda: 'Percentual do salário de benefício que forma o auxílio-acidente.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Ele começa no dia seguinte ao fim do auxílio por incapacidade temporária e dura até a véspera de qualquer aposentadoria — as duas coisas não se acumulam.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'auxilio-acidente',
+          texto: 'A calculadora de auxílio-acidente aplica o percentual e o teto sobre o salário de benefício.',
         },
       ],
     },

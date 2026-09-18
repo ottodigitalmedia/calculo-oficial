@@ -690,6 +690,30 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './regras-de-aposentadoria'
     ).then((m) => m.calcular),
+  'valor-da-aposentadoria': () =>
+    import(
+      /* webpackChunkName: "calc-valor-da-aposentadoria" */
+      /* webpackExports: ["calcular"] */
+      './valor-da-aposentadoria'
+    ).then((m) => m.calcular),
+  'auxilio-acidente': () =>
+    import(
+      /* webpackChunkName: "calc-auxilio-acidente" */
+      /* webpackExports: ["calcular"] */
+      './auxilio-acidente'
+    ).then((m) => m.calcular),
+  'aposentadoria-do-professor': () =>
+    import(
+      /* webpackChunkName: "calc-aposentadoria-do-professor" */
+      /* webpackExports: ["calcular"] */
+      './aposentadoria-do-professor'
+    ).then((m) => m.calcular),
+  'ferias-em-dobro': () =>
+    import(
+      /* webpackChunkName: "calc-ferias-em-dobro" */
+      /* webpackExports: ["calcular"] */
+      './ferias-em-dobro'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

@@ -20,8 +20,8 @@ export const FERIAS: Guia = {
     'O valor das férias não é o salário do mês — e a parte vendida segue regra de desconto oposta à parte descansada.',
   descricaoSeo:
     'Como se forma o valor das férias: período aquisitivo, adicional de um terço, férias proporcionais, venda de parte do período e os descontos do abono.',
-  atualizadoEm: '2026-08-06',
-  calculadoras: ['ferias', 'salario-liquido', 'decimo-terceiro'],
+  atualizadoEm: '2026-09-18',
+  calculadoras: ['ferias', 'salario-liquido', 'decimo-terceiro', 'ferias-em-dobro'],
 
   secoes: [
     {
@@ -44,6 +44,33 @@ export const FERIAS: Guia = {
           tipo: 'paragrafo',
           texto:
             'Um período aquisitivo completo e não gozado é o que a rescisão chama de férias vencidas. É por isso que aquele campo existe na calculadora de rescisão: ele muda bastante o acerto, e muita gente não sabe que tem um período nessa condição.',
+        },
+      ],
+    },
+
+    {
+      id: 'quando-o-prazo-passa',
+      titulo: 'Quando o prazo passa, os dias dobram',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Se a empresa não concede as férias dentro do período concessivo, a remuneração é paga em dobro. O detalhe que quase ninguém conhece é que a dobra vale por dia: férias que começam dentro do prazo e terminam fora dele têm em dobro só os dias de fora.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'ferias-periodo-concessivo-meses',
+          legenda: 'Meses que a empresa tem, depois do período aquisitivo, para conceder as férias.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A dobra incide sobre a remuneração de férias inteira — o salário dos dias e o terço constitucional. A regra dos dias vem da jurisprudência consolidada do Tribunal Superior do Trabalho, na Súmula 81.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'ferias-em-dobro',
+          texto: 'A calculadora de férias em dobro mostra o prazo, os dias de cada lado e quanto a dobra acrescenta.',
         },
       ],
     },

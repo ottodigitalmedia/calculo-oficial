@@ -30,6 +30,8 @@ export const REGRAS_DE_TRANSICAO_DA_APOSENTADORIA: Guia = {
     'aposentadoria-pedagio-50',
     'aposentadoria-pedagio-100',
     'aposentadoria-por-idade',
+    'valor-da-aposentadoria',
+    'aposentadoria-do-professor',
   ],
 
   secoes: [
@@ -143,6 +145,68 @@ export const REGRAS_DE_TRANSICAO_DA_APOSENTADORIA: Guia = {
           slug: 'regras-de-aposentadoria',
           texto:
             'O comparador de regras põe as cinco lado a lado, com o mês em que cada uma se cumpre, e aponta a primeira.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Na maior parte das regras, o valor parte de um percentual da média e cresce a cada ano completo de contribuição acima de um limite, que é menor para a mulher. No pedágio do tempo inteiro, o valor é a média integral.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'aposentadoria-valor-coeficiente-base',
+          legenda: 'Percentual da média antes do acréscimo por ano de contribuição.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'aposentadoria-valor-acrescimo-por-ano',
+          legenda: 'Acréscimo por ano completo de contribuição acima do limite.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'aposentadoria-valor-anos-sem-acrescimo-mulher',
+          legenda: 'Anos de contribuição da mulher a partir dos quais cada ano acrescenta.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'aposentadoria-valor-anos-sem-acrescimo-homem',
+          legenda: 'Anos de contribuição do homem a partir dos quais cada ano acrescenta.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'valor-da-aposentadoria',
+          texto: 'A calculadora de valor da aposentadoria aplica o percentual, o teto e o piso sobre a sua média.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-professor',
+      titulo: 'O professor tem regras próprias',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Quem tem todo o tempo de contribuição em efetivo exercício de magistério na educação infantil ou nos ensinos fundamental e médio tem versões próprias da regra de pontos, da idade progressiva, do pedágio do tempo inteiro e da regra permanente — em geral com cinco anos a menos de idade e de tempo.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'aposentadoria-professor-pontos-tempo-mulher',
+          legenda: 'Anos de magistério exigidos da professora na regra de pontos.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'aposentadoria-professor-pontos-tempo-homem',
+          legenda: 'Anos de magistério exigidos do professor na regra de pontos.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Tempo em outra atividade tira a pessoa dessas regras e a leva para as gerais. Professor universitário não está nelas.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'aposentadoria-do-professor',
+          texto: 'A calculadora do professor compara as regras do magistério e aponta a primeira a se cumprir.',
         },
       ],
     },

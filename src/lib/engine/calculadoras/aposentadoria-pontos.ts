@@ -69,10 +69,20 @@ export interface SaidaRegraDePontos {
   readonly pontosExigidosNoAno: number | null
 }
 
+/**
+ * Os parâmetros da regra. Ausente = a regra geral do art. 15; o professor
+ * (art. 15, § 3º) passa os seus — CALC-111.
+ */
+export interface ParametrosDaRegraDePontos {
+  readonly pontos: string
+  readonly tempo: string
+}
+
 export function calcularRegraDePontos(
   entrada: EntradaRegraDePontos,
   dataReferencia: DataISO,
   registro: Registro,
+  parametros?: ParametrosDaRegraDePontos,
 ): Resultado<SaidaRegraDePontos> {
   const camposInteiros = [
     entrada.idadeAnos,
@@ -104,9 +114,11 @@ export function calcularRegraDePontos(
     }
   }
 
-  const idPontos = entrada.sexo === 'mulher' ? 'aposentadoria-pontos-mulher' : 'aposentadoria-pontos-homem'
+  const idPontos =
+    parametros?.pontos ?? (entrada.sexo === 'mulher' ? 'aposentadoria-pontos-mulher' : 'aposentadoria-pontos-homem')
   const idTempo =
-    entrada.sexo === 'mulher' ? 'aposentadoria-tempo-minimo-mulher' : 'aposentadoria-tempo-minimo-homem'
+    parametros?.tempo ??
+    (entrada.sexo === 'mulher' ? 'aposentadoria-tempo-minimo-mulher' : 'aposentadoria-tempo-minimo-homem')
 
   const pontos = inteiroDe(registro, idPontos, dataReferencia)
   const tempoMinimo = inteiroDe(registro, idTempo, dataReferencia)

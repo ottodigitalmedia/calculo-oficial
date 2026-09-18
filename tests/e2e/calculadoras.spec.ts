@@ -208,6 +208,9 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   'aposentadoria-pedagio-100': '?sexo=mulher&idadeAnos=55&emendaAnos=25&tempoAnos=32',
   'aposentadoria-por-idade': '?sexo=mulher&filiacao=antes&idadeAnos=61&tempoAnos=15',
   'regras-de-aposentadoria': '?sexo=mulher&filiacao=antes&idadeAnos=57&tempoAnos=32&emendaAnos=25',
+  // Lote 7: idade e magistério interagem; as férias exigem datas em ordem.
+  'aposentadoria-do-professor': '?sexo=mulher&filiacao=antes&idadeAnos=50&tempoAnos=25&emendaAnos=19',
+  'ferias-em-dobro': '?salario=300000&inicioAquisitivo=2024-03-10&inicioFerias=2026-02-24&dias=30',
 }
 
 for (const c of CALCULADORAS) {

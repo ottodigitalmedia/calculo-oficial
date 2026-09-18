@@ -420,11 +420,18 @@ export interface SaidaPedagio100 extends Cumprimento {
   readonly faltaIdadeMeses: number
 }
 
+/** Parâmetros do pedágio de 100%. Ausente = regra geral; o professor passa os do § 1º. */
+export interface ParametrosDoPedagio100 {
+  readonly idade: string
+  readonly tempo: string
+}
+
 /** CALC-106 — pedágio de 100% (EC nº 103/2019, art. 20). */
 export function calcularPedagio100(
   entrada: EntradaPedagio100,
   dataReferencia: DataISO,
   registro: Registro,
+  parametros?: ParametrosDoPedagio100,
 ): Resultado<SaidaPedagio100> {
   const valida = validarPedagio(entrada)
   if (!valida.ok) return valida
@@ -438,8 +445,16 @@ export function calcularPedagio100(
   }
 
   const mulher = entrada.sexo === 'mulher'
-  const idade: Resolvido = inteiroDe(registro, mulher ? 'aposentadoria-pedagio-100-idade-mulher' : 'aposentadoria-pedagio-100-idade-homem', dataReferencia)
-  const tempo: Resolvido = inteiroDe(registro, mulher ? 'aposentadoria-pedagio-100-tempo-mulher' : 'aposentadoria-pedagio-100-tempo-homem', dataReferencia)
+  const idade: Resolvido = inteiroDe(
+    registro,
+    parametros?.idade ?? (mulher ? 'aposentadoria-pedagio-100-idade-mulher' : 'aposentadoria-pedagio-100-idade-homem'),
+    dataReferencia,
+  )
+  const tempo: Resolvido = inteiroDe(
+    registro,
+    parametros?.tempo ?? (mulher ? 'aposentadoria-pedagio-100-tempo-mulher' : 'aposentadoria-pedagio-100-tempo-homem'),
+    dataReferencia,
+  )
   if (idade === null || tempo === null) return { ok: false, motivo: 'vigencia_ausente', detalhe: SEM_VIGENCIA }
 
   const naEmenda = emMeses(entrada.tempoNaEmendaAnos, entrada.tempoNaEmendaMeses)
@@ -543,10 +558,10 @@ const NOMES: Readonly<Record<IdDaRegra, string>> = {
   permanente: 'Regra permanente',
 }
 
-function deCumprimento(id: IdDaRegra, c: Cumprimento): AvaliacaoDaRegra {
+function deCumprimento(id: IdDaRegra, c: Cumprimento, nome: string = NOMES[id]): AvaliacaoDaRegra {
   return {
     id,
-    nome: NOMES[id],
+    nome,
     situacao: c.mesesAteCumprir === null ? 'fora_do_horizonte' : c.cumpreHoje ? 'cumpre' : 'cumprira',
     mesesAteCumprir: c.mesesAteCumprir,
     anoDeCumprimento: c.anoDeCumprimento,
@@ -555,8 +570,13 @@ function deCumprimento(id: IdDaRegra, c: Cumprimento): AvaliacaoDaRegra {
   }
 }
 
-function fora(id: IdDaRegra, situacao: 'nao_se_aplica' | 'falta_dado', motivo: string): AvaliacaoDaRegra {
-  return { id, nome: NOMES[id], situacao, mesesAteCumprir: null, anoDeCumprimento: null, mesDeCumprimento: null, motivo }
+function fora(
+  id: IdDaRegra,
+  situacao: 'nao_se_aplica' | 'falta_dado',
+  motivo: string,
+  nome: string = NOMES[id],
+): AvaliacaoDaRegra {
+  return { id, nome, situacao, mesesAteCumprir: null, anoDeCumprimento: null, mesDeCumprimento: null, motivo }
 }
 
 function comPrefixo(nome: string, etapas: readonly Etapa[]): Etapa[] {
@@ -695,6 +715,183 @@ export function compararRegras(
       unidade: 'numero',
       justificativa:
         'Cumprir primeiro não é o mesmo que ser a mais vantajosa: o valor do benefício muda de uma regra para outra, e o pedágio de 50% leva o fator previdenciário.',
+    })
+  }
+
+  return {
+    ok: true,
+    valores: { regras, maisCedo },
+    traco: { etapas, dataReferencia, vigenciasAplicadas: [...new Set(vigencias)] },
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CALC-111 — aposentadoria do professor
+// ---------------------------------------------------------------------------
+
+const NOMES_PROFESSOR: Readonly<Partial<Record<IdDaRegra, string>>> = {
+  pontos: 'Pontos do professor',
+  'idade-progressiva': 'Idade progressiva do professor',
+  'pedagio-100': 'Pedágio de 100% do professor',
+  permanente: 'Regra permanente do professor',
+}
+
+function nomeProfessor(id: IdDaRegra): string {
+  return NOMES_PROFESSOR[id] ?? NOMES[id]
+}
+
+function regraQueSeCumprePrimeiro(regras: readonly AvaliacaoDaRegra[]): AvaliacaoDaRegra | null {
+  let maisCedo: AvaliacaoDaRegra | null = null
+  for (const r of regras) {
+    if (r.mesesAteCumprir === null) continue
+    if (maisCedo === null || maisCedo.mesesAteCumprir === null || r.mesesAteCumprir < maisCedo.mesesAteCumprir) maisCedo = r
+  }
+  return maisCedo
+}
+
+/**
+ * CALC-111 — as regras do professor da educação infantil e dos ensinos
+ * fundamental e médio: pontos (art. 15, § 3º), idade progressiva (art. 16,
+ * § 2º), pedágio de 100% (art. 20, § 1º) e a permanente (art. 19, § 1º, II).
+ *
+ * **O tempo informado é o de MAGISTÉRIO.** As quatro regras exigem que o tempo
+ * seja "exclusivamente" de efetivo exercício nessas funções; quem tem tempo
+ * misto segue as regras gerais, que o comparador de CALC-108 cobre. Não há
+ * pedágio de 50% nem aposentadoria por idade específicos do professor.
+ */
+export function compararRegrasDoProfessor(
+  entrada: EntradaComparador,
+  dataReferencia: DataISO,
+  registro: Registro,
+): Resultado<SaidaComparador> {
+  const base: EntradaIdadeETempo = {
+    sexo: entrada.sexo,
+    idadeAnos: entrada.idadeAnos,
+    idadeMeses: entrada.idadeMeses,
+    tempoAnos: entrada.tempoAnos,
+    tempoMeses: entrada.tempoMeses,
+  }
+  const valida = validarIdadeETempo(base)
+  if (!valida.ok) return valida
+  const validaEmenda = validarAnosEMeses([[entrada.tempoNaEmendaAnos, entrada.tempoNaEmendaMeses]])
+  if (!validaEmenda.ok) return validaEmenda
+  const naEmenda = emMeses(entrada.tempoNaEmendaAnos, entrada.tempoNaEmendaMeses)
+  if (naEmenda > emMeses(entrada.tempoAnos, entrada.tempoMeses)) {
+    return { ok: false, motivo: 'entrada_invalida', detalhe: 'O tempo de magistério de hoje não pode ser menor que o de 13/11/2019.' }
+  }
+
+  const mulher = entrada.sexo === 'mulher'
+  const regras: AvaliacaoDaRegra[] = []
+  const etapas: Etapa[] = []
+  const vigencias: string[] = []
+  const somar = (nome: string, t: Traco) => {
+    etapas.push(...comPrefixo(nome, t.etapas))
+    vigencias.push(...t.vigenciasAplicadas)
+  }
+
+  if (!entrada.filiadoAntesDaEmenda) {
+    const r = avaliarIdadeETempo(
+      {
+        idIdade: mulher ? 'aposentadoria-professor-permanente-idade-mulher' : 'aposentadoria-professor-permanente-idade-homem',
+        idTempo: 'aposentadoria-professor-permanente-tempo',
+        justificativaIdade: 'Regra permanente do professor, para quem se filiou depois de 13/11/2019 (art. 19, § 1º, II).',
+      },
+      base,
+      dataReferencia,
+      registro,
+    )
+    if (!r.ok) return r
+    regras.push(deCumprimento('permanente', r.valores, nomeProfessor('permanente')))
+    somar(nomeProfessor('permanente'), r.traco)
+    const motivo = 'Só para quem já era filiado ao Regime Geral em 13/11/2019.'
+    for (const id of ['pontos', 'idade-progressiva', 'pedagio-100'] as const) {
+      regras.push(fora(id, 'nao_se_aplica', motivo, nomeProfessor(id)))
+    }
+  } else {
+    const pontos = calcularRegraDePontos(
+      {
+        sexo: entrada.sexo,
+        idadeAnos: entrada.idadeAnos,
+        idadeMeses: entrada.idadeMeses,
+        tempoContribuicaoAnos: entrada.tempoAnos,
+        tempoContribuicaoMeses: entrada.tempoMeses,
+      },
+      dataReferencia,
+      registro,
+      {
+        pontos: mulher ? 'aposentadoria-professor-pontos-mulher' : 'aposentadoria-professor-pontos-homem',
+        tempo: mulher ? 'aposentadoria-professor-pontos-tempo-mulher' : 'aposentadoria-professor-pontos-tempo-homem',
+      },
+    )
+    if (!pontos.ok) {
+      if (pontos.motivo !== 'entrada_incompleta') return pontos
+      regras.push(fora('pontos', 'falta_dado', 'Informe o tempo de magistério.', nomeProfessor('pontos')))
+    } else {
+      const p = pontos.valores
+      regras.push(
+        deCumprimento(
+          'pontos',
+          { cumpreHoje: p.cumpreTudo, mesesAteCumprir: p.mesesAteLa, anoDeCumprimento: p.anoDeCumprimento, mesDeCumprimento: p.mesDeCumprimento },
+          nomeProfessor('pontos'),
+        ),
+      )
+      somar(nomeProfessor('pontos'), pontos.traco)
+    }
+
+    const progressiva = avaliarIdadeETempo(
+      {
+        idIdade: mulher ? 'aposentadoria-professor-idade-progressiva-mulher' : 'aposentadoria-professor-idade-progressiva-homem',
+        idTempo: mulher ? 'aposentadoria-professor-idade-progressiva-tempo-mulher' : 'aposentadoria-professor-idade-progressiva-tempo-homem',
+        justificativaIdade:
+          'Idade e tempo cinco anos menores que os da regra geral, e a idade sobe seis meses a cada 1º de janeiro desde 2020 até o teto do § 2º do art. 16.',
+      },
+      base,
+      dataReferencia,
+      registro,
+    )
+    if (!progressiva.ok) return progressiva
+    regras.push(deCumprimento('idade-progressiva', progressiva.valores, nomeProfessor('idade-progressiva')))
+    somar(nomeProfessor('idade-progressiva'), progressiva.traco)
+
+    if (naEmenda === 0) {
+      regras.push(fora('pedagio-100', 'falta_dado', 'Informe o tempo de magistério que você tinha em 13/11/2019.', nomeProfessor('pedagio-100')))
+    } else {
+      const p100 = calcularPedagio100(
+        {
+          sexo: entrada.sexo,
+          idadeAnos: entrada.idadeAnos,
+          idadeMeses: entrada.idadeMeses,
+          tempoNaEmendaAnos: entrada.tempoNaEmendaAnos,
+          tempoNaEmendaMeses: entrada.tempoNaEmendaMeses,
+          tempoAnos: entrada.tempoAnos,
+          tempoMeses: entrada.tempoMeses,
+        },
+        dataReferencia,
+        registro,
+        {
+          idade: mulher ? 'aposentadoria-professor-pedagio-100-idade-mulher' : 'aposentadoria-professor-pedagio-100-idade-homem',
+          tempo: mulher ? 'aposentadoria-professor-pedagio-100-tempo-mulher' : 'aposentadoria-professor-pedagio-100-tempo-homem',
+        },
+      )
+      if (!p100.ok) return p100
+      regras.push(deCumprimento('pedagio-100', p100.valores, nomeProfessor('pedagio-100')))
+      somar(nomeProfessor('pedagio-100'), p100.traco)
+    }
+    regras.push(fora('permanente', 'nao_se_aplica', 'Só para quem se filiou ao Regime Geral depois de 13/11/2019.', nomeProfessor('permanente')))
+  }
+
+  const maisCedo = regraQueSeCumprePrimeiro(regras)
+  if (maisCedo !== null && maisCedo.mesesAteCumprir !== null) {
+    etapas.push({
+      rotulo: `Regra que se cumpre primeiro — ${maisCedo.nome}`,
+      formula:
+        maisCedo.mesesAteCumprir === 0
+          ? 'requisitos já cumpridos na data de referência'
+          : `em ${descreverMeses(maisCedo.mesesAteCumprir)}, mantido o exercício do magistério`,
+      resultado: centavos(maisCedo.mesesAteCumprir * CENTESIMOS_POR_UNIDADE),
+      unidade: 'numero',
+      justificativa:
+        'Cumprir primeiro não é o mesmo que ser a mais vantajosa: o pedágio de 100% paga a média integral, e as demais, um percentual que cresce com o tempo de contribuição.',
     })
   }
 
