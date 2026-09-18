@@ -44,7 +44,14 @@
  */
 
 import type { ConjuntoDeParametros } from '../tipos'
-import { LC_123_ANEXO_III, LC_123_ANEXO_V, LC_123_ART_18_FATOR_R } from './fontes'
+import {
+  LC_123_ANEXO_I,
+  LC_123_ANEXO_II,
+  LC_123_ANEXO_III,
+  LC_123_ANEXO_IV,
+  LC_123_ANEXO_V,
+  LC_123_ART_18_FATOR_R,
+} from './fontes'
 
 /** Vigência dos anexos da LC nº 155/2016. */
 const INICIO = '2018-01-01'
@@ -56,7 +63,7 @@ const INICIO = '2018-01-01'
 const FIM = '2026-12-31'
 
 export const SIMPLES_NACIONAL: ConjuntoDeParametros = {
-  fontes: [LC_123_ANEXO_III, LC_123_ANEXO_V, LC_123_ART_18_FATOR_R],
+  fontes: [LC_123_ANEXO_III, LC_123_ANEXO_V, LC_123_ART_18_FATOR_R, LC_123_ANEXO_I, LC_123_ANEXO_II, LC_123_ANEXO_IV],
 
   parametros: [
     {
@@ -71,6 +78,24 @@ export const SIMPLES_NACIONAL: ConjuntoDeParametros = {
       nome: 'Simples Nacional — Anexo V',
       descricao:
         'Faixas, alíquotas nominais e parcelas a deduzir dos serviços tributados pelo Anexo V, quando o fator R fica abaixo do limiar.',
+      tipo: 'tabela_faixas',
+    },
+    {
+      id: 'simples-anexo-i',
+      nome: 'Simples Nacional — Anexo I (comércio)',
+      descricao: 'Faixas de receita bruta em doze meses, alíquotas nominais e parcelas a deduzir do comércio.',
+      tipo: 'tabela_faixas',
+    },
+    {
+      id: 'simples-anexo-ii',
+      nome: 'Simples Nacional — Anexo II (indústria)',
+      descricao: 'Faixas de receita bruta em doze meses, alíquotas nominais e parcelas a deduzir da indústria.',
+      tipo: 'tabela_faixas',
+    },
+    {
+      id: 'simples-anexo-iv',
+      nome: 'Simples Nacional — Anexo IV',
+      descricao: 'Faixas, alíquotas nominais e parcelas a deduzir dos serviços do § 5º-C do art. 18, sem a CPP.',
       tipo: 'tabela_faixas',
     },
     {
@@ -156,6 +181,63 @@ export const SIMPLES_NACIONAL: ConjuntoDeParametros = {
       valor: { tipo: 'percentual', aliquotaBp: 2_800 },
       observacao:
         '"caso a razão entre a folha de salários e a receita bruta da pessoa jurídica seja igual ou superior a 28%". Igual ao limiar já basta para o Anexo III.',
+    },
+    {
+      id: 'simples-anexo-i-2018',
+      parametroId: 'simples-anexo-i',
+      fonteId: 'lc-123-2006-anexo-i',
+      inicio: INICIO,
+      fim: FIM,
+      valor: {
+        tipo: 'tabela_faixas',
+        faixas: [
+          { ordem: 1, limiteInferiorCentavos: 0, limiteSuperiorCentavos: 18_000_000, aliquotaBp: 400, parcelaDeduzirCentavos: 0 },
+          { ordem: 2, limiteInferiorCentavos: 18_000_001, limiteSuperiorCentavos: 36_000_000, aliquotaBp: 730, parcelaDeduzirCentavos: 594_000 },
+          { ordem: 3, limiteInferiorCentavos: 36_000_001, limiteSuperiorCentavos: 72_000_000, aliquotaBp: 950, parcelaDeduzirCentavos: 1_386_000 },
+          { ordem: 4, limiteInferiorCentavos: 72_000_001, limiteSuperiorCentavos: 180_000_000, aliquotaBp: 1_070, parcelaDeduzirCentavos: 2_250_000 },
+          { ordem: 5, limiteInferiorCentavos: 180_000_001, limiteSuperiorCentavos: 360_000_000, aliquotaBp: 1_430, parcelaDeduzirCentavos: 8_730_000 },
+          { ordem: 6, limiteInferiorCentavos: 360_000_001, limiteSuperiorCentavos: 480_000_000, aliquotaBp: 1_900, parcelaDeduzirCentavos: 37_800_000 },
+        ],
+      },
+      observacao: 'Fechada pelo mesmo motivo do Anexo III: a LC nº 214/2025 substitui os anexos a partir de 2027.',
+    },
+    {
+      id: 'simples-anexo-ii-2018',
+      parametroId: 'simples-anexo-ii',
+      fonteId: 'lc-123-2006-anexo-ii',
+      inicio: INICIO,
+      fim: FIM,
+      valor: {
+        tipo: 'tabela_faixas',
+        faixas: [
+          { ordem: 1, limiteInferiorCentavos: 0, limiteSuperiorCentavos: 18_000_000, aliquotaBp: 450, parcelaDeduzirCentavos: 0 },
+          { ordem: 2, limiteInferiorCentavos: 18_000_001, limiteSuperiorCentavos: 36_000_000, aliquotaBp: 780, parcelaDeduzirCentavos: 594_000 },
+          { ordem: 3, limiteInferiorCentavos: 36_000_001, limiteSuperiorCentavos: 72_000_000, aliquotaBp: 1_000, parcelaDeduzirCentavos: 1_386_000 },
+          { ordem: 4, limiteInferiorCentavos: 72_000_001, limiteSuperiorCentavos: 180_000_000, aliquotaBp: 1_120, parcelaDeduzirCentavos: 2_250_000 },
+          { ordem: 5, limiteInferiorCentavos: 180_000_001, limiteSuperiorCentavos: 360_000_000, aliquotaBp: 1_470, parcelaDeduzirCentavos: 8_550_000 },
+          { ordem: 6, limiteInferiorCentavos: 360_000_001, limiteSuperiorCentavos: 480_000_000, aliquotaBp: 3_000, parcelaDeduzirCentavos: 72_000_000 },
+        ],
+      },
+      observacao: 'Fechada pelo mesmo motivo do Anexo III: a LC nº 214/2025 substitui os anexos a partir de 2027.',
+    },
+    {
+      id: 'simples-anexo-iv-2018',
+      parametroId: 'simples-anexo-iv',
+      fonteId: 'lc-123-2006-anexo-iv',
+      inicio: INICIO,
+      fim: FIM,
+      valor: {
+        tipo: 'tabela_faixas',
+        faixas: [
+          { ordem: 1, limiteInferiorCentavos: 0, limiteSuperiorCentavos: 18_000_000, aliquotaBp: 450, parcelaDeduzirCentavos: 0 },
+          { ordem: 2, limiteInferiorCentavos: 18_000_001, limiteSuperiorCentavos: 36_000_000, aliquotaBp: 900, parcelaDeduzirCentavos: 810_000 },
+          { ordem: 3, limiteInferiorCentavos: 36_000_001, limiteSuperiorCentavos: 72_000_000, aliquotaBp: 1_020, parcelaDeduzirCentavos: 1_242_000 },
+          { ordem: 4, limiteInferiorCentavos: 72_000_001, limiteSuperiorCentavos: 180_000_000, aliquotaBp: 1_400, parcelaDeduzirCentavos: 3_978_000 },
+          { ordem: 5, limiteInferiorCentavos: 180_000_001, limiteSuperiorCentavos: 360_000_000, aliquotaBp: 2_200, parcelaDeduzirCentavos: 18_378_000 },
+          { ordem: 6, limiteInferiorCentavos: 360_000_001, limiteSuperiorCentavos: 480_000_000, aliquotaBp: 3_300, parcelaDeduzirCentavos: 82_800_000 },
+        ],
+      },
+      observacao: 'Fechada pelo mesmo motivo do Anexo III: a LC nº 214/2025 substitui os anexos a partir de 2027.',
     },
   ],
 }

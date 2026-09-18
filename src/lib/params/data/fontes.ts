@@ -3037,3 +3037,100 @@ export const CLT_ART_71: Fonte = {
   url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
   orgao: 'Presidência da República',
 }
+
+// ---------------------------------------------------------------------------
+// Lote 9 do catálogo v5 — DAS do Simples e DAE do doméstico (CALC-116 e 117)
+// ---------------------------------------------------------------------------
+
+/**
+ * Simples Nacional — Anexo I (comércio), na redação da LC nº 155/2016,
+ * "Vigência: 01/01/2018". Transcrito do texto compilado no Planalto, lido em
+ * 18/09/2026:
+ *
+ * > 1ª faixa: até 180.000,00 — 4,00% — deduzir —
+ * > 2ª faixa: de 180.000,01 a 360.000,00 — 7,30% — 5.940,00
+ * > 3ª faixa: de 360.000,01 a 720.000,00 — 9,50% — 13.860,00
+ * > 4ª faixa: de 720.000,01 a 1.800.000,00 — 10,70% — 22.500,00
+ * > 5ª faixa: de 1.800.000,01 a 3.600.000,00 — 14,30% — 87.300,00
+ * > 6ª faixa: de 3.600.000,01 a 4.800.000,00 — 19,00% — 378.000,00
+ *
+ * Substituído a partir de 2027 pelo art. 519 da LC nº 214/2025 — ver
+ * `LC_123_ANEXO_III`.
+ */
+export const LC_123_ANEXO_I: Fonte = {
+  id: 'lc-123-2006-anexo-i',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006, com a redação da Lei Complementar nº 155, de 2016',
+  dispositivo: 'Anexo I — vigência a partir de 01/01/2018',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Simples Nacional — Anexo II (indústria), mesma redação e vigência:
+ *
+ * > 1ª faixa: até 180.000,00 — 4,50% — —
+ * > 2ª faixa: de 180.000,01 a 360.000,00 — 7,80% — 5.940,00
+ * > 3ª faixa: de 360.000,01 a 720.000,00 — 10,00% — 13.860,00
+ * > 4ª faixa: de 720.000,01 a 1.800.000,00 — 11,20% — 22.500,00
+ * > 5ª faixa: de 1.800.000,01 a 3.600.000,00 — 14,70% — 85.500,00
+ * > 6ª faixa: de 3.600.000,01 a 4.800.000,00 — 30,00% — 720.000,00
+ */
+export const LC_123_ANEXO_II: Fonte = {
+  id: 'lc-123-2006-anexo-ii',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006, com a redação da Lei Complementar nº 155, de 2016',
+  dispositivo: 'Anexo II — vigência a partir de 01/01/2018',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Simples Nacional — Anexo IV (serviços do § 5º-C do art. 18), mesma redação e
+ * vigência:
+ *
+ * > 1ª faixa: até 180.000,00 — 4,50% — —
+ * > 2ª faixa: de 180.000,01 a 360.000,00 — 9,00% — 8.100,00
+ * > 3ª faixa: de 360.000,01 a 720.000,00 — 10,20% — 12.420,00
+ * > 4ª faixa: de 720.000,01 a 1.800.000,00 — 14,00% — 39.780,00
+ * > 5ª faixa: de 1.800.000,01 a 3.600.000,00 — 22,00% — 183.780,00
+ * > 6ª faixa: de 3.600.000,01 a 4.800.000,00 — 33,00% — 828.000,00
+ *
+ * A tabela de partilha deste anexo não tem a coluna da CPP: a contribuição
+ * patronal sobre a folha é recolhida fora do DAS.
+ */
+export const LC_123_ANEXO_IV: Fonte = {
+  id: 'lc-123-2006-anexo-iv',
+  norma: 'Lei Complementar nº 123, de 14 de dezembro de 2006, com a redação da Lei Complementar nº 155, de 2016',
+  dispositivo: 'Anexo IV — vigência a partir de 01/01/2018',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Simples Doméstico — LC nº 150/2015, art. 34 (DOU de 02/06/2015).
+ *
+ * > "O Simples Doméstico assegurará o recolhimento mensal, mediante documento
+ * > único de arrecadação, dos seguintes valores: I - 8% (oito por cento) a 11%
+ * > (onze por cento) de contribuição previdenciária, a cargo do segurado
+ * > empregado doméstico [...]; II - 8% (oito por cento) de contribuição patronal
+ * > previdenciária para a seguridade social, a cargo do empregador doméstico
+ * > [...]; III - 0,8% (oito décimos por cento) de contribuição social para
+ * > financiamento do seguro contra acidentes do trabalho; IV - 8% (oito por
+ * > cento) de recolhimento para o FGTS; V - 3,2% (três inteiros e dois décimos
+ * > por cento), na forma do art. 22 desta Lei; e VI - imposto sobre a renda
+ * > retido na fonte [...], se incidente."
+ * > § 7º "O recolhimento mensal [...] e a exigência das contribuições, dos
+ * > depósitos e do imposto [...] somente serão devidos após 120 (cento e vinte)
+ * > dias da data de publicação desta Lei."
+ *
+ * O inciso I foi alcançado pela tabela progressiva da EC nº 103/2019 — a
+ * contribuição do empregado sai da tabela do INSS, como a de qualquer
+ * empregado. O art. 24 da Lei nº 8.212/1991, na redação da Lei nº
+ * 13.202/2015, repete os 8% e os 0,8%.
+ */
+export const LC_150_ART_34: Fonte = {
+  id: 'lc-150-2015-art-34',
+  norma: 'Lei Complementar nº 150, de 1º de junho de 2015',
+  dispositivo: 'Art. 34, caput, I a VI, e § 7º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm',
+  orgao: 'Congresso Nacional',
+}

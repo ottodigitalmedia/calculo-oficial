@@ -22,10 +22,10 @@
  */
 
 import type { ConjuntoDeParametros } from '../tipos'
-import { LC_150_ART_22, LC_150_ART_23 } from './fontes'
+import { LC_150_ART_22, LC_150_ART_23, LC_150_ART_34 } from './fontes'
 
 export const DOMESTICO: ConjuntoDeParametros = {
-  fontes: [LC_150_ART_22, LC_150_ART_23],
+  fontes: [LC_150_ART_22, LC_150_ART_23, LC_150_ART_34],
 
   parametros: [
     {
@@ -52,6 +52,18 @@ export const DOMESTICO: ConjuntoDeParametros = {
       nome: 'Aviso prévio do doméstico — total máximo em dias',
       descricao: 'Limite total do aviso prévio, somados o prazo base e os acréscimos.',
       tipo: 'inteiro',
+    },
+    {
+      id: 'domestico-contribuicao-patronal',
+      nome: 'Doméstico — contribuição patronal',
+      descricao: 'Contribuição previdenciária do empregador doméstico sobre o salário de contribuição.',
+      tipo: 'percentual',
+    },
+    {
+      id: 'domestico-seguro-acidente',
+      nome: 'Doméstico — seguro contra acidentes',
+      descricao: 'Contribuição para o financiamento do seguro contra acidentes do trabalho, a cargo do empregador doméstico.',
+      tipo: 'percentual',
     },
   ],
 
@@ -122,6 +134,28 @@ export const DOMESTICO: ConjuntoDeParametros = {
       inicio: '2015-06-02',
       fim: null,
       valor: { tipo: 'inteiro', valor: 90 },
+    },
+    // -----------------------------------------------------------------------
+    // LC nº 150/2015, art. 34, II e III — exigíveis "após 120 dias" da
+    // publicação (§ 7º): DOU de 02/06/2015, logo a partir de 01/10/2015.
+    // -----------------------------------------------------------------------
+    {
+      id: 'domestico-patronal-2015',
+      parametroId: 'domestico-contribuicao-patronal',
+      fonteId: 'lc-150-2015-art-34',
+      inicio: '2015-10-01',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 800 },
+      observacao:
+        'Antes, a contribuição do empregador doméstico era de 12% (Lei nº 8.212/1991, art. 24, redação original). O art. 24 foi reescrito pela Lei nº 13.202/2015 com os mesmos 8% e 0,8%.',
+    },
+    {
+      id: 'domestico-seguro-acidente-2015',
+      parametroId: 'domestico-seguro-acidente',
+      fonteId: 'lc-150-2015-art-34',
+      inicio: '2015-10-01',
+      fim: null,
+      valor: { tipo: 'percentual', aliquotaBp: 80 },
     },
   ],
 }
