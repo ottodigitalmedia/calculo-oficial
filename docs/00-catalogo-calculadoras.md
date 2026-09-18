@@ -52,8 +52,8 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 31 |
-| TRI | Tributos Pessoa Física | Volume sazonal intenso | 12 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 32 |
+| TRI | Tributos Pessoa Física | Volume sazonal intenso | 14 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
 | INV | Investimentos e Renda Fixa | Âncora de receita | 8 |
@@ -63,7 +63,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
 | PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
-| | **Total** | | **112** |
+| | **Total** | | **115** |
 
 ---
 
@@ -106,6 +106,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-091 | Sobreaviso e prontidão (art. 244) | 🔸 | M | P | Nula | v5 |
 | CALC-092 | Rescisão por justa causa — o que resta e o que sai | 🔥 | M | P | Alta | v5 |
 | CALC-112 | Férias vencidas em dobro (CLT, arts. 134 e 137; Súmula 81 do TST) | 🔥 | M | P | Nula | v5 |
+| CALC-115 | Horas trabalhadas e intervalo (CF, art. 7º, XIII; CLT, arts. 66 e 71) | 🔥 | M | P | Nula | v5 |
 | CALC-095 | Saque-aniversário do FGTS | 🔥 | B | P | Média | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
@@ -142,6 +143,8 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-094 | Imposto no resgate da previdência privada | 🔸 | M | P | Baixa | v5 |
 | CALC-096 | Imposto em fundos imobiliários (rendimentos e ganho) | 🔥 | A | P | Média | v5 |
 | CALC-098 | Come-cotas do fundo de investimento | 🔸 | A | P | Baixa | v5 |
+| CALC-113 | Imposto na venda de carro e outros bens (Lei 9.250, art. 22) | 🔥 | M | P | Média | v5 |
+| CALC-114 | Imposto de renda sobre aluguel (RIR/2018, arts. 42 e 689) | 🔥 | M | P | Alta | v5 |
 
 > ⚠️ VERIFICAR: a regra vigente de IRRF combina tabela progressiva com mecanismo de redução para faixas intermediárias. Confirmar contra a lei e a orientação da Receita Federal antes de implementar CALC-015 — é o parâmetro de maior impacto e maior risco de erro do projeto inteiro.
 
@@ -372,8 +375,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 36 | — | Expansão de cobertura — lotes 1 a 7 de §18 |
-| | **112** | 11 | |
+| **v5** | 39 | — | Expansão de cobertura — lotes 1 a 8 de §18 |
+| | **115** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -619,7 +622,28 @@ vencidas sempre simples — corrigido no mesmo dia (`ESTADO-DO-PROJETO` §7.87).
   digitalizada, e o valor segue a pensão com teto de um salário mínimo. Risco
   alto para pouco retorno.
 
-### 18.9 Candidatas dos próximos lotes
+### 18.9 Lote 8 — venda de bens, aluguel e jornada, publicado em 18/09/2026
+
+CALC-113 e CALC-114, na tabela de §5, e CALC-115, na de §4. Sem guia novo: cada
+uma ganhou seção num guia que já respondia a mesma pergunta — *Cripto no
+imposto* (o teto e o degrau são a mesma regra), *Imóvel para alugar* e *Horas
+extras*.
+
+**Duas das três são montagem de peças conferidas.** A venda de bens usa a tabela
+de CALC-020 e a isenção de pequeno valor de CALC-021 (Lei nº 9.250/1995, art.
+22), relida no Planalto: o teste é o PREÇO no mês, somados os bens da mesma
+natureza. O aluguel tira da base o que o RIR/2018 manda tirar (arts. 42 e 689) e
+entrega o resto ao motor do carnê-leão.
+
+**A jornada trouxe parâmetros novos** — oito horas diárias e quarenta e quatro
+semanais (Constituição, art. 7º, XIII), os intervalos do art. 71 e as onze horas
+do art. 66 da CLT —, em minutos, num conjunto próprio. A cobertura começa em
+11/11/2017, com a redação atual do § 4º do art. 71.
+
+**Duas correções saíram da preparação do lote**, antes dele: a dobra das férias
+vencidas nas rescisões (§7.87) e o carnê-leão sem o redutor de 2026 (§7.88).
+
+### 18.10 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para

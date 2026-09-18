@@ -29,6 +29,36 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — expansão do catálogo, lote 8
+
+### Adicionado · venda de bens, aluguel e jornada
+
+CALC-113 imposto na venda de carro e outros bens · CALC-114 imposto de renda
+sobre aluguel · CALC-115 horas trabalhadas e intervalo. Seções novas nos guias
+*Cripto no imposto*, *Imóvel para alugar* e *Horas extras* (`00-catalogo` §18.9).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `jornada-normal-diaria-minutos` · `-semanal-minutos` | 480 · 2.640 minutos | desde 05/10/1988 | Constituição, art. 7º, XIII |
+| `intervalo-*` | acima de 360 min: 60; acima de 240: 15; máximo de 120 sem acordo | desde 10/11/1943 | CLT, art. 71, caput e § 1º |
+| `interjornada-minima-minutos` | 660 minutos | desde 10/11/1943 | CLT, art. 66 |
+| `intervalo-suprimido-acrescimo` | 50% | desde 11/11/2017 | CLT, art. 71, § 4º (red. Lei nº 13.467/2017) |
+
+A venda de bens e o aluguel não trazem parâmetro novo: usam a tabela e a
+isenção do ganho de capital e as tabelas mensais do IR já cadastradas.
+
+### Auditoria · casos-ouro
+
+22 casos-ouro novos, com o teto de R$ 35.000,00 dos dois lados, bens da mesma
+natureza somados no mês, a segunda faixa do ganho, as exclusões do aluguel
+limitadas ao próprio aluguel, a jornada que atravessa a meia-noite, seis horas
+exatas (quinze minutos de intervalo, não uma hora) e o descanso abaixo de onze
+horas.
+
+---
+
 ## Ciclo de 18/09/2026 — o ano em que as calculadoras abrem
 
 ### Corrigido · o carnê-leão calculava 2026 pelas regras de 2025

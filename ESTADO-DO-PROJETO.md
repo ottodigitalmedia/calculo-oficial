@@ -4375,6 +4375,20 @@ seletor, sem entrar na cobertura.
 precisa ser declarado na definição, ou o ano em que ele começa não aparece para
 quem usa a página.
 
+### 7.89 Lote 8 — venda de bens, aluguel e jornada
+
+**CALC-113 a CALC-115**, sem guia novo. O catálogo passa de 112 para **115**.
+
+**A preparação rendeu mais que o lote.** Para montar o lote 8 foi preciso olhar
+a rescisão (§7.87) e o seletor de período (§7.88) — e os dois defeitos
+encontrados valiam mais que as três calculadoras novas. É o argumento para
+continuar construindo por lotes pequenos: cada um força a reler o que já está
+no ar.
+
+**Seis horas exatas não passam de seis horas.** O art. 71 exige uma hora quando
+o trabalho "exceda de 6 horas"; com seis exatas, a exigência é a do § 1º, quinze
+minutos. O caso-ouro trava essa fronteira.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
