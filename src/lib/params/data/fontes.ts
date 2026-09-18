@@ -2700,3 +2700,237 @@ export const EC_103_ART_20: Fonte = {
   url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
   orgao: 'Congresso Nacional',
 }
+
+// ---------------------------------------------------------------------------
+// Lote 7 do catálogo v5 — valor da aposentadoria, auxílio-acidente,
+// aposentadoria do professor e férias em dobro (CALC-109 a CALC-112)
+// ---------------------------------------------------------------------------
+
+/**
+ * Valor da aposentadoria — EC nº 103/2019, art. 26. Vigência na publicação
+ * (art. 36, III), DOU de 13/11/2019.
+ *
+ * > Caput: a média aritmética simples dos salários de contribuição
+ * > "atualizados monetariamente, correspondentes a 100% (cem por cento) do
+ * > período contributivo desde a competência julho de 1994 ou desde o início da
+ * > contribuição, se posterior àquela competência."
+ * > § 1º "A média a que se refere o caput será limitada ao valor máximo do
+ * > salário de contribuição do Regime Geral de Previdência Social [...]"
+ * > § 2º "O valor do benefício de aposentadoria corresponderá a 60% (sessenta
+ * > por cento) da média aritmética [...], com acréscimo de 2 (dois) pontos
+ * > percentuais para cada ano de contribuição que exceder o tempo de 20 (vinte)
+ * > anos de contribuição nos casos: I - [...] do § 4º do art. 15, do § 3º do
+ * > art. 16 e do § 2º do art. 18; [...] III - de aposentadoria por
+ * > incapacidade permanente [...]; e IV - do § 2º do art. 19 [...]"
+ * > § 3º "O valor do benefício de aposentadoria corresponderá a 100% (cem por
+ * > cento) da média aritmética [...]: I - no caso do inciso II do § 2º do
+ * > art. 20; II - no caso de aposentadoria por incapacidade permanente, quando
+ * > decorrer de acidente de trabalho, de doença profissional e de doença do
+ * > trabalho."
+ * > § 5º "O acréscimo a que se refere o caput do § 2º será aplicado para cada
+ * > ano que exceder 15 (quinze) anos de tempo de contribuição para [...] as
+ * > mulheres filiadas ao Regime Geral de Previdência Social."
+ *
+ * O pedágio de 50% (art. 17, parágrafo único) usa o fator previdenciário e não
+ * está nesta conta.
+ */
+export const EC_103_ART_26: Fonte = {
+  id: 'ec-103-2019-art-26',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 26, caput e §§ 1º, 2º, 3º e 5º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Piso e teto do benefício que substitui o salário — Lei nº 8.213/1991,
+ * art. 33, redação original (DOU de 25/07/1991).
+ *
+ * > "A renda mensal do benefício de prestação continuada que substituir o
+ * > salário-de-contribuição ou o rendimento do trabalho do segurado não terá
+ * > valor inferior ao do salário-mínimo, nem superior ao do limite máximo do
+ * > salário-de-contribuição, ressalvado o disposto no art. 45 desta Lei."
+ *
+ * O auxílio-acidente é indenização (art. 86, caput), não substitui o salário —
+ * e por isso não tem o piso deste artigo.
+ */
+export const LEI_8213_ART_33: Fonte = {
+  id: 'lei-8213-1991-art-33',
+  norma: 'Lei nº 8.213, de 24 de julho de 1991',
+  dispositivo: 'Art. 33',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Auxílio-acidente — Lei nº 8.213/1991, art. 86 (red. Lei nº 9.528/1997, DOU
+ * de 11/12/1997). O percentual de 50% vem da Lei nº 9.032/1995 (DOU extra de
+ * 29/04/1995) e foi mantido pela redação de 1997.
+ *
+ * > Caput: "O auxílio-acidente será concedido, como indenização, ao segurado
+ * > quando, após consolidação das lesões decorrentes de acidente de qualquer
+ * > natureza, resultarem seqüelas que impliquem redução da capacidade para o
+ * > trabalho que habitualmente exercia."
+ * > § 1º "O auxílio-acidente mensal corresponderá a cinqüenta por cento do
+ * > salário-de-benefício e será devido, observado o disposto no § 5º, até a
+ * > véspera do início de qualquer aposentadoria ou até a data do óbito do
+ * > segurado."
+ * > § 2º "[...] será devido a partir do dia seguinte ao da cessação do
+ * > auxílio-doença, independentemente de qualquer remuneração ou rendimento
+ * > auferido pelo acidentado, vedada sua acumulação com qualquer
+ * > aposentadoria."
+ *
+ * A redação da MP nº 905/2019 (50% da aposentadoria por invalidez) teve a
+ * vigência encerrada — o texto compilado a marca assim.
+ */
+export const LEI_8213_ART_86: Fonte = {
+  id: 'lei-8213-1991-art-86',
+  norma: 'Lei nº 8.213, de 24 de julho de 1991, com a redação da Lei nº 9.528, de 1997',
+  dispositivo: 'Art. 86, caput e §§ 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regra de pontos do professor — EC nº 103/2019, art. 15, § 3º.
+ *
+ * > "Para o professor que comprovar exclusivamente 25 (vinte e cinco) anos de
+ * > contribuição, se mulher, e 30 (trinta) anos de contribuição, se homem, em
+ * > efetivo exercício das funções de magistério na educação infantil e no
+ * > ensino fundamental e médio, o somatório da idade e do tempo de
+ * > contribuição, incluídas as frações, será equivalente a 81 (oitenta e um)
+ * > pontos, se mulher, e 91 (noventa e um) pontos, se homem, aos quais serão
+ * > acrescidos, a partir de 1º de janeiro de 2020, 1 (um) ponto a cada ano para
+ * > o homem e para a mulher, até atingir o limite de 92 (noventa e dois)
+ * > pontos, se mulher, e 100 (cem) pontos, se homem."
+ */
+export const EC_103_ART_15_P3: Fonte = {
+  id: 'ec-103-2019-art-15-p3',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 15, § 3º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Idade progressiva do professor — EC nº 103/2019, art. 16, § 2º.
+ *
+ * > "Para o professor que comprovar exclusivamente tempo de efetivo exercício
+ * > das funções de magistério na educação infantil e no ensino fundamental e
+ * > médio, o tempo de contribuição e a idade de que tratam os incisos I e II do
+ * > caput deste artigo serão reduzidos em 5 (cinco) anos, sendo, a partir de 1º
+ * > de janeiro de 2020, acrescidos 6 (seis) meses, a cada ano, às idades
+ * > previstas no inciso II do caput, até atingirem 57 (cinquenta e sete) anos,
+ * > se mulher, e 60 (sessenta) anos, se homem."
+ *
+ * Com a redução: 25/30 anos de contribuição e idade de 51/56 anos em 2019.
+ */
+export const EC_103_ART_16_P2: Fonte = {
+  id: 'ec-103-2019-art-16-p2',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 16, § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Regra permanente do professor — EC nº 103/2019, art. 19, § 1º, II.
+ *
+ * > "ao professor que comprove 25 (vinte e cinco) anos de contribuição
+ * > exclusivamente em efetivo exercício das funções de magistério na educação
+ * > infantil e no ensino fundamental e médio e tenha 57 (cinquenta e sete) anos
+ * > de idade, se mulher, e 60 (sessenta) anos de idade, se homem."
+ */
+export const EC_103_ART_19_P1_II: Fonte = {
+  id: 'ec-103-2019-art-19-p1-ii',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 19, § 1º, II',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Pedágio de 100% do professor — EC nº 103/2019, art. 20, § 1º.
+ *
+ * > "Para o professor que comprovar exclusivamente tempo de efetivo exercício
+ * > das funções de magistério na educação infantil e no ensino fundamental e
+ * > médio serão reduzidos, para ambos os sexos, os requisitos de idade e de
+ * > tempo de contribuição em 5 (cinco) anos."
+ *
+ * Com a redução: 52/55 anos de idade e 25/30 anos de contribuição, mais o
+ * pedágio do inciso IV sobre esse tempo reduzido.
+ */
+export const EC_103_ART_20_P1: Fonte = {
+  id: 'ec-103-2019-art-20-p1',
+  norma: 'Emenda Constitucional nº 103, de 12 de novembro de 2019',
+  dispositivo: 'Art. 20, § 1º',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Período aquisitivo de férias — CLT, art. 130 (red. Decreto-lei nº
+ * 1.535/1977, publicado no DOU de 13/04/1977 e em vigor em 1º/05/1977, art. 3º).
+ *
+ * > "Após cada período de 12 (doze) meses de vigência do contrato de trabalho,
+ * > o empregado terá direito a férias, na seguinte proporção: [...]"
+ */
+export const CLT_ART_130: Fonte = {
+  id: 'clt-art-130',
+  norma: 'Consolidação das Leis do Trabalho, com a redação do Decreto-lei nº 1.535, de 1977',
+  dispositivo: 'Art. 130, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * Período concessivo — CLT, art. 134 (red. Decreto-lei nº 1.535/1977, em vigor
+ * em 1º/05/1977).
+ *
+ * > "As férias serão concedidas por ato do empregador, em um só período, nos 12
+ * > (doze) meses subseqüentes à data em que o empregado tiver adquirido o
+ * > direito."
+ */
+export const CLT_ART_134: Fonte = {
+  id: 'clt-art-134',
+  norma: 'Consolidação das Leis do Trabalho, com a redação do Decreto-lei nº 1.535, de 1977',
+  dispositivo: 'Art. 134, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * Férias fora do prazo — CLT, art. 137 (red. Decreto-lei nº 1.535/1977, em
+ * vigor em 1º/05/1977).
+ *
+ * > "Sempre que as férias forem concedidas após o prazo de que trata o art.
+ * > 134, o empregador pagará em dobro a respectiva remuneração."
+ *
+ * A remuneração de férias inclui o terço constitucional (CF, art. 7º, XVII;
+ * Súmula 328 do TST), e é ela que se paga em dobro.
+ */
+export const CLT_ART_137: Fonte = {
+  id: 'clt-art-137',
+  norma: 'Consolidação das Leis do Trabalho, com a redação do Decreto-lei nº 1.535, de 1977',
+  dispositivo: 'Art. 137, caput',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * Súmula 81 do TST — os dias de férias fora do prazo.
+ *
+ * > "Os dias de férias gozados após o período legal de concessão deverão ser
+ * > remunerados em dobro."
+ *
+ * Mantida pela Res. 121/2003 (DJ 19, 20 e 21/11/2003); redação original da RA
+ * 69/1978. É ela que faz a dobra incidir DIA A DIA: férias que começam dentro
+ * do prazo e terminam fora dele têm só os dias de fora em dobro.
+ */
+export const TST_SUMULA_81: Fonte = {
+  id: 'tst-sumula-81',
+  norma: 'Súmula 81 do Tribunal Superior do Trabalho',
+  dispositivo: 'Res. 121/2003, DJ 19, 20 e 21.11.2003',
+  url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
+  orgao: 'Tribunal Superior do Trabalho',
+}
