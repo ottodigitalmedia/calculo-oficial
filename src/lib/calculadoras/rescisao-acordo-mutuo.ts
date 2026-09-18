@@ -38,9 +38,10 @@ import { INSS } from "../params/data/inss";
 import { IRRF } from "../params/data/irrf";
 import { TRABALHISTA } from "../params/data/trabalhista";
 import { construirRegistro } from "../params/registry";
+import { FERIAS_FORA_DO_PRAZO } from "../params/data/ferias-fora-do-prazo";
 
 /** Registro montado no módulo adiado — ver a nota em `rescisao-sem-justa-causa.ts`. */
-const registro = construirRegistro(INSS, IRRF, TRABALHISTA);
+const registro = construirRegistro(INSS, IRRF, TRABALHISTA, FERIAS_FORA_DO_PRAZO);
 
 /** Exportação de topo — ver a nota em `salario-liquido.ts`. */
 export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
@@ -55,7 +56,8 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         texto(valores, "avisoPrevio") === "trabalhado"
           ? "trabalhado"
           : "indenizado",
-      temFeriasVencidas: texto(valores, "feriasVencidas") === "sim",
+      temFeriasVencidas: ["sim", "dobro"].includes(texto(valores, "feriasVencidas")),
+      feriasVencidasEmDobro: texto(valores, "feriasVencidas") === "dobro",
       saldoFgtsInformado: centavos(numero(valores, "saldoFgts")),
       dependentes: numero(valores, "dependentes"),
     },
@@ -90,7 +92,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         ...(v.feriasVencidas > 0
           ? ([
               {
-                rotulo: "Férias vencidas + 1/3",
+                rotulo: texto(valores, "feriasVencidas") === "dobro" ? "Férias vencidas + 1/3, em dobro" : "Férias vencidas + 1/3",
                 valor: v.feriasVencidas,
                 sinal: "credito",
               },
@@ -210,7 +212,8 @@ export const RESCISAO_ACORDO_MUTUO: DefinicaoCalculadora = {
       padrao: "nao",
       opcoes: [
         { valor: "nao", rotulo: "Não" },
-        { valor: "sim", rotulo: "Sim" },
+        { valor: "sim", rotulo: "Sim, e ainda estão no prazo para serem tiradas" },
+        { valor: "dobro", rotulo: "Sim, e o prazo para tirá-las já passou" },
       ],
     },
     {

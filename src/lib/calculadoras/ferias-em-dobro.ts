@@ -138,7 +138,7 @@ export const FERIAS_EM_DOBRO: DefinicaoCalculadora = {
     {
       pergunta: 'E se eu for demitido com férias vencidas?',
       resposta:
-        'Na rescisão, as férias cujo prazo de concessão já passou são pagas em dobro, com o terço (art. 146 da CLT). A calculadora de rescisão soma as férias vencidas de forma simples; se o prazo já tinha passado, esta página mostra quanto a dobra acrescenta.',
+        'Na rescisão, as férias cujo prazo de concessão já passou são pagas em dobro, com o terço (art. 146 da CLT). A calculadora de rescisão pergunta se o prazo já passou e aplica a dobra no acerto.',
     },
   ],
 

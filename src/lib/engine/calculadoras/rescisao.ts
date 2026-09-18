@@ -37,6 +37,7 @@ import { ZERO, basisPoints, centavos, type BasisPoints, type Centavos } from '..
 import type { DataISO } from '../../params/tipos'
 import type { Registro } from '../../params/registry'
 import {
+  CLT_ART_146,
   CLT_ART_484A_SAQUE,
   CLT_ART_487,
   LEI_8036_ART_18,
@@ -120,6 +121,11 @@ export interface EntradaRescisao {
   readonly regime: Regime
   readonly avisoPrevio: ModalidadeAviso
   readonly temFeriasVencidas: boolean
+  /**
+   * O período concessivo das férias vencidas já terminou — CLT, arts. 137 e
+   * 146: pagas em dobro. Ausente = simples, como antes de 18/09/2026.
+   */
+  readonly feriasVencidasEmDobro?: boolean
   /** Saldo real da conta vinculada. Zero significa "estimar" (`RN-023`). */
   readonly saldoFgtsInformado: Centavos
   readonly dependentes: number
@@ -429,13 +435,39 @@ export function calcularRescisao(
   // --- Férias vencidas + terço (CLT art. 146) ---
   const feriasVencidasBase = entrada.temFeriasVencidas ? entrada.salario : ZERO
   const tercoVencidas = proporcao(feriasVencidasBase, 1, 3, POLITICA)
-  const feriasVencidas = somar(feriasVencidasBase, tercoVencidas)
+  const feriasVencidasSimples = somar(feriasVencidasBase, tercoVencidas)
+  let feriasVencidas = feriasVencidasSimples
 
   if (entrada.temFeriasVencidas) {
     registrar({
       rotulo: 'Férias vencidas + 1/3',
       formula: `${reais(feriasVencidasBase)} + ${reais(tercoVencidas)} (terço constitucional)`,
+      resultado: feriasVencidasSimples,
+    })
+  }
+
+  // --- Em dobro, se o prazo de concessão já passou (CLT arts. 137 e 146) ---
+  if (entrada.temFeriasVencidas && entrada.feriasVencidasEmDobro === true) {
+    const fator = registro.resolver('ferias-fora-do-prazo-fator', dataReferencia)
+    if (!fator.ok || fator.resolvida.vigencia.valor.tipo !== 'fracao') {
+      return {
+        ok: false,
+        motivo: 'vigencia_ausente',
+        detalhe: 'Não há a regra da dobra das férias cadastrada para a data informada.',
+      }
+    }
+    const { numerador, denominador } = fator.resolvida.vigencia.valor
+    feriasVencidas = proporcao(feriasVencidasSimples, numerador, denominador, POLITICA)
+    traco.vigencias.add(fator.resolvida.vigencia.id)
+    registrar({
+      rotulo: 'Férias vencidas em dobro — o prazo para concedê-las já tinha passado',
+      formula: `${reais(feriasVencidasSimples)} × ${numerador}${denominador === 1 ? '' : `/${denominador}`}`,
       resultado: feriasVencidas,
+      parametro: citar(fator.resolvida),
+      fundamento: fundamentar(CLT_ART_146),
+      justificativa:
+        'O art. 146 manda pagar as férias vencidas "simples ou em dobro, conforme o caso": em dobro quando o ' +
+        'período concessivo do art. 134 já terminou sem que elas fossem concedidas (art. 137).',
     })
   }
 

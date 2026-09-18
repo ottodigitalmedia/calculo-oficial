@@ -38,7 +38,7 @@ export const RESCISAO_SEM_JUSTA_CAUSA: Guia = {
           itens: [
             'Saldo de salário: os dias efetivamente trabalhados no mês da saída.',
             'Aviso prévio: cumprido trabalhando ou pago em dinheiro, conforme o caso.',
-            'Férias vencidas, se houver período completo não gozado, com o adicional constitucional.',
+            'Férias vencidas, se houver período completo não gozado, com o adicional constitucional — em dobro se o prazo para concedê-las já tiver passado.',
             'Férias proporcionais do período em curso, com o mesmo adicional.',
             'Décimo terceiro proporcional aos meses do ano.',
             'Multa rescisória sobre o saldo do FGTS, paga pelo empregador.',

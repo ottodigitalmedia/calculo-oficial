@@ -13,6 +13,7 @@ import { calcularJustaCausa } from '../engine/calculadoras/justa-causa'
 import { centavos } from '../engine/types'
 import { INSS } from '../params/data/inss'
 import { IRRF } from '../params/data/irrf'
+import { FERIAS_FORA_DO_PRAZO } from '../params/data/ferias-fora-do-prazo'
 import { construirRegistro } from '../params/registry'
 import type { DataISO } from '../params/tipos'
 import {
@@ -23,7 +24,7 @@ import {
   type LinhaDetalhamento,
 } from './tipos'
 
-const registro = construirRegistro(INSS, IRRF)
+const registro = construirRegistro(INSS, IRRF, FERIAS_FORA_DO_PRAZO)
 
 export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   const r = calcularJustaCausa(
@@ -31,6 +32,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       desligamento: texto(valores, 'desligamento') as DataISO,
       salario: centavos(numero(valores, 'salario')),
       periodosVencidos: numero(valores, 'periodosVencidos'),
+      periodosEmDobro: numero(valores, 'periodosEmDobro'),
       dependentes: numero(valores, 'dependentes'),
     },
     dataReferencia,
@@ -42,7 +44,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   const detalhamento: LinhaDetalhamento[] = [
     { rotulo: 'Saldo de salário', valor: v.saldoSalario, sinal: 'credito' },
     ...(v.feriasVencidas > 0
-      ? ([{ rotulo: 'Férias vencidas + 1/3', valor: v.feriasVencidas, sinal: 'credito' }] as const)
+      ? ([{ rotulo: numero(valores, 'periodosEmDobro') > 0 ? 'Férias vencidas + 1/3, com a dobra' : 'Férias vencidas + 1/3', valor: v.feriasVencidas, sinal: 'credito' }] as const)
       : []),
     ...(v.inss > 0 ? ([{ rotulo: 'INSS sobre o saldo', valor: v.inss, sinal: 'debito' }] as const) : []),
     ...(v.irrf > 0 ? ([{ rotulo: 'Imposto de renda sobre o saldo', valor: v.irrf, sinal: 'debito' }] as const) : []),
@@ -106,6 +108,15 @@ export const RESCISAO_JUSTA_CAUSA: DefinicaoCalculadora = {
       minimo: 0,
       maximo: 5,
       ajuda: 'Períodos de doze meses já completados e ainda não gozados. Zero é o caso mais comum.',
+    },
+    {
+      id: 'periodosEmDobro',
+      rotulo: 'Desses, quantos já passaram do prazo para serem tirados',
+      tipo: 'inteiro',
+      padrao: 0,
+      minimo: 0,
+      maximo: 5,
+      ajuda: 'A empresa tem doze meses, depois de completado cada período, para conceder as férias. Passado o prazo, aquele período é pago em dobro.',
     },
     {
       id: 'dependentes',

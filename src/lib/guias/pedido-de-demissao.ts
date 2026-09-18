@@ -43,7 +43,7 @@ export const PEDIDO_DE_DEMISSAO: Guia = {
           tipo: 'lista',
           itens: [
             'Saldo de salário pelos dias trabalhados no mês da saída.',
-            'Férias vencidas, se houver período completo não gozado, com o adicional constitucional.',
+            'Férias vencidas, se houver período completo não gozado, com o adicional constitucional — em dobro se o prazo para concedê-las já tiver passado.',
             'Férias proporcionais do período em curso, com o mesmo adicional.',
             'Décimo terceiro proporcional aos meses do ano.',
           ],

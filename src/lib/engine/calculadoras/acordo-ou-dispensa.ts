@@ -83,6 +83,8 @@ export interface EntradaAcordoOuDispensa {
   readonly salario: Centavos
   readonly avisoPrevio: 'indenizado' | 'trabalhado'
   readonly temFeriasVencidas: boolean
+  /** Prazo de concessão já vencido — pagas em dobro (CLT, arts. 137 e 146). */
+  readonly feriasVencidasEmDobro?: boolean
   readonly saldoFgtsInformado: Centavos
   readonly dependentes: number
   readonly solicitacaoSeguro: Solicitacao
@@ -134,6 +136,7 @@ export function calcularAcordoOuDispensa(
     regime: 'clt',
     avisoPrevio: entrada.avisoPrevio,
     temFeriasVencidas: entrada.temFeriasVencidas,
+    feriasVencidasEmDobro: entrada.feriasVencidasEmDobro === true,
     saldoFgtsInformado: entrada.saldoFgtsInformado,
     dependentes: entrada.dependentes,
   }

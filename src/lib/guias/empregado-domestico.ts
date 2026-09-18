@@ -34,7 +34,7 @@ export const EMPREGADO_DOMESTICO: Guia = {
           tipo: 'lista',
           itens: [
             'Saldo de salário pelos dias trabalhados no mês da saída.',
-            'Férias vencidas e proporcionais, com o adicional constitucional.',
+            'Férias vencidas e proporcionais, com o adicional constitucional — as vencidas em dobro se o prazo para concedê-las já tiver passado.',
             'Décimo terceiro proporcional aos meses do ano.',
             'As mesmas regras de incidência: o que é salarial sofre desconto, o que é indenizatório não.',
           ],

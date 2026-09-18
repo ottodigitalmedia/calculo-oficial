@@ -22,7 +22,7 @@ import { lerData } from '../datas'
 import { calcularInss } from '../inss'
 import { calcularIrrf } from '../irrf'
 import { multiplicarPorInteiro, proporcao, somar, subtrair } from '../money'
-import { fundamentar, reais, type Etapa, type Resultado, type Traco } from '../traco'
+import { citar, fundamentar, reais, type Etapa, type Resultado, type Traco } from '../traco'
 import { ZERO, type Centavos } from '../types'
 import type { DataISO } from '../../params/tipos'
 import type { Registro } from '../../params/registry'
@@ -45,6 +45,11 @@ export interface EntradaJustaCausa {
   readonly salario: Centavos
   /** Períodos aquisitivos completos e não gozados. Zero é o caso comum. */
   readonly periodosVencidos: number
+  /**
+   * Quantos desses períodos já passaram do prazo de concessão — pagos em dobro
+   * (CLT, arts. 137 e 146). Ausente = zero, como antes de 18/09/2026.
+   */
+  readonly periodosEmDobro?: number
   readonly dependentes: number
 }
 
@@ -81,6 +86,14 @@ export function calcularJustaCausa(
   ) {
     return { ok: false, motivo: 'entrada_invalida', detalhe: 'Informe de zero a cinco períodos de férias vencidas.' }
   }
+  const periodosEmDobro = entrada.periodosEmDobro ?? 0
+  if (!Number.isInteger(periodosEmDobro) || periodosEmDobro < 0 || periodosEmDobro > entrada.periodosVencidos) {
+    return {
+      ok: false,
+      motivo: 'entrada_invalida',
+      detalhe: 'Os períodos em dobro são parte dos vencidos — não podem ser mais numerosos que eles.',
+    }
+  }
 
   const etapas: Etapa[] = []
   const vigencias = new Set<string>()
@@ -98,7 +111,8 @@ export function calcularJustaCausa(
   // --- Férias vencidas + 1/3 ------------------------------------------------
   const feriasBase = multiplicarPorInteiro(entrada.salario, entrada.periodosVencidos)
   const terco = proporcao(feriasBase, 1, 3, POLITICA)
-  const feriasVencidas = somar(feriasBase, terco)
+  const feriasVencidasSimples = somar(feriasBase, terco)
+  let feriasVencidas = feriasVencidasSimples
 
   if (entrada.periodosVencidos > 0) {
     etapas.push({
@@ -109,6 +123,30 @@ export function calcularJustaCausa(
       justificativa:
         'O art. 146 manda pagar as férias já adquiridas "qualquer que seja a causa" da cessação do contrato. ' +
         'A justa causa tira as proporcionais, não as vencidas.',
+    })
+  }
+
+  // --- A dobra dos períodos cujo prazo de concessão já passou ----------------
+  if (periodosEmDobro > 0) {
+    const fator = registro.resolver('ferias-fora-do-prazo-fator', dataReferencia)
+    if (!fator.ok || fator.resolvida.vigencia.valor.tipo !== 'fracao') {
+      return { ok: false, motivo: 'vigencia_ausente', detalhe: 'Não há a regra da dobra das férias cadastrada para a data informada.' }
+    }
+    const { numerador, denominador } = fator.resolvida.vigencia.valor
+    const umPeriodo = somar(entrada.salario, proporcao(entrada.salario, 1, 3, POLITICA))
+    const dobrados = multiplicarPorInteiro(umPeriodo, periodosEmDobro)
+    const acrescimo = subtrair(proporcao(dobrados, numerador, denominador, POLITICA), dobrados)
+    feriasVencidas = somar(feriasVencidasSimples, acrescimo)
+    vigencias.add(fator.resolvida.vigencia.id)
+    etapas.push({
+      rotulo: `Dobra de ${periodosEmDobro} período(s) fora do prazo de concessão`,
+      formula: `${reais(umPeriodo)} × ${periodosEmDobro} a mais = ${reais(acrescimo)}; férias vencidas: ${reais(feriasVencidas)}`,
+      resultado: feriasVencidas,
+      parametro: citar(fator.resolvida),
+      fundamento: fundamentar(CLT_ART_146),
+      justificativa:
+        'O art. 146 manda pagar as férias vencidas "simples ou em dobro, conforme o caso": em dobro quando o ' +
+        'período concessivo já terminou (art. 137). Vale também na justa causa.',
     })
   }
 
