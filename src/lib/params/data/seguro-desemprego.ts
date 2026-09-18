@@ -27,22 +27,14 @@
  */
 
 import type { ConjuntoDeParametros } from '../tipos'
-import {
-  LEI_7998_ART_4,
-  LEI_7998_ART_5,
-  MTE_ANEXO_SEGURO_DESEMPREGO_2025,
-  MTE_TABELA_SEGURO_DESEMPREGO,
-  RES_CODEFAT_957,
-} from './fontes'
+import { LC_150_ART_26, LEI_7998_ART_4, LEI_7998_ART_5, MTE_ANEXO_SEGURO_DESEMPREGO_2025, MTE_TABELA_SEGURO_DESEMPREGO, RES_CODEFAT_957 } from './fontes'
 
 export const SEGURO_DESEMPREGO: ConjuntoDeParametros = {
-  fontes: [
-    LEI_7998_ART_4,
+  fontes: [LEI_7998_ART_4,
     LEI_7998_ART_5,
     RES_CODEFAT_957,
     MTE_TABELA_SEGURO_DESEMPREGO,
-    MTE_ANEXO_SEGURO_DESEMPREGO_2025,
-  ],
+    MTE_ANEXO_SEGURO_DESEMPREGO_2025, LC_150_ART_26],
 
   parametros: [
     // --- Número de parcelas: Lei nº 7.998/1990, art. 4º, § 2º ---
@@ -115,6 +107,24 @@ export const SEGURO_DESEMPREGO: ConjuntoDeParametros = {
       nome: 'Seguro-desemprego — valor máximo da parcela',
       descricao: 'Valor invariável do benefício para salário médio acima do limite da segunda faixa.',
       tipo: 'valor_monetario',
+    },
+    {
+      id: 'seguro-desemprego-domestico-parcelas',
+      nome: 'Seguro-desemprego do doméstico — parcelas',
+      descricao: 'Número máximo de parcelas, de um salário mínimo cada, do empregado doméstico.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'seguro-desemprego-domestico-meses-minimos',
+      nome: 'Seguro-desemprego do doméstico — meses de vínculo',
+      descricao: 'Meses de vínculo doméstico exigidos na janela anterior à dispensa.',
+      tipo: 'inteiro',
+    },
+    {
+      id: 'seguro-desemprego-domestico-janela-meses',
+      nome: 'Seguro-desemprego do doméstico — janela',
+      descricao: 'Meses anteriores à dispensa em que o vínculo é contado.',
+      tipo: 'inteiro',
     },
   ],
 
@@ -316,6 +326,34 @@ export const SEGURO_DESEMPREGO: ConjuntoDeParametros = {
       inicio: '2026-01-11',
       fim: null,
       valor: { tipo: 'valor_monetario', centavos: 251_865 },
+    },
+    // -----------------------------------------------------------------------
+    // Doméstico — LC nº 150/2015, arts. 26 e 28, I (DOU de 02/06/2015).
+    // -----------------------------------------------------------------------
+    {
+      id: 'sd-domestico-parcelas-2015',
+      parametroId: 'seguro-desemprego-domestico-parcelas',
+      fonteId: 'lc-150-2015-art-26',
+      inicio: '2015-06-02',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 3 },
+      observacao: 'Cada parcela é de um salário mínimo, "de forma contínua ou alternada" (art. 26).',
+    },
+    {
+      id: 'sd-domestico-meses-2015',
+      parametroId: 'seguro-desemprego-domestico-meses-minimos',
+      fonteId: 'lc-150-2015-art-26',
+      inicio: '2015-06-02',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 15 },
+    },
+    {
+      id: 'sd-domestico-janela-2015',
+      parametroId: 'seguro-desemprego-domestico-janela-meses',
+      fonteId: 'lc-150-2015-art-26',
+      inicio: '2015-06-02',
+      fim: null,
+      valor: { tipo: 'inteiro', valor: 24 },
     },
   ],
 }

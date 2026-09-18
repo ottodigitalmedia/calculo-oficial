@@ -3134,3 +3134,100 @@ export const LC_150_ART_34: Fonte = {
   url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm',
   orgao: 'Congresso Nacional',
 }
+
+// ---------------------------------------------------------------------------
+// Lote 10 do catálogo v5 — abono salarial e seguro-desemprego do doméstico
+// ---------------------------------------------------------------------------
+
+/**
+ * Abono salarial — Lei nº 7.998/1990, art. 9º, na redação da Lei nº
+ * 13.134/2015 (DOU de 17/06/2015; efeitos financeiros a partir do exercício de
+ * 2016, ano-base 2015, pela própria Lei nº 13.134).
+ *
+ * > Caput: "É assegurado o recebimento de abono salarial anual, no valor máximo
+ * > de 1 (um) salário-mínimo vigente na data do respectivo pagamento, aos
+ * > empregados que: I - tenham percebido [...] até 2 (dois) salários mínimos
+ * > médios de remuneração mensal no período trabalhado e que tenham exercido
+ * > atividade remunerada pelo menos durante 30 (trinta) dias no ano-base; II -
+ * > estejam cadastrados há pelo menos 5 (cinco) anos no Fundo de Participação
+ * > PIS-Pasep ou no Cadastro Nacional do Trabalhador."
+ * > § 2º "O valor do abono salarial anual [...] será calculado na proporção de
+ * > 1/12 (um doze avos) do valor do salário-mínimo vigente na data do
+ * > respectivo pagamento, multiplicado pelo número de meses trabalhados no ano
+ * > correspondente."
+ * > § 3º "A fração igual ou superior a 15 (quinze) dias de trabalho será contada
+ * > como mês integral [...]."
+ * > § 4º "O valor do abono salarial será emitido em unidades inteiras de moeda
+ * > corrente, com a suplementação das partes decimais até a unidade inteira
+ * > imediatamente superior."
+ *
+ * O limite de renda do inciso I foi reescrito pela EC nº 135/2024 no art. 239,
+ * § 3º, da Constituição — ver `CF_ART_239_P3`.
+ */
+export const LEI_7998_ART_9: Fonte = {
+  id: 'lei-7998-1990-art-9',
+  norma: 'Lei nº 7.998, de 11 de janeiro de 1990, com a redação da Lei nº 13.134, de 2015',
+  dispositivo: 'Art. 9º, caput e §§ 2º a 4º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l7998.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * O limite de renda do abono — Constituição, art. 239, § 3º, na redação da EC
+ * nº 135/2024, e § 3º-A.
+ *
+ * > § 3º "[...] remuneração mensal de até 2 (duas) vezes o salário mínimo do
+ * > ano-base para pagamento em 2025, corrigida, a partir de 2026, pela variação
+ * > anual do Índice Nacional de Preços ao Consumidor (INPC) [...] acumulada no
+ * > segundo exercício anterior ao de pagamento do benefício, é assegurado o
+ * > pagamento de 1 (um) salário mínimo anual [...]."
+ * > § 3º-A "O limite para elegibilidade do benefício de que trata o § 3º deste
+ * > artigo não será inferior ao valor equivalente ao salário mínimo do período
+ * > trabalhado multiplicado pelo índice de 1,5 (um inteiro e cinco décimos)."
+ */
+export const CF_ART_239_P3: Fonte = {
+  id: 'cf-1988-art-239-p3',
+  norma: 'Constituição da República Federativa do Brasil de 1988, com a redação da Emenda Constitucional nº 135, de 2024',
+  dispositivo: 'Art. 239, §§ 3º e 3º-A',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * O limite corrigido para o pagamento de 2026 — publicado pelo Ministério do
+ * Trabalho e Emprego na página oficial do serviço, conferida em 18/09/2026
+ * (atualizada em 28/05/2026):
+ *
+ * > "No calendário de pagamento de 2026 terão direito os trabalhadores que
+ * > receberam remuneração média de até R$ 2.766,00 no ano-base 2024."
+ *
+ * A mesma página publica a tabela de valores por meses trabalhados, de R$
+ * 136,00 a R$ 1.621,00. A regra de correção está na Resolução CODEFAT/MTE nº
+ * 1.032/2025, art. 3º, §§ 1º e 2º; o número, só no Ministério.
+ */
+export const MTE_ABONO_2026: Fonte = {
+  id: 'mte-abono-salarial-2026',
+  norma: 'Ministério do Trabalho e Emprego — Abono Salarial, calendário de pagamento de 2026 (Resolução CODEFAT/MTE nº 1.032/2025)',
+  dispositivo: 'Limite de remuneração média do ano-base 2024',
+  url: 'https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/abono-salarial',
+  orgao: 'Ministério do Trabalho e Emprego',
+}
+
+/**
+ * Seguro-desemprego do empregado doméstico — LC nº 150/2015, arts. 26 e 28
+ * (DOU de 02/06/2015, em vigor na publicação, art. 47).
+ *
+ * > Art. 26: "O empregado doméstico que for dispensado sem justa causa fará jus
+ * > ao benefício do seguro-desemprego, na forma da Lei nº 7.998 [...], no valor
+ * > de 1 (um) salário-mínimo, por período máximo de 3 (três) meses, de forma
+ * > contínua ou alternada."
+ * > Art. 28, I: vínculo "como empregado doméstico, durante pelo menos 15
+ * > (quinze) meses nos últimos 24 (vinte e quatro) meses".
+ */
+export const LC_150_ART_26: Fonte = {
+  id: 'lc-150-2015-art-26',
+  norma: 'Lei Complementar nº 150, de 1º de junho de 2015',
+  dispositivo: 'Arts. 26 e 28, I',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm',
+  orgao: 'Congresso Nacional',
+}

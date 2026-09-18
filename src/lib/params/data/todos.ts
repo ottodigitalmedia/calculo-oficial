@@ -44,6 +44,7 @@ import { PLR } from './plr'
 import { PREVIDENCIA_RGPS } from './previdencia-rgps'
 import { FERIAS_FORA_DO_PRAZO } from './ferias-fora-do-prazo'
 import { JORNADA } from './jornada'
+import { ABONO_SALARIAL } from './abono-salarial'
 import { PREVIDENCIA_PRIVADA } from './previdencia-privada'
 import { RENDA_FIXA } from './renda-fixa'
 import { DISPONIBILIDADE } from './disponibilidade'
@@ -92,4 +93,5 @@ export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
   PREVIDENCIA_RGPS,
   FERIAS_FORA_DO_PRAZO,
   JORNADA,
+  ABONO_SALARIAL,
 ]
