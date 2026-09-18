@@ -182,6 +182,8 @@ export const CARNE_LEAO: DefinicaoCalculadora = {
     'irrf-deducao-dependente',
     'irrf-desconto-simplificado',
   ],
+  // O redutor de 2026 — sem ele o seletor parava em 2025 (§7.88).
+  parametrosOpcionais: ['irrf-reducao-limite-integral'],
 
   rotuloResultado: 'Carnê-leão do mês',
 

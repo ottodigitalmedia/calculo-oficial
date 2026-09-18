@@ -397,6 +397,18 @@ export interface DefinicaoCalculadora {
    */
   readonly parametrosRequeridos: readonly string[]
 
+  /**
+   * Parâmetros que o motor usa SE houver vigência — e cuja ausência significa
+   * "a regra não existia", não "falta o dado". O redutor do IR (Lei nº
+   * 15.270/2025) é o caso: antes de 2026 não havia redução.
+   *
+   * Não entram na cobertura — exigi-los bloquearia 2025 —, mas os anos em que
+   * começam entram no seletor de período. Sem isto o carnê-leão só oferecia
+   * 2025, e cobrava R$ 312,89 sobre R$ 5.000,00 em 2026, quando o imposto é
+   * zero (`ESTADO-DO-PROJETO` §7.88).
+   */
+  readonly parametrosOpcionais?: readonly string[]
+
   readonly rotuloResultado: string
 
   readonly calcular: FuncaoCalculo
@@ -446,7 +458,7 @@ export function formularioDe(
     campos: definicao.campos,
     rotuloResultado: definicao.rotuloResultado,
     ...(definicao.avisoAdicional ? { avisoAdicional: definicao.avisoAdicional } : {}),
-    anosDisponiveis: semAnosFuturos(registro.anosDisponiveis(definicao.parametrosRequeridos), anoCorrente),
+    anosDisponiveis: semAnosFuturos(anosComOpcionais(definicao, registro), anoCorrente),
     cobertura: cobertura ? { inicio: cobertura.inicio, fim: cobertura.fim } : null,
     ...vigenciaPelaDataDe(definicao),
   }
@@ -469,6 +481,22 @@ function semAnosFuturos(anos: readonly number[], anoCorrente: number | undefined
   if (anoCorrente === undefined) return anos
   const ate = anos.filter((a) => a <= anoCorrente)
   return ate.length > 0 ? ate : anos
+}
+
+/**
+ * Os anos do seletor: os da cobertura dos parâmetros exigidos, mais os anos em
+ * que começam vigências dos parâmetros opcionais — sem sair da cobertura.
+ */
+function anosComOpcionais(definicao: DefinicaoCalculadora, registro: Registro): readonly number[] {
+  const base = registro.anosDisponiveis(definicao.parametrosRequeridos)
+  const opcionais = definicao.parametrosOpcionais ?? []
+  if (opcionais.length === 0 || base.length === 0) return base
+  const primeiro = base[base.length - 1] ?? 0
+  const todos = new Set<number>(base)
+  for (const id of opcionais) {
+    for (const ano of registro.anosDisponiveis([id])) if (ano >= primeiro) todos.add(ano)
+  }
+  return [...todos].sort((a, b) => b - a)
 }
 
 function vigenciaPelaDataDe(
