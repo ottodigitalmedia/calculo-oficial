@@ -4234,6 +4234,33 @@ comparar o que produção serve com o que foi publicado. **Enquanto o
 `HEALTH_TOKEN` não for configurado nos dois lados, conferir em produção não é
 zelo: é o único teste que existe para o deploy.**
 
+#### O BV-12 reprovou o push — e o conserto foi para a frente
+
+O commit `a38672b` (`params(previdencia): tabela de pontos da EC 103…`) chegou
+ao `main` sem a vigência no assunto. O corpo tinha Fonte, URL, Verificado
+contra e Casos-ouro — mas o assunto precisa ser `params(<id>): vigência a
+partir de <início>`, e o verificador reprovou a execução 35336742506 antes de
+publicar.
+
+O que **não** foi feito: reescrever o histórico. `push --force` é decisão do
+mantenedor (`CLAUDE.md`), e o defeito está só na mensagem, não no dado. O
+verificador confere o intervalo de cada push, então o push seguinte, com este
+registro, passa por cima sem esconder nada. Para constar no formato devido:
+
+```
+params(pensao-cota-familiar, auxilio-incapacidade-percentual,
+       aposentadoria-pontos-*, aposentadoria-tempo-minimo-*):
+       vigência a partir de 2019-11-13
+```
+
+(o art. 36, III, da EC 103 dá vigência na publicação aos arts. 15 e 23; o
+art. 61 da Lei 8.213 tem a redação de 1995). O corpo daquele commit cita
+"art. 36, I" — o inciso certo é o III, como já está em `fontes.ts`.
+
+**Regra que fica:** `npm run check` não roda o BV-12 — ele depende do intervalo
+do push. Antes de empurrar commit `params`, rodar
+`npm run validate:commits -- origin/main..HEAD`.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
