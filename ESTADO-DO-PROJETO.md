@@ -4355,6 +4355,26 @@ link compartilhado em agosto reproduzir outro número hoje.
 calculadora é afirmação a conferir no código dela — foi assim que o defeito
 apareceu.
 
+### 7.88 O seletor de período errava para os dois lados
+
+De manhã, CALC-103 abria em 2033 — o ano da última vigência da escada de pontos.
+À tarde, ao preparar o lote 8, uma varredura do mesmo seletor mostrou 35
+calculadoras abrindo num ano passado. Em 34 isso é o comportamento projetado:
+parâmetros que nunca mudaram não têm seletor, e o aviso diz "em vigor a partir
+de 1990" — correto. No carnê-leão não: o redutor da Lei nº 15.270/2025 é
+parâmetro OPCIONAL do motor do IR, ficava fora da conta dos anos, e 2026 nunca
+aparecia.
+
+A primeira correção — dar o ano corrente a toda cobertura aberta — foi
+reprovada pelo teste de ponta a ponta que protege o "em vigor a partir de". O
+teste estava certo; a correção era larga demais. A que ficou é
+`parametrosOpcionais` na definição: os anos em que eles começam entram no
+seletor, sem entrar na cobertura.
+
+**Regra que fica:** parâmetro cuja ausência significa "a regra não existia"
+precisa ser declarado na definição, ou o ano em que ele começa não aparece para
+quem usa a página.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão

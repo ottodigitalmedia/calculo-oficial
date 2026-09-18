@@ -29,6 +29,33 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — o ano em que as calculadoras abrem
+
+### Corrigido · o carnê-leão calculava 2026 pelas regras de 2025
+
+**O que estava errado.** O seletor de período é montado pelos parâmetros que a
+calculadora exige, e o redutor da Lei nº 15.270/2025 — vigente desde 1º/01/2026
+— é parâmetro OPCIONAL do motor do IR: antes de 2026 ele não existia, e exigi-lo
+bloquearia 2025. Fora da conta, ele não trazia 2026 para o seletor, e o
+carnê-leão (CALC-053) oferecia apenas 2025. Sobre R$ 5.000,00
+recebidos no mês, a página cobrava R$ 312,89; em 2026 o imposto é zero.
+
+**Exposição.** CALC-053, de 1º/01 a 18/09/2026, em toda simulação — a página não
+oferecia 2026. Os outros nove consumidores do motor do IR já exigiam a tabela do
+INSS de 2026 e chegavam ao ano certo.
+
+**Correção.** A definição da calculadora pode declarar `parametrosOpcionais`, e
+os anos em que eles começam entram no seletor sem entrar na cobertura. O
+carnê-leão passa a oferecer 2026 e 2025. Uma primeira tentativa — acrescentar o
+ano corrente a toda calculadora de cobertura aberta — foi descartada pelo teste
+de ponta a ponta: transformava em seletor de dois anos iguais as páginas cujos
+parâmetros nunca mudaram, que corretamente dizem "em vigor a partir de".
+
+**Caso-ouro que impede a repetição:** `tests/unit/ano-corrente.test.ts` — o
+carnê-leão com 2026 no seletor e imposto zero sobre R$ 5.000,00.
+
+---
+
 ## Ciclo de 18/09/2026 — as férias vencidas na rescisão
 
 ### Corrigido · as rescisões pagavam as férias vencidas sempre de forma simples
