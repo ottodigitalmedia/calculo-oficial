@@ -50,6 +50,7 @@ import { IMPOSTO_NA_BOLSA } from './imposto-na-bolsa'
 import { APOSENTADORIA_REGRA_DE_PONTOS } from './aposentadoria-regra-de-pontos'
 import { BENEFICIOS_DO_INSS } from './beneficios-do-inss'
 import { REGRAS_DE_TRANSICAO_DA_APOSENTADORIA } from './regras-de-transicao-da-aposentadoria'
+import { ABONO_SALARIAL_GUIA } from './abono-salarial'
 import { PREVIDENCIA_PRIVADA_GUIA } from './previdencia-privada'
 import { LICENCAS_MATERNIDADE_E_PATERNIDADE } from './licencas-maternidade-e-paternidade'
 
@@ -134,6 +135,7 @@ export const GUIAS: readonly Guia[] = [
   BENEFICIOS_DO_INSS,
   APOSENTADORIA_REGRA_DE_PONTOS,
   REGRAS_DE_TRANSICAO_DA_APOSENTADORIA,
+  ABONO_SALARIAL_GUIA,
 ]
 
 export function guiaPorSlug(slug: string): Guia | undefined {

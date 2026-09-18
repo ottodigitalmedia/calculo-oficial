@@ -350,6 +350,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'O que vai na guia mensal de quem contrata doméstica, babá ou cuidador — e quanto ela custa de verdade.',
   },
   {
+    slug: 'abono-salarial-pis',
+    nome: 'Abono salarial do PIS',
+    linhaDeContexto:
+      'Se a sua renda fica no limite do ano e quanto seria o abono pelos meses trabalhados.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

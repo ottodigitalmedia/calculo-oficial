@@ -744,6 +744,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './dae-do-empregador-domestico'
     ).then((m) => m.calcular),
+  'abono-salarial-pis': () =>
+    import(
+      /* webpackChunkName: "calc-abono-salarial-pis" */
+      /* webpackExports: ["calcular"] */
+      './abono-salarial'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

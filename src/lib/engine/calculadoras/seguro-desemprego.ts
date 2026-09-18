@@ -298,3 +298,91 @@ export function calcularSeguroDesemprego(
 }
 
 export { ZERO }
+
+// ---------------------------------------------------------------------------
+// O empregado doméstico — LC nº 150/2015, arts. 26 e 28, I
+// ---------------------------------------------------------------------------
+
+export interface EntradaSeguroDesempregoDomestico {
+  /** Meses de vínculo como doméstico na janela anterior à dispensa. */
+  readonly meses: number
+}
+
+export interface SaidaSeguroDesempregoDomestico {
+  readonly parcela: Centavos
+  readonly numeroDeParcelas: number
+  readonly total: Centavos
+  readonly mesesMinimos: number
+  readonly janela: number
+}
+
+/**
+ * O doméstico tem regra própria, e mais simples: um salário mínimo por
+ * parcela, até três parcelas, com quinze meses de vínculo doméstico nos vinte
+ * e quatro anteriores à dispensa. Não há média de salários nem faixas.
+ */
+export function calcularSeguroDesempregoDomestico(
+  entrada: EntradaSeguroDesempregoDomestico,
+  dataReferencia: DataISO,
+  registro: Registro,
+): Resultado<SaidaSeguroDesempregoDomestico> {
+  const parcelas = registro.resolver('seguro-desemprego-domestico-parcelas', dataReferencia)
+  const minimos = registro.resolver('seguro-desemprego-domestico-meses-minimos', dataReferencia)
+  const janela = registro.resolver('seguro-desemprego-domestico-janela-meses', dataReferencia)
+  const piso = registro.resolver('salario-minimo', dataReferencia)
+  if (
+    !parcelas.ok || parcelas.resolvida.vigencia.valor.tipo !== 'inteiro' ||
+    !minimos.ok || minimos.resolvida.vigencia.valor.tipo !== 'inteiro' ||
+    !janela.ok || janela.resolvida.vigencia.valor.tipo !== 'inteiro' ||
+    !piso.ok || piso.resolvida.vigencia.valor.tipo !== 'valor_monetario'
+  ) {
+    return { ok: false, motivo: 'vigencia_ausente', detalhe: 'Não há parâmetros do seguro-desemprego do doméstico para a data informada.' }
+  }
+  const nParcelas = parcelas.resolvida.vigencia.valor.valor
+  const nMinimos = minimos.resolvida.vigencia.valor.valor
+  const nJanela = janela.resolvida.vigencia.valor.valor
+
+  if (!Number.isInteger(entrada.meses) || entrada.meses <= 0) {
+    return { ok: false, motivo: 'entrada_incompleta', detalhe: 'Informe quantos meses você trabalhou como doméstico.' }
+  }
+  if (entrada.meses > nJanela) {
+    return { ok: false, motivo: 'entrada_invalida', detalhe: `Conte só os meses dentro dos ${nJanela} anteriores à dispensa.` }
+  }
+  if (entrada.meses < nMinimos) {
+    return {
+      ok: false,
+      motivo: 'entrada_invalida',
+      detalhe:
+        `Com ${entrada.meses} mês(es) de vínculo doméstico não há direito ao benefício: a lei exige ` +
+        `${nMinimos} meses nos ${nJanela} anteriores à dispensa.`,
+    }
+  }
+
+  const parcela = centavos(piso.resolvida.vigencia.valor.centavos)
+  const total = centavos(parcela * nParcelas)
+  const etapas: Etapa[] = [
+    {
+      rotulo: `Vínculo — ${entrada.meses} meses nos últimos ${nJanela}`,
+      formula: `mínimo de ${nMinimos}: cumprido`,
+      resultado: centavos(entrada.meses),
+      unidade: 'numero',
+      parametro: citar(minimos.resolvida),
+    },
+    {
+      rotulo: `${nParcelas} parcelas de um salário mínimo`,
+      formula: `${reais(parcela)} × ${nParcelas}`,
+      resultado: total,
+      parametro: citar(parcelas.resolvida),
+      justificativa: 'Para o doméstico, o valor não depende do salário: é sempre um salário mínimo por parcela (LC nº 150/2015, art. 26).',
+    },
+  ]
+  return {
+    ok: true,
+    valores: { parcela, numeroDeParcelas: nParcelas, total, mesesMinimos: nMinimos, janela: nJanela },
+    traco: {
+      etapas,
+      dataReferencia,
+      vigenciasAplicadas: [parcelas.resolvida.vigencia.id, minimos.resolvida.vigencia.id, janela.resolvida.vigencia.id, piso.resolvida.vigencia.id],
+    },
+  }
+}

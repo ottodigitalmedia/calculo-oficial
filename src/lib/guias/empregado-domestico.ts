@@ -18,7 +18,7 @@ export const EMPREGADO_DOMESTICO: Guia = {
   descricaoSeo:
     'O que muda na rescisão do empregado doméstico: a indenização compensatória no lugar da multa do FGTS, o aviso prévio com norma própria e o que permanece igual.',
   atualizadoEm: '2026-08-07',
-  calculadoras: ['rescisao-domestico', 'rescisao-sem-justa-causa', 'custo-do-funcionario', 'dae-do-empregador-domestico'],
+  calculadoras: ['rescisao-domestico', 'rescisao-sem-justa-causa', 'custo-do-funcionario', 'dae-do-empregador-domestico', 'seguro-desemprego'],
 
   secoes: [
     {
@@ -109,6 +109,33 @@ export const EMPREGADO_DOMESTICO: Guia = {
           tipo: 'paragrafo',
           texto:
             'Citar o dispositivo certo não é preciosismo: quando a norma geral é alterada e a específica não, quem confunde as duas passa a usar uma regra que não se aplica àquele contrato.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-seguro-desemprego',
+      titulo: 'O seguro-desemprego do doméstico é diferente',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O empregado doméstico dispensado sem justa causa tem seguro-desemprego com regra própria: cada parcela vale um salário mínimo, qualquer que fosse o salário, e o número de parcelas é menor que o do empregado com carteira em empresa. Para se habilitar, é preciso ter um tempo mínimo de vínculo doméstico nos meses anteriores à dispensa.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'seguro-desemprego-domestico-parcelas',
+          legenda: 'Número máximo de parcelas do seguro-desemprego do doméstico.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'seguro-desemprego-domestico-meses-minimos',
+          legenda: 'Meses de vínculo doméstico exigidos na janela anterior à dispensa.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'seguro-desemprego',
+          texto: 'A calculadora de seguro-desemprego tem a opção do empregado doméstico.',
         },
       ],
     },

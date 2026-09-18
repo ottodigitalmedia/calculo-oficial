@@ -46,6 +46,7 @@ import { IMPOSTO_SOBRE_ALUGUEL } from './imposto-sobre-aluguel'
 import { HORAS_TRABALHADAS } from './horas-trabalhadas'
 import { DAS_SIMPLES_NACIONAL } from './das-simples-nacional'
 import { DAE_DO_EMPREGADOR_DOMESTICO } from './dae-do-empregador-domestico'
+import { ABONO_SALARIAL_PIS } from './abono-salarial'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -180,6 +181,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   HORAS_TRABALHADAS,
   DAS_SIMPLES_NACIONAL,
   DAE_DO_EMPREGADOR_DOMESTICO,
+  ABONO_SALARIAL_PIS,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

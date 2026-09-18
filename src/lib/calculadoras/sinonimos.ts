@@ -75,6 +75,7 @@ export const SINONIMOS: Readonly<Record<string, readonly string[]>> = {
   'aposentadoria-do-professor': ['escola', 'lecionar', 'docente', 'educacao infantil'],
   'ganho-de-capital-na-venda-de-bens': ['vendi meu carro', 'venda de moto', 'venda de joia', 'isencao 35 mil'],
   'imposto-sobre-aluguel': ['locador', 'inquilino', 'renda de aluguel', 'recebo aluguel'],
+  'abono-salarial-pis': ['pis pasep', 'abono do pis', 'pis 2026', 'quem recebe pis', 'calendario pis'],
   'das-simples-nacional': ['anexo iii', 'fator r', 'imposto da empresa', 'pgdas', 'rbt12'],
   'dae-do-empregador-domestico': ['esocial domestico', 'guia da empregada', 'faxineira registrada', 'simples domestico'],
   'horas-trabalhadas': ['calculadora de horas', 'ponto eletronico', 'jornada diaria', 'cartao de ponto'],

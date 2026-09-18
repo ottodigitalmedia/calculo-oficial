@@ -9,7 +9,7 @@
  * justamente esse número que decide se o acordo compensa. As duas se citam.
  */
 
-import { calcularSeguroDesemprego } from '../engine/calculadoras/seguro-desemprego'
+import { calcularSeguroDesemprego, calcularSeguroDesempregoDomestico } from '../engine/calculadoras/seguro-desemprego'
 import { centavos } from '../engine/types'
 import { formatarReal } from '../format/moeda'
 import { SEGURO_DESEMPREGO as PARAMS } from '../params/data/seguro-desemprego'
@@ -26,6 +26,31 @@ const registro = construirRegistro(PARAMS, INSS)
 
 /** Exportação de topo — ver a nota em `salario-liquido.ts`. */
 export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
+  // O doméstico tem regra própria (LC nº 150/2015, art. 26): um salário mínimo
+  // por parcela, até três, sem média de salários.
+  if (texto(valores, 'vinculo') === 'domestico') {
+    const d = calcularSeguroDesempregoDomestico({ meses: numero(valores, 'mesesDomestico') }, dataReferencia, registro)
+    if (!d.ok) return d
+    return {
+      ok: true,
+      traco: d.traco,
+      valores: {
+        principal: d.valores.total,
+        detalhamento: [
+          { rotulo: `${d.valores.numeroDeParcelas} parcelas de ${formatarReal(d.valores.parcela)}`, valor: d.valores.total, sinal: 'neutro' },
+        ],
+        destaques: [
+          { rotulo: 'Valor de cada parcela', valor: formatarReal(d.valores.parcela) },
+          { rotulo: 'Número de parcelas', valor: `${d.valores.numeroDeParcelas}` },
+        ],
+        notas: [
+          'Para o empregado doméstico, cada parcela é de um salário mínimo, qualquer que fosse o salário, e o máximo é de três parcelas (LC nº 150/2015, art. 26).',
+          'É preciso ter quinze meses de vínculo doméstico nos vinte e quatro anteriores à dispensa sem justa causa (art. 28).',
+        ],
+      },
+    }
+  }
+
   const escolha = texto(valores, 'solicitacao')
   const solicitacao =
     escolha === 'segunda' ? 'segunda' : escolha === 'terceira-ou-mais' ? 'terceira-ou-mais' : 'primeira'
@@ -107,12 +132,33 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
 
   campos: [
     {
+      id: 'vinculo',
+      rotulo: 'Tipo de emprego',
+      tipo: 'selecao',
+      padrao: 'clt',
+      opcoes: [
+        { valor: 'clt', rotulo: 'Empregado com carteira (CLT)' },
+        { valor: 'domestico', rotulo: 'Empregado doméstico' },
+      ],
+      ajuda: 'O doméstico tem regra própria: um salário mínimo por parcela, até três.',
+    },
+    {
+      id: 'mesesDomestico',
+      rotulo: 'Meses como doméstico nos últimos 24',
+      tipo: 'inteiro',
+      obrigatorio: true,
+      minimo: 1,
+      maximo: 24,
+      visivelSe: { campo: 'vinculo', em: ['domestico'] },
+    },
+    {
       id: 'salario1',
       rotulo: 'Salário do último mês',
       tipo: 'monetario',
       obrigatorio: true,
       minimo: 1,
       maximo: 100_000_000,
+      visivelSe: { campo: 'vinculo', em: ['clt'] },
     },
     {
       id: 'salario2',
@@ -122,6 +168,7 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
       minimo: 0,
       maximo: 100_000_000,
       ajuda: 'Deixe em branco se foi igual ao último.',
+      visivelSe: { campo: 'vinculo', em: ['clt'] },
     },
     {
       id: 'salario3',
@@ -131,6 +178,7 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
       minimo: 0,
       maximo: 100_000_000,
       ajuda: 'A lei manda usar a média dos três últimos meses.',
+      visivelSe: { campo: 'vinculo', em: ['clt'] },
     },
     {
       id: 'mesesTrabalhados',
@@ -140,6 +188,7 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
       minimo: 1,
       maximo: 36,
       ajuda: 'Contando o vínculo que terminou e outros do período, se houver.',
+      visivelSe: { campo: 'vinculo', em: ['clt'] },
     },
     {
       id: 'solicitacao',
@@ -152,6 +201,7 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
         { valor: 'terceira-ou-mais', rotulo: 'Terceira ou mais' },
       ],
       ajuda: 'O tempo mínimo de vínculo exigido cai a cada solicitação.',
+      visivelSe: { campo: 'vinculo', em: ['clt'] },
     },
   ],
 
@@ -161,6 +211,7 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
     'seguro-desemprego-teto',
     'seguro-desemprego-meses-minimos-1a',
     'salario-minimo',
+    'seguro-desemprego-domestico-parcelas',
   ],
 
   rotuloResultado: 'Total do seguro-desemprego',
@@ -195,6 +246,11 @@ export const SEGURO_DESEMPREGO: DefinicaoCalculadora = {
       pergunta: 'Pedi demissão. Tenho direito?',
       resposta:
         'Não. O seguro-desemprego pressupõe dispensa sem justa causa. Pedido de demissão e dispensa por justa causa não dão acesso ao benefício. Esta calculadora estima parcelas e valor supondo que a dispensa foi sem justa causa; ela não verifica essa condição nem as demais do art. 3º da lei.',
+    },
+    {
+      pergunta: 'E o empregado doméstico?',
+      resposta:
+        'Tem regra própria, na Lei Complementar nº 150/2015: cada parcela é de um salário mínimo, qualquer que fosse o salário, com no máximo três parcelas, e é preciso ter quinze meses de vínculo doméstico nos vinte e quatro anteriores à dispensa (arts. 26 e 28). Escolha "Empregado doméstico" no primeiro campo.',
     },
     {
       pergunta: 'Esse é o valor exato que vou receber?',
