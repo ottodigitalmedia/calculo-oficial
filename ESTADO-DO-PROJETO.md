@@ -4340,6 +4340,21 @@ candidata.
 Foi publicado no DOU de 13/04/1977, mas o art. 3º adia a vigência para
 1º/05/1977. A vigência das três regras de férias começa ali.
 
+### 7.87 A dobra das férias vencidas na rescisão — um defeito de lançamento
+
+Encontrado ao escrever a FAQ de CALC-112: ela prometia que a rescisão somava as
+férias vencidas em dobro, e a rescisão somava simples. Conferido o art. 146 —
+"simples ou em dobro, conforme o caso" —, era a rescisão que estava incompleta,
+desde o lançamento, em seis calculadoras.
+
+**O conserto preservou os links.** A resposta "sim" continua significando
+simples; a dobra é uma terceira resposta. Mudar o significado de "sim" faria um
+link compartilhado em agosto reproduzir outro número hoje.
+
+**Regra que fica:** a FAQ de uma calculadora que afirma algo sobre OUTRA
+calculadora é afirmação a conferir no código dela — foi assim que o defeito
+apareceu.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão

@@ -29,6 +29,35 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — as férias vencidas na rescisão
+
+### Corrigido · as rescisões pagavam as férias vencidas sempre de forma simples
+
+**O que estava errado.** As calculadoras de rescisão perguntavam apenas se havia
+férias vencidas e somavam salário mais um terço. A CLT manda pagar "simples ou
+em dobro, conforme o caso" (art. 146): em dobro quando o prazo para concedê-las
+(art. 134) já passou (art. 137). Quem tinha um período nessa situação via um
+acerto menor do que o devido — a diferença é de uma remuneração de férias
+inteira, com o terço.
+
+**Exposição.** Desde o lançamento de cada uma, até 18/09/2026: rescisão sem justa
+causa, pedido de demissão, acordo mútuo, rescisão do doméstico, rescisão por
+justa causa (CALC-092) e o comparador acordo ou dispensa. Só as simulações com
+férias vencidas cujo prazo de concessão já tinha terminado.
+
+**Correção.** A pergunta passou a ter três respostas — não; sim, ainda no
+prazo; sim, com o prazo vencido —, e a terceira aplica a dobra lida do
+parâmetro `ferias-fora-do-prazo-fator` (CLT, art. 137), com o fundamento do
+art. 146 na memória. Na justa causa, que conta períodos, um campo novo diz
+quantos deles estão fora do prazo. A resposta "sim" continua simples, para
+que links já compartilhados reproduzam o mesmo resultado. Para o doméstico, a
+LC nº 150/2015, art. 19, aplica a CLT subsidiariamente.
+
+**Caso-ouro que impede a repetição:** `tests/golden/ferias-vencidas-na-rescisao.test.ts`,
+com a página de rescisão levando a escolha até o motor.
+
+---
+
 ## Ciclo de 18/09/2026 — expansão do catálogo, lote 7
 
 ### Adicionado · o valor da aposentadoria, o professor e as férias em dobro

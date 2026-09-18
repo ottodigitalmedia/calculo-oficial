@@ -607,8 +607,8 @@ parágrafo tem o seu cadastro, pela mesma razão do lote 6: a memória precisa
 citar o parágrafo do professor.
 
 **A dobra das férias é por dia** (Súmula 81 do TST), sobre a remuneração com o
-terço. A calculadora de rescisão soma as férias vencidas de forma simples, e a
-FAQ de CALC-112 diz isso em vez de prometer o que ela não faz.
+terço. Escrever a FAQ de CALC-112 revelou que as rescisões pagavam as férias
+vencidas sempre simples — corrigido no mesmo dia (`ESTADO-DO-PROJETO` §7.87).
 
 **Duas candidatas saíram do lote, com motivo:**
 
@@ -628,7 +628,7 @@ valor dela veio de site de terceiro.
 
 | Categoria | Candidatas |
 |---|---|
-| TRB | jornada 12×36 e feriados · provisão mensal de férias e 13º · dobra das férias vencidas dentro da rescisão |
+| TRB | jornada 12×36 e feriados · provisão mensal de férias e 13º |
 | TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
 | PRV | auxílio-reclusão (depende da portaria anual) · valor pelo pedágio de 50%, com o fator previdenciário |
 | CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · antecipação do saque-aniversário |
