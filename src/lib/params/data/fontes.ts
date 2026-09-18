@@ -2934,3 +2934,106 @@ export const TST_SUMULA_81: Fonte = {
   url: 'https://www.tst.jus.br/documents/10157/63003/Livro-Internet.pdf',
   orgao: 'Tribunal Superior do Trabalho',
 }
+
+// ---------------------------------------------------------------------------
+// Lote 8 do catálogo v5 — aluguel e jornada (CALC-114 e CALC-115)
+// ---------------------------------------------------------------------------
+
+/**
+ * O que não entra na base do imposto sobre aluguel recebido de pessoa física —
+ * Regulamento do Imposto de Renda (Decreto nº 9.580/2018), art. 42, com base
+ * na Lei nº 7.739/1989, art. 14.
+ *
+ * > "Não serão computados no rendimento bruto, na hipótese de aluguéis de
+ * > imóveis: I - o valor dos impostos, das taxas e dos emolumentos incidentes
+ * > sobre o bem que produzir o rendimento; II - o aluguel pago pela locação de
+ * > imóvel sublocado; III - as despesas pagas para cobrança ou recebimento do
+ * > rendimento; e IV - as despesas de condomínio."
+ *
+ * O art. 689 repete a regra para o aluguel pago por pessoa jurídica, com
+ * retenção na fonte.
+ */
+export const RIR_2018_ART_42: Fonte = {
+  id: 'rir-2018-art-42',
+  norma: 'Decreto nº 9.580, de 22 de novembro de 2018 — Regulamento do Imposto sobre a Renda',
+  dispositivo: 'Art. 42 (Lei nº 7.739/1989, art. 14)',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/decreto/D9580.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * O mesmo, para o aluguel pago por pessoa jurídica — RIR/2018, art. 689.
+ *
+ * > "Não integrarão a base de cálculo para incidência do imposto sobre a renda,
+ * > na hipótese de aluguéis de imóveis: I - o valor dos impostos, das taxas e
+ * > dos emolumentos incidentes sobre o bem que produzir o rendimento; II - o
+ * > aluguel pago pela locação do imóvel sublocado; III - as despesas para
+ * > cobrança ou recebimento do rendimento; e IV - as despesas de condomínio."
+ */
+export const RIR_2018_ART_689: Fonte = {
+  id: 'rir-2018-art-689',
+  norma: 'Decreto nº 9.580, de 22 de novembro de 2018 — Regulamento do Imposto sobre a Renda',
+  dispositivo: 'Art. 689 (Lei nº 7.739/1989, art. 14)',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/decreto/D9580.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * Duração normal do trabalho — Constituição, art. 7º, XIII, texto original de
+ * 05/10/1988.
+ *
+ * > "duração do trabalho normal não superior a oito horas diárias e quarenta e
+ * > quatro semanais, facultada a compensação de horários e a redução da
+ * > jornada, mediante acordo ou convenção coletiva de trabalho;"
+ */
+export const CF_ART_7_XIII: Fonte = {
+  id: 'cf-1988-art-7-xiii',
+  norma: 'Constituição da República Federativa do Brasil de 1988',
+  dispositivo: 'Art. 7º, XIII',
+  url: 'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Descanso entre jornadas — CLT, art. 66, texto original (em vigor em
+ * 10/11/1943, art. 911).
+ *
+ * > "Entre 2 (duas) jornadas de trabalho haverá um período mínimo de 11 (onze)
+ * > horas consecutivas para descanso."
+ */
+export const CLT_ART_66: Fonte = {
+  id: 'clt-art-66',
+  norma: 'Consolidação das Leis do Trabalho — Decreto-lei nº 5.452, de 1º de maio de 1943',
+  dispositivo: 'Art. 66',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * Intervalo para repouso e alimentação — CLT, art. 71, caput e §§ 1º e 2º no
+ * texto original (em vigor em 10/11/1943); § 4º na redação da Lei nº
+ * 13.467/2017 (DOU de 14/07/2017, em vigor 120 dias depois, em 11/11/2017).
+ *
+ * > Caput: "Em qualquer trabalho contínuo, cuja duração exceda de 6 (seis)
+ * > horas, é obrigatória a concessão de um intervalo para repouso ou
+ * > alimentação, o qual será, no mínimo, de 1 (uma) hora e, salvo acordo
+ * > escrito ou contrato coletivo em contrário, não poderá exceder de 2 (duas)
+ * > horas."
+ * > § 1º "Não excedendo de 6 (seis) horas o trabalho, será, entretanto,
+ * > obrigatório um intervalo de 15 (quinze) minutos quando a duração
+ * > ultrapassar 4 (quatro) horas."
+ * > § 2º "Os intervalos de descanso não serão computados na duração do
+ * > trabalho."
+ * > § 4º "A não concessão ou a concessão parcial do intervalo intrajornada
+ * > mínimo, para repouso e alimentação, a empregados urbanos e rurais, implica
+ * > o pagamento, de natureza indenizatória, apenas do período suprimido, com
+ * > acréscimo de 50% (cinquenta por cento) sobre o valor da remuneração da hora
+ * > normal de trabalho."
+ */
+export const CLT_ART_71: Fonte = {
+  id: 'clt-art-71',
+  norma: 'Consolidação das Leis do Trabalho, com a redação da Lei nº 13.467, de 2017, no § 4º',
+  dispositivo: 'Art. 71, caput e §§ 1º, 2º e 4º',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Presidência da República',
+}
