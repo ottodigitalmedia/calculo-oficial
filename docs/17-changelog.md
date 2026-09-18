@@ -29,6 +29,58 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — expansão do catálogo, lote 6
+
+### Adicionado · as demais regras de aposentadoria
+
+CALC-104 idade progressiva · CALC-105 pedágio de 50% · CALC-106 pedágio de 100% ·
+CALC-107 aposentadoria por idade (transição e permanente) · CALC-108 comparador
+de regras de aposentadoria.
+
+Um guia novo — *Regras de aposentadoria depois da reforma* —, e o guia da regra
+de pontos passa a apontar o comparador (`00-catalogo` §18.7).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `aposentadoria-idade-progressiva-mulher` | 56 a 62 anos, seis meses por ano | 2019 a 2031, uma vigência por ano | EC nº 103/2019, art. 16, § 1º |
+| `aposentadoria-idade-progressiva-homem` | 61 a 65 anos, seis meses por ano | 2019 a 2027, uma vigência por ano | EC nº 103/2019, art. 16, § 1º |
+| `aposentadoria-idade-progressiva-tempo-*` | 30 · 35 anos | desde 13/11/2019 | EC nº 103/2019, art. 16, I |
+| `aposentadoria-pedagio-50-*` | mais de 28 · 33 anos em 2019; 30 · 35 anos; 50% | desde 13/11/2019 | EC nº 103/2019, art. 17 |
+| `aposentadoria-pedagio-100-*` | 57 · 60 anos; 30 · 35 anos | desde 13/11/2019 | EC nº 103/2019, art. 20 |
+| `aposentadoria-idade-transicao-*` | mulher 60 a 62 anos até 2023; homem 65; 15 anos | desde 13/11/2019 | EC nº 103/2019, art. 18 |
+| `aposentadoria-permanente-*` | 62 · 65 anos; 15 · 20 anos | desde 13/11/2019 | EC nº 103/2019, art. 19 |
+
+Idades cadastradas em MESES, porque as escadas sobem seis meses por ano.
+
+### Corrigido · CALC-103 abria em 2033 e projetava um ano tarde
+
+**Dois defeitos, publicados com o lote 5 em 17/09/2026 e corrigidos em
+18/09/2026.** Nenhum parâmetro estava errado; as contas estavam.
+
+1. **A página abria no ano de 2033.** O seletor de período oferecia até o ano da
+   vigência mais recente, e a tabela de pontos tem vigência cadastrada até 2033.
+   A calculadora abria dizendo que a exigência "deste ano" era de 100 pontos
+   (a de 2026 é 93) e projetava o cumprimento a partir de 2033. **Exposição:**
+   toda visita a CALC-103 que não escolheu o ano à mão, de 17 a 18/09/2026.
+   **Correção:** o seletor não oferece ano posterior ao corrente, informado pela
+   página no servidor — o motor continua sem relógio. `tests/unit/ano-corrente.test.ts`.
+2. **A projeção era anual e errava por um ano.** Testava sempre o mesmo mês do
+   calendário, e quem cumpre os pontos em dezembro via o ano seguinte.
+   **Exposição:** as projeções de CALC-103 cujo cumprimento caía entre o mês de
+   referência e dezembro. **Correção:** projeção mês a mês, comum às seis
+   regras. Dois casos-ouro esperavam o valor errado — o raciocínio escrito
+   neles pulava os meses do meio — e foram corrigidos com a conta mês a mês; um
+   caso novo trava a regressão.
+
+### Auditoria · casos-ouro
+
+32 casos-ouro novos das cinco calculadoras, mais um de regressão em CALC-103 e
+três de ano corrente — todos por aritmética direta sobre o texto da Emenda.
+
+---
+
 ## Ciclo de 17/09/2026 — expansão do catálogo, lote 5
 
 ### Adicionado · a categoria PRV e quatro benefícios do INSS

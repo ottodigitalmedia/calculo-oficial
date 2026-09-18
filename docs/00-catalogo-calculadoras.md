@@ -62,8 +62,8 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
-| PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 4 |
-| | **Total** | | **103** |
+| PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 9 |
+| | **Total** | | **108** |
 
 ---
 
@@ -306,11 +306,20 @@ seção evita renumerar §14 a §18, que são referenciadas em todo o projeto.
 | CALC-101 | Auxílio por incapacidade temporária | 🔥 | M | P | Média | v5 |
 | CALC-102 | Salário-maternidade pago pelo INSS | 🔸 | M | P | Alta | v5 |
 | CALC-103 | Aposentadoria pela regra de pontos (EC 103, art. 15) | 🔥 | M | P | **Crítica** | v5 |
+| CALC-104 | Aposentadoria pela idade progressiva (EC 103, art. 16) | 🔥 | M | P | **Crítica** | v5 |
+| CALC-105 | Aposentadoria pelo pedágio de 50% (EC 103, art. 17) | 🔥 | M | P | Média | v5 |
+| CALC-106 | Aposentadoria pelo pedágio de 100% (EC 103, art. 20) | 🔥 | M | P | Média | v5 |
+| CALC-107 | Aposentadoria por idade — transição e permanente (EC 103, arts. 18 e 19) | 🔥 | M | P | Média | v5 |
+| CALC-108 | Comparador de regras de aposentadoria (EC 103, arts. 15 a 20) | 🔥 | A | P | **Crítica** | v5 |
 
 > **CALC-103 tem manutenção crítica por construção.** A pontuação exigida sobe
 > um ponto por ano até 2033 (mulher) e 2028 (homem) — e toda a tabela já está
 > cadastrada, ano a ano, como vigência. A manutenção não é anual: é conferir, a
 > cada revisão, se nenhuma emenda mudou a regra.
+>
+> **CALC-104 e CALC-108 herdam a mesma condição.** A idade progressiva sobe seis
+> meses por ano até 2031 (mulher) e 2027 (homem), também cadastrada ano a ano; o
+> comparador depende de todas as regras ao mesmo tempo.
 
 ---
 
@@ -359,8 +368,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 27 | — | Expansão de cobertura — lotes 1 a 5 de §18 |
-| | **103** | 11 | |
+| **v5** | 32 | — | Expansão de cobertura — lotes 1 a 6 de §18 |
+| | **108** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -550,7 +559,31 @@ VALOR da aposentadoria — que depende da média das contribuições desde julho
 1994, dado que só o extrato do CNIS tem. As páginas dizem isso, e os guias
 repetem.
 
-### 18.7 Candidatas dos próximos lotes
+### 18.7 Lote 6 — as demais regras de aposentadoria, publicado em 18/09/2026
+
+CALC-104 a CALC-108, na tabela de §13.1. Cinco calculadoras e um guia novo —
+*Regras de aposentadoria depois da reforma* —, fechando o que o lote 5 havia
+declarado como fora: idade progressiva (art. 16), os dois pedágios (arts. 17 e
+20), a aposentadoria por idade na transição e na regra permanente (arts. 18 e
+19) e o comparador que põe as seis regras lado a lado.
+
+**Cada artigo tem os seus próprios parâmetros**, mesmo quando o número coincide:
+os trinta anos da mulher aparecem em quatro artigos, e a memória de cálculo
+precisa citar o artigo da regra aplicada, não o de outra que diz o mesmo número.
+
+**O pedágio de 50% trabalha em meios meses.** Metade de um número ímpar de meses
+termina em meio mês, e a conta o mantém — sem arredondar a lei. Só a data de
+cumprimento, que é um mês do calendário, conta o meio mês como inteiro.
+
+**O lote corrigiu CALC-103 em dois pontos**, registrados em `ESTADO-DO-PROJETO`
+§7.85: a página abria no ano de 2033 (a vigência mais recente da tabela), e a
+projeção anual errava por um ano quando o cumprimento caía no meio do ano. A
+projeção das seis regras é mês a mês.
+
+**Continua fora, e declarado:** professor, atividade especial, pessoa com
+deficiência e o VALOR da aposentadoria.
+
+### 18.8 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -561,7 +594,7 @@ valor dela veio de site de terceiro.
 |---|---|
 | TRB | férias vencidas em dobro · rescisão por justa causa · jornada 12×36 e feriados · provisão mensal de férias e 13º |
 | TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
-| PRV | demais regras de transição da EC nº 103/2019 (idade progressiva, pedágio menor e pedágio maior) · aposentadoria por idade · valor da aposentadoria a partir da média · auxílio-acidente · auxílio-reclusão |
+| PRV | valor da aposentadoria a partir da média · regras do professor · auxílio-acidente · auxílio-reclusão |
 | CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |

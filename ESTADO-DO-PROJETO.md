@@ -4261,6 +4261,54 @@ art. 61 da Lei 8.213 tem a redação de 1995). O corpo daquele commit cita
 do push. Antes de empurrar commit `params`, rodar
 `npm run validate:commits -- origin/main..HEAD`.
 
+### 7.85 Lote 6 — as demais regras de aposentadoria, e dois defeitos do lote 5
+
+**CALC-104 a CALC-108**, com um guia novo. O catálogo passa de 103 para **108**.
+
+#### O defeito que só apareceu olhando produção
+
+Ao conferir o lote 5 no ar, CALC-103 dizia: *parâmetros legais vigentes em
+15/06/2033*. A página abre no ano mais recente que o registro oferece, e isso é
+certo para tabela anual — deixa de ser quando a norma publica o futuro de uma
+vez. A tabela de pontos vai até 2033, e a calculadora abria sete anos adiante.
+
+O conserto não pôs relógio no motor (`C-M2`). A página informa o ano corrente
+no servidor, e `formularioDe` tira do seletor os anos que ainda não chegaram.
+Uma varredura das 103 calculadoras mostrou que só CALC-103 abria no futuro — a
+licença-paternidade também tem vigências adiante, mas decide pela data do
+nascimento (`vigenciaPelaData`).
+
+**Regra que fica:** tabela publicada com anos de antecedência é dado legítimo,
+e a projeção precisa dela. O que não pode é ela decidir o ano de abertura.
+
+#### A projeção anual errava por um ano
+
+A primeira versão de CALC-103 testava sempre o mesmo mês do calendário. Com
+referência em junho, a mulher que alcança os 100 pontos em dezembro de 2033
+aparecia em 2034. Os dois casos-ouro que esperavam o ano errado foram
+**corrigidos, e não ajustados**: o raciocínio escrito neles contava anos
+inteiros e pulava os meses do meio — o caso estava errado, não só o código. A
+conta mês a mês vai escrita em cada um, e um caso novo trava a regressão.
+
+#### O pedágio em meios meses
+
+Metade de treze meses são seis meses e meio. Converter o meio mês em dias
+exigiria a convenção do mês de 30 dias, que está na IN PRES/INSS nº 128/2022,
+art. 207, parágrafo único — instrução alterada várias vezes, sem texto compilado
+oficial que se pudesse conferir. A conta ficou em meios meses, que é aritmética
+da própria Emenda, e só a data de cumprimento arredonda para o mês inteiro.
+
+#### Cada artigo com os seus parâmetros
+
+Os trinta anos da mulher aparecem nos arts. 15, 16, 17 e 20. Reaproveitar um
+parâmetro só faria a memória de cálculo do pedágio citar o artigo da regra de
+pontos. São parâmetros diferentes que hoje coincidem no valor.
+
+#### O comparador diz QUANDO, e avisa que isso não é QUANTO
+
+A regra que se cumpre primeiro pode pagar menos — o pedágio de 50% leva o fator
+previdenciário. A página, o guia e a última etapa da memória dizem isso.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
