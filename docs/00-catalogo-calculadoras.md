@@ -52,18 +52,18 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 32 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 33 |
 | TRI | Tributos Pessoa Física | Volume sazonal intenso | 14 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
 | INV | Investimentos e Renda Fixa | Âncora de receita | 8 |
-| AUT | Autônomo, MEI e PJ | Ponte entre trabalhista e tributário | 7 |
+| AUT | Autônomo, MEI e PJ | Ponte entre trabalhista e tributário | 8 |
 | VEI | Veículos | Receita média, manutenção baixa | 7 |
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
 | PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
-| | **Total** | | **115** |
+| | **Total** | | **117** |
 
 ---
 
@@ -107,6 +107,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-092 | Rescisão por justa causa — o que resta e o que sai | 🔥 | M | P | Alta | v5 |
 | CALC-112 | Férias vencidas em dobro (CLT, arts. 134 e 137; Súmula 81 do TST) | 🔥 | M | P | Nula | v5 |
 | CALC-115 | Horas trabalhadas e intervalo (CF, art. 7º, XIII; CLT, arts. 66 e 71) | 🔥 | M | P | Nula | v5 |
+| CALC-117 | DAE do empregador doméstico (LC 150, art. 34) | 🔥 | M | P | Alta | v5 |
 | CALC-095 | Saque-aniversário do FGTS | 🔥 | B | P | Média | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
@@ -221,6 +222,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-050 | INSS do contribuinte individual e facultativo | 🔸 | M | P | Alta | v3 |
 | CALC-051 | Pró-labore e encargos do sócio | ▫️ | M | P | Alta | v4 |
 | CALC-052 | Faturamento máximo do MEI e desenquadramento | 🔸 | M | P | Média | v4 |
+| CALC-116 | DAS do Simples Nacional — anexo, faixa e alíquota efetiva (LC 123, art. 18) | 🔥 | A | P | **Crítica** | v5 |
 | CALC-053 | Carnê-leão — recolhimento mensal do autônomo | ▫️ | M | P | Alta | v4 |
 
 ---
@@ -375,8 +377,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 39 | — | Expansão de cobertura — lotes 1 a 8 de §18 |
-| | **115** | 11 | |
+| **v5** | 41 | — | Expansão de cobertura — lotes 1 a 9 de §18 |
+| | **117** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -643,7 +645,27 @@ do art. 66 da CLT —, em minutos, num conjunto próprio. A cobertura começa em
 **Duas correções saíram da preparação do lote**, antes dele: a dobra das férias
 vencidas nas rescisões (§7.87) e o carnê-leão sem o redutor de 2026 (§7.88).
 
-### 18.10 Candidatas dos próximos lotes
+### 18.10 Lote 9 — o DAS do Simples e o DAE do doméstico, publicado em 18/09/2026
+
+CALC-116, na tabela de §9, e CALC-117, na de §4. Sem guia novo: seções em *MEI:
+DAS e limite* (o caminho de quem sai do MEI) e *Empregado doméstico*.
+
+**O DAS aplica a fórmula da lei sem arredondar no meio.** O art. 18, § 1º-A,
+define a alíquota efetiva como (RBT12 × Aliq − PD) ÷ RBT12, e o DAS é essa
+fração sobre a receita do mês, em inteiro grande; só o valor final vira
+centavo. O comparador CLT × PJ (CALC-048) arredonda a efetiva para duas casas
+antes de aplicá-la — aceitável numa comparação, e registrado aqui para quem for
+unificar os dois.
+
+**Os anexos I, II e IV entraram fechados em 31/12/2026**, como III e V: a LC nº
+214/2025 os substitui a partir de 2027. **CALC-116 tem manutenção crítica por
+isso** — em janeiro de 2027 ela bloqueia até os anexos novos serem cadastrados.
+
+**O fator previdenciário ficou fora**, com motivo: a tábua do IBGE é legível,
+mas as regras de idade fracionária e de arredondamento do fator não foram
+confirmadas em fonte.
+
+### 18.11 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -654,7 +676,7 @@ valor dela veio de site de terceiro.
 |---|---|
 | TRB | jornada 12×36 e feriados · provisão mensal de férias e 13º |
 | TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
-| PRV | auxílio-reclusão (depende da portaria anual) · valor pelo pedágio de 50%, com o fator previdenciário |
+| PRV | auxílio-reclusão (depende da portaria anual) · fator previdenciário e o valor pelo pedágio de 50% (falta confirmar arredondamento e idade fracionária) |
 | CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |

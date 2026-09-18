@@ -29,6 +29,31 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — expansão do catálogo, lote 9
+
+### Adicionado · o DAS do Simples Nacional e o DAE do doméstico
+
+CALC-116 DAS do Simples Nacional · CALC-117 DAE do empregador doméstico. Seções
+novas nos guias *MEI: DAS e limite* e *Empregado doméstico* (`00-catalogo`
+§18.10).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `simples-anexo-i` · `-ii` · `-iv` | seis faixas cada, com alíquota nominal e parcela a deduzir | 01/01/2018 a 31/12/2026 | LC nº 123/2006, Anexos I, II e IV (red. LC nº 155/2016) |
+| `domestico-contribuicao-patronal` · `domestico-seguro-acidente` | 8% · 0,8% | desde 01/10/2015 | LC nº 150/2015, art. 34, II e III, e § 7º |
+
+### Auditoria · casos-ouro
+
+16 casos-ouro novos: todas as atividades do DAS, o fator R nos dois lados dos
+28%, a 6ª faixa, o teto de R$ 4,8 milhões, a fórmula sem arredondamento
+intermediário e o bloqueio de 2027; no DAE, o salário mínimo parcela a parcela,
+os 20% de encargos e o salário acima do teto — com a base previdenciária
+limitada e o FGTS inteiro.
+
+---
+
 ## Ciclo de 18/09/2026 — expansão do catálogo, lote 8
 
 ### Adicionado · venda de bens, aluguel e jornada

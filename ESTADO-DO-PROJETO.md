@@ -4389,9 +4389,39 @@ no ar.
 o trabalho "exceda de 6 horas"; com seis exatas, a exigência é a do § 1º, quinze
 minutos. O caso-ouro trava essa fronteira.
 
+### 7.90 Lote 9 — o DAS do Simples e o DAE do doméstico
+
+**CALC-116 e CALC-117**, sem guia novo. O catálogo passa de 115 para **117**.
+
+**CALC-116 bloqueia em 1º de janeiro de 2027.** Os anexos cadastrados fecham em
+31/12/2026 porque a LC nº 214/2025 os substitui. É o bloqueio certo (`RN-003`),
+mas é uma calculadora de volume alto que para de responder numa data conhecida:
+os anexos XVIII a XXII da LC nº 214 precisam ser lidos e cadastrados ANTES
+disso. Entra em §8 como tarefa datada.
+
+**A base do DAE tem dois tetos diferentes.** Patronal e seguro-acidente incidem
+sobre o salário de contribuição — limitado ao teto do INSS —; FGTS e os 3,2%,
+sobre a remuneração inteira. O caso-ouro de R$ 10.000,00 trava a diferença.
+
+**Deploy do lote 8: três disparos.** O webhook responde 200 e a verificação de
+saúde lê o contêiner antigo — o defeito de §7.76, cada vez mais frequente. A
+correção que falta é do mantenedor: `HEALTH_TOKEN` no GitHub e no painel.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
+
+### 8.000 Tarefa com data — antes de 1º/01/2027
+
+**Cadastrar os anexos do Simples Nacional da LC nº 214/2025 (Anexos XVIII a
+XXII).** Os Anexos I a V da LC nº 123/2006 fecham em 31/12/2026, e a partir daí
+CALC-116 (DAS do Simples) e CALC-048 (comparador CLT × PJ) bloqueiam por
+`RN-003`. O bloqueio é correto, mas tira do ar duas calculadoras de volume alto
+numa data conhecida. Ler os anexos novos, cadastrá-los com vigência a partir de
+01/01/2027 e escrever os casos-ouro — ver §7.90.
+
+**Configurar o `HEALTH_TOKEN`** (mantenedor): sem ele, o deploy não prova que o
+contêiner trocou, e o lote 8 precisou de três disparos (§7.90).
 
 ### 8.00 Retomada em 17/09/2026 — o catálogo está em expansão
 
