@@ -356,6 +356,17 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Se a sua renda fica no limite do ano e quanto seria o abono pelos meses trabalhados.',
   },
   {
+    slug: 'juros-simples',
+    nome: 'Juros simples',
+    linhaDeContexto:
+      'Juros sobre o capital inicial, com taxa e prazo em qualquer unidade — e a comparação com os compostos.',
+  },
+  {
+    slug: 'escala-12x36',
+    nome: 'Escala 12 × 36',
+    linhaDeContexto: 'Quantos plantões e quantas horas no mês, e quais caem em domingo ou feriado.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

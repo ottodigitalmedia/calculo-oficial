@@ -47,6 +47,8 @@ import { HORAS_TRABALHADAS } from './horas-trabalhadas'
 import { DAS_SIMPLES_NACIONAL } from './das-simples-nacional'
 import { DAE_DO_EMPREGADOR_DOMESTICO } from './dae-do-empregador-domestico'
 import { ABONO_SALARIAL_PIS } from './abono-salarial'
+import { JUROS_SIMPLES } from './juros-simples'
+import { ESCALA_12X36 } from './escala-12x36'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -182,6 +184,8 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   DAS_SIMPLES_NACIONAL,
   DAE_DO_EMPREGADOR_DOMESTICO,
   ABONO_SALARIAL_PIS,
+  JUROS_SIMPLES,
+  ESCALA_12X36,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

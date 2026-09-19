@@ -19,7 +19,7 @@ export const HORAS_EXTRAS: Guia = {
     'A hora extra não termina nela mesma: ela repercute no repouso semanal, e a hora da madrugada dura menos que sessenta minutos.',
   descricaoSeo:
     'Como se calcula a hora extra a partir do salário mensal, por que ela reflete no descanso semanal remunerado e por que a hora noturna é reduzida.',
-  atualizadoEm: '2026-09-17',
+  atualizadoEm: '2026-09-18',
   calculadoras: [
     'horas-extras',
     'banco-de-horas',
@@ -29,6 +29,7 @@ export const HORAS_EXTRAS: Guia = {
     'desconto-de-faltas',
     'sobreaviso-e-prontidao',
     'horas-trabalhadas',
+    'escala-12x36',
   ],
 
   secoes: [
@@ -177,6 +178,38 @@ export const HORAS_EXTRAS: Guia = {
           slug: 'adicional-noturno',
           texto:
             'A calculadora de adicional noturno aplica a regra urbana ou a rural e mostra a conversão das horas quando ela existe.',
+        },
+      ],
+    },
+
+    {
+      id: 'a-escala-12x36',
+      titulo: 'Na escala 12 × 36, o feriado já está no salário',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A escala de doze horas de trabalho por trinta e seis de descanso é uma exceção ao limite diário, prevista na CLT desde a reforma de 2017, e pode ser combinada por acordo individual escrito ou por instrumento coletivo. O plantão se repete a cada dois dias, e a média semanal fica abaixo do limite constitucional — embora uma semana real tenha três ou quatro plantões.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'escala-12x36-trabalho-minutos',
+          legenda: 'Trabalho seguido de cada plantão, em minutos.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'escala-12x36-descanso-minutos',
+          legenda: 'Descanso ininterrupto depois de cada plantão, em minutos.',
+        },
+        {
+          tipo: 'destaque',
+          texto:
+            'A lei diz que a remuneração mensal da escala já abrange o descanso semanal e os feriados, que se consideram compensados. Plantão em feriado, pela CLT, não é pago à parte — a convenção coletiva da categoria pode prever outra coisa.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'escala-12x36',
+          texto: 'A calculadora da escala marca os plantões do mês a partir de um dia de plantão e aponta os que caem em domingo e em feriado nacional.',
         },
       ],
     },

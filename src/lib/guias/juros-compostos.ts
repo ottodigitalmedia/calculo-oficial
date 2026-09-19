@@ -24,7 +24,7 @@ export const JUROS_COMPOSTOS: Guia = {
   descricaoSeo:
     'A diferença entre juros simples e compostos, por que o prazo pesa mais que a taxa, como os aportes mudam a conta e o erro de unidade que engana.',
   atualizadoEm: '2026-08-06',
-  calculadoras: ['juros-compostos', 'valor-futuro-corrigido', 'reserva-de-emergencia'],
+  calculadoras: ['juros-compostos', 'valor-futuro-corrigido', 'reserva-de-emergencia', 'juros-simples'],
 
   secoes: [
     {
@@ -45,6 +45,16 @@ export const JUROS_COMPOSTOS: Guia = {
           tipo: 'destaque',
           texto:
             'Toda a diferença vem de uma escolha só: se o rendimento fica de fora ou entra na conta do próximo período.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Há um trecho em que o simples ganha: em menos de um período da taxa. Meio mês a uma taxa mensal rende mais no regime simples, porque a conversão proporcional dá uma fração maior que a raiz do regime composto. Em um período os dois empatam, e dali em diante o composto passa à frente.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'juros-simples',
+          texto: 'A calculadora de juros simples mostra, ao lado, o que o mesmo capital daria em juros compostos.',
         },
       ],
     },

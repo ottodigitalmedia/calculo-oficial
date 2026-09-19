@@ -750,6 +750,18 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './abono-salarial'
     ).then((m) => m.calcular),
+  'juros-simples': () =>
+    import(
+      /* webpackChunkName: "calc-juros-simples" */
+      /* webpackExports: ["calcular"] */
+      './juros-simples'
+    ).then((m) => m.calcular),
+  'escala-12x36': () =>
+    import(
+      /* webpackChunkName: "calc-escala-12x36" */
+      /* webpackExports: ["calcular"] */
+      './escala-12x36'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */
