@@ -3231,3 +3231,31 @@ export const LC_150_ART_26: Fonte = {
   url: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm',
   orgao: 'Congresso Nacional',
 }
+
+/**
+ * Escala 12 × 36 — CLT, art. 59-A, incluído pela Lei nº 13.467/2017 (em vigor
+ * em 11/11/2017, art. 6º). Texto conferido no Planalto em 18/09/2026:
+ *
+ * > "Em exceção ao disposto no art. 59 desta Consolidação, é facultado às
+ * > partes, mediante acordo individual escrito, convenção coletiva ou acordo
+ * > coletivo de trabalho, estabelecer horário de trabalho de doze horas
+ * > seguidas por trinta e seis horas ininterruptas de descanso, observados ou
+ * > indenizados os intervalos para repouso e alimentação."
+ * >
+ * > Parágrafo único: "A remuneração mensal pactuada pelo horário previsto no
+ * > caput deste artigo abrange os pagamentos devidos pelo descanso semanal
+ * > remunerado e pelo descanso em feriados, e serão considerados compensados os
+ * > feriados e as prorrogações de trabalho noturno, quando houver, de que tratam
+ * > o art. 70 e o § 5º do art. 73 desta Consolidação."
+ *
+ * A Medida Provisória nº 808/2017 deu outra redação ao caput, exigindo
+ * convenção ou acordo coletivo, e perdeu a vigência em 23/04/2018 sem
+ * conversão; as durações — doze e trinta e seis horas — não mudaram.
+ */
+export const CLT_ART_59A: Fonte = {
+  id: 'clt-art-59-a',
+  norma: 'Consolidação das Leis do Trabalho, art. 59-A, incluído pela Lei nº 13.467, de 13 de julho de 2017',
+  dispositivo: 'Art. 59-A, caput e parágrafo único',
+  url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
+  orgao: 'Presidência da República',
+}
