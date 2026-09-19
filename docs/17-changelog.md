@@ -52,6 +52,16 @@ com o composto; a escala em meses de 28 a 31 dias, os feriados resolvidos na
 data de cada plantão — o 20 de novembro de 2023 fica de fora —, um ano inteiro
 e o bloqueio antes de 11/11/2017.
 
+### Corrigido · CALC-120 exibia a contagem multiplicada por cem
+
+No primeiro deploy do lote, o resultado principal da escala 12 × 36 mostrou
+"1.500" plantões onde a conta dava 15. A página lê a contagem inteira quando
+`casasDecimais` é zero, e a definição a escalava em centésimos. As etapas da
+memória, as horas e a lista de datas estavam certas. **Exposição:** das 21h23 de
+18/09/2026 até o deploy da correção, na mesma noite; a calculadora era nova e
+não tinha link externo. O caso-ouro esperava o valor errado — agora trava a
+leitura inteira.
+
 ---
 
 ## Ciclo de 18/09/2026 — expansão do catálogo, lote 10

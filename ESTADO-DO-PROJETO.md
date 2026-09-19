@@ -4444,6 +4444,14 @@ feriado, cita a regra e diz que a convenção coletiva pode dispor de outra form
 férias e 13º (CALC-011) e as horas entre horários (CALC-115). Contar duas vezes
 a mesma pergunta produziria páginas rasas, que é o que §11 existe para evitar.
 
+**Um defeito meu, pego na conferência em produção.** O resultado principal de
+CALC-120 saiu multiplicado por cem ("1.500" plantões). O caso-ouro da página
+tinha sido escrito lendo o que o código devolvia, e não o que a tela precisa
+mostrar — o erro que `CO-1` existe para impedir, em versão caseira. A correção
+seguiu na mesma noite. **Lição para as próximas contagens:** resultado com
+`casasDecimais: 0` é valor inteiro, sem escala; o caso-ouro da página confere
+também `casasDecimais`.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
