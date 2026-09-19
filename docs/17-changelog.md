@@ -29,6 +29,43 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 19/09/2026 — expansão do catálogo, lote 13
+
+### Adicionado · ajuste anual de 2026 e PGBL
+
+CALC-121 PGBL no imposto de renda; CALC-017 (restituição) e CALC-019
+(simplificado ou completo) passam a calcular o ano-calendário de 2026, com a
+redução do art. 11-A, e a aceitar a contribuição ao PGBL. O guia *Declaração
+anual* ganha duas seções (`00-catalogo` §18.14).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `irpf-tabela-anual` | faixas de 2026 (isento até R$ 29.145,60) | 01/01 a 31/12/2026 | Receita Federal, Tributação de 2026 |
+| `irpf-simplificado-limite-anual` | R$ 17.640,00 | desde 01/01/2026 | Lei nº 9.250/1995, art. 10, X |
+| `irpf-simplificado-percentual-anual` | 20% | desde 01/01/2026 | Lei nº 9.250/1995, art. 10, caput |
+| `irpf-reducao-anual-*` | até R$ 2.694,15 até R$ 60 mil; 8.429,73 − 0,095575 × R até R$ 88,2 mil | desde 01/01/2026 | Lei nº 9.250/1995, art. 11-A (Lei nº 15.270/2025) |
+| `irpf-previdencia-privada-limite-anual` | 12% dos rendimentos tributáveis | desde 01/01/2024 | Lei nº 9.532/1997, art. 11 |
+
+### Corrigido · a pergunta sobre 2026 em CALC-017 dizia o contrário da lei
+
+A pergunta frequente da restituição dizia que a Lei nº 15.270/2025 criou "um
+redutor novo para rendimentos mais altos". A redução é para os rendimentos mais
+BAIXOS — integral até R$ 60 mil, decrescente até R$ 88,2 mil. A conta não era
+afetada, porque 2026 estava bloqueado; o texto estava errado desde que foi
+publicado. Substituído pela explicação da redução.
+
+### Auditoria · casos-ouro
+
+17 casos-ouro novos: a tabela de 2026 com a redução nas duas faixas e nas
+fronteiras (R$ 60.000,00, R$ 60.000,01, R$ 88.200,00 e um centavo acima), a
+redução limitada ao imposto de cada modelo, 2025 sem redução, o limite de 12%,
+a condição do regime e a economia do PGBL — inclusive quando ela é zero. Os
+casos de 2026 que afirmavam o bloqueio passaram a afirmá-lo em 2027.
+
+---
+
 ## Ciclo de 19/09/2026 — expansão do catálogo, lote 12
 
 ### Adicionado · fundos de curto prazo e percentuais em série

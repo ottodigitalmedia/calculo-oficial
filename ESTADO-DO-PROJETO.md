@@ -4471,6 +4471,38 @@ integrarem a base. É a leitura mais coerente, mas é leitura — e a página n�
 declarava. Passou a declarar, com o efeito da leitura contrária. **Pendente:**
 quando a Receita publicar exemplo de aluguel com o redutor, conferir e fechar.
 
+### 7.94 Lote 13 — o ajuste anual de 2026, e o PGBL que faltava desde o lançamento
+
+**CALC-121**, e 2026 em CALC-017 e CALC-019. O catálogo passa de 120 para
+**121**.
+
+**O bloqueio de 2026 foi desfeito do jeito que foi decidido que seria.** Desde
+agosto as duas calculadoras recusavam 2026 com `RN-003`, porque a Lei nº
+15.270/2025 mudou a estrutura da apuração. Agora entram juntas a tabela anual
+publicada pela Receita, o limite novo do simplificado e a redução do art. 11-A,
+e o motor aplica a redução — limitada ao imposto de cada modelo — só quando ela
+vige. 2024 e 2025 ficaram intactos; os casos-ouro deles passaram sem mudança.
+
+**Não há exemplo oficial de ajuste anual com a redução.** Os casos-ouro são a
+letra da tabela e do art. 11-A, e a conferência mais forte é interna: a tabela
+(Receita) e a redução (Planalto) fecham ao centavo em R$ 60.000,00. Duas
+leituras ficam declaradas: a fronteira de R$ 60.000,01, em que a fórmula dá R$
+1,08 a mais que o teto da faixa anterior, segue a letra; e a faixa pelos
+rendimentos brutos, que o texto manda e a Receita aplica na redução mensal.
+**Pendente:** quando a Receita publicar exemplo de ajuste anual de 2026,
+conferir os casos contra ele.
+
+**Um texto errado saiu junto.** A pergunta sobre 2026 da restituição dizia que o
+redutor era "para rendimentos mais altos" — o contrário. Não afetava conta
+nenhuma, mas estava no ar; o changelog registra.
+
+**A pesquisa do lote deixou dois caminhos prontos para o lote 14**: o Tesouro
+Prefixado, com a metodologia oficial do Tesouro Nacional (LTN de R$ 1.000,00
+no vencimento, IOF zero a partir de 30 dias) — falta conferir o Decreto nº
+9.292/2018, que revogou o 3.859/2001 —, e os limites da antecipação do
+saque-aniversário, que mudam em **1º/11/2026** (Resolução CCFGTS nº
+1.130/2025: de cinco para três parcelas).
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
@@ -4486,6 +4518,10 @@ numa data conhecida. Ler os anexos novos, cadastrá-los com vigência a partir d
 
 **Cadastrar o limite do abono salarial do pagamento de 2027** — CALC-118
 bloqueia até ele existir. Ver §7.91.
+
+**Cadastrar a tabela anual do ano-calendário de 2027** quando a Receita a
+publicar — até lá, CALC-017, CALC-019 e CALC-121 oferecem até 2026, que é o
+ano declarado em 2027. Não bloqueia; é manutenção. Ver §7.94.
 
 **Configurar o `HEALTH_TOKEN`** (mantenedor): sem ele, o deploy não prova que o
 contêiner trocou, e o lote 8 precisou de três disparos (§7.90).

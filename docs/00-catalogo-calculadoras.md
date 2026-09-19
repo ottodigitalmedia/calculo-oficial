@@ -53,7 +53,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
 | TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 35 |
-| TRI | Tributos Pessoa Física | Volume sazonal intenso | 14 |
+| TRI | Tributos Pessoa Física | Volume sazonal intenso | 15 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
 | INV | Investimentos e Renda Fixa | Âncora de receita | 8 |
@@ -63,7 +63,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 7 |
 | PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
-| | **Total** | | **120** |
+| | **Total** | | **121** |
 
 ---
 
@@ -148,6 +148,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-098 | Come-cotas do fundo de investimento | 🔸 | A | P | Baixa | v5 |
 | CALC-113 | Imposto na venda de carro e outros bens (Lei 9.250, art. 22) | 🔥 | M | P | Média | v5 |
 | CALC-114 | Imposto de renda sobre aluguel (RIR/2018, arts. 42 e 689) | 🔥 | M | P | Alta | v5 |
+| CALC-121 | PGBL no imposto de renda (Lei 9.532, art. 11; Lei 9.250, art. 11-A) | 🔥 | M | P | Alta | v5 |
 
 > ⚠️ VERIFICAR: a regra vigente de IRRF combina tabela progressiva com mecanismo de redução para faixas intermediárias. Confirmar contra a lei e a orientação da Receita Federal antes de implementar CALC-015 — é o parâmetro de maior impacto e maior risco de erro do projeto inteiro.
 
@@ -380,8 +381,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 44 | — | Expansão de cobertura — lotes 1 a 11 de §18 |
-| | **120** | 11 | |
+| **v5** | 45 | — | Expansão de cobertura — lotes 1 a 13 de §18 |
+| | **121** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -729,7 +730,29 @@ conta publicada e achou um ponto que a página não declarava: o redutor de 2026
 enquadrado pelo aluguel tributável, sem exemplo oficial que o confirme para
 aluguel. A página passou a dizer isso (`ESTADO-DO-PROJETO` §7.93).
 
-### 18.14 Candidatas dos próximos lotes
+### 18.14 Lote 13 — o ajuste anual de 2026 e o PGBL, publicado em 19/09/2026
+
+**CALC-121**, na tabela de §5, e **o ano-calendário de 2026 em CALC-017 e
+CALC-019**, que estavam bloqueados desde o lote de agosto por decisão: a Lei nº
+15.270/2025 revogou o art. 11 da Lei nº 9.250/1995 e criou a redução anual do
+art. 11-A, e 2026 só entrou quando as três peças puderam entrar juntas — a
+tabela anual publicada pela Receita, o limite de R$ 17.640,00 do simplificado
+(art. 10, X) e a redução.
+
+**A faixa da redução é definida pelos rendimentos tributáveis, e não pela
+base.** O texto diz isso três vezes. Consequência que a página do PGBL mostra:
+deduções — o PGBL inclusive — diminuem o imposto da tabela, mas não aumentam a
+redução; até R$ 60 mil o imposto anual já é zero, e o PGBL não economiza nada.
+
+**A tabela e a redução fecham entre si.** Com R$ 60.000,00 de rendimentos, o
+simplificado dá R$ 2.694,15 de imposto — o teto exato da redução. As duas vêm de
+fontes diferentes (Receita e Planalto), e o encaixe ao centavo é a melhor
+conferência disponível enquanto não houver exemplo oficial de ajuste anual.
+
+**O PGBL entrou também em CALC-017 e CALC-019**, que declaravam a ausência dele
+desde o lançamento.
+
+### 18.15 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -738,10 +761,9 @@ valor dela veio de site de terceiro.
 
 | Categoria | Candidatas |
 |---|---|
-| TRI | ganho de capital em bens móveis |
 | PRV | auxílio-reclusão (depende da portaria anual) · fator previdenciário e o valor pelo pedágio de 50% (falta confirmar arredondamento e idade fracionária) |
-| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · antecipação do saque-aniversário |
-| INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
+| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · limites da antecipação do saque-aniversário (Res. CCFGTS nº 1.130/2025: 5 parcelas até 31/10/2026 e 3 depois; R$ 100 a R$ 500 cada; juros abaixo de 1,80% a.m.) |
+| INV | Tesouro Prefixado (LTN: R$ 1.000,00 no vencimento — Decreto nº 3.859/2001, revogado pelo 9.292/2018, a conferir; IOF zero a partir de 30 dias — Decreto nº 6.306/2007) · Tesouro Selic · rendimento pelo CDI |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
 
 > **A conta que a expansão precisa ter à vista.** Somadas, as candidatas
