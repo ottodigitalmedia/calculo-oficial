@@ -13,23 +13,27 @@
  *
  * ## O que este motor NÃO faz, e por quê
  *
- * - **Previdência privada (PGBL).** Dedutível até 12% dos rendimentos
- *   tributáveis (Lei nº 9.532/1997, art. 11), e o limite é um parâmetro legal
- *   que não foi conferido em fonte oficial nesta sessão. Omitir erra para
- *   MENOS restituição, e a tela declara a ausência — o precedente é `RN-027`.
  * - **Rendimentos de tributação exclusiva** (13º, aplicações financeiras).
  *   Não entram no ajuste, por definição.
  * - **Carnê-leão, rendimentos no exterior, ganho de capital.** Cada um tem
  *   apuração própria; CALC-053 já faz o primeiro.
- * - **O redutor do art. 3º-A e a tabela de 2026 em diante.** Ver o cabeçalho de
- *   `params/data/irpf-anual.ts`: a Lei nº 15.270/2025 revogou o art. 11, e 2026
- *   é outra estrutura. O bloqueio de `RN-003` é a resposta certa até que ela
- *   seja estudada.
+ *
+ * ## O que entrou no lote 13 (19/09/2026)
+ *
+ * - **Previdência privada (PGBL)**, dedutível no modelo completo até 12% dos
+ *   rendimentos tributáveis, e só para quem contribui ao regime geral ou
+ *   próprio — ou é aposentado ou pensionista (Lei nº 9.532/1997, art. 11).
+ * - **A redução anual do art. 11-A da Lei nº 9.250/1995**, a partir do
+ *   ano-calendário de 2026. A faixa é definida pelos RENDIMENTOS TRIBUTÁVEIS, e
+ *   não pela base: deduções — o PGBL inclusive — reduzem o imposto da tabela,
+ *   mas não mudam a redução. Ela vale para os dois modelos e é limitada ao
+ *   imposto de cada um (§ 1º). Antes de 2026 os parâmetros não vigem e a redução
+ *   é zero: não havia redução, e isso não é falta de dado.
  *
  * Regras: `RN-011`, `RN-012`, `RN-014`.
  */
 
-import { limitarAoTeto, maximo, minimo, naoNegativo, somar, subtrair, aplicarAliquota } from '../money'
+import { limitarAoTeto, maximo, minimo, naoNegativo, proporcao, somar, subtrair, aplicarAliquota } from '../money'
 import { ConstrutorDeTraco, percentual, reais, type Resultado } from '../traco'
 import { ZERO, basisPoints, centavos, type BasisPoints, type Centavos } from '../types'
 import type { DataISO, VigenciaResolvida } from '../../params/tipos'
@@ -41,6 +45,21 @@ export const PARAMETROS_IRPF_ANUAL = [
   'irpf-instrucao-limite-anual',
   'irpf-simplificado-percentual-anual',
   'irpf-simplificado-limite-anual',
+  'irpf-previdencia-privada-limite-anual',
+] as const
+
+/**
+ * Parâmetros da redução anual do art. 11-A. **Opcionais por construção**: o
+ * mecanismo nasceu no ano-calendário de 2026, e ausência de vigência antes
+ * disso significa "não havia redução" — a mesma decisão do redutor mensal em
+ * `engine/irrf.ts`.
+ */
+export const PARAMETROS_REDUCAO_ANUAL = [
+  'irpf-reducao-anual-limite-integral',
+  'irpf-reducao-anual-valor-maximo',
+  'irpf-reducao-anual-constante',
+  'irpf-reducao-anual-coeficiente',
+  'irpf-reducao-anual-limite-aplicacao',
 ] as const
 
 /** `RN-007`: empate para cima, como no restante do motor. */
@@ -60,6 +79,14 @@ export interface EntradaIrpfAnual {
   readonly pensao: Centavos
   /** Imposto retido na fonte ao longo do ano. */
   readonly impostoRetido: Centavos
+  /** Contribuições à previdência privada (PGBL) no ano. Ausente = zero. */
+  readonly previdenciaPrivada?: Centavos
+  /**
+   * Contribui ao regime geral ou próprio — ou é aposentado ou pensionista? A
+   * dedução do PGBL depende disso (Lei nº 9.532/1997, art. 11, caput e § 5º).
+   * Ausente = sim.
+   */
+  readonly contribuiParaRegime?: boolean
 }
 
 export type ModeloAdotado = 'completo' | 'simplificado'
@@ -80,6 +107,13 @@ export interface SaidaIrpfAnual {
   /** Instrução efetivamente dedutível, já limitada. */
   readonly instrucaoDedutivel: Centavos
   readonly aliquotaFaixa: BasisPoints
+  /** PGBL efetivamente dedutível no completo, já limitado. */
+  readonly previdenciaDedutivel: Centavos
+  /** O limite de 12% dos rendimentos tributáveis, em reais. */
+  readonly limitePrevidencia: Centavos
+  /** Redução do art. 11-A aplicada em cada modelo. Zero antes de 2026. */
+  readonly reducaoCompleto: Centavos
+  readonly reducaoSimplificado: Centavos
 }
 
 function valorMonetario(r: VigenciaResolvida): Centavos | null {
@@ -130,6 +164,7 @@ export function calcularIrpfAnual(
     entrada.medicas,
     entrada.pensao,
     entrada.impostoRetido,
+    entrada.previdenciaPrivada ?? ZERO,
   ]
   if (naoNegativos.some((v) => v < 0)) {
     return { ok: false, motivo: 'entrada_invalida', detalhe: 'Valores não podem ser negativos.' }
@@ -147,8 +182,9 @@ export function calcularIrpfAnual(
   const tetoInstrucao = registro.resolver('irpf-instrucao-limite-anual', dataReferencia)
   const percSimplificado = registro.resolver('irpf-simplificado-percentual-anual', dataReferencia)
   const tetoSimplificado = registro.resolver('irpf-simplificado-limite-anual', dataReferencia)
+  const limitePrev = registro.resolver('irpf-previdencia-privada-limite-anual', dataReferencia)
 
-  for (const r of [tabela, porDependente, tetoInstrucao, percSimplificado, tetoSimplificado]) {
+  for (const r of [tabela, porDependente, tetoInstrucao, percSimplificado, tetoSimplificado, limitePrev]) {
     if (!r.ok) return { ok: false, motivo: 'vigencia_ausente', detalhe: r.detalhe }
   }
   if (
@@ -156,7 +192,8 @@ export function calcularIrpfAnual(
     !porDependente.ok ||
     !tetoInstrucao.ok ||
     !percSimplificado.ok ||
-    !tetoSimplificado.ok
+    !tetoSimplificado.ok ||
+    !limitePrev.ok
   ) {
     return { ok: false, motivo: 'vigencia_ausente', detalhe: 'Parâmetro anual indisponível.' }
   }
@@ -218,12 +255,33 @@ export function calcularIrpfAnual(
     )
   }
 
+  // --- Previdência privada: 12% dos rendimentos, com a condição do regime ----
+  const percPrev = percentualDe(limitePrev.resolvida) ?? basisPoints(0)
+  const limitePrevidencia = aplicarAliquota(entrada.rendimentosTributaveis, percPrev, POLITICA)
+  const pgbl = entrada.previdenciaPrivada ?? ZERO
+  const podeDeduzir = entrada.contribuiParaRegime !== false
+  const previdenciaDedutivel = podeDeduzir ? limitarAoTeto(pgbl, limitePrevidencia) : ZERO
+  if (pgbl > 0) {
+    traco.passoComParametro(
+      'Previdência privada dedutível',
+      !podeDeduzir
+        ? `${reais(pgbl)} — não dedutível sem contribuição ao regime geral ou próprio`
+        : previdenciaDedutivel < pgbl
+          ? `${reais(pgbl)} limitado a ${percentual(percPrev)} de ${reais(entrada.rendimentosTributaveis)}`
+          : `${reais(pgbl)}, dentro do limite de ${percentual(percPrev)} (${reais(limitePrevidencia)})`,
+      previdenciaDedutivel,
+      limitePrev.resolvida,
+      'Só no modelo completo. A dedução exige contribuição também ao regime geral ou próprio, salvo aposentados e pensionistas.',
+    )
+  }
+
   const deducoesCompleto = somar(
     entrada.inss,
     totalDependentes,
     instrucaoDedutivel,
     entrada.medicas,
     entrada.pensao,
+    previdenciaDedutivel,
   )
   const baseCompleto = naoNegativo(subtrair(entrada.rendimentosTributaveis, deducoesCompleto))
   traco.passo(
@@ -277,16 +335,36 @@ export function calcularIrpfAnual(
     tabela.resolvida,
   )
 
+  // --- Redução anual do art. 11-A, quando vige -----------------------------
+  const reducaoBruta = reducaoAnual(entrada.rendimentosTributaveis, dataReferencia, registro, traco)
+  // § 1º: limitada ao imposto da tabela — de CADA modelo.
+  const reducaoCompleto = minimo(reducaoBruta, porCompleto.imposto)
+  const reducaoSimplificado = minimo(reducaoBruta, porSimplificado.imposto)
+  const impostoCompleto = subtrair(porCompleto.imposto, reducaoCompleto)
+  const impostoSimplificado = subtrair(porSimplificado.imposto, reducaoSimplificado)
+  if (reducaoBruta > 0) {
+    traco.passo(
+      'Imposto pelo completo, depois da redução',
+      `${reais(porCompleto.imposto)} − ${reais(reducaoCompleto)}`,
+      impostoCompleto,
+    )
+    traco.passo(
+      'Imposto pelo simplificado, depois da redução',
+      `${reais(porSimplificado.imposto)} − ${reais(reducaoSimplificado)}`,
+      impostoSimplificado,
+    )
+  }
+
   // --- O modelo adotado ---------------------------------------------------
   // Empate vai para o completo: `<` e não `<=`. Sem diferença no imposto, a
   // declaração com deduções comprovadas é a que descreve os fatos.
-  const usaSimplificado = porSimplificado.imposto < porCompleto.imposto
+  const usaSimplificado = impostoSimplificado < impostoCompleto
   const modeloAdotado: ModeloAdotado = usaSimplificado ? 'simplificado' : 'completo'
   const escolhido = usaSimplificado ? porSimplificado : porCompleto
-  const impostoDevido = escolhido.imposto
+  const impostoDevido = usaSimplificado ? impostoSimplificado : impostoCompleto
   const economiaDoModelo = subtrair(
-    maximo(porCompleto.imposto, porSimplificado.imposto),
-    minimo(porCompleto.imposto, porSimplificado.imposto),
+    maximo(impostoCompleto, impostoSimplificado),
+    minimo(impostoCompleto, impostoSimplificado),
   )
 
   traco.passo(
@@ -313,8 +391,8 @@ export function calcularIrpfAnual(
       saldo,
       modeloAdotado,
       impostoDevido,
-      impostoCompleto: porCompleto.imposto,
-      impostoSimplificado: porSimplificado.imposto,
+      impostoCompleto,
+      impostoSimplificado,
       economiaDoModelo,
       baseCompleto,
       baseSimplificado,
@@ -322,7 +400,152 @@ export function calcularIrpfAnual(
       descontoSimplificado,
       instrucaoDedutivel,
       aliquotaFaixa: escolhido.aliquota,
+      previdenciaDedutivel,
+      limitePrevidencia,
+      reducaoCompleto,
+      reducaoSimplificado,
     },
     traco: traco.construir(),
+  }
+}
+
+/**
+ * Redução do art. 11-A, antes do limite do § 1º. Zero quando não vige.
+ *
+ *   até R$ 60.000,00          até R$ 2.694,15 — teto fixo
+ *   R$ 60.000,01 a 88.200,00  8.429,73 − (0,095575 × rendimentos tributáveis)
+ *   acima de R$ 88.200,00     nenhuma
+ *
+ * **Segue a letra da tabela, inclusive na fronteira.** Em R$ 60.000,01 a fórmula
+ * dá R$ 2.695,23, um real acima do teto da primeira faixa. A lei é assim, e a
+ * calculadora não a "corrige".
+ */
+function reducaoAnual(
+  rendimentos: Centavos,
+  dataReferencia: DataISO,
+  registro: Registro,
+  traco: ConstrutorDeTraco,
+): Centavos {
+  const resolvidos = PARAMETROS_REDUCAO_ANUAL.map((id) => registro.resolver(id, dataReferencia))
+  if (resolvidos.some((r) => !r.ok)) return ZERO
+  const [limiteIntegral, valorMaximo, constante, coeficiente, limiteAplicacao] = resolvidos.map((r) =>
+    r.ok ? r.resolvida : null,
+  )
+  if (!limiteIntegral || !valorMaximo || !constante || !coeficiente || !limiteAplicacao) return ZERO
+
+  const teto = valorMonetario(limiteIntegral) ?? ZERO
+  const maximoReducao = valorMonetario(valorMaximo) ?? ZERO
+  const limite = valorMonetario(limiteAplicacao) ?? ZERO
+
+  if (rendimentos > limite) {
+    traco.passoComParametro(
+      'Redução anual do imposto',
+      `Rendimentos de ${reais(rendimentos)}, acima de ${reais(limite)} — sem redução`,
+      ZERO,
+      limiteAplicacao,
+    )
+    return ZERO
+  }
+  if (rendimentos <= teto) {
+    traco.passoComParametro(
+      'Redução anual do imposto',
+      `Rendimentos de ${reais(rendimentos)}, até ${reais(teto)} — redução de até ${reais(maximoReducao)}`,
+      maximoReducao,
+      valorMaximo,
+      'A faixa da redução é definida pelos rendimentos tributáveis, e não pela base de cálculo (Lei nº 9.250/1995, art. 11-A).',
+    )
+    return maximoReducao
+  }
+  const c = valorMonetario(constante) ?? ZERO
+  const v = coeficiente.vigencia.valor
+  if (v.tipo !== 'fracao') return ZERO
+  // ADR-007: coeficiente em fração exata, sem ponto flutuante.
+  const produto = proporcao(rendimentos, v.numerador, v.denominador, POLITICA)
+  const bruta = naoNegativo(subtrair(c, produto))
+  traco.passoComParametro(
+    'Redução anual do imposto',
+    `${reais(c)} − (${v.numerador}/${v.denominador} × ${reais(rendimentos)}) = ${reais(bruta)}`,
+    bruta,
+    coeficiente,
+    'A faixa da redução é definida pelos rendimentos tributáveis, e não pela base de cálculo (Lei nº 9.250/1995, art. 11-A).',
+  )
+  return bruta
+}
+
+// ---------------------------------------------------------------------------
+// CALC-121 — Quanto o PGBL economiza de imposto
+// ---------------------------------------------------------------------------
+
+export interface SaidaEconomiaPgbl {
+  /** Imposto devido sem e com a contribuição, cada um no modelo mais vantajoso. */
+  readonly impostoSem: Centavos
+  readonly impostoCom: Centavos
+  readonly economia: Centavos
+  readonly modeloSem: ModeloAdotado
+  readonly modeloCom: ModeloAdotado
+  /** Contribuição considerada — a informada, ou o limite quando ela vem zerada. */
+  readonly contribuicao: Centavos
+  readonly dedutivel: Centavos
+  readonly limite: Centavos
+}
+
+/**
+ * A apuração anual rodada duas vezes: sem e com a contribuição.
+ *
+ * **Por que duas apurações, e não "alíquota × contribuição".** O PGBL só
+ * deduz no modelo completo; a redução de 2026 depende dos rendimentos e é
+ * limitada ao imposto; e a contribuição pode fazer o completo passar à frente
+ * do simplificado. A economia verdadeira é a diferença entre os dois impostos
+ * devidos, cada um no melhor modelo — e é isso que a conta entrega.
+ *
+ * Contribuição zerada simula o limite de 12%, que é a pergunta de quem ainda vai
+ * aplicar: "quanto posso colocar, e quanto isso economiza?".
+ */
+export function calcularEconomiaPgbl(
+  entrada: Omit<EntradaIrpfAnual, 'impostoRetido'>,
+  dataReferencia: DataISO,
+  registro: Registro,
+): Resultado<SaidaEconomiaPgbl> {
+  const base: EntradaIrpfAnual = { ...entrada, impostoRetido: ZERO, previdenciaPrivada: ZERO }
+  const sem = calcularIrpfAnual(base, dataReferencia, registro)
+  if (!sem.ok) return sem
+
+  const informada = entrada.previdenciaPrivada ?? ZERO
+  const contribuicao = informada > 0 ? informada : sem.valores.limitePrevidencia
+  const com = calcularIrpfAnual(
+    { ...base, previdenciaPrivada: contribuicao, contribuiParaRegime: entrada.contribuiParaRegime !== false },
+    dataReferencia,
+    registro,
+  )
+  if (!com.ok) return com
+
+  const economia = naoNegativo(subtrair(sem.valores.impostoDevido, com.valores.impostoDevido))
+  const etapas = [
+    ...com.traco.etapas,
+    {
+      rotulo: 'Sem o PGBL, o imposto seria',
+      formula: `modelo ${sem.valores.modeloAdotado}`,
+      resultado: sem.valores.impostoDevido,
+    },
+    {
+      rotulo: 'Economia de imposto com o PGBL',
+      formula: `${reais(sem.valores.impostoDevido)} − ${reais(com.valores.impostoDevido)}`,
+      resultado: economia,
+    },
+  ]
+
+  return {
+    ok: true,
+    valores: {
+      impostoSem: sem.valores.impostoDevido,
+      impostoCom: com.valores.impostoDevido,
+      economia,
+      modeloSem: sem.valores.modeloAdotado,
+      modeloCom: com.valores.modeloAdotado,
+      contribuicao,
+      dedutivel: com.valores.previdenciaDedutivel,
+      limite: com.valores.limitePrevidencia,
+    },
+    traco: { etapas, dataReferencia, vigenciasAplicadas: com.traco.vigenciasAplicadas },
   }
 }

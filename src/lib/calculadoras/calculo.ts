@@ -762,6 +762,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './escala-12x36'
     ).then((m) => m.calcular),
+  'pgbl-imposto-de-renda': () =>
+    import(
+      /* webpackChunkName: "calc-pgbl-imposto-de-renda" */
+      /* webpackExports: ["calcular"] */
+      './pgbl'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

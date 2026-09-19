@@ -227,15 +227,15 @@ describe('ano-calendário 2024', () => {
 // O recorte de vigência — RN-003
 // ---------------------------------------------------------------------------
 
-describe('fora de 2024–2025 o cálculo é bloqueado', () => {
+describe('fora de 2024–2026 o cálculo é bloqueado', () => {
   /*
-   * A Lei nº 15.270/2025 revogou o art. 11 da Lei nº 9.250/1995 e mudou a
-   * estrutura da apuração a partir de 2026. Enquanto ela não for estudada,
-   * bloquear é a resposta certa — extrapolar a tabela de 2025 produziria
-   * número errado com aparência de exato.
+   * A tabela anual vale para o ano-calendário dela. 2026 entrou no lote 13, com
+   * a redução do art. 11-A (ver `irpf-anual-2026.test.ts`); 2027 ainda não tem
+   * tabela publicada, e extrapolar a de 2026 produziria número errado com
+   * aparência de exato.
    */
   it.each([
-    ['2026-06-15', '2026, quando a estrutura mudou'],
+    ['2027-06-15', '2027, sem tabela anual publicada'],
     ['2023-06-15', '2023, anterior à cobertura'],
   ])('%s é recusado — %s', (data) => {
     const r = calcularIrpfAnual(

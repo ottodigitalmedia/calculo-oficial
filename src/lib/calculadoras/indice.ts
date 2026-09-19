@@ -367,6 +367,12 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quantos plantões e quantas horas no mês, e quais caem em domingo ou feriado.',
   },
   {
+    slug: 'pgbl-imposto-de-renda',
+    nome: 'PGBL no Imposto de Renda',
+    linhaDeContexto:
+      'Quanto a contribuição ao PGBL reduz o imposto da declaração — e quando não reduz nada.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

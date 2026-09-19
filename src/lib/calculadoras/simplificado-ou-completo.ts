@@ -15,7 +15,11 @@
  * duas telas sobre uma conta nunca divergem entre si.
  */
 
-import { calcularIrpfAnual, PARAMETROS_IRPF_ANUAL } from '../engine/calculadoras/irpf-anual'
+import {
+  calcularIrpfAnual,
+  PARAMETROS_IRPF_ANUAL,
+  PARAMETROS_REDUCAO_ANUAL,
+} from '../engine/calculadoras/irpf-anual'
 import { centavos } from '../engine/types'
 import { formatarReal } from '../format/moeda'
 import { IRPF_ANUAL } from '../params/data/irpf-anual'
@@ -43,6 +47,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       // A retenção não participa da comparação: ela desloca o saldo dos dois
       // modelos igualmente, e por isso não muda qual deles compensa.
       impostoRetido: centavos(0),
+      previdenciaPrivada: centavos(numero(valores, 'previdencia')),
     },
     dataReferencia,
     registro,
@@ -92,9 +97,12 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
           'antes de escolher o modelo na declaração.',
         'O desconto simplificado tem teto. A partir de certo rendimento ele para de crescer, e o ' +
           'modelo completo tende a vencer para quem tem despesas dedutíveis relevantes.',
-        'A previdência privada (PGBL) não entra nesta conta, e ela pesa a favor do modelo ' +
-          'completo. Quem tem PGBL deve considerar que a vantagem do completo é maior que a ' +
-          'mostrada aqui.',
+        'A previdência privada (PGBL) é dedutível no modelo completo até 12% dos rendimentos tributáveis, e ' +
+          'só para quem também contribui ao INSS ou a regime próprio — ou é aposentado ou pensionista. A ' +
+          'calculadora supõe que você cumpre essa condição.',
+        'A partir do ano-calendário de 2026, o imposto anual tem a redução do art. 11-A da Lei nº ' +
+          '9.250/1995: integral para rendimentos tributáveis até R$ 60 mil, decrescente até R$ 88,2 mil. A ' +
+          'faixa é definida pelos rendimentos, e não pela base — as deduções não a mudam.',
       ],
     },
   }
@@ -163,14 +171,25 @@ export const SIMPLIFICADO_OU_COMPLETO: DefinicaoCalculadora = {
       maximo: 100_000_000_000,
       ajuda: 'Somente a fixada em decisão judicial ou acordo homologado. Sem teto.',
     },
+    {
+      id: 'previdencia',
+      rotulo: 'Previdência privada (PGBL) no ano',
+      tipo: 'monetario',
+      padrao: 0,
+      minimo: 0,
+      maximo: 100_000_000_000,
+      ajuda:
+        'Contribuições ao PGBL. Dedutíveis no modelo completo até 12% dos rendimentos, para quem também contribui ao INSS ou regime próprio — ou é aposentado. VGBL não entra.',
+    },
   ],
 
   parametrosRequeridos: [...PARAMETROS_IRPF_ANUAL],
+  parametrosOpcionais: [...PARAMETROS_REDUCAO_ANUAL],
   rotuloResultado: 'Quanto o melhor modelo economiza',
   calcular,
 
   avisoAdicional:
-    'A comparação considera apenas as deduções listadas nos campos. Previdência privada, livro-caixa e outras deduções específicas não entram, e todas elas pesam a favor do modelo completo.',
+    'A comparação considera apenas as deduções listadas nos campos. Livro-caixa e outras deduções específicas não entram, e todas elas pesam a favor do modelo completo.',
 
   faq: [
     {
@@ -194,9 +213,9 @@ export const SIMPLIFICADO_OU_COMPLETO: DefinicaoCalculadora = {
         'O completo. Sem diferença no imposto, a declaração que lança as despesas comprovadas é a que descreve os fatos — e é a que deixa rastro documental caso a declaração seja questionada depois.',
     },
     {
-      pergunta: 'Por que só 2024 e 2025 aparecem no seletor de período?',
+      pergunta: 'A redução de 2026 muda qual modelo compensa?',
       resposta:
-        'Porque a Lei nº 15.270/2025 revogou o artigo da tabela anual e criou um redutor novo a partir de 2026. A estrutura da apuração mudou, e não apenas os valores. Enquanto ela não for estudada e cadastrada com a norma correspondente, oferecer 2026 seria calcular por uma regra revogada.',
+        'Pode mudar a distância entre eles. A redução do art. 11-A é a mesma nos dois modelos, porque depende dos rendimentos e não das deduções, mas é limitada ao imposto de cada um. Quando ela zera o imposto de um modelo e não do outro, a vantagem cresce; quando zera os dois, os modelos empatam em zero.',
     },
   ],
 

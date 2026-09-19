@@ -15,7 +15,11 @@
  * grande, não numa legenda. O padrão é o de CALC-034.
  */
 
-import { calcularIrpfAnual, PARAMETROS_IRPF_ANUAL } from '../engine/calculadoras/irpf-anual'
+import {
+  calcularIrpfAnual,
+  PARAMETROS_IRPF_ANUAL,
+  PARAMETROS_REDUCAO_ANUAL,
+} from '../engine/calculadoras/irpf-anual'
 import { centavos } from '../engine/types'
 import { formatarReal } from '../format/moeda'
 import { IRPF_ANUAL } from '../params/data/irpf-anual'
@@ -44,6 +48,7 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       medicas: centavos(numero(valores, 'medicas')),
       pensao: centavos(numero(valores, 'pensao')),
       impostoRetido: retido,
+      previdenciaPrivada: centavos(numero(valores, 'previdencia')),
     },
     dataReferencia,
     registro,
@@ -68,6 +73,14 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       v.modeloAdotado === 'simplificado' ? v.baseSimplificado : v.baseCompleto,
     ) },
   ]
+
+  const reducao = v.modeloAdotado === 'simplificado' ? v.reducaoSimplificado : v.reducaoCompleto
+  if (reducao > 0) {
+    destaques.push({ rotulo: 'Redução anual de 2026 aplicada', valor: formatarReal(reducao) })
+  }
+  if (v.previdenciaDedutivel > 0) {
+    destaques.push({ rotulo: 'PGBL dedutível no completo', valor: formatarReal(v.previdenciaDedutivel) })
+  }
 
   if (v.economiaDoModelo > 0) {
     destaques.push({
@@ -94,9 +107,12 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         'Só entram aqui os rendimentos TRIBUTÁVEIS. Décimo terceiro, aplicações financeiras e ' +
           'demais rendimentos de tributação exclusiva têm imposto definitivo e não voltam ao ' +
           'ajuste — somá-los aqui distorce o resultado para pior.',
-        'A previdência privada (PGBL) NÃO entra nesta conta. Ela é dedutível dentro de um limite ' +
-          'legal que ainda não foi conferido em fonte oficial para este projeto, e preferimos ' +
-          'omitir a estimar. Quem tem PGBL tende a pagar menos que o calculado aqui.',
+        'A previdência privada (PGBL) é dedutível no modelo completo até 12% dos rendimentos tributáveis, e ' +
+          'só para quem também contribui ao INSS ou a regime próprio — ou é aposentado ou pensionista. A ' +
+          'calculadora supõe que você cumpre essa condição.',
+        'A partir do ano-calendário de 2026, o imposto anual tem a redução do art. 11-A da Lei nº ' +
+          '9.250/1995: integral para rendimentos tributáveis até R$ 60 mil, decrescente até R$ 88,2 mil. A ' +
+          'faixa é definida pelos rendimentos, e não pela base — as deduções não a mudam.',
         'O teto da despesa com instrução é por pessoa. A calculadora recebe a soma e aplica o ' +
           'limite multiplicado pelo número de pessoas — o que coincide com a lei quando ninguém ' +
           'isoladamente ultrapassou o próprio teto. A memória de cálculo mostra o limite aplicado.',
@@ -178,14 +194,26 @@ export const RESTITUICAO_IRPF: DefinicaoCalculadora = {
       maximo: 100_000_000_000,
       ajuda: 'Somente a fixada em decisão judicial ou acordo homologado. Sem teto.',
     },
+    {
+      id: 'previdencia',
+      rotulo: 'Previdência privada (PGBL) no ano',
+      tipo: 'monetario',
+      padrao: 0,
+      minimo: 0,
+      maximo: 100_000_000_000,
+      ajuda:
+        'Contribuições ao PGBL. Dedutíveis no modelo completo até 12% dos rendimentos, para quem também contribui ao INSS ou regime próprio — ou é aposentado. VGBL não entra.',
+    },
   ],
 
   parametrosRequeridos: [...PARAMETROS_IRPF_ANUAL],
+  // A redução do art. 11-A nasceu em 2026: antes disso, não havia — ver o motor.
+  parametrosOpcionais: [...PARAMETROS_REDUCAO_ANUAL],
   rotuloResultado: 'Saldo do ajuste anual',
   calcular,
 
   avisoAdicional:
-    'Esta é uma estimativa do ajuste anual, e não substitui o programa da Receita. Ela não trata previdência privada, rendimentos de tributação exclusiva, ganho de capital nem rendimentos recebidos do exterior.',
+    'Esta é uma estimativa do ajuste anual, e não substitui o programa da Receita. Ela não trata rendimentos de tributação exclusiva, ganho de capital, livro-caixa nem rendimentos recebidos do exterior.',
 
   faq: [
     {
@@ -204,9 +232,9 @@ export const RESTITUICAO_IRPF: DefinicaoCalculadora = {
         'Não. O art. 8º, II, "a", da Lei nº 9.250/1995 enumera o que é dedutível e não fixa teto algum, ao contrário da instrução, que tem valor máximo por pessoa. A contrapartida é a comprovação: a despesa precisa ser sua ou de dependente declarado, com recibo identificando quem prestou e quem pagou.',
     },
     {
-      pergunta: 'Por que a calculadora não aceita o ano-calendário de 2026?',
+      pergunta: 'O que muda no ano-calendário de 2026?',
       resposta:
-        'Porque a Lei nº 15.270/2025 revogou o artigo que fixava a tabela anual e criou um redutor novo para rendimentos mais altos, com produção de efeitos a partir de 2026. A apuração deixou de ser a mesma conta com outros números. Aplicar a tabela de 2025 a 2026 produziria um valor errado com aparência de exato — preferimos bloquear e dizer por quê.',
+        'A Lei nº 15.270/2025 criou uma redução do imposto anual (art. 11-A da Lei nº 9.250/1995): integral, de até R$ 2.694,15, para quem tem rendimentos tributáveis de até R$ 60 mil no ano, e decrescente até zerar em R$ 88,2 mil. O limite do desconto simplificado também subiu. A calculadora aplica a tabela anual de 2026 publicada pela Receita e a redução, que é limitada ao imposto calculado. A declaração desse ano é entregue em 2027.',
     },
     {
       pergunta: 'A restituição sai no valor calculado aqui?',

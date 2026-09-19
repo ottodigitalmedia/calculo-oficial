@@ -50,7 +50,8 @@ describe('ano corrente no seletor de período', () => {
   })
 
   it('cobertura fechada não ganha ano (RN-003)', () => {
-    expect(formularioDe(porSlug('restituicao-irpf')!, registro, 2026).anosDisponiveis[0]).toBe(2025)
+    // A tabela anual de 2026 fecha em 31/12/2026: em 2027, o seletor não oferece 2027.
+    expect(formularioDe(porSlug('restituicao-irpf')!, registro, 2027).anosDisponiveis[0]).toBe(2026)
   })
 
   it('se toda a cobertura é futura, a lista fica como está', () => {

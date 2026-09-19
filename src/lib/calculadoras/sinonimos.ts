@@ -103,6 +103,7 @@ export const SINONIMOS: Readonly<Record<string, readonly string[]>> = {
   irrf: ['leao', 'retencao', 'imposto na fonte'],
   'ir-renda-fixa': ['tabela regressiva', 'imposto no investimento', 'come cotas'],
   'restituicao-irpf': ['malha fina', 'imposto a pagar', 'ajuste anual'],
+  'pgbl-imposto-de-renda': ['previdencia privada', 'vgbl', 'deducao de 12', 'plano de previdencia'],
   'simplificado-ou-completo': ['desconto simplificado', 'qual modelo declarar', 'deducao legal'],
   'imposto-sobre-criptoativos': ['bitcoin', 'criptomoeda', 'exchange'],
   'carne-leao': ['recibo', 'autonomo imposto', 'aluguel recebido imposto'],

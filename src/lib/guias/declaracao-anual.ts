@@ -18,8 +18,8 @@ export const DECLARACAO_ANUAL: Guia = {
     'A restituição não é um prêmio: é a devolução do que foi retido a mais durante o ano.',
   descricaoSeo:
     'O ajuste anual do Imposto de Renda: por que dá restituição ou imposto a pagar, a diferença entre o modelo simplificado e o completo, e o que é dedutível.',
-  atualizadoEm: '2026-08-07',
-  calculadoras: ['restituicao-irpf', 'simplificado-ou-completo', 'carne-leao'],
+  atualizadoEm: '2026-09-19',
+  calculadoras: ['restituicao-irpf', 'simplificado-ou-completo', 'carne-leao', 'pgbl-imposto-de-renda'],
 
   secoes: [
     {
@@ -146,6 +146,65 @@ export const DECLARACAO_ANUAL: Guia = {
           tipo: 'paragrafo',
           texto:
             'Declarar um dependente traz a dedução, mas obriga a somar os rendimentos dele à sua declaração. Quando o dependente tem renda própria relevante, o resultado pode ser pior — vale testar as duas formas antes de decidir.',
+        },
+      ],
+    },
+
+    {
+      id: 'a-reducao-de-2026',
+      titulo: 'A partir de 2026, uma redução no imposto anual',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A partir do ano-calendário de 2026 — a declaração entregue em 2027 —, o imposto anual tem uma redução para quem ganha menos. Ela é integral até um limite de rendimentos tributáveis, cai em linha reta numa faixa de transição e some acima dela. A redução nunca passa do próprio imposto: ela zera, mas não devolve.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'irpf-reducao-anual-limite-integral',
+          legenda: 'Rendimentos tributáveis no ano até os quais a redução é integral.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'irpf-reducao-anual-valor-maximo',
+          legenda: 'Redução máxima do imposto anual.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'irpf-reducao-anual-limite-aplicacao',
+          legenda: 'Rendimentos tributáveis no ano acima dos quais não há redução.',
+        },
+        {
+          tipo: 'destaque',
+          texto:
+            'A faixa da redução é definida pelos rendimentos, e não pela base de cálculo. Deduções diminuem o imposto da tabela, mas não aumentam a redução.',
+        },
+      ],
+    },
+
+    {
+      id: 'o-pgbl',
+      titulo: 'O PGBL deduz — mas só no completo, e nem sempre compensa',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A contribuição à previdência privada do tipo PGBL é dedutível no modelo completo, até um percentual dos rendimentos tributáveis, para quem também contribui ao INSS ou a regime próprio — ou é aposentado. O VGBL não é dedutível.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'irpf-previdencia-privada-limite-anual',
+          legenda: 'Limite da dedução do PGBL, como percentual dos rendimentos tributáveis.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'A dedução não é isenção: o imposto fica para o resgate, sobre o valor acumulado inteiro. E a economia de hoje depende do modelo e da faixa — quem continua melhor no simplificado, ou tem o imposto zerado pela redução de 2026, não economiza nada.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'pgbl-imposto-de-renda',
+          texto: 'A calculadora do PGBL apura a declaração com e sem a contribuição e mostra a diferença real.',
         },
       ],
     },
