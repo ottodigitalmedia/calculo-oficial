@@ -20,8 +20,6 @@ import { texto, type DefinicaoCalculadora, type Destaque, type FuncaoCalculo } f
 const registro = construirRegistro(JORNADA, FERIADOS)
 
 const MINUTOS_NA_HORA = 60
-/** Escala das grandezas em unidade `'numero'` — ver `Unidade` em `traco.ts`. */
-const CENTESIMOS_POR_UNIDADE = 100
 /** Até um mês e pouco, a lista de datas cabe no resultado; acima disso, só a contagem. */
 const LISTA_ATE = 31
 
@@ -63,7 +61,8 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
     ok: true,
     traco: r.traco,
     valores: {
-      principal: centavos(v.plantoes.length * CENTESIMOS_POR_UNIDADE),
+      // Contagem sem escala, como CALC-072: com `casasDecimais: 0` o valor é lido inteiro.
+      principal: centavos(v.plantoes.length),
       unidade: 'numero',
       casasDecimais: 0,
       detalhamento: [],

@@ -184,9 +184,11 @@ describe('CALC-120 · escala 12 × 36', () => {
     expect(r2.ok).toBe(false)
   })
 
-  it('a página devolve a quantidade de plantões', () => {
+  /** Contagem lida inteira (`casasDecimais: 0`), como CALC-072 — a página exibiu "1.500" no primeiro deploy. */
+  it('a página devolve a quantidade de plantões, sem escala', () => {
     const r = porSlug('escala-12x36')!.calcular({ plantao: '2026-06-01', inicio: '2026-06-01', fim: '2026-06-30' }, REF)
     if (!r.ok) throw new Error('esperado sucesso')
-    expect(r.valores.principal).toBe(1_500)
+    expect(r.valores.casasDecimais).toBe(0)
+    expect(r.valores.principal).toBe(15)
   })
 })
