@@ -2330,9 +2330,14 @@ export const CTB_ART_284: Fonte = {
  * acrescer do que já foi tributado antes. É por isso que o come-cotas não
  * tributa duas vezes o mesmo rendimento.
  *
- * Os fundos de prazo médio curto (art. 6º da Lei nº 11.053/2004) têm alíquotas
- * próprias — 20% na periódica e tabela de 22,5% e 20% no resgate — e ficam fora
- * desta calculadora, que declara isso.
+ * > § 1º, II: "nos fundos de que trata o art. 6º da Lei nº 11.053, de 29 de
+ * > dezembro de 2004: a) 20% (vinte por cento), na data da tributação
+ * > periódica [...]; e b) o percentual complementar necessário para totalizar
+ * > a alíquota prevista nos incisos I e II do § 2º do art. 6º da Lei nº
+ * > 11.053 [...], na data da [...] do resgate de cotas".
+ *
+ * Texto conferido no Planalto em 19/09/2026. A remissão à Medida Provisória nº
+ * 1.303/2025 aparece com "vigência encerrada" — a redação vale como está.
  */
 export const LEI_14754_ART_17: Fonte = {
   id: 'lei-14754-2023-art-17',
@@ -3258,4 +3263,29 @@ export const CLT_ART_59A: Fonte = {
   dispositivo: 'Art. 59-A, caput e parágrafo único',
   url: 'https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
   orgao: 'Presidência da República',
+}
+
+/**
+ * Fundos de curto prazo — Lei nº 11.053/2004, art. 6º (DOU de 30/12/2004;
+ * efeitos a partir de 1º/01/2005, art. 8º). Texto conferido no Planalto em
+ * 19/09/2026:
+ *
+ * > Caput: "Os fundos de investimento cuja carteira de títulos tenha prazo médio
+ * > igual ou inferior a 365 (trezentos e sessenta e cinco) dias sujeitam-se à
+ * > incidência do imposto de renda na fonte, por ocasião do resgate, na forma
+ * > do disposto neste artigo."
+ * > § 2º: "[...] sujeitam-se ao imposto sobre a renda na fonte, por ocasião do
+ * > resgate, às seguintes alíquotas: I - 22,5% (vinte e dois inteiros e cinco
+ * > décimos por cento), em aplicações com prazo de até 6 (seis) meses; II - 20%
+ * > (vinte por cento), em aplicações com prazo acima de 6 (seis) meses."
+ *
+ * **O prazo da lei é em meses, e a calculadora pergunta em meses.** Converter
+ * seis meses em um número de dias exigiria uma convenção que o artigo não dá.
+ */
+export const LEI_11053_ART_6: Fonte = {
+  id: 'lei-11053-2004-art-6',
+  norma: 'Lei nº 11.053, de 29 de dezembro de 2004',
+  dispositivo: 'Art. 6º, caput e § 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11053.htm',
+  orgao: 'Congresso Nacional',
 }
