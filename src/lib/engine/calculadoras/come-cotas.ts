@@ -13,6 +13,13 @@
  *
  * O prazo decide a alíquota final pela tabela da Lei nº 11.033/2004, a mesma que
  * CALC-018 usa: o cadastro é um só (`renda-fixa.ts`).
+ *
+ * **Fundos de curto prazo têm regra própria** — carteira com prazo médio de até
+ * 365 dias (Lei nº 11.053/2004, art. 6º): come-cotas de 20% (Lei nº
+ * 14.754/2023, art. 17, § 1º, II) e, no resgate, 22,5% em aplicações de até seis
+ * meses e 20% acima disso. **A lei conta o prazo em MESES**, e a entrada é a
+ * resposta a "a aplicação tem mais de seis meses?" — converter em dias pediria
+ * uma convenção que o art. 6º não dá.
  */
 
 import { aplicarAliquota, naoNegativo, subtrair } from '../money'
@@ -37,6 +44,9 @@ function inteiroDe(registro: Registro, id: string, data: DataISO): Resolvido<num
   return { valor: r.resolvida.vigencia.valor.valor, resolvida: r.resolvida }
 }
 
+/** Regra geral (longo prazo) ou fundo de curto prazo do art. 6º da Lei nº 11.053/2004. */
+export type TipoDeFundo = 'longo' | 'curto'
+
 export interface EntradaComeCotas {
   /** Rendimento acumulado da aplicação, desde o aporte até hoje. */
   readonly rendimentoAcumulado: Centavos
@@ -44,8 +54,12 @@ export interface EntradaComeCotas {
   readonly rendimentoJaTributado: Centavos
   /** Imposto já retido nos come-cotas anteriores. */
   readonly impostoJaRetido: Centavos
-  /** Dias decorridos desde a aplicação. Decide a alíquota final da tabela. */
+  /** Dias decorridos desde a aplicação. Decide a alíquota final da tabela — só na regra geral. */
   readonly diasDesdeAplicacao: number
+  /** Ausente = regra geral. */
+  readonly fundo?: TipoDeFundo
+  /** Só no curto prazo: a aplicação tem mais de seis meses (art. 6º, § 2º, II)? */
+  readonly acimaDeSeisMeses?: boolean
 }
 
 export interface SaidaComeCotas {
@@ -83,6 +97,9 @@ export function calcularComeCotas(
       detalhe: 'O rendimento já tributado não pode ser maior que o rendimento acumulado.',
     }
   }
+  const curto = entrada.fundo === 'curto'
+  if (curto) return calcularCurtoPrazo(entrada, dataReferencia, registro)
+
   if (
     !Number.isInteger(entrada.diasDesdeAplicacao) ||
     entrada.diasDesdeAplicacao <= 0 ||
@@ -167,5 +184,82 @@ export function calcularComeCotas(
       complementoNoResgate,
     },
     traco,
+  }
+}
+
+/**
+ * Fundo de curto prazo: mesma mecânica, alíquotas próprias.
+ *
+ * O come-cotas antecipa 20%, e no resgate cobra-se o complemento até 22,5% (até
+ * seis meses) ou até 20% (acima). Aplicação com mais de seis meses e todos os
+ * come-cotas em dia não tem complemento: a antecipação já é a alíquota final.
+ */
+function calcularCurtoPrazo(
+  entrada: EntradaComeCotas,
+  dataReferencia: DataISO,
+  registro: Registro,
+): Resultado<SaidaComeCotas> {
+  const acima = entrada.acimaDeSeisMeses === true
+  const periodica = percentualDe(registro, 'come-cotas-curto-prazo-aliquota-periodica', dataReferencia)
+  const faixaFinal = percentualDe(
+    registro,
+    acima ? 'ir-fundo-curto-prazo-acima-seis-meses' : 'ir-fundo-curto-prazo-ate-seis-meses',
+    dataReferencia,
+  )
+  if (periodica === null || faixaFinal === null) {
+    return {
+      ok: false,
+      motivo: 'vigencia_ausente',
+      detalhe: 'Não há regras de come-cotas dos fundos de curto prazo cadastradas para a data informada.',
+    }
+  }
+
+  const baseDoComeCotas = subtrair(entrada.rendimentoAcumulado, entrada.rendimentoJaTributado)
+  const comeCotas = aplicarAliquota(baseDoComeCotas, periodica.valor, POLITICA)
+  const impostoNoResgate = aplicarAliquota(entrada.rendimentoAcumulado, faixaFinal.valor, POLITICA)
+  const complementoNoResgate = naoNegativo(subtrair(impostoNoResgate, entrada.impostoJaRetido))
+
+  const etapas: Etapa[] = [
+    {
+      rotulo: `Come-cotas de ${percentual(periodica.valor)} — fundo de curto prazo`,
+      formula:
+        entrada.rendimentoJaTributado > 0
+          ? `(${reais(entrada.rendimentoAcumulado)} − ${reais(entrada.rendimentoJaTributado)}) × ${percentual(periodica.valor)}`
+          : `${reais(entrada.rendimentoAcumulado)} × ${percentual(periodica.valor)}`,
+      resultado: comeCotas,
+      parametro: citar(periodica.resolvida),
+      justificativa:
+        'Fundo cuja carteira tem prazo médio de até 365 dias. A retenção de maio e novembro é maior que a da regra geral e incide só sobre o rendimento ainda não tributado.',
+    },
+    {
+      rotulo: `Alíquota final no resgate — ${percentual(faixaFinal.valor)}`,
+      formula: `aplicação ${acima ? 'com mais de' : 'de até'} seis meses · ${reais(entrada.rendimentoAcumulado)} × ${percentual(faixaFinal.valor)}`,
+      resultado: impostoNoResgate,
+      parametro: citar(faixaFinal.resolvida),
+      justificativa: 'Nos fundos de curto prazo, a tabela de resgate tem duas faixas, contadas em meses de aplicação.',
+    },
+    {
+      rotulo: 'Complemento a pagar no resgate de hoje',
+      formula: `${reais(impostoNoResgate)} − ${reais(entrada.impostoJaRetido)} já retidos`,
+      resultado: complementoNoResgate,
+      justificativa: 'Se o já retido cobre o devido, não há nova cobrança nem restituição no resgate.',
+    },
+  ]
+
+  return {
+    ok: true,
+    valores: {
+      comeCotas,
+      baseDoComeCotas,
+      aliquotaPeriodica: periodica.valor,
+      aliquotaFinal: faixaFinal.valor,
+      impostoNoResgate,
+      complementoNoResgate,
+    },
+    traco: {
+      etapas,
+      dataReferencia,
+      vigenciasAplicadas: [periodica.resolvida.vigencia.id, faixaFinal.resolvida.vigencia.id],
+    },
   }
 }

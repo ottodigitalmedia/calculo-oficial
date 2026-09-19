@@ -60,6 +60,11 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
         'Se você recebe outros rendimentos de pessoas físicas no mesmo mês, o carnê-leão é um só, sobre a soma — a calculadora de carnê-leão faz essa conta.',
         'Aluguel pago por pessoa jurídica tem o imposto retido na fonte, pela mesma tabela e com as mesmas exclusões.',
         'No ajuste anual, o aluguel soma aos demais rendimentos tributáveis, e o imposto pago no mês é compensado.',
+        ...(v.exclusoes > 0
+          ? [
+              'O redutor de 2026 é enquadrado pelo aluguel tributável, já sem as despesas excluídas — que a lei tira da base. Não há exemplo oficial de aluguel com o redutor; se a Receita enquadrar pelo aluguel bruto, o redutor sai menor para quem tem exclusões.',
+            ]
+          : []),
       ],
     },
   }
@@ -124,7 +129,7 @@ export const IMPOSTO_SOBRE_ALUGUEL: DefinicaoCalculadora = {
     {
       pergunta: 'A isenção de 2026 vale para o aluguel?',
       resposta:
-        'O redutor da Lei nº 15.270/2025 alcança o imposto calculado pela tabela mensal, e o carnê-leão é calculado por essa tabela. A calculadora aplica o redutor a partir de 2026, como no carnê-leão.',
+        'O redutor da Lei nº 15.270/2025 alcança os rendimentos tributáveis sujeitos à incidência mensal, e o aluguel é um deles — no carnê-leão e na retenção pela empresa, que a Receita incluiu expressamente (IN RFB nº 1.500/2014, art. 22, VI, na redação da IN RFB nº 2.299/2025). A calculadora aplica o redutor a partir de 2026 e o enquadra pelo aluguel tributável, já sem IPTU, condomínio e taxa de administração. A Receita não publicou exemplo de aluguel com o redutor: se ela enquadrar pelo aluguel bruto, o redutor sai menor para quem tem essas despesas.',
     },
   ],
 

@@ -15,17 +15,20 @@ import { formatarPercentual } from '../format/moeda'
 import { COME_COTAS } from '../params/data/come-cotas'
 import { RENDA_FIXA } from '../params/data/renda-fixa'
 import { construirRegistro } from '../params/registry'
-import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
+import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
 const registro = construirRegistro(COME_COTAS, RENDA_FIXA)
 
 export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
+  const curto = texto(valores, 'fundo') === 'curto'
   const r = calcularComeCotas(
     {
       rendimentoAcumulado: centavos(numero(valores, 'rendimento')),
       rendimentoJaTributado: centavos(numero(valores, 'jaTributado')),
       impostoJaRetido: centavos(numero(valores, 'jaRetido')),
       diasDesdeAplicacao: numero(valores, 'dias'),
+      fundo: curto ? 'curto' : 'longo',
+      acimaDeSeisMeses: texto(valores, 'prazoCurto') === 'acima',
     },
     dataReferencia,
     registro,
@@ -47,14 +50,15 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       destaques: [
         { rotulo: 'Alíquota do come-cotas', valor: formatarPercentual(v.aliquotaPeriodica) },
         { rotulo: 'Alíquota final pelo prazo', valor: formatarPercentual(v.aliquotaFinal) },
+        { rotulo: 'Tipo de fundo', valor: curto ? 'curto prazo — carteira de até 365 dias' : 'longo prazo — regra geral' },
       ],
       notas: [
         'A retenção acontece no último dia útil de maio e de novembro, em cotas: o valor em reais continua, ' +
           'mas você fica com menos cotas do que tinha.',
         'O come-cotas não é imposto a mais. Ele antecipa a alíquota da tabela regressiva — no resgate, cobra-se ' +
           'apenas a diferença que faltar. O custo real é o rendimento que o valor antecipado deixa de gerar.',
-        'Fundos de prazo médio curto e fundos de ações têm regras próprias, que esta estimativa não cobre. ' +
-          'Ela trata dos fundos da regra geral, de longo prazo.',
+        'Fundos de ações têm regime próprio, sem come-cotas, que esta estimativa não cobre. Os de curto prazo ' +
+          '— carteira com prazo médio de até 365 dias — têm alíquotas próprias, escolhidas no primeiro campo.',
       ],
     },
   }
@@ -69,6 +73,17 @@ export const COME_COTAS_CALC: DefinicaoCalculadora = {
     'Calcule o come-cotas do seu fundo: a retenção semestral, a alíquota final pela tabela regressiva e o complemento devido no resgate.',
 
   campos: [
+    {
+      id: 'fundo',
+      rotulo: 'Tipo de fundo',
+      tipo: 'selecao',
+      padrao: 'longo',
+      opcoes: [
+        { valor: 'longo', rotulo: 'Longo prazo — a regra geral (multimercado, renda fixa comum)' },
+        { valor: 'curto', rotulo: 'Curto prazo — carteira com prazo médio de até 365 dias' },
+      ],
+      ajuda: 'Está no regulamento e na lâmina do fundo. Na dúvida, a maioria dos fundos é de longo prazo.',
+    },
     {
       id: 'rendimento',
       rotulo: 'Rendimento acumulado desde a aplicação',
@@ -105,6 +120,19 @@ export const COME_COTAS_CALC: DefinicaoCalculadora = {
       minimo: 1,
       maximo: 36_500,
       ajuda: 'É o prazo que decide a alíquota final da tabela regressiva.',
+      visivelSe: { campo: 'fundo', em: ['longo'] },
+    },
+    {
+      id: 'prazoCurto',
+      rotulo: 'Há quanto tempo a aplicação foi feita',
+      tipo: 'selecao',
+      padrao: 'ate',
+      opcoes: [
+        { valor: 'ate', rotulo: 'Até seis meses' },
+        { valor: 'acima', rotulo: 'Mais de seis meses' },
+      ],
+      ajuda: 'Nos fundos de curto prazo, a lei conta o prazo em meses: são duas faixas.',
+      visivelSe: { campo: 'fundo', em: ['curto'] },
     },
   ],
 
@@ -117,6 +145,9 @@ export const COME_COTAS_CALC: DefinicaoCalculadora = {
     'ir-renda-fixa-limite-1',
     'ir-renda-fixa-limite-2',
     'ir-renda-fixa-limite-3',
+    'come-cotas-curto-prazo-aliquota-periodica',
+    'ir-fundo-curto-prazo-ate-seis-meses',
+    'ir-fundo-curto-prazo-acima-seis-meses',
   ],
 
   rotuloResultado: 'Come-cotas estimado do semestre',
@@ -142,7 +173,12 @@ export const COME_COTAS_CALC: DefinicaoCalculadora = {
     {
       pergunta: 'Todo fundo tem come-cotas?',
       resposta:
-        'Não. Fundos de ações têm regime próprio, e fundos de prazo médio curto seguem alíquotas diferentes, com retenção periódica maior e tabela própria no resgate. Esta calculadora trata dos fundos da regra geral, de longo prazo — os multimercados e os de renda fixa mais comuns.',
+        'Não. Fundos de ações têm regime próprio, sem come-cotas. Os demais têm, e com duas regras: a geral, de longo prazo — a dos multimercados e da maioria dos fundos de renda fixa —, e a dos fundos de curto prazo, cuja carteira tem prazo médio de até 365 dias. A calculadora cobre as duas; escolha no primeiro campo.',
+    },
+    {
+      pergunta: 'Como é o come-cotas do fundo de curto prazo?',
+      resposta:
+        'A retenção de maio e novembro é de 20%, e não de 15% (Lei nº 14.754/2023, art. 17, § 1º, II). No resgate, a alíquota final é de 22,5% para aplicações de até seis meses e de 20% acima disso (Lei nº 11.053/2004, art. 6º, § 2º). Com mais de seis meses, o come-cotas já antecipa a alíquota inteira: sobre o rendimento que passou por ele, não sobra complemento, e no resgate paga-se só o imposto do rendimento posterior à última retenção.',
     },
     {
       pergunta: 'E se eu resgatar logo depois do come-cotas?',

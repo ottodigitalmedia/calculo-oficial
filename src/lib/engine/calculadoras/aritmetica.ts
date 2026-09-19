@@ -24,7 +24,7 @@
 
 import { aplicarAliquota, aliquotaEfetiva, proporcao, subtrair, somar } from '../money'
 import { percentual, reais, type Etapa, type Resultado, type Traco } from '../traco'
-import { centavos, type BasisPoints, type Centavos } from '../types'
+import { basisPoints, centavos, type BasisPoints, type Centavos } from '../types'
 import type { DataISO } from '../../params/tipos'
 
 /**
@@ -197,6 +197,118 @@ function numero(valor: Centavos): string {
   const frac = abs % CENTESIMOS_POR_UNIDADE
   const comSeparador = String(inteiro).replace(/\B(?=(\d{3})+(?!\d))/g, '.')
   return `${negativo ? '−' : ''}${comSeparador},${String(frac).padStart(2, '0')}`
+}
+
+// ---------------------------------------------------------------------------
+// CALC-070 — Porcentagem em série: descontos e acréscimos sucessivos
+// ---------------------------------------------------------------------------
+
+/**
+ * Um passo da série: acréscimo OU desconto, em basis points. O outro fica zero.
+ */
+export interface PassoPercentual {
+  readonly acrescimoBp: BasisPoints
+  readonly descontoBp: BasisPoints
+}
+
+export interface SaidaSerie {
+  /** Valor depois do último passo, em centésimos. */
+  readonly resultado: Centavos
+  /** Resultado menos o valor inicial, em centésimos — negativo quando caiu. */
+  readonly diferenca: Centavos
+  /**
+   * A variação única que equivale à série inteira, em basis points, com sinal.
+   * Calculada pelo produto EXATO dos fatores, e não pelos valores arredondados.
+   */
+  readonly variacaoEquivalenteBp: number
+  readonly passosAplicados: number
+}
+
+/** 100% em basis points. Definição de unidade (`ADR-004` A-2), não constante legal. */
+// eslint-disable-next-line no-restricted-syntax -- unidade, não parâmetro legal (BV-10)
+const BP_INTEIRO = 10_000n
+
+/**
+ * Descontos e acréscimos aplicados um sobre o outro.
+ *
+ * **Cada passo incide sobre o resultado do anterior** — é o que a loja faz com
+ * "10% à vista sobre o preço já em promoção", e é por isso que dois descontos de
+ * 10% somam 19%, e não 20%. Cada passo arredonda uma vez, como um preço real.
+ *
+ * A variação equivalente sai do produto exato dos fatores `(1 ± p)`, em `bigint`,
+ * arredondada uma única vez: é a resposta a "quanto a série toda dá, num
+ * percentual só", e não depende dos centavos do caminho.
+ */
+export function calcularPercentuaisEmSerie(
+  valorInicial: number,
+  passos: readonly PassoPercentual[],
+  dataReferencia: DataISO,
+): Resultado<SaidaSerie> {
+  const validos = passos.filter((p) => p.acrescimoBp > 0 || p.descontoBp > 0)
+  if (valorInicial <= 0) {
+    return { ok: false, motivo: 'entrada_incompleta', detalhe: 'Informe o valor inicial.' }
+  }
+  if (validos.length === 0) {
+    return { ok: false, motivo: 'entrada_incompleta', detalhe: 'Informe ao menos um acréscimo ou desconto na série.' }
+  }
+  if (validos.some((p) => p.acrescimoBp > 0 && p.descontoBp > 0)) {
+    return {
+      ok: false,
+      motivo: 'entrada_invalida',
+      detalhe: 'Em cada linha, preencha o acréscimo OU o desconto — não os dois.',
+    }
+  }
+  if (validos.some((p) => p.descontoBp > Number(BP_INTEIRO))) {
+    return { ok: false, motivo: 'entrada_invalida', detalhe: 'Um desconto não pode passar de 100%.' }
+  }
+
+  const etapas: Etapa[] = []
+  let atual = centavos(valorInicial)
+  let numerador = 1n
+  let denominador = 1n
+
+  validos.forEach((p, i) => {
+    const sobe = p.acrescimoBp > 0
+    const bp = sobe ? p.acrescimoBp : p.descontoBp
+    const parte = aplicarAliquota(atual, bp, POLITICA)
+    const antes = atual
+    atual = sobe ? somar(atual, parte) : subtrair(atual, parte)
+    numerador *= sobe ? BP_INTEIRO + BigInt(bp) : BP_INTEIRO - BigInt(bp)
+    denominador *= BP_INTEIRO
+    etapas.push({
+      rotulo: `${i + 1}º passo — ${sobe ? 'acréscimo' : 'desconto'} de ${percentual(bp)}`,
+      formula: `${numero(antes)} ${sobe ? '+' : '−'} ${percentual(bp)} de ${numero(antes)} (${numero(parte)})`,
+      resultado: atual,
+      unidade: 'numero',
+      ...(i === 0 ? {} : { justificativa: 'O percentual incide sobre o resultado do passo anterior, e não sobre o valor inicial.' }),
+    })
+  })
+
+  // Variação equivalente: (Π fatores − 1) em bp, arredondada uma vez, com sinal.
+  const diferencaFatores = numerador - denominador
+  const negativo = diferencaFatores < 0n
+  const magnitude = (negativo ? -diferencaFatores : diferencaFatores) * BP_INTEIRO
+  const q = magnitude / denominador
+  const r = magnitude % denominador
+  const arredondado = 2n * r >= denominador ? q + 1n : q
+  const variacaoEquivalenteBp = Number(negativo ? -arredondado : arredondado)
+
+  const diferenca = subtrair(atual, centavos(valorInicial))
+  etapas.push({
+    rotulo: 'Variação equivalente à série inteira',
+    formula: `produto dos fatores de cada passo, menos 1 — ${variacaoEquivalenteBp < 0 ? 'queda' : 'alta'} de ${percentual(basisPoints(Math.abs(variacaoEquivalenteBp)))}`,
+    resultado: centavos(variacaoEquivalenteBp),
+    unidade: 'percentual',
+    justificativa:
+      'É o percentual único que, aplicado uma vez, leva do valor inicial ao final. Ele não é a soma dos percentuais da série.',
+  })
+
+  const traco: Traco = { etapas, dataReferencia, vigenciasAplicadas: [] }
+  return {
+    ok: true,
+    valores: { resultado: atual, diferenca, variacaoEquivalenteBp, passosAplicados: validos.length },
+    traco,
+  }
 }
 
 // ---------------------------------------------------------------------------

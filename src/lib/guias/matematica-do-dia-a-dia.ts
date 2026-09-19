@@ -19,7 +19,7 @@ export const MATEMATICA_DO_DIA_A_DIA: Guia = {
     'Porcentagem, regra de três, média e prazos — as quatro contas que resolvem quase tudo fora da calculadora científica.',
   descricaoSeo:
     'Como pensar porcentagem, regra de três, média ponderada e contagem de dias úteis sem decorar fórmula, e onde cada uma costuma dar errado.',
-  atualizadoEm: '2026-08-07',
+  atualizadoEm: '2026-09-19',
   calculadoras: [
     'porcentagem',
     'regra-de-tres',
@@ -61,7 +61,7 @@ export const MATEMATICA_DO_DIA_A_DIA: Guia = {
           tipo: 'chamada',
           slug: 'porcentagem',
           texto:
-            'A calculadora cobre os quatro casos — quanto é, qual o percentual, aumento e desconto.',
+            'A calculadora cobre os casos do dia a dia — quanto é, qual o percentual, aumento, desconto e variação — e aplica descontos e acréscimos em série, um sobre o outro, mostrando o percentual único equivalente.',
         },
       ],
     },

@@ -16,7 +16,7 @@ export const IR_NA_RENDA_FIXA: Guia = {
     'Duas aplicações com o mesmo rendimento anunciado podem entregar valores bem diferentes — e a diferença é o imposto.',
   descricaoSeo:
     'Como funciona a tabela regressiva do imposto de renda na renda fixa, quais aplicações são isentas, e por que comparar rendimento bruto leva à escolha errada.',
-  atualizadoEm: '2026-09-17',
+  atualizadoEm: '2026-09-19',
   calculadoras: ['ir-renda-fixa', 'cdb-lci-lca', 'onde-render-mais', 'rendimento-da-poupanca', 'come-cotas'],
 
   secoes: [
@@ -122,6 +122,26 @@ export const IR_NA_RENDA_FIXA: Guia = {
           slug: 'come-cotas',
           texto:
             'A calculadora de come-cotas mostra a retenção do semestre, a alíquota final pelo prazo e o complemento que sobra para o resgate.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'Os fundos de curto prazo — os que mantêm a carteira com prazo médio de até um ano — seguem outra regra: a retenção semestral é maior, e o resgate tem só duas faixas, contadas em meses de aplicação, no lugar das quatro da tabela regressiva.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'come-cotas-curto-prazo-aliquota-periodica',
+          legenda: 'Alíquota da retenção semestral nos fundos de curto prazo.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'ir-fundo-curto-prazo-ate-seis-meses',
+          legenda: 'Alíquota final no resgate de fundo de curto prazo, aplicação de até seis meses.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'ir-fundo-curto-prazo-acima-seis-meses',
+          legenda: 'Alíquota final no resgate de fundo de curto prazo, aplicação de mais de seis meses.',
         },
       ],
     },

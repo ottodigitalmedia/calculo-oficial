@@ -13,10 +13,15 @@
  * `engine/traco.ts` para o que isso exigiu do molde.
  */
 
-import { calcularPorcentagem, type OperacaoPorcentagem } from '../engine/calculadoras/aritmetica'
-import { basisPoints } from '../engine/types'
-import { formatarNumero } from '../format/moeda'
 import {
+  calcularPercentuaisEmSerie,
+  calcularPorcentagem,
+  type OperacaoPorcentagem,
+} from '../engine/calculadoras/aritmetica'
+import { basisPoints, centavos } from '../engine/types'
+import { formatarNumero, formatarPercentual } from '../format/moeda'
+import {
+  lerLista,
   numero,
   texto,
   type DefinicaoCalculadora,
@@ -43,6 +48,7 @@ const ROTULO_DIFERENCA: Readonly<Record<OperacaoPorcentagem, string>> = {
 /** Exportação de topo — ver a nota em `salario-liquido.ts`. */
 export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   const escolhida = texto(valores, 'operacao')
+  if (escolhida === 'serie') return calcularSerie(valores, dataReferencia)
   const operacao = OPERACOES.find((o) => o === escolhida) ?? 'parte'
 
   const r = calcularPorcentagem(
@@ -84,6 +90,46 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   }
 }
 
+/**
+ * Descontos e acréscimos em série — cada um sobre o resultado do anterior.
+ *
+ * A lista tem duas colunas, acréscimo e desconto, e cada linha usa uma delas:
+ * sinal numa célula de lista não existe (`FORMATO_DE_LISTA` só aceita dígitos),
+ * e duas colunas dizem o sentido sem pedir que a pessoa digite um "menos".
+ */
+const calcularSerie: FuncaoCalculo = (valores, dataReferencia) => {
+  const passos = lerLista(valores, 'serie', 2).map(([acrescimo = 0, desconto = 0]) => ({
+    acrescimoBp: basisPoints(acrescimo),
+    descontoBp: basisPoints(desconto),
+  }))
+  const r = calcularPercentuaisEmSerie(numero(valores, 'valor'), passos, dataReferencia)
+  if (!r.ok) return r
+  const v = r.valores
+  const sentido = v.variacaoEquivalenteBp < 0 ? 'queda' : 'alta'
+
+  return {
+    ok: true,
+    traco: r.traco,
+    valores: {
+      principal: v.resultado,
+      unidade: 'numero',
+      detalhamento: [],
+      destaques: [
+        {
+          rotulo: 'Equivale a um percentual único de',
+          valor: `${sentido} de ${formatarPercentual(Math.abs(v.variacaoEquivalenteBp))}`,
+        },
+        { rotulo: 'Diferença para o valor inicial', valor: formatarNumero(centavos(v.diferenca)) },
+        { rotulo: 'Passos aplicados', valor: `${v.passosAplicados}` },
+      ],
+      notas: [
+        'Cada percentual incide sobre o resultado do passo anterior. Por isso dois descontos de 10% dão 19% de desconto, e não 20%; e um acréscimo de 10% seguido de um desconto de 10% termina 1% abaixo do início.',
+        'O percentual único equivalente é calculado pelo produto exato dos fatores de cada passo. Os valores de cada passo são arredondados em duas casas, como um preço.',
+      ],
+    },
+  }
+}
+
 export const PORCENTAGEM: DefinicaoCalculadora = {
   id: 'CALC-070',
   slug: 'porcentagem',
@@ -105,6 +151,7 @@ export const PORCENTAGEM: DefinicaoCalculadora = {
         { valor: 'acrescimo', rotulo: 'Quanto fica com X% de acréscimo' },
         { valor: 'proporcao', rotulo: 'Um valor é quantos % de outro' },
         { valor: 'variacao', rotulo: 'Qual foi a variação percentual' },
+        { valor: 'serie', rotulo: 'Descontos ou acréscimos em série' },
       ],
     },
     {
@@ -114,7 +161,7 @@ export const PORCENTAGEM: DefinicaoCalculadora = {
       obrigatorio: true,
       minimo: 1,
       maximo: 1_000_000_000,
-      ajuda: 'Na variação, é o valor NOVO — o de depois.',
+      ajuda: 'Na variação, é o valor NOVO — o de depois. Na série, é o valor de partida.',
     },
     {
       id: 'percentual',
@@ -134,6 +181,20 @@ export const PORCENTAGEM: DefinicaoCalculadora = {
       maximo: 1_000_000_000,
       ajuda: 'Na proporção, é o total. Na variação, é o valor ANTERIOR — o de antes.',
       visivelSe: { campo: 'operacao', em: ['proporcao', 'variacao'] },
+    },
+    {
+      id: 'serie',
+      rotulo: 'Os percentuais, na ordem em que são aplicados',
+      tipo: 'lista',
+      obrigatorio: true,
+      colunas: [
+        { id: 'acrescimo', rotulo: 'Acréscimo', tipo: 'percentual', maximo: 100_000 },
+        { id: 'desconto', rotulo: 'Desconto', tipo: 'percentual', maximo: 10_000 },
+      ],
+      linhasIniciais: 3,
+      maximoDeLinhas: 10,
+      ajuda: 'Uma linha por passo: preencha o acréscimo OU o desconto. Linhas vazias são ignoradas.',
+      visivelSe: { campo: 'operacao', em: ['serie'] },
     },
   ],
 
@@ -167,9 +228,14 @@ export const PORCENTAGEM: DefinicaoCalculadora = {
     {
       pergunta: 'Serve para calcular desconto em compra?',
       resposta:
-        'Serve. Escolha "quanto fica com X% de desconto", informe o preço e o percentual, e o resultado é o valor final; o destaque mostra quanto foi abatido. Para desconto sobre desconto, rode a calculadora duas vezes — usando o resultado da primeira como valor da segunda, que é como a loja de fato aplica.',
+        'Serve. Escolha "quanto fica com X% de desconto", informe o preço e o percentual, e o resultado é o valor final; o destaque mostra quanto foi abatido. Para desconto sobre desconto, escolha "descontos ou acréscimos em série": cada percentual é aplicado sobre o resultado do anterior, que é como a loja de fato aplica.',
+    },
+    {
+      pergunta: 'Dois descontos de 10% são um desconto de 20%?',
+      resposta:
+        'Não: são 19%. O segundo desconto incide sobre o preço já reduzido — 100 com 10% vira 90, e 10% de 90 são 9, o que leva a 81. A opção de descontos ou acréscimos em série aplica cada percentual na ordem e mostra o percentual único equivalente à série inteira.',
     },
   ],
 
-  relacionadas: ['juros-compostos', 'salario-liquido', 'inss'],
+  relacionadas: ['juros-compostos', 'juros-simples', 'salario-liquido', 'inss'],
 }
