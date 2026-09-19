@@ -144,17 +144,15 @@ export const LEI_9250_ART_8: Fonte = {
  *        ano-calendário de 2025**; e
  *   X  - R$ 17.640,00 [...] a partir do ano-calendário de 2026.
  *
- * **O inciso X não foi cadastrado, de propósito.** A mesma Lei nº 15.270/2025
- * **revogou o art. 11**, que é onde vive a tabela anual — ou seja, de 2026 em
- * diante a conta não é a mesma com outro número: é outra estrutura, com o
- * redutor do art. 3º-A. Cadastrar só o limite novo deixaria a calculadora
- * oferecer 2026 e calcular pela estrutura velha, que é o defeito de §7.48 com
- * consequência pior. Ver a nota em `irpf-anual.ts`.
+ * **O inciso X entrou no lote 13 (19/09/2026)**, junto com a estrutura que o
+ * acompanha: a tabela anual de 2026 publicada pela Receita e a redução anual do
+ * art. 11-A. Cadastrar só o limite novo teria calculado 2026 pela estrutura
+ * velha — o defeito de §7.48 com consequência pior. Ver `irpf-anual.ts`.
  */
 export const LEI_9250_ART_10: Fonte = {
   id: 'lei-9250-1995-art-10',
   norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 15.270, de 2025',
-  dispositivo: 'Art. 10, caput e inciso IX',
+  dispositivo: 'Art. 10, caput e incisos IX e X',
   url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
   orgao: 'Congresso Nacional',
 }
@@ -3287,5 +3285,87 @@ export const LEI_11053_ART_6: Fonte = {
   norma: 'Lei nº 11.053, de 29 de dezembro de 2004',
   dispositivo: 'Art. 6º, caput e § 2º',
   url: 'https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11053.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Tabela anual do ano-calendário de 2026 — publicada pela Receita Federal na
+ * página "Tributação de 2026", conferida em 19/09/2026:
+ *
+ * > "Tabela de Incidência Anual — A partir do exercício 2027 (ano-calendário
+ * > 2026). Até R$ 29.145,60 | - | - · De R$ 29.145,61 até R$ 33.919,80 | 7,5%
+ * > | R$ 2.185,92 · De R$ 33.919,81 até R$ 45.012,60 | 15,0% | R$ 4.729,91 ·
+ * > De R$ 45.012,61 até R$ 55.976,16 | 22,5% | R$ 8.105,85 · Acima de R$
+ * > 55.976,16 | 27,5% | R$ 10.904,66 · Dedução anual por dependente: R$
+ * > 2.275,08 · Limite anual de despesa com instrução: R$ 3.561,50 · Limite
+ * > anual de desconto simplificado: R$ 17.640,00"
+ *
+ * Os limites das faixas são doze vezes os da tabela mensal em vigor desde maio
+ * de 2025 (Lei nº 11.482/2007, art. 1º, parágrafo único, e inciso XII). As
+ * parcelas a deduzir são as publicadas, que diferem de doze vezes as mensais
+ * por centavos — a Receita as fixou para a tabela ser contínua nas fronteiras.
+ */
+export const RFB_TABELA_ANUAL_2026: Fonte = {
+  id: 'rfb-tabela-anual-ac2026',
+  norma:
+    'Tabela progressiva anual do IRPF publicada pela Receita Federal para o exercício de 2027, ano-calendário de 2026',
+  dispositivo: 'Exercício 2027 · ano-calendário 2026',
+  url: 'https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2026',
+  orgao: 'Receita Federal do Brasil',
+}
+
+/**
+ * Redução anual do IRPF — Lei nº 9.250/1995, art. 11-A, incluído pela Lei nº
+ * 15.270/2025 (efeitos a partir de 1º/01/2026, art. 8º). Texto conferido no
+ * Planalto em 19/09/2026:
+ *
+ * > "A partir do exercício de 2027, ano-calendário de 2026, será concedida
+ * > redução do Imposto sobre a Renda das Pessoas Físicas anual, apurado sobre
+ * > os rendimentos tributáveis sujeitos ao ajuste anual, de acordo com a
+ * > seguinte tabela: até R$ 60.000,00 | até R$ 2.694,15 (de modo que o imposto
+ * > devido seja zero) · de R$ 60.000,01 até R$ 88.200,00 | R$ 8.429,73 -
+ * > (0,095575 x rendimentos tributáveis sujeitos ao ajuste anual) [...]
+ * > § 1º O valor da redução [...] fica limitado ao valor do imposto de renda
+ * > anual calculado de acordo com a tabela progressiva anual vigente no
+ * > ano-calendário. § 2º Os contribuintes que tiverem rendimentos tributáveis
+ * > sujeitos ao ajuste anual superiores a R$ 88.200,00 [...] não terão redução
+ * > no imposto devido."
+ *
+ * **A faixa é definida pelos rendimentos tributáveis, e não pela base de
+ * cálculo** — é o que o texto diz três vezes, e o que a Receita aplica na
+ * redução mensal do art. 3º-A (exemplo 5 da página de exemplos da Lei nº
+ * 15.270/2025). Deduções, inclusive a do PGBL, reduzem o imposto da tabela,
+ * mas não mudam a faixa da redução.
+ */
+export const LEI_9250_ART_11A: Fonte = {
+  id: 'lei-9250-1995-art-11a',
+  norma: 'Lei nº 9.250, de 26 de dezembro de 1995, com a redação da Lei nº 15.270, de 26 de novembro de 2025',
+  dispositivo: 'Art. 11-A, caput e §§ 1º e 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9250.htm',
+  orgao: 'Congresso Nacional',
+}
+
+/**
+ * Previdência privada no ajuste anual — Lei nº 9.532/1997, art. 11, caput, na
+ * redação da Lei nº 10.887/2004. Texto conferido no Planalto em 19/09/2026:
+ *
+ * > "As deduções relativas às contribuições para entidades de previdência
+ * > privada, a que se refere a alínea e do inciso II do art. 8o da Lei no
+ * > 9.250, de 26 de dezembro de 1995 [...] cujo ônus seja da própria pessoa
+ * > física, ficam condicionadas ao recolhimento, também, de contribuições para
+ * > o regime geral de previdência social ou, quando for o caso, para regime
+ * > próprio de previdência social [...], observada a contribuição mínima, e
+ * > limitadas a 12% (doze por cento) do total dos rendimentos computados na
+ * > determinação da base de cálculo do imposto devido na declaração de
+ * > rendimentos."
+ * > § 5º: "Excetuam-se da condição de que trata o caput deste artigo os
+ * > beneficiários de aposentadoria ou pensão concedidas por regime próprio de
+ * > previdência ou pelo regime geral de previdência social."
+ */
+export const LEI_9532_ART_11: Fonte = {
+  id: 'lei-9532-1997-art-11',
+  norma: 'Lei nº 9.532, de 10 de dezembro de 1997, com a redação da Lei nº 10.887, de 2004',
+  dispositivo: 'Art. 11, caput e § 5º',
+  url: 'https://www.planalto.gov.br/ccivil_03/leis/l9532.htm',
   orgao: 'Congresso Nacional',
 }
