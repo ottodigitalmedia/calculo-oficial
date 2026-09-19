@@ -4452,6 +4452,25 @@ seguiu na mesma noite. **Lição para as próximas contagens:** resultado com
 `casasDecimais: 0` é valor inteiro, sem escala; o caso-ouro da página confere
 também `casasDecimais`.
 
+### 7.93 Lote 12 — duas opções, e uma leitura que a página não declarava
+
+**Nenhuma calculadora nova**; o catálogo segue em **120**. Os fundos de curto
+prazo entram em CALC-098 e os percentuais em série, em CALC-070.
+
+**A candidata "IR sobre aluguel pago por PJ" já estava publicada** como opção de
+CALC-114, e a lista de §18 não tinha sido atualizada. A pesquisa feita para ela
+não se perdeu: confirmou, em fonte oficial, a retenção pela tabela mensal
+(RIR/2018, art. 688), as exclusões (art. 689), o desconto simplificado (IN RFB
+nº 1.500/2014, art. 52, § 3º) e o redutor de 2026 também na retenção sobre
+aluguel (IN RFB nº 2.299/2025, que incluiu o Anexo X no art. 22 da IN 1.500).
+
+**O que ela não confirmou é qual valor enquadra o redutor.** Nos exemplos
+oficiais de salário, a Receita usa o rendimento bruto; para aluguel, não há
+exemplo, e CALC-114 usa o aluguel já sem as exclusões, que a lei manda não
+integrarem a base. É a leitura mais coerente, mas é leitura — e a página não a
+declarava. Passou a declarar, com o efeito da leitura contrária. **Pendente:**
+quando a Receita publicar exemplo de aluguel com o redutor, conferir e fechar.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão

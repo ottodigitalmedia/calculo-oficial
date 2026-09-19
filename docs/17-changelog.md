@@ -29,6 +29,39 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 19/09/2026 — expansão do catálogo, lote 12
+
+### Adicionado · fundos de curto prazo e percentuais em série
+
+CALC-098 (come-cotas) cobre os fundos de curto prazo; CALC-070 (porcentagem)
+aplica descontos e acréscimos em série, com o percentual único equivalente. Os
+guias *IR na renda fixa* e *Matemática do dia a dia* acompanham
+(`00-catalogo` §18.13).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `come-cotas-curto-prazo-aliquota-periodica` | 20% | desde 01/01/2024 | Lei nº 14.754/2023, art. 17, § 1º, II, "a" |
+| `ir-fundo-curto-prazo-ate-seis-meses` | 22,5% | desde 01/01/2005 | Lei nº 11.053/2004, art. 6º, § 2º, I |
+| `ir-fundo-curto-prazo-acima-seis-meses` | 20% | desde 01/01/2005 | Lei nº 11.053/2004, art. 6º, § 2º, II |
+
+### Esclarecido · CALC-114 declara como enquadra o redutor de 2026
+
+A página do imposto sobre aluguel aplicava o redutor da Lei nº 15.270/2025
+pelo aluguel tributável — já sem IPTU, condomínio e taxa de administração —
+sem dizer que essa é uma leitura da lei, sem exemplo oficial para aluguel. A
+pergunta frequente e uma nota, quando há exclusões, passaram a declarar isso e
+o efeito da leitura contrária. A conta não mudou.
+
+### Auditoria · casos-ouro
+
+10 casos-ouro novos: o come-cotas do curto prazo nas duas faixas de resgate e
+com retenções anteriores, a regra geral intacta, e a série com descontos,
+acréscimos, arredondamento por passo e o equivalente pelo produto exato.
+
+---
+
 ## Ciclo de 18/09/2026 — expansão do catálogo, lote 11
 
 ### Adicionado · juros simples e escala 12 × 36

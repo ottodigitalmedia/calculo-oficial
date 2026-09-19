@@ -710,7 +710,26 @@ conta plantões, horas, domingos e feriados nacionais, que é o que se pergunta.
 mostra as duas provisões e os encargos sobre elas. **Horas entre horários
 também sai**: é CALC-115.
 
-### 18.13 Candidatas dos próximos lotes
+### 18.13 Lote 12 — curto prazo no come-cotas e percentuais em série, publicado em 19/09/2026
+
+Sem calculadora nova, e de propósito: as duas perguntas cabiam em páginas que já
+existiam. **CALC-098** ganha os fundos de curto prazo — carteira com prazo médio
+de até 365 dias —, com come-cotas de 20% (Lei nº 14.754/2023, art. 17, § 1º,
+II) e resgate a 22,5% ou 20% (Lei nº 11.053/2004, art. 6º, § 2º). **CALC-070**
+ganha descontos e acréscimos em série, com o percentual único equivalente.
+
+**O prazo do curto prazo é em meses, e a página pergunta em meses.** O art. 6º
+diz "até 6 (seis) meses"; converter em dias exigiria uma convenção que a lei não
+dá, e a calculadora não a inventa.
+
+**IR sobre aluguel pago por pessoa jurídica sai da lista: já era CALC-114.** A
+pesquisa em fonte oficial (RIR/2018, arts. 688, 689 e 707; IN RFB nº
+1.500/2014, arts. 22, 31 e 52, na redação da IN RFB nº 2.299/2025) confirmou a
+conta publicada e achou um ponto que a página não declarava: o redutor de 2026 é
+enquadrado pelo aluguel tributável, sem exemplo oficial que o confirme para
+aluguel. A página passou a dizer isso (`ESTADO-DO-PROJETO` §7.93).
+
+### 18.14 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -719,12 +738,11 @@ valor dela veio de site de terceiro.
 
 | Categoria | Candidatas |
 |---|---|
-| TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
+| TRI | ganho de capital em bens móveis |
 | PRV | auxílio-reclusão (depende da portaria anual) · fator previdenciário e o valor pelo pedágio de 50% (falta confirmar arredondamento e idade fracionária) |
 | CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
-| UTI | desconto e acréscimo percentual em série |
 
 > **A conta que a expansão precisa ter à vista.** Somadas, as candidatas
 > legítimas dentro das dez categorias ativas ficam na casa de **quarenta a
