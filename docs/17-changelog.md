@@ -29,6 +29,31 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 18/09/2026 — expansão do catálogo, lote 11
+
+### Adicionado · juros simples e escala 12 × 36
+
+CALC-119 juros simples, com comparação ao composto, ligada ao guia *Juros
+compostos*; CALC-120 escala 12 × 36, com seção nova no guia *Horas extras*
+(`00-catalogo` §18.12).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `escala-12x36-trabalho-minutos` | 720 (doze horas) | desde 11/11/2017 | CLT, art. 59-A (Lei nº 13.467/2017) |
+| `escala-12x36-descanso-minutos` | 2.160 (trinta e seis horas) | desde 11/11/2017 | CLT, art. 59-A (Lei nº 13.467/2017) |
+
+### Auditoria · casos-ouro
+
+20 casos-ouro novos: juros simples nas três unidades de taxa e de prazo, o
+arredondamento único, o produto acima de 2^53 e os três trechos da comparação
+com o composto; a escala em meses de 28 a 31 dias, os feriados resolvidos na
+data de cada plantão — o 20 de novembro de 2023 fica de fora —, um ano inteiro
+e o bloqueio antes de 11/11/2017.
+
+---
+
 ## Ciclo de 18/09/2026 — expansão do catálogo, lote 10
 
 ### Adicionado · abono salarial e seguro-desemprego do doméstico

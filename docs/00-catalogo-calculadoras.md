@@ -52,7 +52,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 
 | Cód. | Categoria | Papel estratégico | Calculadoras |
 |---|---|---|---|
-| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 34 |
+| TRB | Trabalhista e CLT | Âncora de volume e de autoridade | 35 |
 | TRI | Tributos Pessoa Física | Volume sazonal intenso | 14 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
@@ -61,9 +61,9 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | VEI | Veículos | Receita média, manutenção baixa | 7 |
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
-| UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 6 |
+| UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 7 |
 | PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
-| | **Total** | | **118** |
+| | **Total** | | **120** |
 
 ---
 
@@ -109,6 +109,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-115 | Horas trabalhadas e intervalo (CF, art. 7º, XIII; CLT, arts. 66 e 71) | 🔥 | M | P | Nula | v5 |
 | CALC-117 | DAE do empregador doméstico (LC 150, art. 34) | 🔥 | M | P | Alta | v5 |
 | CALC-118 | Abono salarial do PIS (Lei 7.998, art. 9º; CF, art. 239, § 3º) | 🔥 | M | P | **Crítica** | v5 |
+| CALC-120 | Escala 12 × 36 — plantões, horas e feriados (CLT, art. 59-A) | 🔥 | M | P | Nula | v5 |
 | CALC-095 | Saque-aniversário do FGTS | 🔥 | B | P | Média | v5 |
 
 > ⚠️ VERIFICAR: base legal e alíquotas de cada item contra o texto normativo vigente antes de codificar. Nunca contra blog, software de terceiro ou site concorrente.
@@ -288,6 +289,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-073 | Divisão de conta entre pessoas | 🔸 | B | — | Nula | v4 |
 | CALC-074 | Conversor de unidades | 🔥 | B | — | Nula | v4 |
 | CALC-075 | Média ponderada e média escolar | 🔸 | B | — | Nula | v4 |
+| CALC-119 | Juros simples, com comparação ao composto | 🔥 | B | — | Nula | v5 |
 
 ---
 
@@ -378,8 +380,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 42 | — | Expansão de cobertura — lotes 1 a 10 de §18 |
-| | **118** | 11 | |
+| **v5** | 44 | — | Expansão de cobertura — lotes 1 a 11 de §18 |
+| | **120** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -687,7 +689,28 @@ segue a lei (`ESTADO-DO-PROJETO` §7.91).
 **O fator previdenciário continua fora**: nem o Decreto nº 3.048/1999 nem a IN
 nº 128/2022 fixam o arredondamento e o tratamento das frações de idade e tempo.
 
-### 18.12 Candidatas dos próximos lotes
+### 18.12 Lote 11 — juros simples e escala 12 × 36, publicado em 18/09/2026
+
+CALC-119, em §13, ligada ao guia *Juros compostos* — que já explicava a
+diferença entre os dois regimes e agora mostra o trecho em que o simples ganha
+—, e CALC-120, em §4, ligada ao guia *Horas extras*, com seção nova sobre a
+escala.
+
+**Juros simples não tem parâmetro legal**, como CALC-022. O que a página
+acrescenta ao C × i × n é a conversão de unidades declarada — calendário
+comercial, mês de 30 e ano de 360 dias — e a comparação com o composto, feita
+pelo motor de CALC-022 para que a conta tenha uma só verdade.
+
+**A escala 12 × 36 lê a regra do art. 59-A em `params/`**: doze horas de
+trabalho e trinta e seis de descanso, desde 11/11/2017, e o parágrafo único
+sobre feriado e descanso semanal, citado na tela. A página não calcula dinheiro:
+conta plantões, horas, domingos e feriados nacionais, que é o que se pergunta.
+
+**Provisão de férias e 13º sai da lista**: CALC-011 (custo do funcionário) já
+mostra as duas provisões e os encargos sobre elas. **Horas entre horários
+também sai**: é CALC-115.
+
+### 18.13 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -696,13 +719,12 @@ valor dela veio de site de terceiro.
 
 | Categoria | Candidatas |
 |---|---|
-| TRB | jornada 12×36 e feriados · provisão mensal de férias e 13º |
 | TRI | IR sobre aluguel recebido de pessoa jurídica · IR de fundos de prazo curto · ganho de capital em bens móveis |
 | PRV | auxílio-reclusão (depende da portaria anual) · fator previdenciário e o valor pelo pedágio de 50% (falta confirmar arredondamento e idade fracionária) |
-| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · juros simples · antecipação do saque-aniversário |
+| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · antecipação do saque-aniversário |
 | INV | PGBL ou VGBL · Tesouro Selic e Tesouro Prefixado · rendimento pelo CDI |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
-| UTI | juros simples · horas entre horários · desconto e acréscimo percentual em série |
+| UTI | desconto e acréscimo percentual em série |
 
 > **A conta que a expansão precisa ter à vista.** Somadas, as candidatas
 > legítimas dentro das dez categorias ativas ficam na casa de **quarenta a

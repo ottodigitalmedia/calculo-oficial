@@ -4425,6 +4425,25 @@ de um real — mas é a lei, e não a tabela, que o produto cita.
 **Duas tarefas com data para 1º/01/2027**, somadas à de §8.000: o limite do
 abono do pagamento de 2027 (INPC de 2025, publicação do Ministério).
 
+### 7.92 Lote 11 — juros simples e a escala 12 × 36
+
+**CALC-119** e **CALC-120**. O catálogo passa de 118 para **120**.
+
+**Nenhum guia novo.** As duas perguntas já tinham endereço: a diferença entre
+juros simples e compostos é a primeira seção do guia de juros compostos, e a
+escala 12 × 36 é jornada — o guia de horas extras ganhou uma seção, com os
+dois parâmetros do art. 59-A em bloco que lê `params/`.
+
+**A escala não põe feriado em dinheiro, e isso é a lei.** O parágrafo único do
+art. 59-A diz que a remuneração mensal da escala já abrange o descanso semanal e
+os feriados, que se consideram compensados. A página aponta os plantões em
+feriado, cita a regra e diz que a convenção coletiva pode dispor de outra forma
+— sem afirmar direito a pagamento nem negar o que o instrumento coletivo der.
+
+**Duas candidatas saíram da lista por já estarem cobertas**: a provisão de
+férias e 13º (CALC-011) e as horas entre horários (CALC-115). Contar duas vezes
+a mesma pergunta produziria páginas rasas, que é o que §11 existe para evitar.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
