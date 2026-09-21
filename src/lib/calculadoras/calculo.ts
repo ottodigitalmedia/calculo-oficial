@@ -768,6 +768,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './pgbl'
     ).then((m) => m.calcular),
+  'tesouro-prefixado': () =>
+    import(
+      /* webpackChunkName: "calc-tesouro-prefixado" */
+      /* webpackExports: ["calcular"] */
+      './tesouro-prefixado'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

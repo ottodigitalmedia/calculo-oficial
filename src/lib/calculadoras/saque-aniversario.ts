@@ -9,12 +9,22 @@
  * Motor em `engine/calculadoras/saque-aniversario.ts`.
  */
 
-import { calcularSaqueAniversario } from '../engine/calculadoras/saque-aniversario'
+import {
+  calcularLimitesDaAntecipacao,
+  calcularSaqueAniversario,
+  PARAMETROS_ANTECIPACAO,
+} from '../engine/calculadoras/saque-aniversario'
 import { centavos } from '../engine/types'
-import { formatarPercentual } from '../format/moeda'
+import { formatarPercentual, formatarReal } from '../format/moeda'
 import { SAQUE_ANIVERSARIO } from '../params/data/saque-aniversario'
 import { construirRegistro } from '../params/registry'
-import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
+import {
+  numero,
+  texto,
+  type DefinicaoCalculadora,
+  type Destaque,
+  type FuncaoCalculo,
+} from './tipos'
 
 const registro = construirRegistro(SAQUE_ANIVERSARIO)
 
@@ -27,20 +37,61 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   if (!r.ok) return r
   const v = r.valores
 
+  const destaques: Destaque[] = [
+    { rotulo: 'Alíquota da faixa', valor: formatarPercentual(v.aliquota) },
+    { rotulo: 'Fatia do saldo sacada', valor: formatarPercentual(v.percentualEfetivo) },
+  ]
+  const notasDaAntecipacao: string[] = []
+  let etapas = r.traco.etapas
+  let vigencias = r.traco.vigenciasAplicadas
+
+  /**
+   * O bloco da antecipação entra por escolha. Ele não muda o saque: mostra até
+   * onde a cessão pode ir, pelos limites do Conselho Curador.
+   */
+  if (texto(valores, 'antecipacao') === 'sim') {
+    const a = calcularLimitesDaAntecipacao(v.saque, dataReferencia, registro)
+    if (a.ok) {
+      const lim = a.valores
+      destaques.push(
+        { rotulo: 'Saques que podem ser cedidos', valor: `${lim.saquesMaximos}` },
+        {
+          rotulo: 'Cedível por saque',
+          valor: lim.atendeMinimo
+            ? `${formatarReal(lim.cedivelPorSaque)} — entre ${formatarReal(lim.minimoPorSaque)} e ${formatarReal(lim.maximoPorSaque)}`
+            : `nada: o saque não chega ao mínimo de ${formatarReal(lim.minimoPorSaque)}`,
+        },
+        { rotulo: 'Total que pode ser cedido', valor: formatarReal(lim.totalCedivel) },
+        { rotulo: 'Juros da antecipação', valor: `abaixo de ${formatarPercentual(lim.jurosTetoBp)} ao mês` },
+      )
+      notasDaAntecipacao.push(
+        `A antecipação é um empréstimo com os saques futuros em garantia. Cada saque cedido fica entre ${formatarReal(lim.minimoPorSaque)} e ${formatarReal(lim.maximoPorSaque)}, uma contratação por competência de aniversário, e a anterior precisa estar quitada.`,
+        `A contratação só pode ser autorizada depois de ${lim.carenciaDias} dias do início da vigência da opção pelo saque-aniversário.`,
+        `As taxas têm de ficar ABAIXO de ${formatarPercentual(lim.jurosTetoBp)} ao mês — a resolução diz "inferiores", e cada banco pratica a sua.`,
+        'Quanto CAI NA CONTA não está nesta estimativa: o banco desconta os juros do prazo até cada aniversário, e nenhuma norma fixa essa conta. O que está aqui é o limite do que pode ser cedido.',
+        'Os saques dos próximos anos dependem do saldo de cada ano, que esta conta não conhece — ela repete o saque de hoje para todos.',
+      )
+      etapas = [...etapas, ...a.traco.etapas]
+      vigencias = [...vigencias, ...a.traco.vigenciasAplicadas]
+    } else {
+      notasDaAntecipacao.push(
+        'Os limites da antecipação valem a partir de 20/10/2025, quando a Resolução CCFGTS nº 1.130/2025 foi publicada. Para a data escolhida, o produto não publica esses números.',
+      )
+    }
+  }
+
   return {
     ok: true,
-    traco: r.traco,
+    traco: { etapas, dataReferencia, vigenciasAplicadas: vigencias },
     valores: {
       principal: v.saque,
       detalhamento: [
         { rotulo: 'Saque-aniversário', valor: v.saque, sinal: 'credito' },
         { rotulo: 'Saldo que permanece na conta', valor: v.saldoRestante, sinal: 'neutro' },
       ],
-      destaques: [
-        { rotulo: 'Alíquota da faixa', valor: formatarPercentual(v.aliquota) },
-        { rotulo: 'Fatia do saldo sacada', valor: formatarPercentual(v.percentualEfetivo) },
-      ],
+      destaques,
       notas: [
+        ...notasDaAntecipacao,
         'A alíquota incide sobre a soma de todas as suas contas do FGTS, e não apenas sobre a do emprego ' +
           'atual. Informe o total.',
         'Aderindo ao saque-aniversário, a despedida sem justa causa deixa de liberar o saldo da conta — a ' +
@@ -73,9 +124,23 @@ export const SAQUE_ANIVERSARIO_FGTS: DefinicaoCalculadora = {
       maximo: 100_000_000,
       ajuda: 'Some todas as suas contas, inclusive as de empregos antigos. É esse total que a tabela usa.',
     },
+    {
+      id: 'antecipacao',
+      rotulo: 'Mostrar os limites da antecipação em banco?',
+      tipo: 'selecao',
+      padrao: 'nao',
+      opcoes: [
+        { valor: 'nao', rotulo: 'Não' },
+        { valor: 'sim', rotulo: 'Sim — quero ver quanto dá para antecipar' },
+      ],
+      ajuda: 'A antecipação é um empréstimo com os saques futuros em garantia, e o Conselho Curador limita quantos e quanto.',
+    },
   ],
 
   parametrosRequeridos: ['fgts-saque-aniversario-tabela'],
+  // Os limites da antecipação nasceram em 20/10/2025: antes disso, a resolução
+  // não os fixava, e o saque-aniversário continua calculando sem eles.
+  parametrosOpcionais: [...PARAMETROS_ANTECIPACAO],
 
   rotuloResultado: 'Saque-aniversário estimado',
 
@@ -111,6 +176,21 @@ export const SAQUE_ANIVERSARIO_FGTS: DefinicaoCalculadora = {
       pergunta: 'Vale a pena antecipar o saque-aniversário num banco?',
       resposta:
         'A antecipação é um empréstimo: o banco adianta os saques futuros e cobra juros por isso, com os direitos aos saques anuais cedidos em garantia — o § 3º do art. 20-D permite essa cessão e manda que as taxas fiquem abaixo das do consignado dos servidores federais. Compare mesmo assim com as demais linhas, e lembre-se de que, enquanto o contrato durar, o saque de cada ano vai para o banco.',
+    },
+    {
+      pergunta: 'Quantos saques dá para antecipar?',
+      resposta:
+        'Até 31 de outubro de 2026, cinco; a partir de 1º de novembro de 2026, três. A regra permanente é a do art. 1º, § 3º, da Resolução CCFGTS nº 958/2020, na redação da nº 1.130/2025, e os cinco valem pela transição do art. 2º dessa resolução. Marque a opção na calculadora e ela responde pela data escolhida, com a norma ao lado.',
+    },
+    {
+      pergunta: 'Existe valor mínimo e máximo por saque antecipado?',
+      resposta:
+        'Existe: cada saque-aniversário cedido não pode ficar abaixo de R$ 100,00 nem acima de R$ 500,00, e cabe uma contratação por competência de aniversário, com a anterior quitada. Também há carência: a autorização só pode ser dada noventa dias depois do início da opção pelo saque-aniversário.',
+    },
+    {
+      pergunta: 'A calculadora mostra quanto o banco deposita na antecipação?',
+      resposta:
+        'Não, e o motivo é o mesmo de sempre aqui: nenhuma norma define o desconto que o banco aplica sobre cada parcela até o aniversário correspondente. O que a página mostra é o limite do que pode ser cedido e o teto de juros — as taxas precisam ficar abaixo de 1,80% ao mês. O valor depositado quem informa é a instituição, na proposta.',
     },
   ],
 

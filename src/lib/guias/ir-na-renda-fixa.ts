@@ -16,8 +16,15 @@ export const IR_NA_RENDA_FIXA: Guia = {
     'Duas aplicações com o mesmo rendimento anunciado podem entregar valores bem diferentes — e a diferença é o imposto.',
   descricaoSeo:
     'Como funciona a tabela regressiva do imposto de renda na renda fixa, quais aplicações são isentas, e por que comparar rendimento bruto leva à escolha errada.',
-  atualizadoEm: '2026-09-19',
-  calculadoras: ['ir-renda-fixa', 'cdb-lci-lca', 'onde-render-mais', 'rendimento-da-poupanca', 'come-cotas'],
+  atualizadoEm: '2026-09-21',
+  calculadoras: [
+    'ir-renda-fixa',
+    'cdb-lci-lca',
+    'onde-render-mais',
+    'rendimento-da-poupanca',
+    'come-cotas',
+    'tesouro-prefixado',
+  ],
 
   secoes: [
     {
@@ -142,6 +149,33 @@ export const IR_NA_RENDA_FIXA: Guia = {
           tipo: 'valorVigente',
           parametroId: 'ir-fundo-curto-prazo-acima-seis-meses',
           legenda: 'Alíquota final no resgate de fundo de curto prazo, aplicação de mais de seis meses.',
+        },
+      ],
+    },
+
+    {
+      id: 'no-tesouro-prefixado',
+      titulo: 'No Tesouro Prefixado, o que varia é o preço — não o que você recebe',
+      blocos: [
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O título prefixado sem cupons é resgatado por um valor fixo por título na data de vencimento. O rendimento vem do deságio: paga-se menos hoje para receber esse valor lá na frente. Quem leva até o fim sabe o bruto desde a compra.',
+        },
+        {
+          tipo: 'valorVigente',
+          parametroId: 'ltn-valor-nominal',
+          legenda: 'Valor pago por título na data de vencimento.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'O imposto segue a mesma tabela regressiva acima, contada da compra ao resgate, e incide só sobre o rendimento. Antes do vencimento, o preço do título oscila com as taxas de mercado, e vender pode render bem menos que o contratado.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'tesouro-prefixado',
+          texto: 'A calculadora do Tesouro Prefixado parte do preço que você pagou e mostra o líquido no vencimento.',
         },
       ],
     },

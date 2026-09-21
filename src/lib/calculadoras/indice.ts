@@ -373,6 +373,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
       'Quanto a contribuição ao PGBL reduz o imposto da declaração — e quando não reduz nada.',
   },
   {
+    slug: 'tesouro-prefixado',
+    nome: 'Tesouro Prefixado no vencimento',
+    linhaDeContexto: 'Quanto cai na conta no vencimento, depois do imposto que o prazo define.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

@@ -50,6 +50,7 @@ import { ABONO_SALARIAL_PIS } from './abono-salarial'
 import { JUROS_SIMPLES } from './juros-simples'
 import { ESCALA_12X36 } from './escala-12x36'
 import { PGBL } from './pgbl'
+import { TESOURO_PREFIXADO } from './tesouro-prefixado'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -188,6 +189,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   JUROS_SIMPLES,
   ESCALA_12X36,
   PGBL,
+  TESOURO_PREFIXADO,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,
