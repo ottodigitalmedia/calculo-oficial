@@ -67,6 +67,15 @@ export type OrgaoEmissor =
   // Registrá-lo como "Ministério do Trabalho e Emprego" apagaria justamente a
   // procedência que torna a fonte forte.
   | 'Conselho Deliberativo do Fundo de Amparo ao Trabalhador'
+  // O Conselho Curador do FGTS entrou em 21/09/2026, com a Resolução nº
+  // 1.130/2025 — os limites da antecipação do saque-aniversário. Mesma razão do
+  // CODEFAT: é conselho, delibera por competência própria (Lei nº 8.036/1990,
+  // art. 5º, e art. 20-D, §§ 3º e 4º), e registrá-lo como ministério apagaria a
+  // procedência.
+  | 'Conselho Curador do Fundo de Garantia do Tempo de Serviço'
+  // O MGI entrou junto: é ele que fixa, por portaria, o teto de juros do
+  // consignado federal a que a resolução do Conselho Curador se remete.
+  | 'Ministério da Gestão e da Inovação em Serviços Públicos'
 
 /**
  * Origem normativa de um parâmetro. Nenhum parâmetro existe sem fonte
