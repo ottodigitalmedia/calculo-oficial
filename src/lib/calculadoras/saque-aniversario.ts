@@ -18,6 +18,7 @@ import { centavos } from '../engine/types'
 import { formatarPercentual, formatarReal } from '../format/moeda'
 import { SAQUE_ANIVERSARIO } from '../params/data/saque-aniversario'
 import { construirRegistro } from '../params/registry'
+import type { DataISO } from '../params/tipos'
 import {
   numero,
   texto,
@@ -50,7 +51,14 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
    * onde a cessão pode ir, pelos limites do Conselho Curador.
    */
   if (texto(valores, 'antecipacao') === 'sim') {
-    const a = calcularLimitesDaAntecipacao(v.saque, dataReferencia, registro)
+    /**
+     * **A data vem do campo, e não do seletor de período — é correção.** O
+     * seletor resolve o ano no dia 15 de junho, e os saques cedíveis caem de
+     * cinco para três em 1º/11/2026: resolvida em junho, a página mostraria o
+     * limite antigo nos dois últimos meses do ano. Quem contrata sabe a data.
+     */
+    const quando = (texto(valores, 'dataDaContratacao') || dataReferencia) as DataISO
+    const a = calcularLimitesDaAntecipacao(v.saque, quando, registro)
     if (a.ok) {
       const lim = a.valores
       destaques.push(
@@ -134,6 +142,13 @@ export const SAQUE_ANIVERSARIO_FGTS: DefinicaoCalculadora = {
         { valor: 'sim', rotulo: 'Sim — quero ver quanto dá para antecipar' },
       ],
       ajuda: 'A antecipação é um empréstimo com os saques futuros em garantia, e o Conselho Curador limita quantos e quanto.',
+    },
+    {
+      id: 'dataDaContratacao',
+      rotulo: 'Data da contratação da antecipação',
+      tipo: 'data',
+      visivelSe: { campo: 'antecipacao', em: ['sim'] },
+      ajuda: 'Os saques que podem ser cedidos caem de cinco para três em 1º/11/2026 — a data decide qual limite vale.',
     },
   ],
 

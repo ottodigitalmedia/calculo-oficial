@@ -97,6 +97,28 @@ describe('limites da antecipação', () => {
     if (!r.ok) expect(r.motivo).toBe('vigencia_ausente')
   })
 
+  /**
+   * O seletor de período da página resolve o ano em 15 de junho, e a virada é em
+   * 1º de novembro: sem data própria, o limite antigo apareceria nos dois
+   * últimos meses de 2026. O campo da contratação é o que impede isso.
+   */
+  it('a página resolve os limites pela data da contratação, e não pelo período', () => {
+    const d = porSlug('saque-aniversario-do-fgts')!
+    const antes = d.calcular(
+      { saldo: 1_000_000, antecipacao: 'sim', dataDaContratacao: '2026-10-31' },
+      ANTES_DA_VIRADA,
+    )
+    const depois = d.calcular(
+      { saldo: 1_000_000, antecipacao: 'sim', dataDaContratacao: '2026-11-01' },
+      ANTES_DA_VIRADA,
+    )
+    if (!antes.ok || !depois.ok) throw new Error('esperado sucesso')
+    const cedidos = (r: typeof antes) =>
+      r.ok ? r.valores.destaques?.find((x) => x.rotulo === 'Saques que podem ser cedidos')?.valor : null
+    expect(cedidos(antes)).toBe('5')
+    expect(cedidos(depois)).toBe('3')
+  })
+
   it('a página mostra os limites só quando pedidos, e o saque não muda', () => {
     const d = porSlug('saque-aniversario-do-fgts')!
     const sem = d.calcular({ saldo: 1_000_000, antecipacao: 'nao' }, ANTES_DA_VIRADA)

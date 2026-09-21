@@ -50,9 +50,20 @@ limites da antecipação em banco (`00-catalogo` §18.15).
 | `ltn-valor-nominal` | R$ 1.000,00 | desde 05/07/2001 | Decreto nº 12.814/2026, art. 2º |
 | `iof-renda-fixa-dias-sem-cobranca` | 30 dias | desde 17/12/2007 | Decreto nº 6.306/2007, Anexo |
 
+### Corrigido · a antecipação resolvia a vigência pela data errada
+
+Na primeira versão publicada do lote, o bloco da antecipação usava a data do
+seletor de período, que resolve o ano em **15 de junho**. A virada de cinco
+para três saques é em 1º/11/2026: nos dois últimos meses do ano a página
+mostraria o limite antigo. A calculadora passou a perguntar a data da
+contratação e resolve por ela. **Exposição:** nenhuma leitura errada era
+possível ainda, porque a regra nova só vale a partir de novembro; a correção
+saiu no mesmo dia.
+
 ### Auditoria · casos-ouro
 
-14 casos-ouro novos: a virada de cinco para três saques em 1º/11/2026, o teto e
+15 casos-ouro novos: a virada de cinco para três saques em 1º/11/2026 — inclusive
+pela página, que é onde o defeito acima estava —, o teto e
 o mínimo por saque, o bloqueio antes de 20/10/2025, e o Tesouro Prefixado no
 vencimento nas duas pontas da tabela regressiva, com as recusas de preço acima
 do valor de resgate e de prazo menor que trinta dias.

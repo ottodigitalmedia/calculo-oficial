@@ -4527,6 +4527,14 @@ regressiva. **Três decretos revogados no caminho**: 3.859/2001, 9.292/2018 e
 11.301/2022; vale o 12.814/2026, com texto idêntico neste ponto, e a vigência
 única guarda a cadeia na observação.
 
+**Um defeito meu, pego na conferência em produção.** O bloco da antecipação
+resolvia os parâmetros pela data do seletor de período — 15 de junho do ano
+escolhido —, e a virada é em 1º/11. Nos dois últimos meses de 2026 a página
+mostraria cinco saques onde valem três. Corrigido com campo de data próprio, e
+o caso-ouro agora trava a virada pela página. **Lição:** parâmetro que muda no
+meio do ano não pode depender do seletor de período; ou a calculadora tem campo
+de data, ou a vigência precisa começar em 1º de janeiro.
+
 **Sobra pouco de candidata viável**: Tesouro Selic e rendimento pelo CDI
 dependem de série econômica; juros de mora, da taxa legal em série; fator
 previdenciário e auxílio-reclusão seguem bloqueados por fonte. A expansão v5
