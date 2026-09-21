@@ -3369,3 +3369,111 @@ export const LEI_9532_ART_11: Fonte = {
   url: 'https://www.planalto.gov.br/ccivil_03/leis/l9532.htm',
   orgao: 'Congresso Nacional',
 }
+
+/**
+ * Antecipação do saque-aniversário — Resolução CCFGTS nº 958, de 24 de abril de
+ * 2020, com a redação da Resolução CCFGTS nº 1.130, de 7 de outubro de 2025
+ * (DOU de 20/10/2025, Ed. 200, Seção 1, p. 153; em vigor na publicação, art.
+ * 5º). Textos conferidos no Diário Oficial em 21/09/2026:
+ *
+ * > Art. 1º, § 2º: "A autorização de que trata o § 1º deste artigo, somente
+ * > poderá ser efetuada após decorrido o prazo de, no mínimo, 90 (noventa) dias
+ * > da data de início da vigência da opção do trabalhador pela sistemática do
+ * > saque-aniversário."
+ * > § 3º: "Poderão ser cedidos ou alienados, no máximo, os direitos dos
+ * > próximos 03 (três) saques anuais, limitado a uma contratação para cada
+ * > competência de saque-aniversário anual, condicionada à quitação da
+ * > antecipação vigente referente ao próximo saque-aniversário."
+ * > § 4º: "O valor mínimo cedido ou alienado de cada saque-aniversário anual
+ * > não poderá ser inferior a R$ 100,00 (cem reais) e nem superior a R$ 500,00
+ * > (quinhentos reais)."
+ *
+ * **A regra de três saques tem uma transição, e ela vence.** O art. 2º da
+ * Resolução nº 1.130/2025: "Até 31 de outubro de 2026, poderão ser cedidos ou
+ * alienados, no máximo, os direitos dos próximos 05 (cinco) saques anuais".
+ * Daí as duas vigências do parâmetro de parcelas.
+ */
+export const RES_CCFGTS_958: Fonte = {
+  id: 'res-ccfgts-958-2020',
+  norma: 'Resolução CCFGTS nº 958, de 24 de abril de 2020, com a redação da Resolução CCFGTS nº 1.130, de 7 de outubro de 2025',
+  dispositivo: 'Art. 1º, §§ 2º a 4º, e art. 2º da Resolução nº 1.130/2025',
+  url: 'https://www.in.gov.br/en/web/dou/-/resolucao-ccfgts-n-1.130-de-7-de-outubro-de-2025-663430271',
+  orgao: 'Conselho Curador do Fundo de Garantia do Tempo de Serviço',
+}
+
+/**
+ * Teto de juros da antecipação — o número não está na resolução do FGTS, e
+ * chegar até ele exige três normas:
+ *
+ * 1. Resolução CCFGTS nº 958/2020, art. 5º (conferida no DOU em 21/09/2026):
+ *    "As taxas de juros praticadas nas operações de crédito garantidas pela
+ *    alienação ou cessão fiduciária de que trata esta Resolução serão
+ *    inferiores ao limite de que trata o art. 4º, § 3º, inciso II, do Decreto
+ *    nº 8.690, de 11 de março de 2016.";
+ * 2. Decreto nº 8.690/2016, art. 4º, § 3º, II: o limite é o "percentual
+ *    estabelecido em ato do Ministro de Estado da Gestão e da Inovação em
+ *    Serviços Públicos";
+ * 3. Portaria MGI nº 7.588, de 28 de novembro de 2023 (DOU de 29/11/2023; em
+ *    vigor na publicação, art. 4º): "As taxas de juros praticadas nas operações
+ *    de empréstimos de que tratam os incisos VIII, IX e X do caput do art. 4º do
+ *    Decreto nº 8.690, de 11 de março de 2016, não poderão ser superiores a
+ *    1,80% (um inteiro e oitenta centésimos por cento) ao mês."
+ *
+ * **O parâmetro guarda 1,80%, e a taxa da antecipação tem de ficar ABAIXO
+ * disso** — a resolução diz "inferiores", não "até". A tela repete a palavra.
+ */
+export const PORTARIA_MGI_7588: Fonte = {
+  id: 'portaria-mgi-7588-2023',
+  norma: 'Portaria MGI nº 7.588, de 28 de novembro de 2023',
+  dispositivo: 'Art. 1º',
+  url: 'https://www.in.gov.br/en/web/dou/-/portaria-mgi-n-7.588-de-28-de-novembro-de-2023-526577414',
+  orgao: 'Ministério da Gestão e da Inovação em Serviços Públicos',
+}
+
+/**
+ * Letra do Tesouro Nacional — Decreto nº 12.814, de 9 de janeiro de 2026 (DOU
+ * de 12/01/2026; em vigor na publicação, art. 32). Texto conferido no Planalto
+ * em 21/09/2026:
+ *
+ * > "Art. 2º As Letras do Tesouro Nacional – LTN terão as seguintes
+ * > características: I - prazo - definido pelo Ministro de Estado da Fazenda,
+ * > quando da emissão do título; II - modalidade - nominativa; III - valor
+ * > nominal - múltiplo de R$ 1.000,00 (mil reais); IV - rendimento - definido
+ * > pelo deságio sobre o valor nominal; e V - resgate - pelo valor nominal, na
+ * > data de vencimento."
+ *
+ * O decreto revogou o nº 11.301/2022, que revogara o nº 9.292/2018, que
+ * revogara o nº 3.859/2001 — os quatro com o mesmo texto neste ponto.
+ *
+ * **O valor de R$ 1.000,00 por título é o que o Tesouro Direto pratica**, e
+ * está na metodologia de cálculo publicada pelo Tesouro Nacional: a tabela de
+ * fórmulas traz, para a LTN, preço igual a 1.000,00 dividido por (1 + taxa)
+ * elevado a du/252, e a de regras de arredondamento traz "Base 1000".
+ * https://thot-arquivos.tesouro.gov.br/publicacao/26310
+ */
+export const DECRETO_12814_ART_2: Fonte = {
+  id: 'decreto-12814-2026-art-2',
+  norma: 'Decreto nº 12.814, de 9 de janeiro de 2026',
+  dispositivo: 'Art. 2º',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/decreto/D12814.htm',
+  orgao: 'Presidência da República',
+}
+
+/**
+ * IOF na renda fixa — Decreto nº 6.306, de 14 de dezembro de 2007 (DOU de
+ * 17/12/2007), art. 32 e Anexo. Texto conferido no Planalto em 21/09/2026:
+ *
+ * > "Art. 32. O IOF será cobrado à alíquota de um por cento ao dia sobre o
+ * > valor do resgate, cessão ou repactuação, limitado ao rendimento da
+ * > operação, em função do prazo, conforme tabela constante do Anexo."
+ *
+ * O Anexo vai de "01 | 96" a "29 | 03" e termina em **"30 | 00"**: a partir do
+ * trigésimo dia não há IOF. É essa fronteira que o parâmetro guarda.
+ */
+export const DECRETO_6306_ANEXO: Fonte = {
+  id: 'decreto-6306-2007-anexo',
+  norma: 'Decreto nº 6.306, de 14 de dezembro de 2007',
+  dispositivo: 'Art. 32 e Anexo',
+  url: 'https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2007/decreto/d6306.htm',
+  orgao: 'Presidência da República',
+}

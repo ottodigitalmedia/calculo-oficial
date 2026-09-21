@@ -53,12 +53,14 @@ import { SALARIO_FAMILIA } from './salario-familia'
 import { SAQUE_ANIVERSARIO } from './saque-aniversario'
 import { SEGURO_DESEMPREGO } from './seguro-desemprego'
 import { SIMPLES_NACIONAL } from './simples-nacional'
+import { TITULOS_PUBLICOS } from './titulos-publicos'
 import { TRANSITO } from './transito'
 import { TRABALHISTA } from './trabalhista'
 import { VALE_TRANSPORTE } from './vale-transporte'
 import type { ConjuntoDeParametros } from '../tipos'
 
 export const TODOS_OS_CONJUNTOS: readonly ConjuntoDeParametros[] = [
+  TITULOS_PUBLICOS,
   INSS,
   IRPF_ANUAL,
   GANHO_DE_CAPITAL,
