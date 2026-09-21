@@ -4503,6 +4503,35 @@ no vencimento, IOF zero a partir de 30 dias) — falta conferir o Decreto nº
 saque-aniversário, que mudam em **1º/11/2026** (Resolução CCFGTS nº
 1.130/2025: de cinco para três parcelas).
 
+### 7.95 Lote 14 — uma data que vence, e um título que não depende de projeção
+
+**CALC-122** e os limites da antecipação em CALC-095. O catálogo passa de 121
+para **122**.
+
+**A antecipação entrou pela data.** Em 1º/11/2026 a Resolução CCFGTS nº
+1.130/2025 corta de cinco para três os saques cedíveis. Era o caso clássico de
+parâmetro com duas vigências, e é assim que está: nada a lembrar na virada.
+
+**O limite do que a página promete.** A conta do valor liberado pelo banco não
+existe em norma — o desconto por prazo é convenção de cada instituição. A
+página entrega o que a resolução fixa (quantos saques, quanto por saque,
+carência) e o teto de juros, que só existe por uma cadeia de três normas:
+Resolução nº 958/2020 → Decreto nº 8.690/2016 → Portaria MGI nº 7.588/2023. A
+palavra da resolução é "inferiores", e a tela repete isso.
+
+**O Tesouro Prefixado virou conta exata por decisão de entrada.** Pedir a taxa
+obrigaria a reconstruir o calendário de dias úteis do mercado — feriados
+bancários que não coincidem com os nacionais. Pedindo o preço unitário, que o
+investidor tem no extrato, a conta usa só o valor nominal do decreto e a tabela
+regressiva. **Três decretos revogados no caminho**: 3.859/2001, 9.292/2018 e
+11.301/2022; vale o 12.814/2026, com texto idêntico neste ponto, e a vigência
+única guarda a cadeia na observação.
+
+**Sobra pouco de candidata viável**: Tesouro Selic e rendimento pelo CDI
+dependem de série econômica; juros de mora, da taxa legal em série; fator
+previdenciário e auxílio-reclusão seguem bloqueados por fonte. A expansão v5
+está perto do fim previsto em §18 do catálogo.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão

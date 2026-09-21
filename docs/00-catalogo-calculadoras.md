@@ -56,14 +56,14 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | TRI | Tributos Pessoa Física | Volume sazonal intenso | 15 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
-| INV | Investimentos e Renda Fixa | Âncora de receita | 8 |
+| INV | Investimentos e Renda Fixa | Âncora de receita | 9 |
 | AUT | Autônomo, MEI e PJ | Ponte entre trabalhista e tributário | 8 |
 | VEI | Veículos | Receita média, manutenção baixa | 7 |
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 7 |
 | PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
-| | **Total** | | **121** |
+| | **Total** | | **122** |
 
 ---
 
@@ -208,6 +208,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-044 | Reserva de emergência — dimensionamento | 🔸 | M | — | Nula | v3 |
 | CALC-045 | Tesouro IPCA+ — rendimento real projetado | ▫️ | A | **API** | Baixa | v4 |
 | CALC-046 | Dividend yield e renda passiva | ▫️ | A | — | Nula | v4 |
+| CALC-122 | Tesouro Prefixado no vencimento (Decreto 12.814/2026, art. 2º; Lei 11.033, art. 1º) | 🔥 | A | P | Baixa | v5 |
 
 > ⚠️ Toda calculadora `API` desta categoria deve funcionar com o último valor conhecido em cache quando a fonte externa estiver indisponível, exibindo a data do dado. Nunca uma tela quebrada, nunca um valor silenciosamente desatualizado.
 
@@ -381,8 +382,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 45 | — | Expansão de cobertura — lotes 1 a 13 de §18 |
-| | **121** | 11 | |
+| **v5** | 46 | — | Expansão de cobertura — lotes 1 a 14 de §18 |
+| | **122** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -752,7 +753,31 @@ conferência disponível enquanto não houver exemplo oficial de ajuste anual.
 **O PGBL entrou também em CALC-017 e CALC-019**, que declaravam a ausência dele
 desde o lançamento.
 
-### 18.15 Candidatas dos próximos lotes
+### 18.15 Lote 14 — antecipação do saque-aniversário e Tesouro Prefixado, publicado em 21/09/2026
+
+**CALC-122**, na tabela de §8, e os **limites da antecipação em CALC-095**, por
+escolha na própria página.
+
+**A antecipação entrou por causa de uma data.** A Resolução CCFGTS nº
+1.130/2025 reduz de cinco para três os saques que podem ser cedidos, e a
+transição acaba em **31/10/2026**. Os limites viraram parâmetro com duas
+vigências: a página responde cinco hoje e três a partir de 1º/11, sem ninguém
+precisar lembrar. Entraram também o mínimo e o máximo por saque (R$ 100,00 e
+R$ 500,00), a carência de noventa dias e o teto de juros.
+
+**O que a antecipação NÃO mostra é o valor liberado.** Nenhuma norma define o
+desconto que o banco aplica até cada aniversário; publicar um "você recebe"
+exigiria inventar uma convenção e apresentá-la como regra. A página entrega o
+limite do que pode ser cedido e diz que o resto vem da proposta do banco.
+
+**No Tesouro Prefixado, a entrada é o PREÇO, não a taxa.** Converter taxa em
+preço exige o calendário de dias úteis do mercado, que tem feriados bancários
+fora da lista de feriados nacionais. Partindo do preço unitário — que está no
+extrato —, a conta é exata: cada título paga R$ 1.000,00 no vencimento
+(Decreto nº 12.814/2026, art. 2º). Abaixo de trinta dias ainda há IOF, e a
+calculadora recusa em vez de calcular sem ele.
+
+### 18.16 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -762,8 +787,8 @@ valor dela veio de site de terceiro.
 | Categoria | Candidatas |
 |---|---|
 | PRV | auxílio-reclusão (depende da portaria anual) · fator previdenciário e o valor pelo pedágio de 50% (falta confirmar arredondamento e idade fracionária) |
-| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) · limites da antecipação do saque-aniversário (Res. CCFGTS nº 1.130/2025: 5 parcelas até 31/10/2026 e 3 depois; R$ 100 a R$ 500 cada; juros abaixo de 1,80% a.m.) |
-| INV | Tesouro Prefixado (LTN: R$ 1.000,00 no vencimento — Decreto nº 3.859/2001, revogado pelo 9.292/2018, a conferir; IOF zero a partir de 30 dias — Decreto nº 6.306/2007) · Tesouro Selic · rendimento pelo CDI |
+| CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) |
+| INV | Tesouro Selic (depende da série da Selic) · rendimento pelo CDI (depende da série do CDI) |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
 
 > **A conta que a expansão precisa ter à vista.** Somadas, as candidatas

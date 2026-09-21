@@ -29,6 +29,36 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 21/09/2026 — expansão do catálogo, lote 14
+
+### Adicionado · Tesouro Prefixado e os limites da antecipação
+
+CALC-122 Tesouro Prefixado no vencimento, ligada ao guia *IR na renda fixa*,
+que ganhou uma seção; CALC-095 (saque-aniversário) mostra, por escolha, os
+limites da antecipação em banco (`00-catalogo` §18.15).
+
+### Parâmetro · vigências novas
+
+| Parâmetro | Valor | Vigência | Fonte |
+|---|---|---|---|
+| `antecipacao-saques-maximos` | 5 | 20/10/2025 a 31/10/2026 | Res. CCFGTS nº 1.130/2025, art. 2º |
+| `antecipacao-saques-maximos` | 3 | desde 01/11/2026 | Res. CCFGTS nº 958/2020, art. 1º, § 3º |
+| `antecipacao-valor-minimo-por-saque` | R$ 100,00 | desde 20/10/2025 | Res. CCFGTS nº 958/2020, art. 1º, § 4º |
+| `antecipacao-valor-maximo-por-saque` | R$ 500,00 | desde 20/10/2025 | Res. CCFGTS nº 958/2020, art. 1º, § 4º |
+| `antecipacao-carencia-dias` | 90 | desde 20/10/2025 | Res. CCFGTS nº 958/2020, art. 1º, § 2º |
+| `antecipacao-juros-teto-mensal` | 1,80% ao mês | desde 29/11/2023 | Portaria MGI nº 7.588/2023, art. 1º |
+| `ltn-valor-nominal` | R$ 1.000,00 | desde 05/07/2001 | Decreto nº 12.814/2026, art. 2º |
+| `iof-renda-fixa-dias-sem-cobranca` | 30 dias | desde 17/12/2007 | Decreto nº 6.306/2007, Anexo |
+
+### Auditoria · casos-ouro
+
+14 casos-ouro novos: a virada de cinco para três saques em 1º/11/2026, o teto e
+o mínimo por saque, o bloqueio antes de 20/10/2025, e o Tesouro Prefixado no
+vencimento nas duas pontas da tabela regressiva, com as recusas de preço acima
+do valor de resgate e de prazo menor que trinta dias.
+
+---
+
 ## Ciclo de 19/09/2026 — expansão do catálogo, lote 13
 
 ### Adicionado · ajuste anual de 2026 e PGBL
