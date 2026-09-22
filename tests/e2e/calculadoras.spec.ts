@@ -216,6 +216,8 @@ const ENTRADAS_QUE_INTERAGEM: Readonly<Record<string, string>> = {
   'horas-trabalhadas': '?entradaHora=8&saidaHora=17&saidaMinuto=48&intervalo=60&dias=5',
   // Lote 9: a receita do mês não pode passar do teto do Simples com o preenchedor genérico.
   'das-simples-nacional': '?atividade=comercio&rbt12=50000000&receitaDoMes=4000000',
+  // Lote 15: a janela precisa de meses publicados, em ordem e com mais de trinta dias.
+  'tesouro-selic': '?valorAplicado=2000000&primeiroMes=2025-08-01&ultimoMes=2026-07-31',
   // Lote 14: preço abaixo de R$ 1.000,00 e mais de trinta dias até o vencimento.
   'tesouro-prefixado': '?valorAplicado=100000&preco=74642&compra=2026-09-21&vencimento=2029-01-01',
   // Lote 11: as três datas da escala precisam de ordem e de estar depois de 11/11/2017.

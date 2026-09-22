@@ -332,6 +332,11 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
           periodoEhEscolha={periodoEhEscolha}
           {...(pelaData ? { rotuloDaDataQueDecide: pelaData.rotulo } : {})}
           {...(formulario.avisoAdicional ? { avisoAdicional: formulario.avisoAdicional } : {})}
+          ressalva={
+            formulario.ressalva === 'coletiva'
+              ? 'O valor final pode variar conforme acordos, convenções coletivas e particularidades do seu contrato.'
+              : 'O valor final pode variar conforme particularidades do seu caso que esta conta não cobre.'
+          }
         />
       </div>
     </div>
@@ -364,6 +369,7 @@ function Resultado({
   periodoEhEscolha,
   rotuloDaDataQueDecide,
   avisoAdicional,
+  ressalva,
 }: {
   readonly estado: Estado
   readonly rotulo: string
@@ -375,6 +381,11 @@ function Resultado({
   /** Rótulo do campo de data que decide a vigência, quando é ele e não o período. */
   readonly rotuloDaDataQueDecide?: string
   readonly avisoAdicional?: string
+  /**
+   * A frase sobre o que mais pode mudar o resultado. Vem pronta do servidor
+   * porque depende da categoria da calculadora — ver `lib/calculadoras/ressalvas.ts`.
+   */
+  readonly ressalva: string
 }) {
   /**
    * O estado da memória vive AQUI, e não dentro de `MemoriaCalculo`.
@@ -502,20 +513,17 @@ function Resultado({
           ) : rotuloDaDataQueDecide ? (
             <>
               Estimativa com base nos dados informados e nos parâmetros legais vigentes na data
-              informada em “{rotuloDaDataQueDecide}”. O valor final pode variar conforme acordos,
-              convenções coletivas e particularidades do seu contrato.
+              informada em “{rotuloDaDataQueDecide}”. {ressalva}
             </>
           ) : periodoEhEscolha ? (
             <>
               Estimativa com base nos dados informados e nos parâmetros legais vigentes em{' '}
-              {formatarData(dataReferencia)}. O valor final pode variar conforme acordos,
-              convenções coletivas e particularidades do seu contrato.
+              {formatarData(dataReferencia)}. {ressalva}
             </>
           ) : (
             <>
               Estimativa com base nos dados informados e nos parâmetros legais em vigor{' '}
-              {formatarPeriodo(cobertura.inicio, cobertura.fim)}. O valor final pode variar
-              conforme acordos, convenções coletivas e particularidades do seu contrato.
+              {formatarPeriodo(cobertura.inicio, cobertura.fim)}. {ressalva}
             </>
           )}
           {avisoAdicional ? ` ${avisoAdicional}` : ''}

@@ -89,7 +89,7 @@ export interface SaidaCorrecao {
 }
 
 /** Quantos meses separam dois rótulos `AAAA-MM`. Negativo se o segundo é antes. */
-function distanciaEmMeses(de: string, ate: string): number | null {
+export function distanciaEmMeses(de: string, ate: string): number | null {
   const a = /^(\d{4})-(\d{2})$/.exec(de)
   const b = /^(\d{4})-(\d{2})$/.exec(ate)
   if (!a || !b) return null
@@ -97,7 +97,7 @@ function distanciaEmMeses(de: string, ate: string): number | null {
 }
 
 /** O rótulo `AAAA-MM` que fica `n` meses depois de `inicio`. */
-function mesEm(inicio: string, n: number): string {
+export function mesEm(inicio: string, n: number): string {
   const encontrado = /^(\d{4})-(\d{2})$/.exec(inicio)
   if (!encontrado) return inicio
   const total = Number(encontrado[1]) * MESES_NO_ANO + (Number(encontrado[2]) - 1) + n
@@ -105,6 +105,33 @@ function mesEm(inicio: string, n: number): string {
   const mes = (total % MESES_NO_ANO) + 1
   return `${ano}-${String(mes).padStart(2, '0')}`
 }
+
+/**
+ * O produto dos fatores mensais entre duas POSIÇÕES da série, inclusive.
+ *
+ * Exportado porque CALC-123 acumula a mesma série com outra janela: lá os meses
+ * escolhidos entram todos, aqui o mês de partida fica de fora (ver a nota do
+ * topo). Uma conta só, dois recortes — duas implementações da multiplicação
+ * divergiriam no primeiro arredondamento.
+ *
+ * O resultado vem na escala de `ESCALA_DO_FATOR`.
+ */
+export function acumularFator(
+  serie: SerieMensal,
+  primeiraPosicao: number,
+  ultimaPosicao: number,
+): bigint {
+  let fator = ESCALA
+  for (let k = primeiraPosicao; k <= ultimaPosicao; k += 1) {
+    const valor = serie.valores[k]
+    if (valor === undefined) continue
+    fator = (fator * (CEM_POR_CENTO + BigInt(valor))) / CEM_POR_CENTO
+  }
+  return fator
+}
+
+/** A escala em que `acumularFator` devolve o produto. */
+export const ESCALA_DO_FATOR = ESCALA
 
 export function corrigirPorIndice(
   entrada: EntradaCorrecao,
@@ -175,14 +202,8 @@ export function corrigirPorIndice(
    * ao longo de duzentos e quarenta meses, e `ADR-004` A-6 o proíbe de todo
    * modo.
    */
-  let fator = ESCALA
   const primeiroAplicado = posicaoInicial + 1
-
-  for (let k = primeiroAplicado; k <= posicaoInicial + passos; k += 1) {
-    const valor = serie.valores[k]
-    if (valor === undefined) continue
-    fator = (fator * (CEM_POR_CENTO + BigInt(valor))) / CEM_POR_CENTO
-  }
+  const fator = acumularFator(serie, primeiroAplicado, posicaoInicial + passos)
 
   const mesesAplicados = passos
   const primeiroMesAplicado = mesesAplicados > 0 ? mesEm(serie.inicio, primeiroAplicado) : entrada.ate

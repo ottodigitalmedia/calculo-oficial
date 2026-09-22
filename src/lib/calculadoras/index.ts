@@ -51,6 +51,7 @@ import { JUROS_SIMPLES } from './juros-simples'
 import { ESCALA_12X36 } from './escala-12x36'
 import { PGBL } from './pgbl'
 import { TESOURO_PREFIXADO } from './tesouro-prefixado'
+import { TESOURO_SELIC } from './tesouro-selic'
 import { MULTA_DE_TRANSITO } from './multa-de-transito'
 import { SAQUE_ANIVERSARIO_FGTS } from './saque-aniversario'
 import { RESCISAO_JUSTA_CAUSA } from './rescisao-justa-causa'
@@ -190,6 +191,7 @@ export const CALCULADORAS: readonly DefinicaoCalculadora[] = [
   ESCALA_12X36,
   PGBL,
   TESOURO_PREFIXADO,
+  TESOURO_SELIC,
   INTERMITENTE,
   FGTS,
   INSS_MENSAL,

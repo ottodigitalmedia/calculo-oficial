@@ -774,6 +774,12 @@ const CALCULOS: Readonly<Record<string, () => Promise<FuncaoCalculo>>> = {
       /* webpackExports: ["calcular"] */
       './tesouro-prefixado'
     ).then((m) => m.calcular),
+  'tesouro-selic': () =>
+    import(
+      /* webpackChunkName: "calc-tesouro-selic" */
+      /* webpackExports: ["calcular"] */
+      './tesouro-selic'
+    ).then((m) => m.calcular),
 }
 
 /** Slugs com cálculo registrado. Usado pelo teste de paridade. */

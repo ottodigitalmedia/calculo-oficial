@@ -378,6 +378,11 @@ export const CATALOGO: readonly ItemDoCatalogo[] = [
     linhaDeContexto: 'Quanto cai na conta no vencimento, depois do imposto que o prazo define.',
   },
   {
+    slug: 'tesouro-selic',
+    nome: 'Tesouro Selic — quanto rendeu',
+    linhaDeContexto: 'Quanto a Selic acumulada rendeu no período, e quanto sobra depois do imposto.',
+  },
+  {
     slug: 'contrato-intermitente',
     nome: 'Contrato intermitente — o acerto de cada convocação',
     linhaDeContexto:

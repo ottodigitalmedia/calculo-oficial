@@ -10,6 +10,7 @@
  * medição em vez de antes do lançamento.
  */
 
+import { ressalvaDe, type Ressalva } from './ressalvas'
 import type { Resultado, Unidade } from '../engine/traco'
 import type { Centavos } from '../engine/types'
 import type { DataISO } from '../params/tipos'
@@ -377,6 +378,13 @@ export interface FormularioCalculadora {
   readonly sugestao?: SugestaoDoFormulario
   /** Presente quando a vigência é resolvida por um campo de data — ver `DefinicaoCalculadora`. */
   readonly vigenciaPelaData?: { readonly campo: string; readonly rotulo: string }
+  /**
+   * De que mais o resultado pode depender — ver `ressalvas.ts`.
+   *
+   * Vai ao navegador porque a frase é do rodapé do resultado, e o componente
+   * não pode decidir sozinho: ele não conhece a categoria da calculadora.
+   */
+  readonly ressalva: Ressalva
 }
 
 export interface DefinicaoCalculadora {
@@ -461,6 +469,7 @@ export function formularioDe(
     anosDisponiveis: semAnosFuturos(anosComOpcionais(definicao, registro), anoCorrente),
     cobertura: cobertura ? { inicio: cobertura.inicio, fim: cobertura.fim } : null,
     ...vigenciaPelaDataDe(definicao),
+    ressalva: ressalvaDe(definicao.slug),
   }
 }
 

@@ -24,6 +24,7 @@ export const IR_NA_RENDA_FIXA: Guia = {
     'rendimento-da-poupanca',
     'come-cotas',
     'tesouro-prefixado',
+    'tesouro-selic',
   ],
 
   secoes: [
@@ -176,6 +177,16 @@ export const IR_NA_RENDA_FIXA: Guia = {
           tipo: 'chamada',
           slug: 'tesouro-prefixado',
           texto: 'A calculadora do Tesouro Prefixado parte do preço que você pagou e mostra o líquido no vencimento.',
+        },
+        {
+          tipo: 'paragrafo',
+          texto:
+            'No título pós-fixado a lógica se inverte: o preço quase não oscila e o rendimento acompanha a taxa básica, mês a mês. O imposto é o mesmo da tabela acima, e como o resgate pode ser feito a qualquer momento, é o tempo de aplicação que decide a alíquota.',
+        },
+        {
+          tipo: 'chamada',
+          slug: 'tesouro-selic',
+          texto: 'A calculadora do Tesouro Selic acumula a taxa do período e separa rendimento de imposto.',
         },
       ],
     },
