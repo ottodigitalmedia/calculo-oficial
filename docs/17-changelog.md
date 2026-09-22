@@ -29,6 +29,35 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 22/09/2026 — expansão do catálogo, lote 15
+
+### Adicionado · Tesouro Selic
+
+CALC-123 calcula o rendimento do Tesouro Selic pela série mensal da taxa, com
+o imposto da tabela regressiva e a fronteira de trinta dias do IOF. Ligada ao
+guia *IR na renda fixa*, que ganhou o parágrafo do pós-fixado
+(`00-catalogo` §18.16).
+
+### Corrigido · o aviso falava de convenção coletiva em toda calculadora
+
+O rodapé do resultado dizia, em qualquer calculadora com parâmetro legal, que o
+valor podia variar "conforme acordos, convenções coletivas e particularidades
+do seu contrato". Convenção coletiva não muda imposto de renda, rendimento de
+título público nem benefício do INSS. A frase passou a seguir a categoria do
+catálogo: trabalhistas mantêm o texto, as demais dizem "particularidades do seu
+caso que esta conta não cobre". **Exposição:** desde o lançamento, em todas as
+calculadoras não trabalhistas com parâmetro legal; nenhum valor calculado era
+afetado.
+
+### Auditoria · casos-ouro
+
+8 casos-ouro novos do Tesouro Selic — doze meses cheios, as três faixas de
+alíquota pela janela, a inclusão dos dois meses escolhidos, o mês ainda não
+publicado e fevereiro sozinho, recusado pelos 28 dias — e 4 testes de unidade
+da ressalva por categoria.
+
+---
+
 ## Ciclo de 21/09/2026 — expansão do catálogo, lote 14
 
 ### Adicionado · Tesouro Prefixado e os limites da antecipação

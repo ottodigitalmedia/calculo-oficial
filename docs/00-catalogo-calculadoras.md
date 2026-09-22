@@ -56,14 +56,14 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | TRI | Tributos Pessoa Física | Volume sazonal intenso | 15 |
 | CRD | Crédito e Dívidas | Âncora de receita | 10 |
 | IMV | Imóveis e Financiamento | Âncora de receita | 8 |
-| INV | Investimentos e Renda Fixa | Âncora de receita | 9 |
+| INV | Investimentos e Renda Fixa | Âncora de receita | 10 |
 | AUT | Autônomo, MEI e PJ | Ponte entre trabalhista e tributário | 8 |
 | VEI | Veículos | Receita média, manutenção baixa | 7 |
 | IDX | Correção Monetária e Índices | Diferencial técnico defensável | 5 |
 | CSM | Consumo Doméstico e Energia | Volume estável, receita média | 5 |
 | UTI | Utilitários e Matemática | Volume alto, receita baixa — sustentação de sessão | 7 |
 | PRV | Previdência e Benefícios do INSS | Volume alto e permanente; risco alto de norma | 12 |
-| | **Total** | | **122** |
+| | **Total** | | **123** |
 
 ---
 
@@ -209,6 +209,7 @@ O catálogo tem **11 categorias ativas** e **5 categorias excluídas em definiti
 | CALC-045 | Tesouro IPCA+ — rendimento real projetado | ▫️ | A | **API** | Baixa | v4 |
 | CALC-046 | Dividend yield e renda passiva | ▫️ | A | — | Nula | v4 |
 | CALC-122 | Tesouro Prefixado no vencimento (Decreto 12.814/2026, art. 2º; Lei 11.033, art. 1º) | 🔥 | A | P | Baixa | v5 |
+| CALC-123 | Tesouro Selic — quanto rendeu (Decreto 12.814/2026, art. 3º) | 🔥 | A | **API** | Baixa | v5 |
 
 > ⚠️ Toda calculadora `API` desta categoria deve funcionar com o último valor conhecido em cache quando a fonte externa estiver indisponível, exibindo a data do dado. Nunca uma tela quebrada, nunca um valor silenciosamente desatualizado.
 
@@ -382,8 +383,8 @@ Probabilidade de loteria, teste vocacional, pegada de carbono, compatibilidade a
 | **v2** | 17 | + IMV, INV, AUT, VEI, UTI | Abrir as verticais de maior valor publicitário |
 | **v3** | 29 | + IDX, CSM | Profundidade nos clusters e diferencial técnico |
 | **v4** | 20 | — | Cauda longa e cobertura |
-| **v5** | 46 | — | Expansão de cobertura — lotes 1 a 14 de §18 |
-| | **122** | 11 | |
+| **v5** | 47 | — | Expansão de cobertura — lotes 1 a 15 de §18 |
+| | **123** | 11 | |
 
 **Regra de conferência.** A quebra por fase é derivada da coluna `Fase` das tabelas §4 a §13, não escrita à mão. Ao mover uma calculadora de fase, recontar — divergência entre esta tabela e as tabelas de categoria invalida o dimensionamento de esforço do `11-roadmap`.
 
@@ -777,7 +778,26 @@ extrato —, a conta é exata: cada título paga R$ 1.000,00 no vencimento
 (Decreto nº 12.814/2026, art. 2º). Abaixo de trinta dias ainda há IOF, e a
 calculadora recusa em vez de calcular sem ele.
 
-### 18.16 Candidatas dos próximos lotes
+### 18.16 Lote 15 — Tesouro Selic, e o aviso que não se aplicava, publicado em 22/09/2026
+
+**CALC-123**, na tabela de §8, com a série mensal da Selic que o produto já
+mantém — a mesma de CALC-060.
+
+**A janela é de meses cheios, e a tela diz isso.** A série é mensal e a LFT
+rende todo dia útil: pedir datas exatas produziria um número com aparência de
+precisão diária e origem mensal. A página pede o primeiro e o último mês de
+rendimento, **e os dois entram** — recorte diferente do de CALC-060, onde o mês
+de partida fica de fora porque o índice daquele mês já está no valor. As duas
+usam o mesmo acumulador; o que muda é a janela, e cada uma explica a sua.
+
+**Um aviso errado saiu do ar.** Toda calculadora com parâmetro legal dizia que
+o valor podia variar "conforme acordos, convenções coletivas e particularidades
+do seu contrato" — inclusive as de imposto, de investimento e de previdência.
+Agora a frase segue a categoria do catálogo: as 36 trabalhistas mantêm a
+menção, e as demais falam em particularidades do caso. A lista é única, mora em
+`lib/calculadoras/ressalvas.ts` e tem teste.
+
+### 18.17 Candidatas dos próximos lotes
 
 **Sem ID ainda, de propósito.** ID é atribuído quando o lote abre e a
 candidata é classificada por §16; atribuir agora reservaria números para
@@ -788,7 +808,7 @@ valor dela veio de site de terceiro.
 |---|---|
 | PRV | auxílio-reclusão (depende da portaria anual) · fator previdenciário e o valor pelo pedágio de 50% (falta confirmar arredondamento e idade fracionária) |
 | CRD | juros de mora e multa por atraso (a taxa legal mudou com a Lei nº 14.905/2024 e depende de série) |
-| INV | Tesouro Selic (depende da série da Selic) · rendimento pelo CDI (depende da série do CDI) |
+| INV | rendimento pelo CDI — depende de uma série de CDI que o produto ainda não ingere |
 | VEI | IPVA por estado — **bloqueada por §14**, é dado estadual · custo de manutenção por faixa de quilometragem |
 
 > **A conta que a expansão precisa ter à vista.** Somadas, as candidatas

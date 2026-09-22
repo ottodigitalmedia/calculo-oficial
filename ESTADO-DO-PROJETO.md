@@ -4540,6 +4540,32 @@ dependem de série econômica; juros de mora, da taxa legal em série; fator
 previdenciário e auxílio-reclusão seguem bloqueados por fonte. A expansão v5
 está perto do fim previsto em §18 do catálogo.
 
+### 7.96 Lote 15 — o pós-fixado, e um aviso que ensinava a ignorar avisos
+
+**CALC-123**. O catálogo passa de 122 para **123**.
+
+**A janela de meses cheios é a decisão do lote.** A série da Selic é mensal, a
+LFT rende diariamente, e a diferença entre as duas coisas não dá para esconder:
+ou a página pede meses e diz que os dias do primeiro e do último mês podem não
+estar inteiros, ou finge precisão que a fonte não tem. Escolhida a primeira, e
+declarada na tela, na memória e no caso-ouro.
+
+**O acumulador virou função exportada.** CALC-060 aplica os meses seguintes ao
+de partida; CALC-123 aplica os dois extremos. Eram duas janelas sobre a mesma
+multiplicação, e agora são: `acumularFator` em `indices.ts`, usada pelas duas.
+
+**O aviso que não se aplicava saiu.** Dizer a quem calcula restituição de
+imposto que o valor "pode variar conforme convenções coletivas" é ensinar o
+leitor a pular o aviso — e o aviso existe porque em rescisão ele é verdadeiro.
+A frase agora segue a categoria do catálogo, com lista única e teste. **Ficava
+no ar desde o lançamento**, em todas as calculadoras não trabalhistas com
+parâmetro legal.
+
+**O que sobra de candidata é pouco, e depende de dado que não temos**:
+rendimento pelo CDI (sem série de CDI ingerida), juros de mora (taxa legal em
+série), fator previdenciário e auxílio-reclusão (bloqueados por fonte desde a
+pesquisa do lote 7). A expansão v5 chegou ao fim previsto em §18 do catálogo.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
