@@ -34,6 +34,14 @@
 > **Comece por §8.00**; §7.80 a §7.84 registram o que a conferência pegou em
 > cada lote antes de publicar.
 >
+> **Sessões de 18 a 22/09/2026 — a expansão v5 fechou.** Lotes 6 a 15 no ar,
+> e o catálogo passa de 103 para **123** calculadoras: quarenta e sete
+> construídas na expansão, de CALC-077 a CALC-123. As 123 foram conferidas em
+> produção no dia 19/09/2026 — todas respondem, todas calculam — e as contas de
+> cada lote foram conferidas no navegador contra os casos-ouro. **§7.97 é o
+> fechamento**: o que entrou, o que ficou declarado como leitura, o que
+> continua bloqueado por fonte e o que tem data marcada. Comece por §8.0000.
+>
 > **Leia antes:** `CLAUDE.md` (regras invioláveis) e `docs/README.md` (índice).
 > Este arquivo não substitui nenhum dos dois — diz onde as coisas pararam.
 
@@ -178,6 +186,11 @@ registro e se atualizam sozinhos. Nenhum arquivo de rota é criado.
 ---
 
 ## 4. Calculadoras — ✅ 75 de 75, em 07/08/2026
+
+> **Esta seção descreve o fechamento do v1 ao v4.** Depois dela veio a expansão
+> v5, que levou o catálogo a **123** calculadoras em 22/09/2026 — ver §7.97 e
+> `00-catalogo` §18. O número acima vale para a data do título; o comando de
+> §4.3 continua sendo o que vale sempre.
 
 **Setenta publicadas.** A lista nominal saiu daqui de propósito: ela divergia
 da realidade a cada publicação, que é o mesmo defeito descrito em §4.2. O que
@@ -4566,9 +4579,115 @@ rendimento pelo CDI (sem série de CDI ingerida), juros de mora (taxa legal em
 série), fator previdenciário e auxílio-reclusão (bloqueados por fonte desde a
 pesquisa do lote 7). A expansão v5 chegou ao fim previsto em §18 do catálogo.
 
+### 7.97 A expansão v5 fechou — o que foi construído, em 22/09/2026
+
+**Quarenta e sete calculadoras**, de CALC-077 a CALC-123, em quinze lotes. O
+catálogo sai de 76 e chega a **123**. O que segue é o registro de continuidade:
+o que cada lote entregou, o que a conferência pegou, e o que ficou de fora com
+motivo.
+
+#### O que entrou, por lote
+
+| Lote | Entregou | Registro |
+|---|---|---|
+| 1 a 5 | CALC-077 a CALC-103 — adicionais, licenças, rescisões, investimentos e os primeiros benefícios do INSS; categoria PRV criada | §7.80 a §7.84 |
+| 6 | Regras de transição da aposentadoria — idade progressiva, pedágios, idade | §7.85 |
+| 7 | Valor da aposentadoria, auxílio-acidente e aposentadoria do professor | §7.86 |
+| 8 | Venda de bens, imposto sobre aluguel e horas trabalhadas | §7.89 |
+| 9 | DAS do Simples Nacional e DAE do empregador doméstico | §7.90 |
+| 10 | Abono salarial do PIS e seguro-desemprego do doméstico | §7.91 |
+| 11 | Juros simples e escala 12 × 36 | §7.92 |
+| 12 | Fundos de curto prazo no come-cotas e percentuais em série | §7.93 |
+| 13 | Ajuste anual de 2026 em CALC-017 e CALC-019, e o PGBL | §7.94 |
+| 14 | Tesouro Prefixado e os limites da antecipação do saque-aniversário | §7.95 |
+| 15 | Tesouro Selic, e a ressalva por categoria | §7.96 |
+
+#### A conferência em produção, feita em 19/09/2026
+
+As **123** páginas respondem e estão no sitemap; a suíte de ponta a ponta que
+preenche cada calculadora e exige um resultado rodou **contra o site
+publicado**, e as 123 passaram. Isso prova que a conta sai, não que o valor está
+certo — a correção dos valores é dos casos-ouro, e cada lote teve os seus
+conferidos no navegador depois do deploy.
+
+#### Os defeitos que a conferência em produção pegou
+
+Nenhum deles teria aparecido em teste, e os três estão no changelog com a
+exposição declarada:
+
+- **CALC-103 abria em 2033**, sete anos à frente, porque a escada de pontos
+  publica o futuro de uma vez (§7.85) — e o mesmo seletor, olhado de novo,
+  escondia 2026 no carnê-leão (§7.88);
+- **as rescisões ignoravam a dobra das férias vencidas** — descoberto ao
+  escrever a FAQ de CALC-112 (§7.87);
+- **CALC-120 exibia "1.500" plantões** onde a conta dava 15: contagem com
+  `casasDecimais: 0` é valor inteiro, sem escala (§7.92);
+- **CALC-095 resolvia os limites da antecipação pelo seletor de período**, que
+  cai sempre em 15 de junho, e a virada da regra é em 1º/11 (§7.95).
+
+#### O que ficou declarado como leitura, e não como certeza
+
+Três pontos em que a norma não tem exemplo oficial. Os três estão escritos na
+própria página, com o efeito da leitura contrária:
+
+- o **redutor de 2026 no imposto sobre aluguel**, enquadrado pelo aluguel já sem
+  as exclusões (§7.93);
+- a **redução anual do art. 11-A**, sem exemplo de ajuste anual publicado pela
+  Receita — a conferência possível foi interna, e fecha ao centavo (§7.94);
+- o **abono salarial de cinco meses**, em que a tabela do Ministério diverge da
+  lei em um real, e a calculadora segue a lei (§7.91).
+
+#### O que continua fora, com motivo
+
+- **fator previdenciário** — nem o Decreto nº 3.048/1999 nem a IN nº 128/2022
+  fixam o arredondamento e as frações de idade e tempo;
+- **auxílio-reclusão** — o limite de baixa renda sai de portaria digitalizada;
+- **juros de mora e multa por atraso** — a taxa legal da Lei nº 14.905/2024
+  depende de série que o produto não ingere;
+- **rendimento pelo CDI** — sem série de CDI;
+- **IPVA e demais dados estaduais e municipais** — `00-catalogo` §14, decisão
+  anterior e não revista.
+
+#### A régua que a expansão deixou
+
+1. **Fonte oficial lida por inteiro, sempre** — inclusive para conferir se o
+   decreto citado ainda está em vigor: no lote 14 foram três revogações
+   encadeadas até chegar ao texto vigente.
+2. **Parâmetro que muda no meio do ano não pode depender do seletor de
+   período**, que resolve em 15 de junho. Ou a calculadora tem campo de data, ou
+   a vigência começa em 1º de janeiro (§7.95).
+3. **O caso-ouro da página confere o que a tela mostra**, e não o que o motor
+   devolve — foi assim que "1.500 plantões" passou (§7.92).
+4. **Aviso que não se aplica ensina a ignorar avisos** (§7.96).
+5. **Candidata que já está publicada não é candidata:** duas saíram da lista de
+   §18 por já existirem, e uma terceira pesquisa (aluguel pago por PJ) só
+   serviu para confirmar a conta no ar e achar o ponto não declarado (§7.93).
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
+
+### 8.0000 Retomada em 22/09/2026 — a expansão fechou; o que vem agora
+
+**Não há lote 16 de calculadora à vista**, e isso é resultado, não falta de
+assunto: as candidatas que sobraram dependem de série econômica que o produto
+não ingere ou de fonte que não confirma valor (§7.97). Abrir mais cobertura
+exigiria reabrir `00-catalogo` §14, que é decisão do mantenedor.
+
+**O que está pronto para ser feito, em ordem de risco:**
+
+1. **As duas tarefas com data** de §8.000 — anexos do Simples e limite do
+   abono. Elas tiram calculadoras do ar em 1º/01/2027 se ninguém agir.
+2. **Manutenção de dependências:** `npm audit` aponta três vulnerabilidades
+   moderadas. Não bloqueiam o pipeline, que reprova de alta para cima.
+3. **Medir antes de acrescentar:** o Search Console é o que diz quais das 123
+   páginas têm demanda real. Sem isso, qualquer lote novo é palpite.
+4. **`HEALTH_TOKEN`** (mantenedor): sem ele o deploy continua sem provar que o
+   contêiner trocou — três lotes precisaram de disparo manual.
+
+**O que NÃO fazer:** publicar calculadora cuja fonte não confirme os valores.
+A expansão inteira foi construída recusando isso, e as recusas estão
+registradas uma a uma.
 
 ### 8.000 Tarefa com data — antes de 1º/01/2027
 

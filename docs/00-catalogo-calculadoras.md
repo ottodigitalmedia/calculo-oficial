@@ -459,6 +459,14 @@ site perdia espaço de busca aos poucos. O ponto de partida foi o de
 `00-product-brief` §5.1: os agregadores generalistas têm **cobertura quatro
 vezes maior**, e para toda busca fora do catálogo eles ganham por padrão.
 
+> **A expansão fechou em 22/09/2026, com quinze lotes e 47 calculadoras** —
+> CALC-077 a CALC-123 —, e o catálogo saiu de 76 para **123**. O fechamento,
+> com o que ficou declarado como leitura da norma e o que continua bloqueado
+> por fonte, está em `ESTADO-DO-PROJETO` §7.97. As candidatas que sobraram
+> (§18.17) dependem de série econômica não ingerida ou de fonte que não
+> confirma valor; ampliar além delas exige reabrir §14, que é decisão do
+> mantenedor.
+
 ### 18.1 As regras que a expansão manteve
 
 Decisões do mantenedor na mesma data:
