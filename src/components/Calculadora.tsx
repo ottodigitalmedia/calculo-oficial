@@ -6,10 +6,12 @@ import { AcoesDoResultado } from '@/components/AcoesDoResultado'
 import { CampoFormulario, validar } from '@/components/campos'
 import { MemoriaCalculo } from '@/components/MemoriaCalculo'
 import { carregarCalculo } from '@/lib/calculadoras/calculo'
+import { calcularComGuarda } from '@/lib/calculadoras/guarda'
 import {
   campoEhTexto,
   campoVisivel,
   listaVazia,
+  opcaoDoPeriodo,
   type FormularioCalculadora,
   type FuncaoCalculo,
   type Campo,
@@ -106,7 +108,8 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
    * nada — oferecer o seletor seria oferecer uma escolha falsa.
    */
   const pelaData = formulario.vigenciaPelaData ?? null
-  const periodoEhEscolha = anos.length > 1 && pelaData === null
+  const periodos = formulario.periodos
+  const periodoEhEscolha = periodos.length > 1 && pelaData === null
 
   /**
    * Abre no ano mais recente que sabemos calcular.
@@ -256,7 +259,8 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
     // carga. Nunca acontece na renderização do servidor, que para em `vazio`.
     if (!calcular) return { tipo: 'carregando' }
 
-    return { tipo: 'calculado', resultado: calcular(valoresAdiados, dataAdiada) }
+    // Com guarda: exceção do motor vira mensagem, nunca página derrubada (§7.99).
+    return { tipo: 'calculado', resultado: calcularComGuarda(calcular, valoresAdiados, dataAdiada) }
   }, [calcular, valoresAdiados, dataAdiada, camposVisiveis, erros, valoresIniciais])
 
   return (
@@ -274,13 +278,13 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
           </label>
           <select
             id="ref"
-            value={dataReferencia}
+            value={opcaoDoPeriodo(periodos, dataReferencia)}
             onChange={(e) => setDataReferencia(e.target.value)}
             className="mt-1 block w-full rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-base"
           >
-            {anos.map((a) => (
-              <option key={a} value={`${a}-06-15`}>
-                {a}
+            {periodos.map((p) => (
+              <option key={p.data} value={p.data}>
+                {p.rotulo}
               </option>
             ))}
           </select>

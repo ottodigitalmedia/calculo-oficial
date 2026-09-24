@@ -64,7 +64,9 @@ test('RF-004 · trocar o período muda o resultado e a vigência exibida', async
   await page.getByLabel('Salário bruto mensal').fill('500000')
   await expect(page.getByText('R$ 4.498,49').first()).toBeVisible()
 
-  await page.getByLabel('Período de referência').selectOption({ label: '2025' })
+  // Pelo valor, não pelo rótulo: desde §7.99 o ano de 2025 tem dois trechos, e
+  // o que contém 15/06 é "2025 — de 01/05 a 31/12".
+  await page.getByLabel('Período de referência').selectOption('2025-06-15')
 
   // Em 2025 NÃO há redutor, então o imposto não zera:
   //   INSS R$ 509,60 · IRRF R$ 312,89 · líquido = R$ 4.177,51
@@ -76,6 +78,21 @@ test('RF-004 · trocar o período muda o resultado e a vigência exibida', async
   const memoria = page.locator('#memoria-de-calculo')
   await expect(memoria.getByText(/01\/01\/2025/).first()).toBeVisible()
   await expect(memoria.getByText(/Portaria Interministerial MPS\/MF nº 6/).first()).toBeVisible()
+})
+
+/**
+ * §7.99 — a tabela do IR mudou em 01/05/2025, e o seletor só oferecia "2025",
+ * que virava 15/06: janeiro a abril de 2025 não podiam ser calculados.
+ *   simplificado 5.000,00 − 564,80 = 4.435,20 × 22,5% − 662,77 = 335,15
+ *   líquido = 5.000,00 − 509,60 − 335,15 = 4.155,25
+ */
+test('RF-004 · janeiro a abril de 2025 é escolhível e usa a tabela de janeiro', async ({ page }) => {
+  await page.getByLabel('Salário bruto mensal').fill('500000')
+  await page
+    .getByLabel('Período de referência')
+    .selectOption({ label: '2025 — de 01/01 a 30/04' })
+  await expect(page.getByText('R$ 4.155,25').first()).toBeVisible()
+  await expect(page).toHaveURL(/ref=2025-01-01/)
 })
 
 test('§1.5 · campo obrigatório vazio mantém estado pendente, sem número parcial', async ({ page }) => {

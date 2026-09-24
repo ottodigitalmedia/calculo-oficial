@@ -88,6 +88,23 @@ export interface ResultadoErro {
 }
 
 /**
+ * O resultado não cabe no inteiro seguro — a conta existe, mas não sai exata.
+ *
+ * **Classe própria desde a auditoria de 24/09/2026 (§7.99).** Era um
+ * `RangeError` genérico, indistinguível de defeito, e a tela não tinha como
+ * separar os dois: um valor digitado com zeros a mais derrubava a página. Com a
+ * classe, quem chama sabe que é limite da entrada, não erro do código — e diz
+ * isso ao usuário (`lib/calculadoras/guarda.ts`). Continua sendo `RangeError`,
+ * e quem já o tratava assim não percebe diferença.
+ */
+export class EstouroDoInteiroSeguro extends RangeError {
+  constructor(mensagem: string) {
+    super(mensagem)
+    this.name = 'EstouroDoInteiroSeguro'
+  }
+}
+
+/**
  * Acima do inteiro seguro da linguagem a soma deixa de ser exata **em
  * silêncio** — que é o único jeito de `A-3` falhar sem alarde. As guardas
  * abaixo transformam esse limite em erro visível.
@@ -104,7 +121,7 @@ function exigirInteiroSeguro(valor: number, unidade: string): void {
     )
   }
   if (!Number.isSafeInteger(valor)) {
-    throw new RangeError(
+    throw new EstouroDoInteiroSeguro(
       `${unidade}: ${valor} excede o inteiro seguro da linguagem; a aritmética deixaria de ser exata.`,
     )
   }
@@ -120,7 +137,7 @@ function exigirInteiroSeguro(valor: number, unidade: string): void {
  */
 export function exigirProdutoSeguro(a: number, b: number, contexto: string): void {
   if (a !== 0 && Math.abs(b) > Number.MAX_SAFE_INTEGER / Math.abs(a)) {
-    throw new RangeError(
+    throw new EstouroDoInteiroSeguro(
       `${contexto}: o produto ${a} × ${b} excede o inteiro seguro e deixaria de ser exato.`,
     )
   }

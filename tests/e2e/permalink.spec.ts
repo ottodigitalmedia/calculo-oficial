@@ -67,7 +67,7 @@ test('o período padrão NÃO entra na URL — se entrasse, toda calculadora fic
   await expect(page.locator('meta[name="robots"][data-query]')).toHaveCount(0)
 
   // Trocar o período, aí sim, aparece.
-  await page.getByLabel('Período de referência').selectOption({ label: '2025' })
+  await page.getByLabel('Período de referência').selectOption('2025-06-15')
   await expect(page).toHaveURL(/ref=2025/)
 })
 

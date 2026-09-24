@@ -146,6 +146,18 @@ export function calcularPrecificacao(
       'onde a precificação de quem trabalha por conta própria costuma errar para baixo.',
   })
 
+  // Percentual mínimo sobre expediente curto arredonda para zero hora — 1 dia
+  // de 12 h a 0,01% são 0,0012 h. Sem esta recusa a divisão seguinte lançava
+  // exceção e derrubava a página (auditoria de 24/09/2026, §7.99).
+  if (horasFaturaveis <= 0) {
+    return {
+      ok: false,
+      motivo: 'entrada_invalida',
+      detalhe:
+        'Com esse expediente e esse percentual faturável não sobra nem um centésimo de hora faturada no mês. Aumente os dias, as horas ou o percentual.',
+    }
+  }
+
   // --- O que precisa entrar ---
   const precisaCobrirNoMes = somar(entrada.rendaDesejadaMensal, entrada.custosFixosMensais)
   etapas.push({

@@ -90,6 +90,38 @@ test('IRRF · a contribuição é campo editável e a memória registra a origem
   await expect(page.getByText('R$ 382,88').first()).toBeVisible()
 })
 
+/**
+ * §7.99 — zero no campo significava "calcule pela tabela", e quem não teve
+ * desconto previdenciário não tinha como dizer isso. O Exemplo 5 da Receita
+ * (INSS zero) não era reproduzível pela tela.
+ */
+test('IRRF · "sem contribuição" esconde o campo e reproduz o exemplo 5 da Receita', async ({
+  page,
+}) => {
+  await page.goto('/calculadora/irrf')
+  await page.getByLabel('Rendimento bruto do mês').fill('760720')
+  await page
+    .getByLabel('Houve desconto de contribuição previdenciária no mês?')
+    .selectOption('nao')
+  await expect(page.getByLabel('Contribuição previdenciária descontada')).toBeHidden()
+  await expect(page.getByText(/Sem contribuição previdenciária no mês/)).toBeVisible()
+  await expect(page.getByText('R$ 1.016,27').first()).toBeVisible()
+})
+
+/**
+ * §7.99 — a página lia `'nao-cumprido'`, valor que o campo não oferece, e o
+ * desconto do art. 23, § 4º, da LC 150 nunca aparecia para quem pede demissão.
+ */
+test('rescisão do doméstico · pedido de demissão sem cumprir aviso tem o desconto', async ({
+  page,
+}) => {
+  await page.goto(
+    '/calculadora/rescisao-domestico?admissao=2016-03-01&desligamento=2026-06-30&salario=300000&motivo=pedido-demissao',
+  )
+  const resultado = page.locator('[aria-live="polite"]')
+  await expect(resultado.getByText('Desconto de aviso não cumprido')).toBeVisible()
+})
+
 test('juros compostos · não tem seletor de período, por não ter parâmetro legal', async ({
   page,
 }) => {

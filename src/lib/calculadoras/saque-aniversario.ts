@@ -156,6 +156,9 @@ export const SAQUE_ANIVERSARIO_FGTS: DefinicaoCalculadora = {
   // Os limites da antecipação nasceram em 20/10/2025: antes disso, a resolução
   // não os fixava, e o saque-aniversário continua calculando sem eles.
   parametrosOpcionais: [...PARAMETROS_ANTECIPACAO],
+  // Resolvidos pela data da contratação, e não pelo seletor — o seletor não
+  // pode ser partido pela virada de 01/11/2026 que ele não controla.
+  parametrosResolvidosPorCampo: [...PARAMETROS_ANTECIPACAO],
 
   rotuloResultado: 'Saque-aniversário estimado',
 

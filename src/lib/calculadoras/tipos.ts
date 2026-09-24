@@ -365,6 +365,20 @@ export interface SugestaoDoFormulario {
   readonly desatualizada: boolean
 }
 
+/**
+ * Uma opção do seletor de período.
+ *
+ * Quase sempre um ano inteiro. Quando um parâmetro da calculadora muda no meio
+ * do ano, o ano vira dois ou mais trechos — ver `periodosDe`.
+ */
+export interface PeriodoDoSeletor {
+  /** A data de referência que a opção entrega ao cálculo. */
+  readonly data: DataISO
+  readonly rotulo: string
+  readonly inicio: DataISO
+  readonly fim: DataISO
+}
+
 export interface FormularioCalculadora {
   readonly slug: string
   readonly campos: readonly Campo[]
@@ -372,6 +386,8 @@ export interface FormularioCalculadora {
   readonly avisoAdicional?: string
   /** Anos que a interseção das vigências admite. Vazio quando não há parâmetro legal. */
   readonly anosDisponiveis: readonly number[]
+  /** As opções do seletor de período, do mais recente ao mais antigo — ver `periodosDe`. */
+  readonly periodos: readonly PeriodoDoSeletor[]
   /** Intervalo coberto, para a frase sob o seletor de período. */
   readonly cobertura: { readonly inicio: DataISO; readonly fim: DataISO | null } | null
   /** Presente quando a calculadora declara `sugestaoDeSerie` e há dado em cache. */
@@ -446,6 +462,16 @@ export interface DefinicaoCalculadora {
    * esta declaração o seletor some, e o aviso cita o campo que decide.
    */
   readonly vigenciaPelaData?: string
+  /**
+   * Parâmetros que o cálculo resolve por um campo de data próprio, e não pela
+   * data do seletor de período.
+   *
+   * Ficam fora do corte de ano em trechos (`periodosDe`): partir o seletor por
+   * uma virada que ele não controla seria oferecer uma escolha falsa. É o caso
+   * dos limites da antecipação do saque-aniversário, resolvidos pela data da
+   * contratação (§7.95).
+   */
+  readonly parametrosResolvidosPorCampo?: readonly string[]
 }
 
 /**
@@ -461,12 +487,14 @@ export function formularioDe(
   anoCorrente?: number,
 ): FormularioCalculadora {
   const cobertura = registro.coberturaCombinada(definicao.parametrosRequeridos)
+  const anosDisponiveis = semAnosFuturos(anosComOpcionais(definicao, registro), anoCorrente)
   return {
     slug: definicao.slug,
     campos: definicao.campos,
     rotuloResultado: definicao.rotuloResultado,
     ...(definicao.avisoAdicional ? { avisoAdicional: definicao.avisoAdicional } : {}),
-    anosDisponiveis: semAnosFuturos(anosComOpcionais(definicao, registro), anoCorrente),
+    anosDisponiveis,
+    periodos: periodosDe(definicao, registro, anosDisponiveis, cobertura?.inicio ?? null),
     cobertura: cobertura ? { inicio: cobertura.inicio, fim: cobertura.fim } : null,
     ...vigenciaPelaDataDe(definicao),
     ressalva: ressalvaDe(definicao.slug),
@@ -506,6 +534,82 @@ function anosComOpcionais(definicao: DefinicaoCalculadora, registro: Registro): 
     for (const ano of registro.anosDisponiveis([id])) if (ano >= primeiro) todos.add(ano)
   }
   return [...todos].sort((a, b) => b - a)
+}
+
+/**
+ * As opções do seletor de período.
+ *
+ * **Nasceu da auditoria de 24/09/2026 (§7.99).** O seletor oferecia anos, e
+ * cada ano virava 15 de junho. Para tabela que muda em 1º de janeiro isso é
+ * exato; para a que muda no meio do ano, não: a tabela do IR mudou em
+ * 01/05/2025, e janeiro a abril de 2025 **não podiam ser escolhidos** — uma
+ * rescisão de março de 2025 saía com a tabela de maio. Vinte calculadoras
+ * estavam nessa situação. É a regra 2 de §7.97, que valia para as novas e não
+ * tinha sido aplicada às antigas.
+ *
+ * Agora o ano em que alguma vigência da calculadora começa fora de 1º de
+ * janeiro vira trechos, e cada trecho entrega uma data dentro dele. O trecho
+ * que contém 15 de junho continua entregando 15 de junho — o padrão da página
+ * e os links já compartilhados não mudam. Ano sem virada no meio continua
+ * sendo uma opção só, com o mesmo valor de antes.
+ */
+function periodosDe(
+  definicao: DefinicaoCalculadora,
+  registro: Registro,
+  anos: readonly number[],
+  inicioDaCobertura: DataISO | null,
+): readonly PeriodoDoSeletor[] {
+  const porCampo = new Set(definicao.parametrosResolvidosPorCampo ?? [])
+  const viradas = new Set<DataISO>()
+  for (const id of [...definicao.parametrosRequeridos, ...(definicao.parametrosOpcionais ?? [])]) {
+    if (porCampo.has(id)) continue
+    for (const inicio of registro.iniciosDeVigencia(id)) viradas.add(inicio)
+  }
+
+  const periodos: PeriodoDoSeletor[] = []
+  for (const ano of anos) {
+    const abertura = `${ano}-01-01` as DataISO
+    const encerramento = `${ano}-12-31` as DataISO
+    const junho = `${ano}-06-15` as DataISO
+    const piso = inicioDaCobertura !== null && inicioDaCobertura > abertura ? inicioDaCobertura : abertura
+    const cortes = [...viradas].filter((d) => d.startsWith(`${ano}-`) && d > piso).sort()
+
+    if (cortes.length === 0) {
+      periodos.push({ data: junho, rotulo: String(ano), inicio: piso, fim: encerramento })
+      continue
+    }
+
+    const inicios = [piso, ...cortes]
+    const trechos = inicios.map((inicio, i) => {
+      const seguinte = inicios[i + 1]
+      const fim = seguinte === undefined ? encerramento : diaAnterior(seguinte)
+      const data = junho >= inicio && junho <= fim ? junho : inicio
+      return { data, rotulo: `${ano} — de ${diaEMes(inicio)} a ${diaEMes(fim)}`, inicio, fim }
+    })
+    periodos.push(...trechos.reverse())
+  }
+  return periodos
+}
+
+/**
+ * A opção do seletor que corresponde a uma data de referência.
+ *
+ * Um link pode trazer qualquer data em `ref` — `2025-03-10`, por exemplo. O
+ * cálculo usa a data do link; o seletor mostra o trecho que a contém, em vez
+ * de exibir outro período e calcular por este.
+ */
+export function opcaoDoPeriodo(periodos: readonly PeriodoDoSeletor[], data: string): string {
+  return periodos.find((p) => data >= p.inicio && data <= p.fim)?.data ?? data
+}
+
+/** Véspera de uma data ISO. Em UTC, para não depender do fuso de quem monta a página. */
+function diaAnterior(data: DataISO): DataISO {
+  const [a, m, d] = data.split('-').map(Number)
+  return new Date(Date.UTC(a ?? 0, (m ?? 1) - 1, (d ?? 1) - 1)).toISOString().slice(0, 10) as DataISO
+}
+
+function diaEMes(data: DataISO): string {
+  return `${data.slice(8, 10)}/${data.slice(5, 7)}`
 }
 
 function vigenciaPelaDataDe(

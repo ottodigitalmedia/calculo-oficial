@@ -16,6 +16,7 @@ import {
   type BasisPoints,
   type Centavos,
   type PoliticaArredondamento,
+  EstouroDoInteiroSeguro,
   ZERO,
   basisPoints,
   centavos,
@@ -93,6 +94,44 @@ function dividirEmMagnitude(
 }
 
 /**
+ * `(a × b) / divisor` em magnitude, exato mesmo quando o produto passa do
+ * inteiro seguro.
+ *
+ * **Nasceu da auditoria de 24/09/2026 (§7.99).** Estas funções recusavam o
+ * cálculo sempre que o produto intermediário passava de 2⁵³ — inclusive quando
+ * o resultado, depois da divisão, cabia com folga. R$ 1,58 milhão aplicado com
+ * R$ 594 mil de rendimento derrubava a página de IR na renda fixa: a conta
+ * tinha resposta exata, e a guarda confundia o caminho com o destino.
+ *
+ * Dentro do inteiro seguro nada muda — é o mesmo `dividirEmMagnitude` de
+ * sempre. Fora dele, o produto e a divisão são feitos em `BigInt`, que é
+ * inteiro e exato; nenhum ponto flutuante entra (`A-6`). A recusa continua
+ * existindo, agora no lugar certo: quando o **quociente** não cabe.
+ */
+function dividirProdutoEmMagnitude(
+  a: number,
+  b: number,
+  divisor: number,
+  contexto: string,
+): { readonly quociente: number; readonly resto: number; readonly negativo: boolean } {
+  const produto = a * b
+  if (Number.isSafeInteger(produto)) return dividirEmMagnitude(produto, divisor)
+  if (divisor === 0) {
+    throw new RangeError('divisão por zero')
+  }
+  const negativo = (a < 0) !== (b < 0) !== (divisor < 0)
+  const p = BigInt(Math.abs(a)) * BigInt(Math.abs(b))
+  const d = BigInt(Math.abs(divisor))
+  const q = p / d
+  if (q > BigInt(Number.MAX_SAFE_INTEGER)) {
+    throw new EstouroDoInteiroSeguro(
+      `${contexto}: o resultado de ${a} × ${b} ÷ ${divisor} excede o inteiro seguro e deixaria de ser exato.`,
+    )
+  }
+  return { quociente: Number(q), resto: Number(p % d), negativo }
+}
+
+/**
  * Aplica a política sobre quociente e resto, ambos em magnitude.
  *
  * A distinção entre as políticas só aparece no empate — `2 × resto === divisor`
@@ -163,8 +202,12 @@ export function aplicarAliquota(
   aliquota: BasisPoints,
   politica: PoliticaArredondamento,
 ): Centavos {
-  exigirProdutoSeguro(base, aliquota, 'aplicarAliquota')
-  const { quociente, resto, negativo } = dividirEmMagnitude(base * aliquota, BP_POR_INTEIRO)
+  const { quociente, resto, negativo } = dividirProdutoEmMagnitude(
+    base,
+    aliquota,
+    BP_POR_INTEIRO,
+    'aplicarAliquota',
+  )
   return centavos(arredondarMagnitude(quociente, resto, BP_POR_INTEIRO, negativo, politica))
 }
 
@@ -216,8 +259,12 @@ export function proporcao(
       `proporcao: numerador e denominador devem ser inteiros, recebidos ${numerador}/${denominador}`,
     )
   }
-  exigirProdutoSeguro(base, numerador, 'proporcao')
-  const { quociente, resto, negativo } = dividirEmMagnitude(base * numerador, denominador)
+  const { quociente, resto, negativo } = dividirProdutoEmMagnitude(
+    base,
+    numerador,
+    denominador,
+    'proporcao',
+  )
   return centavos(
     arredondarMagnitude(quociente, resto, Math.abs(denominador), negativo, politica),
   )
@@ -282,8 +329,12 @@ export function aliquotaEfetiva(
   politica: PoliticaArredondamento,
 ): BasisPoints {
   if (total === 0) return basisPoints(0)
-  exigirProdutoSeguro(parte, BP_POR_INTEIRO, 'aliquotaEfetiva')
-  const { quociente, resto, negativo } = dividirEmMagnitude(parte * BP_POR_INTEIRO, total)
+  const { quociente, resto, negativo } = dividirProdutoEmMagnitude(
+    parte,
+    BP_POR_INTEIRO,
+    total,
+    'aliquotaEfetiva',
+  )
   return basisPoints(
     arredondarMagnitude(quociente, resto, Math.abs(total), negativo, politica),
   )

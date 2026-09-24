@@ -23,13 +23,17 @@
 
 import { describe, expect, it } from 'vitest'
 
+import { porSlug } from '../../src/lib/calculadoras'
+import { formularioDe } from '../../src/lib/calculadoras/tipos'
 import { calcularIrrf } from '../../src/lib/engine/irrf'
 import { centavos } from '../../src/lib/engine/types'
 import { INSS } from '../../src/lib/params/data/inss'
 import { IRRF } from '../../src/lib/params/data/irrf'
+import { TODOS_OS_CONJUNTOS } from '../../src/lib/params/data/todos'
 import { construirRegistro } from '../../src/lib/params/registry'
 
 const registro = construirRegistro(INSS, IRRF)
+const registroCompleto = construirRegistro(...TODOS_OS_CONJUNTOS)
 const EM_2026 = '2026-01-01'
 
 function calcular(rendimento: number, inss: number, data = EM_2026, dependentes = 0) {
@@ -238,6 +242,27 @@ describe('RF-004 · a mesma entrada em vigências diferentes', () => {
     expect(maio.valores.baseCalculo).toBe(339_280)
     expect(abril.valores.imposto).not.toBe(maio.valores.imposto)
   })
+
+  /**
+   * O motor sempre soube a tabela de janeiro a abril; a TELA não a alcançava —
+   * o seletor só oferecia "2025", que virava 15/06 (§7.99). Pela opção do
+   * seletor, agora:
+   *   simplificado 5.000,00 − 564,80 = 4.435,20
+   *   4.435,20 × 22,5% = 997,92 − 662,77 = 335,15   (tabela de 01/2025)
+   *   contra 312,89 pela tabela de maio — R$ 22,26 por mês de diferença.
+   */
+  it('a opção "2025 — de 01/01 a 30/04" do seletor calcula com a tabela de janeiro', () => {
+    const periodo = formularioDe(porSlug('irrf')!, registroCompleto, 2026).periodos.find(
+      (p) => p.rotulo === '2025 — de 01/01 a 30/04',
+    )
+    expect(periodo).toBeDefined()
+    const r = porSlug('irrf')!.calcular(
+      { rendimentoBruto: 500_000, houveContribuicao: 'sim', inss: 50_960, dependentes: 0, pensao: 0 },
+      periodo!.data,
+    )
+    if (!r.ok) throw new Error(r.detalhe)
+    expect(r.valores.principal).toBe(33_515)
+  })
 })
 
 describe('C-M1 · o traço permite refazer a conta', () => {
@@ -256,5 +281,46 @@ describe('C-M1 · o traço permite refazer a conta', () => {
     const tabela = r.traco.etapas.find((e) => e.rotulo.includes('Imposto pela tabela'))
     expect(tabela?.formula).toContain('R$')
     expect(tabela?.formula).toContain('%')
+  })
+})
+
+/**
+ * fonte_verificacao: Exemplo 5 da Receita Federal (acima), agora pela porta da
+ * página.
+ *
+ * Até 24/09/2026 a página não conseguia reproduzi-lo: o exemplo tem INSS zero,
+ * e na tela zero significava "calcule pela tabela" — o Exemplo 5 saía com
+ * R$ 944,96 de contribuição deduzida e imposto menor. A pergunta
+ * `houveContribuicao` separa as duas coisas (§7.99).
+ */
+describe('CALC-015 · a página distingue "sem contribuição" de "calcule para mim"', () => {
+  const pagina = (valores: Record<string, number | string>) => {
+    const r = porSlug('irrf')!.calcular(valores, EM_2026)
+    if (!r.ok) throw new Error(r.detalhe)
+    return r.valores
+  }
+
+  it('exemplo 5 pela página: sem contribuição, R$ 1.016,27', () => {
+    const v = pagina({ rendimentoBruto: 760_720, houveContribuicao: 'nao', inss: 0, dependentes: 0, pensao: 0 })
+    expect(v.principal).toBe(101_627)
+    expect(v.detalhamento.find((l) => l.rotulo === 'Contribuição previdenciária')?.valor).toBe(0)
+  })
+
+  it('"sem contribuição" ignora um valor que tenha ficado no campo escondido', () => {
+    const v = pagina({ rendimentoBruto: 760_720, houveContribuicao: 'nao', inss: 50_000, dependentes: 0, pensao: 0 })
+    expect(v.principal).toBe(101_627)
+  })
+
+  it('com contribuição e o campo zerado, continua calculando pela tabela — links antigos não mudam', () => {
+    const semPergunta = pagina({ rendimentoBruto: 760_720, inss: 0, dependentes: 0, pensao: 0 })
+    const comSim = pagina({ rendimentoBruto: 760_720, houveContribuicao: 'sim', inss: 0, dependentes: 0, pensao: 0 })
+    expect(comSim.principal).toBe(semPergunta.principal)
+    expect(comSim.principal).toBeLessThan(101_627)
+  })
+
+  it('com contribuição informada, usa a informada — exemplo 2 da Receita', () => {
+    const v = pagina({ rendimentoBruto: 400_000, houveContribuicao: 'sim', inss: 37_341, dependentes: 0, pensao: 0 })
+    expect(v.detalhamento.find((l) => l.rotulo === 'Contribuição previdenciária')?.valor).toBe(37_341)
+    expect(v.principal).toBe(0)
   })
 })

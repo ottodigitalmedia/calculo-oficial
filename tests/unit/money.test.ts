@@ -177,9 +177,25 @@ describe('aplicarAliquota · multiplica antes de dividir', () => {
     expect(erradoDivideAntes).toBe(0)
   })
 
-  it('recusa produto que estouraria o inteiro seguro', () => {
-    expect(() => aplicarAliquota(c(Number.MAX_SAFE_INTEGER), bp(10_000), 'truncar')).toThrow(
+  /**
+   * A recusa é do RESULTADO, não do caminho (§7.99). Até 24/09/2026 a guarda
+   * olhava o produto intermediário e recusava contas com resposta exata.
+   */
+  it('recusa quando o resultado estouraria o inteiro seguro', () => {
+    expect(() => aplicarAliquota(c(Number.MAX_SAFE_INTEGER), bp(20_000), 'truncar')).toThrow(
       RangeError,
+    )
+  })
+
+  it('produto acima do inteiro seguro com resultado que cabe sai exato', () => {
+    // 9.007.199.254.740.991 × 100% = ele mesmo; o produto passa de 2⁵³.
+    expect(aplicarAliquota(c(Number.MAX_SAFE_INTEGER), bp(10_000), 'truncar')).toBe(
+      Number.MAX_SAFE_INTEGER,
+    )
+    // 49.999.000.000.000 × 22,5%: o caso que derrubava CALC-122.
+    // 49.999.000.000.000 × 2.250 / 10.000 = 11.249.775.000.000, exato.
+    expect(aplicarAliquota(c(49_999_000_000_000), bp(2_250), 'meio_para_cima')).toBe(
+      11_249_775_000_000,
     )
   })
 })
@@ -207,6 +223,30 @@ describe('RN-016 · proporcionalidade por avos', () => {
   it('recusa numerador ou denominador fracionário', () => {
     expect(() => proporcao(c(100), 1.5, 12, 'truncar')).toThrow(TypeError)
     expect(() => proporcao(c(100), 1, 12.5, 'truncar')).toThrow(TypeError)
+  })
+
+  /**
+   * O produto que derrubava a página de IR na renda fixa na auditoria (§7.99):
+   * 158.726.882 × 59.458.680 é 9,4 × 10¹⁵, acima de 2⁵³ — e, dividido de volta,
+   * o resultado é trivial.
+   */
+  it('produto acima do inteiro seguro sai exato, com o arredondamento de sempre', () => {
+    expect(proporcao(c(158_726_882), 59_458_680, 158_726_882, 'truncar')).toBe(59_458_680)
+    // 10¹⁵ × 7 / 12 = 583.333.333.333.333,33… — truncar e meio para cima divergem
+    // só no último dígito, como na faixa segura.
+    expect(proporcao(c(1_000_000_000_000_000), 7, 12, 'truncar')).toBe(583_333_333_333_333)
+    expect(proporcao(c(1_000_000_000_000_000), 11, 12, 'meio_para_cima')).toBe(916_666_666_666_667)
+    // Sinal: negativo em qualquer um dos três termos inverte o resultado.
+    expect(proporcao(c(-1_000_000_000_000_000), 11, 12, 'truncar')).toBe(-916_666_666_666_666)
+    expect(proporcao(c(1_000_000_000_000_000), 11, -12, 'truncar')).toBe(-916_666_666_666_666)
+  })
+
+  it('recusa quando o resultado não cabe', () => {
+    expect(() => proporcao(c(Number.MAX_SAFE_INTEGER), 3, 2, 'truncar')).toThrow(RangeError)
+  })
+
+  it('divisão por zero continua recusada, também fora da faixa segura', () => {
+    expect(() => proporcao(c(Number.MAX_SAFE_INTEGER), 3, 0, 'truncar')).toThrow(RangeError)
   })
 })
 

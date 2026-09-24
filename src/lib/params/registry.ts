@@ -62,6 +62,14 @@ export interface Registro {
    * `null` se o parâmetro não existe ou não tem vigência.
    */
   maisRecente(parametroId: string): VigenciaResolvida | null
+  /**
+   * Datas em que começa cada vigência de um parâmetro, em ordem crescente.
+   *
+   * É o que diz ao seletor de período onde um ano precisa ser partido — a
+   * tabela do IR mudou em 01/05/2025, e um seletor que só conhece anos não
+   * alcança janeiro a abril (`ESTADO-DO-PROJETO` §7.99).
+   */
+  iniciosDeVigencia(parametroId: string): readonly DataISO[]
   readonly parametros: readonly Parametro[]
 }
 
@@ -197,6 +205,10 @@ export function construirRegistro(...conjuntos: readonly ConjuntoDeParametros[])
       // devolver o valor sem ela seria pior que devolver nada.
       if (!fonte) return null
       return { parametro: indice.parametro, vigencia: ultima, fonte }
+    },
+
+    iniciosDeVigencia(parametroId) {
+      return (indices.get(parametroId)?.vigencias ?? []).map((v) => v.inicio)
     },
 
     anosDisponiveis(parametrosIds) {
