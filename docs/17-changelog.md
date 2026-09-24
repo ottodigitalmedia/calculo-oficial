@@ -29,6 +29,65 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 24/09/2026 — auditoria de cálculo do catálogo inteiro
+
+### Corrigido · IRRF: quem não teve desconto previdenciário não conseguia informar zero
+
+Em CALC-015, zero no campo de contribuição significava "calcule pela tabela".
+Quem recebeu rendimento sem desconto previdenciário tinha a contribuição da
+tabela deduzida mesmo assim, e o imposto saía menor — o Exemplo 5 da Receita
+(INSS zero, R$ 1.016,27) não era reproduzível pela tela. A pergunta "Houve
+desconto de contribuição previdenciária no mês?" separa as duas coisas; o
+padrão "Sim" mantém o comportamento anterior e os links já compartilhados.
+**Exposição:** desde o lançamento de CALC-015, só para quem não teve
+contribuição no mês.
+
+### Corrigido · rescisão do doméstico: o pedido de demissão nunca descontava o aviso
+
+Em CALC-012, a página lia o valor `nao-cumprido`, que o campo de aviso não
+oferece ("Indenizado ou não cumprido" / "Trabalhado ou cumprido"). O desconto do
+art. 23, § 4º, da LC nº 150/2015 nunca era aplicado, e o total de quem pede
+demissão sem cumprir aviso saía maior em até um salário. O motor estava certo e
+o caso-ouro dele passava; faltava o teste pela página, que agora existe.
+**Exposição:** desde o lançamento de CALC-012, só no pedido de demissão.
+
+### Corrigido · janeiro a abril de 2025 não podiam ser escolhidos
+
+O seletor de período oferecia anos, e cada ano virava 15 de junho. A tabela do
+IR mudou em 01/05/2025: em dezoito calculadoras que a usam, escolher 2025
+aplicava sempre a tabela de maio — R$ 5.000,00 de salário em março de 2025
+retinha R$ 312,89 na tela, e o devido é R$ 335,15. O seguro-desemprego tinha o
+mesmo problema entre 1º e 10 de janeiro. Agora o ano em que alguma vigência
+começa fora de 1º de janeiro vira trechos no seletor ("2025 — de 01/01 a
+30/04"); o trecho que contém 15 de junho mantém a data de sempre.
+**Exposição:** cálculos de janeiro a abril de 2025 (e de 1º a 10 de janeiro,
+no seguro-desemprego), desde que a tabela de maio de 2025 entrou no registro.
+
+### Corrigido · valor alto derrubava a página em vez de calcular ou explicar
+
+Duas causas. As funções de proporção e alíquota recusavam a conta sempre que o
+produto intermediário passava de 2⁵³, mesmo com resultado pequeno — R$ 1,58
+milhão aplicado derrubava a página de IR na renda fixa; agora o produto é feito
+em inteiro exato (`BigInt`) e a recusa fica só para resultado acima de R$ 90
+trilhões. E a tela não tratava exceção do cálculo: a recusa derrubava a página
+inteira. Agora vira a mensagem "Os valores informados levam a um resultado
+grande demais…". Na precificação por hora, expediente curto com percentual
+faturável mínimo dividia por zero; agora é recusa explicada.
+**Exposição:** catorze calculadoras, só com valores muito acima do usual.
+Nenhum número errado era exibido — a página caía.
+
+### Auditoria · as 123 calculadoras, em produção
+
+Casos-ouro conferidos **no site publicado**, por permalink, para todas as 123
+calculadoras: 234 links abertos, 232 com o valor exato, 1 impossível de
+expressar pelo formulário e 1 divergência — a do doméstico, acima. Teste novo
+de robustez: 120 formulários por calculadora no `check`, 3.000 na auditoria
+(369 mil cálculos), sem exceção, sem `NaN` e sem cálculo sem memória. Casos-ouro
+pela página para o IRRF sem contribuição, o doméstico e o trecho de janeiro de
+2025 (`ESTADO-DO-PROJETO` §7.99).
+
+---
+
 ## Ciclo de 22/09/2026 — expansão do catálogo, lote 15
 
 ### Adicionado · Tesouro Selic

@@ -34,6 +34,13 @@
 > **Comece por §8.00**; §7.80 a §7.84 registram o que a conferência pegou em
 > cada lote antes de publicar.
 >
+> **Sessão de 24/09/2026, segunda parte — auditoria de cálculo.** As 123
+> calculadoras conferidas contra os casos-ouro **no site publicado**, e um teste
+> de robustez novo sobre o catálogo inteiro. Cinco defeitos corrigidos — o mais
+> grave, a rescisão do doméstico que nunca descontava o aviso de quem pede
+> demissão; e janeiro a abril de 2025, que o seletor de período não alcançava
+> em dezoito calculadoras. **§7.99.**
+>
 > **Sessão de 24/09/2026 — auditoria de produção.** As 177 URLs em 200, as 123
 > calculadoras calculando no site publicado e 31 casos-ouro conferidos ao
 > centavo **em produção**. O tráfego não subiu: as impressões semanais caíram
@@ -4707,8 +4714,9 @@ do doméstico e rescisão com férias vencidas em dobro. Cada permalink foi ante
 conferido localmente com o próprio leitor de query da página, para que erro de
 montagem de URL não se passasse por defeito.
 
-**Um ponto de produto, não de conta:** no salário líquido e no IRRF, INSS
-igual a zero é lido como "calcule o INSS para mim". Quem de fato não contribui
+**Um ponto de produto, não de conta** — corrigido na mesma data, §7.99: no
+IRRF (o salário líquido não tem esse campo), INSS igual a zero é lido como
+"calcule o INSS para mim". Quem de fato não contribui
 não consegue informar zero — o Exemplo 5 da Receita (INSS zero) não é
 reproduzível pela tela, só pelo motor. Registrado para decisão; nada foi
 alterado.
@@ -4743,6 +4751,71 @@ guia do INSS estão entre 70 e 95.
 **O GA4 não foi lido:** o domínio `analytics.google.com` está bloqueado para a
 extensão do navegador usada na auditoria. Visitas reais ficam sem número; o
 dado de busca é o do Search Console.
+
+### 7.99 Auditoria de cálculo do catálogo inteiro, em 24/09/2026
+
+O mantenedor pediu a correção do INSS zerado no IRRF (§7.98) e uma auditoria
+de todas as calculadoras — se calculam certo, sem erro, com confiança. Foram
+três frentes, e cada uma achou coisa que as outras não achariam.
+
+#### O que foi medido
+
+| Frente | Como | Resultado |
+|---|---|---|
+| Casos-ouro em produção | permalink de cada caso aberto no site publicado, conferido antes localmente com o leitor de URL e o cálculo da própria página | **123 de 123 calculadoras**; 234 links, 232 exatos, 1 inexpressável pelo formulário, **1 divergência real** |
+| Robustez | `tests/unit/robustez.test.ts`: formulários que a tela aceita, gerados com semente fixa — 120 por calculadora no `check`, 3.000 na auditoria | 14 calculadoras quebravam a página; **0** depois das correções |
+| Seletor de período | varredura das vigências de cada calculadora contra as datas que o seletor consegue produzir | **18 calculadoras** com período inalcançável |
+
+#### Os cinco defeitos, todos corrigidos
+
+1. **IRRF — zero não era zero.** O campo de contribuição usava zero como
+   "calcule para mim"; quem não teve desconto não conseguia informá-lo. Pergunta
+   nova `houveContribuicao`, padrão "Sim" para não mudar link antigo.
+2. **Rescisão do doméstico — o desconto do aviso nunca aparecia.** A página lia
+   `'nao-cumprido'`, valor que o campo não oferece. **É o achado mais grave da
+   auditoria**: número errado com aparência de certo, no ar desde o lançamento
+   de CALC-012, e invisível ao caso-ouro — que testava o motor, que estava
+   certo.
+3. **Janeiro a abril de 2025 inalcançáveis.** É a regra 2 de §7.97 — "parâmetro
+   que muda no meio do ano não pode depender do seletor" — que valia para as
+   calculadoras novas e nunca tinha sido aplicada às antigas. A correção é
+   geral, em `periodosDe`: o ano com virada no meio vira trechos, e
+   `parametrosResolvidosPorCampo` impede trecho falso onde a virada é
+   resolvida por campo de data (saque-aniversário).
+4. **Produto grande derrubava a página.** A guarda de inteiro seguro olhava o
+   produto intermediário, não o resultado. `dividirProdutoEmMagnitude` faz a
+   conta em `BigInt` quando precisa; `EstouroDoInteiroSeguro` separa o limite
+   legítimo do defeito; `lib/calculadoras/guarda.ts` impede que qualquer
+   exceção derrube a página.
+5. **Precificação por hora dividia por zero** com expediente curto e percentual
+   faturável mínimo.
+
+#### O que a auditoria confirmou sem mudança
+
+- Toda calculadora tem caso-ouro, e todo arquivo de caso-ouro declara a origem
+  dos valores.
+- Nenhuma cita exemplo oficial resolvido, exceto IRRF (exemplos da Receita),
+  INSS (valor publicado pela Receita) e criptoativos (Perguntas e Respostas
+  IRPF 2026). As demais são cálculo manual sobre o texto da norma — ou
+  aritmética, nas que não têm parâmetro legal.
+- **Oito têm só propriedades, sem valor fixo:** `alugar-ou-comprar`,
+  `acordo-ou-dispensa`, `onde-render-mais`, `portabilidade-de-credito` e as
+  quatro que dependem de série de índice (`correcao-por-indice`,
+  `poder-de-compra`, `reajuste-de-aluguel`, `reajuste-de-salario`). Em
+  produção, todas batem com o cálculo local; as de série não admitem valor
+  fixo por natureza, as outras quatro admitem e ficam como melhoria.
+
+#### A régua que a auditoria deixou
+
+1. **Caso-ouro do motor não prova a tela.** Os dois defeitos de valor — o do
+   doméstico e o do seletor — tinham o motor certo e testado. O que faltava era
+   o mesmo caso passando pela porta da página. Os casos novos desta sessão são
+   todos pela página.
+2. **Guarda tem de proteger o destino, não o caminho.** Recusar um produto
+   intermediário grande com resultado pequeno é recusar conta que existe.
+3. **Regra nova vale para o que já existe.** §7.97 escreveu a regra do seletor
+   e a aplicou só dali para a frente; a auditoria achou dezoito calculadoras
+   que ela já cobria.
 
 ---
 
