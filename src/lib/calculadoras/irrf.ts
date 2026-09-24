@@ -13,7 +13,7 @@ import { calcularInss } from '../engine/inss'
 import { calcularIrrf } from '../engine/irrf'
 import { centavos } from '../engine/types'
 import { formatarPercentual } from '../format/moeda'
-import { numero, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
+import { numero, texto, type DefinicaoCalculadora, type FuncaoCalculo } from './tipos'
 
 import { INSS } from '../params/data/inss'
 import { IRRF } from '../params/data/irrf'
@@ -31,12 +31,15 @@ const registro = construirRegistro(INSS, IRRF)
 /** Exportação de topo — ver a nota em `salario-liquido.ts`. */
 export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   const bruto = centavos(numero(valores, 'rendimentoBruto'))
-  const informado = centavos(numero(valores, 'inss'))
+  const semContribuicao = texto(valores, 'houveContribuicao') === 'nao'
+  const informado = semContribuicao ? centavos(0) : centavos(numero(valores, 'inss'))
 
-  // INSS zerado significa "calcule para mim". Ainda assim é o motor de
-  // T-102 que calcula — não há segunda implementação.
+  // INSS zerado significa "calcule para mim" — mas só quando houve desconto.
+  // Sem a pergunta, quem não contribuiu no mês não tinha como informar zero:
+  // o zero virava a contribuição da tabela e o imposto saía menor (§7.99).
+  // Ainda assim é o motor de T-102 que calcula — não há segunda implementação.
   let inss = informado
-  if (informado === 0) {
+  if (informado === 0 && !semContribuicao) {
     const prev = calcularInss({ salarioContribuicao: bruto }, dataReferencia, registro)
     if (!prev.ok) return prev
     inss = prev.valores.contribuicao
@@ -55,9 +58,11 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
   if (!r.ok) return r
 
   const notas = [
-    informado > 0
-      ? 'Usando o valor de contribuição previdenciária que você informou.'
-      : 'A contribuição previdenciária foi calculada pela tabela do período. Informe o valor do seu holerite se ele for diferente.',
+    semContribuicao
+      ? 'Sem contribuição previdenciária no mês: a base do imposto não tem essa dedução.'
+      : informado > 0
+        ? 'Usando o valor de contribuição previdenciária que você informou.'
+        : 'A contribuição previdenciária foi calculada pela tabela do período. Informe o valor do seu holerite se ele for diferente.',
     r.valores.baseEscolhida === 'desconto_simplificado'
       ? 'O desconto simplificado produziu base menor e foi aplicado por ser mais favorável.'
       : 'As deduções legais produziram base menor e foram aplicadas por serem mais favoráveis.',
@@ -106,6 +111,18 @@ export const IRRF_MENSAL: DefinicaoCalculadora = {
       maximo: 100_000_000,
     },
     {
+      // Padrão "sim" preserva o comportamento anterior: um link salvo antes
+      // desta pergunta existir continua dando o mesmo resultado (TC-029).
+      id: 'houveContribuicao',
+      rotulo: 'Houve desconto de contribuição previdenciária no mês?',
+      tipo: 'selecao',
+      padrao: 'sim',
+      opcoes: [
+        { valor: 'sim', rotulo: 'Sim' },
+        { valor: 'nao', rotulo: 'Não — o rendimento não teve desconto previdenciário' },
+      ],
+    },
+    {
       id: 'inss',
       rotulo: 'Contribuição previdenciária descontada',
       tipo: 'monetario',
@@ -113,6 +130,7 @@ export const IRRF_MENSAL: DefinicaoCalculadora = {
       minimo: 0,
       maximo: 100_000_000,
       ajuda: 'Deixe zerado para usar o valor calculado pela tabela do período.',
+      visivelSe: { campo: 'houveContribuicao', em: ['sim'] },
     },
     {
       id: 'dependentes',
@@ -157,7 +175,7 @@ export const IRRF_MENSAL: DefinicaoCalculadora = {
     {
       pergunta: 'Por que a contribuição previdenciária aparece como campo?',
       resposta:
-        'Porque ela é dedução da base do imposto, e o valor que interessa é o que veio no seu holerite. Se você deixar zerado, calculamos pela tabela do período; se informar, usamos o seu. A memória registra qual dos dois foi usado.',
+        'Porque ela é dedução da base do imposto, e o valor que interessa é o que veio no seu holerite. Se você deixar zerado, calculamos pela tabela do período; se informar, usamos o seu. Se o rendimento não teve desconto previdenciário, responda "Não" à pergunta anterior e a dedução fica em zero. A memória registra qual das três situações foi usada.',
     },
     {
       pergunta: 'Este cálculo considera outros rendimentos e a declaração anual?',

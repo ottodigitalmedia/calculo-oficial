@@ -274,11 +274,12 @@ Mesma estrutura de CALC-002, com as diferenças:
 | Campo | Tipo | Rótulo | Validação | Padrão |
 |---|---|---|---|---|
 | `rendimentoBruto` * | Monetário | "Rendimento bruto do mês" | > 0 | vazio |
-| `inss` | Monetário | "Contribuição previdenciária descontada" | ≥ 0 | calculado |
+| `houveContribuicao` | Seleção | "Houve desconto de contribuição previdenciária no mês?" — "Sim" / "Não — o rendimento não teve desconto previdenciário" | — | "Sim" |
+| `inss` | Monetário | "Contribuição previdenciária descontada" — visível só com "Sim" | ≥ 0 | calculado |
 | `dependentes` | Inteiro | "Número de dependentes" | 0 a 20 | 0 |
 | `pensao` | Monetário | "Pensão alimentícia (desconto judicial)" | ≥ 0 | 0 |
 
-**Comportamento:** `inss` é pré-preenchido pelo cálculo automático e editável. Quando editado, exibe: "Usando o valor que você informou."
+**Comportamento:** `inss` é pré-preenchido pelo cálculo automático e editável. Quando editado, exibe: "Usando o valor que você informou." Com `houveContribuicao` em "Não", a dedução previdenciária é zero e a nota diz: "Sem contribuição previdenciária no mês: a base do imposto não tem essa dedução." — sem essa pergunta, zero no campo significava "calcule pela tabela" e quem não contribuiu não tinha como informá-lo (`ESTADO-DO-PROJETO` §7.99).
 
 **Etapas:** deduções legais → base pelas deduções → desconto simplificado → base simplificada → escolha da base mais favorável com justificativa (`RN-012`) → imposto pela tabela → redutor, quando aplicável (`RN-013`) → imposto devido, nunca negativo (`RN-014`).
 
