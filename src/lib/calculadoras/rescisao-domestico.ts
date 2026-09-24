@@ -40,11 +40,15 @@ export const calcular: FuncaoCalculo = (valores, dataReferencia) => {
       salario: centavos(numero(valores, 'salario')),
       modalidade: motivo === 'pedido-demissao' ? 'pedido-demissao' : 'sem-justa-causa',
       regime: 'domestico',
+      // As opções servem aos dois motivos, e o rótulo diz como: "Indenizado ou
+      // não cumprido" / "Trabalhado ou cumprido". No pedido de demissão, lia-se
+      // aqui `'nao-cumprido'` — valor que o campo não oferece —, e o desconto
+      // do art. 23, § 4º, nunca era aplicado (auditoria de 24/09/2026, §7.99).
       avisoPrevio:
         motivo === 'pedido-demissao'
-          ? texto(valores, 'avisoPrevio') === 'nao-cumprido'
-            ? 'nao-cumprido'
-            : 'cumprido'
+          ? texto(valores, 'avisoPrevio') === 'trabalhado'
+            ? 'cumprido'
+            : 'nao-cumprido'
           : texto(valores, 'avisoPrevio') === 'trabalhado'
             ? 'trabalhado'
             : 'indenizado',

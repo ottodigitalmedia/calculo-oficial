@@ -20,6 +20,7 @@
 
 import { describe, expect, it } from 'vitest'
 
+import { porSlug } from '../../src/lib/calculadoras'
 import { calcularRescisao } from '../../src/lib/engine/calculadoras/rescisao'
 import { centavos } from '../../src/lib/engine/types'
 import { DOMESTICO } from '../../src/lib/params/data/domestico'
@@ -190,5 +191,37 @@ describe('CALC-012 · o desconto do aviso não cumprido — art. 23, § 4º', ()
     expect(r.valores.descontoAvisoPrevio).toBeGreaterThan(0)
     // O prazo devido POR ele é o base, sem o acréscimo proporcional.
     expect(r.valores.diasAviso).toBe(30)
+  })
+
+  /**
+   * A mesma conta, pela porta da página. O motor sempre esteve certo: era a
+   * página que nunca lhe pedia o desconto — lia `'nao-cumprido'`, valor que o
+   * campo não oferece (§7.99). O teste acima passava; a tela, não.
+   */
+  const pagina = (avisoPrevio: string) => {
+    const r = porSlug('rescisao-domestico')!.calcular(
+      {
+        admissao: BASE.admissao,
+        desligamento: BASE.desligamento,
+        salario: BASE.salario,
+        motivo: 'pedido-demissao',
+        avisoPrevio,
+        feriasVencidas: 'nao',
+        saldoFgts: 0,
+        dependentes: 0,
+      },
+      REF,
+    )
+    if (!r.ok) throw new Error(r.detalhe)
+    return r.valores.detalhamento.find((l) => l.rotulo === 'Desconto de aviso não cumprido')
+  }
+
+  it('a página desconta 30 dias de salário de quem pede demissão e não cumpre o aviso', () => {
+    // 30 dias de R$ 3.000,00 = um salário, o prazo base do art. 23, § 1º.
+    expect(pagina('indenizado')).toMatchObject({ valor: 300_000, sinal: 'debito' })
+  })
+
+  it('e não desconta de quem cumpre', () => {
+    expect(pagina('trabalhado')).toBeUndefined()
   })
 })
