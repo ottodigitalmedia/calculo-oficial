@@ -34,6 +34,12 @@
 > **Comece por §8.00**; §7.80 a §7.84 registram o que a conferência pegou em
 > cada lote antes de publicar.
 >
+> **Sessão de 24/09/2026 — auditoria de produção.** As 177 URLs em 200, as 123
+> calculadoras calculando no site publicado e 31 casos-ouro conferidos ao
+> centavo **em produção**. O tráfego não subiu: as impressões semanais caíram
+> cerca de 70% desde meados de agosto, e o efeito da expansão ainda não aparece
+> nos dados. **§7.98**, e o próximo passo é medir de novo em meados de outubro.
+>
 > **Sessões de 18 a 22/09/2026 — a expansão v5 fechou.** Lotes 6 a 15 no ar,
 > e o catálogo passa de 103 para **123** calculadoras: quarenta e sete
 > construídas na expansão, de CALC-077 a CALC-123. As 123 foram conferidas em
@@ -4663,6 +4669,81 @@ própria página, com o efeito da leitura contrária:
    §18 por já existirem, e uma terceira pesquisa (aluguel pago por PJ) só
    serviu para confirmar a conta no ar e achar o ponto não declarado (§7.93).
 
+### 7.98 Auditoria de produção, em 24/09/2026
+
+O mantenedor pediu três respostas: se todas as páginas estão no ar, se as
+calculadoras calculam e calculam certo, e se o tráfego aumentou. As duas
+primeiras são sim; a terceira é não, e o motivo não é técnico.
+
+#### Páginas — todas no ar
+
+Varredura do sitemap e de todo link interno encontrado nas páginas:
+
+- **177 de 177 URLs em 200**; nenhum link interno quebrado; nenhuma página
+  alcançável por link que esteja fora do sitemap;
+- título, descrição e canônica presentes em todas, sem título nem descrição
+  repetidos, nenhuma com `noindex`;
+- rota inexistente devolve 404; `robots.txt` responde;
+- resposta em 33 ms na mediana, 135 ms no p95, 171 ms no pior caso.
+
+#### Calculadoras — calculam, e calculam certo
+
+Três camadas, cada uma provando uma coisa diferente:
+
+| Camada | Onde roda | Resultado | O que prova |
+|---|---|---|---|
+| Unidade + casos-ouro | código local | 3.156 de 3.156 | a conta está certa **no código** |
+| Ponta a ponta (`PLAYWRIGHT_BASE_URL` apontando para produção) | site publicado | 1.269 passaram, 1 pulado (só vale no perfil móvel) | as 123 abrem, preenchem e calculam **no ar**, em computador e celular |
+| Casos-ouro por permalink | site publicado | **31 de 31 ao centavo** | o valor que a tela mostra **em produção** é o do caso-ouro |
+
+A terceira camada é a que faltava: a suíte de ponta a ponta confere que a conta
+sai, não qual número sai, e os casos-ouro não passam pelo site. Os 31 casos
+cobrem todas as categorias e os lotes mais recentes — IRRF no Exemplo 4 da
+Receita (R$ 382,88), INSS no valor publicado pela Receita, DAS pelas faixas da
+LC 123, ajuste anual de 2026 e PGBL, come-cotas de curto prazo, juros simples,
+escala 12 × 36 (15 e 16 plantões), Tesouro Prefixado e Selic, a virada de 5
+para 3 saques na antecipação em 1º/11/2026, abono salarial, seguro-desemprego
+do doméstico e rescisão com férias vencidas em dobro. Cada permalink foi antes
+conferido localmente com o próprio leitor de query da página, para que erro de
+montagem de URL não se passasse por defeito.
+
+**Um ponto de produto, não de conta:** no salário líquido e no IRRF, INSS
+igual a zero é lido como "calcule o INSS para mim". Quem de fato não contribui
+não consegue informar zero — o Exemplo 5 da Receita (INSS zero) não é
+reproduzível pela tela, só pelo motor. Registrado para decisão; nada foi
+alterado.
+
+#### Tráfego — não aumentou
+
+Search Console, busca na web, até 21/09 (último dia disponível na data):
+
+| Semana | Impressões | Cliques |
+|---|---|---|
+| 10–16/08 | 2.039 | 2 |
+| 17–23/08 | 1.910 | 1 |
+| 24–30/08 | 1.761 | 2 |
+| 31/08–06/09 | 892 | 0 |
+| 07–13/09 | 575 | 0 |
+| 14–20/09 | 556 | 0 |
+
+Em 47 dias, **6 cliques e 7.930 impressões**, posição média 24,9. É a mesma
+queda que motivou a expansão em 17/09 (§7.80), continuada.
+
+**O efeito da expansão ainda não é mensurável:** as 47 calculadoras entraram
+entre 17 e 22/09, e os dados param em 21/09. A indexação confirma: das 176
+páginas conhecidas pelo Google, **130 indexadas e 46 não** — 33 "detectadas,
+mas não indexadas", 12 "rastreadas, mas não indexadas", 1 redirecionamento.
+
+**O padrão de §7.79 se mantém.** Nos últimos 7 dias, as páginas em posição 8 a
+10 continuam sendo `conversor-de-unidades`, `quanto-rende-por-mes`,
+`divisao-de-conta` e `poder-de-compra` — perguntas que o Google responde na
+própria busca, com impressão e sem clique —, enquanto `rescisao-domestico` e o
+guia do INSS estão entre 70 e 95.
+
+**O GA4 não foi lido:** o domínio `analytics.google.com` está bloqueado para a
+extensão do navegador usada na auditoria. Visitas reais ficam sem número; o
+dado de busca é o do Search Console.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
@@ -4681,7 +4762,10 @@ exigiria reabrir `00-catalogo` §14, que é decisão do mantenedor.
 2. **Manutenção de dependências:** `npm audit` aponta três vulnerabilidades
    moderadas. Não bloqueiam o pipeline, que reprova de alta para cima.
 3. **Medir antes de acrescentar:** o Search Console é o que diz quais das 123
-   páginas têm demanda real. Sem isso, qualquer lote novo é palpite.
+   páginas têm demanda real. Sem isso, qualquer lote novo é palpite. **A
+   auditoria de 24/09 (§7.98) é a linha de base**: medir de novo em meados de
+   outubro — quantas das 46 não indexadas entraram, e se as páginas da
+   expansão trouxeram impressões.
 4. **`HEALTH_TOKEN`** (mantenedor): sem ele o deploy continua sem provar que o
    contêiner trocou — três lotes precisaram de disparo manual.
 
