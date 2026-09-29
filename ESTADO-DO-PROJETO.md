@@ -4821,7 +4821,12 @@ três frentes, e cada uma achou coisa que as outras não achariam.
 
 ## 8. Sugestão de ordem para a próxima sessão
 
-### 8.0000 Retomada em 22/09/2026 — a expansão fechou; o que vem agora
+### 8.0000 Retomada — a expansão fechou e o catálogo foi auditado (atualizado em 29/09/2026)
+
+**Estado ao fim da sessão de 18 a 29/09/2026:** 123 calculadoras no ar, todas
+conferidas contra os casos-ouro **no site publicado** (§7.99), cinco defeitos
+de cálculo corrigidos, e o repositório sincronizado com `origin/main` sem nada
+pendente. O que segue é o ponto de partida da próxima sessão.
 
 **Não há lote 16 de calculadora à vista**, e isso é resultado, não falta de
 assunto: as candidatas que sobraram dependem de série econômica que o produto
@@ -4841,6 +4846,28 @@ exigiria reabrir `00-catalogo` §14, que é decisão do mantenedor.
    expansão trouxeram impressões.
 4. **`HEALTH_TOKEN`** (mantenedor): sem ele o deploy continua sem provar que o
    contêiner trocou — três lotes precisaram de disparo manual.
+5. **Valor fixo nos casos-ouro de quatro calculadoras** que hoje só têm
+   propriedades e admitem valor: `alugar-ou-comprar`, `acordo-ou-dispensa`,
+   `onde-render-mais` e `portabilidade-de-credito` (§7.99). As quatro de série
+   de índice não admitem, por natureza.
+6. **Custo de aquisição zero no ganho de capital de imóvel:** o campo é
+   obrigatório e zero conta como vazio, então o caso-ouro da fronteira de
+   R$ 5 milhões com custo zero não é expressável pela tela. Decidir se custo
+   zero é caso real a admitir — é de produto, não de conta.
+7. **GA4** (mantenedor): na auditoria de 24/09 o domínio do Analytics estava
+   bloqueado para a extensão do navegador, e as visitas reais ficaram sem
+   número (§7.98). Para a medição de outubro, ler o GA4 diretamente ou liberar
+   o acesso.
+
+**Como repetir as auditorias** — o que não está versionado, e o que está:
+
+| Auditoria | Como |
+|---|---|
+| Páginas em produção | varrer o `sitemap.xml` e todo link interno, exigindo 200; 404 em rota inexistente (§7.98) |
+| Ponta a ponta contra produção | `PLAYWRIGHT_BASE_URL=https://calculoficial.com.br npx playwright test tests/e2e` — o servidor local não sobe quando a URL responde |
+| Robustez pesada | `ROBUSTEZ_FORMULARIOS=3000 npx vitest run tests/unit/robustez.test.ts` (o `check` roda 120) |
+| Casos-ouro em produção | **não versionado** — os scripts rodaram fora do repositório. Método: para cada caso-ouro, montar o permalink (centavos, basis points, datas ISO, seleção pelo valor, `ref=` para o período), conferir antes localmente com `lerDaUrl` + `calcular` + formatação da própria página, e só então abrir em produção e exigir o valor exato (§7.99) |
+| Tráfego | Search Console → Desempenho → Dias, e Indexação → Páginas; a linha de base é a tabela de §7.98 |
 
 **O que NÃO fazer:** publicar calculadora cuja fonte não confirme os valores.
 A expansão inteira foi construída recusando isso, e as recusas estão
