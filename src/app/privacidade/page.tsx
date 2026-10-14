@@ -81,13 +81,16 @@ export default function Privacidade() {
 
       <h2>O link que você compartilha</h2>
       <p>
-        Ao preencher uma calculadora, o endereço da página passa a conter os valores informados —
-        é o que permite salvar ou enviar um cálculo sem precisar de conta. Como esse endereço
-        carrega seus dados, ele:
+        Ao preencher uma calculadora, o endereço da página passa a conter os valores informados,
+        depois do sinal <code>#</code> — é o que permite salvar ou enviar um cálculo sem precisar de
+        conta. Como esse trecho carrega seus dados, ele:
       </p>
       <ul>
+        <li>
+          não sai do seu navegador: a parte depois do <code>#</code> não é enviada a este site nem a
+          nenhum terceiro;
+        </li>
         <li>não é indexado por buscadores;</li>
-        <li>não é transmitido a nenhum terceiro;</li>
         <li>
           deve ser compartilhado apenas com quem você quer que veja esses valores — o link contém o
           que você preencheu.
@@ -101,11 +104,16 @@ export default function Privacidade() {
         legítimo interesse na medição de público, e não o consentimento — por isso não há banner.
       </p>
       <p>
-        <strong>Os valores que você digita não vão junto.</strong> O endereço da página é limpo
-        antes de a medição carregar: sai o caminho da página, nunca a parte que carrega salário,
-        pensão ou saldo. Isso está no código, não numa configuração, e há teste automático que
-        reprova a publicação se a limpeza for desfeita. O site de onde você veio é reduzido ao
-        domínio pelo mesmo motivo.
+        <strong>Os valores que você digita não vão junto.</strong> Eles ficam depois do{' '}
+        <code>#</code> no endereço, parte que o navegador não transmite — a medição recebe só o
+        caminho da página. O site de onde você veio é reduzido ao domínio pelo mesmo motivo. Há
+        teste automático que digita, envia e navega contra a medição real e reprova a publicação se
+        algum valor chegar ao Google. <strong>Entre 07/08 e 14/10/2026 isso falhou</strong>, e
+        valores digitados chegaram ao Google Analytics; o que aconteceu e o que foi feito estão no{' '}
+        <Link href="/aviso-legal#incidente-2026-10" className="text-[var(--color-brand)] underline">
+          aviso legal
+        </Link>
+        .
       </p>
       <p>
         Não há publicidade hoje. Quando for introduzida, esta página será atualizada no mesmo

@@ -47,10 +47,15 @@ export default function Cookies() {
         é reportar o endereço inteiro.
       </p>
       <p>
-        Aqui o endereço é <strong>limpo antes</strong> de a medição carregar: o que sai é o caminho
-        da página, nunca os valores. O mesmo vale para o site de onde você veio, reduzido ao domínio.
-        Isso está no código que monta a página, não numa configuração de painel — e há testes
-        automáticos que reprovam a publicação se essa limpeza for desfeita.
+        Por isso os valores ficam <strong>depois do sinal <code>#</code></strong>, parte do endereço
+        que o navegador não envia a ninguém: o que a medição recebe é o caminho da página, nunca os
+        valores. O site de onde você veio é reduzido ao domínio. Há testes automáticos, contra a
+        medição real, que reprovam a publicação se algum valor escapar. Entre 07/08 e 14/10/2026 a
+        proteção anterior falhou — os detalhes estão no{' '}
+        <Link href="/aviso-legal#incidente-2026-10" className="text-[var(--color-brand)] underline">
+          aviso legal
+        </Link>
+        .
       </p>
 
       <h2>Por que não há banner</h2>

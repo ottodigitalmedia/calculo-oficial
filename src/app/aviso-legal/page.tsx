@@ -59,6 +59,28 @@ export default function AvisoLegal() {
         valor devido.
       </p>
 
+      <h2 id="incidente-2026-10">Incidente de privacidade — corrigido em 14/10/2026</h2>
+      <p>
+        <strong>O que aconteceu.</strong> Entre 07/08/2026, quando a medição de audiência começou,
+        e 14/10/2026, valores digitados nas calculadoras foram enviados ao Google Analytics. Ao
+        preencher um campo, o valor ia para o endereço da página; uma configuração da medição
+        registrava esse endereço a cada mudança, e também ao navegar para outra página. A limpeza
+        que o site fazia valia só para o primeiro registro da visita.
+      </p>
+      <p>
+        <strong>O que foi exposto.</strong> Os números digitados — salário, pensão, saldo de FGTS e
+        outros valores dos formulários —, junto do endereço da calculadora, na conta de medição
+        deste site no Google Analytics. Nome, CPF, e-mail e qualquer outro dado de identificação
+        nunca foram pedidos nem enviados.
+      </p>
+      <p>
+        <strong>A correção.</strong> Desde 14/10/2026, os valores ficam depois do sinal{' '}
+        <code>#</code> no endereço — parte que o navegador não envia a ninguém, nem a este site, nem
+        ao Google. Links antigos continuam funcionando e são convertidos antes de a medição
+        carregar. Há teste automático, contra a medição real, que digita, envia e navega e reprova
+        a publicação se algum valor chegar ao Google.
+      </p>
+
       <h2>Se você encontrar uma divergência</h2>
       <p>
         Um parâmetro incorreto publicado aqui é o erro mais grave que este site pode cometer, e o
