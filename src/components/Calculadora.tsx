@@ -27,7 +27,7 @@ import {
   formatarPeriodo,
   formatarReal,
 } from '@/lib/format/moeda'
-import { ajustarIndexacao, escreverNaUrl, lerDaUrl } from '@/lib/url-state'
+import { ajustarIndexacao, escreverNaUrl, estadoNaUrl, lerDaUrl } from '@/lib/url-state'
 
 /**
  * A página genérica de calculadora — `ADR-008` E-1.
@@ -166,7 +166,7 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
    * durante a renderização produziria divergência de hidratação.
    */
   useEffect(() => {
-    const { valores: daUrl, referencia } = lerDaUrl(formulario.campos, window.location.search)
+    const { valores: daUrl, referencia } = lerDaUrl(formulario.campos, estadoNaUrl(window.location))
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sincronização única com a URL, que é sistema externo
     if (Object.keys(daUrl).length > 0) setValores((atual) => ({ ...atual, ...daUrl }))
     if (referencia !== null) setDataReferencia(referencia)
@@ -179,19 +179,21 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
    * no histórico, e o botão "voltar" deixaria de voltar para a página anterior.
    */
   useEffect(() => {
-    const query = escreverNaUrl(
+    const fragmento = escreverNaUrl(
       formulario.campos,
       valores,
       dataReferencia,
       dataInicial,
       valoresIniciais,
     )
-    const alvo = `${window.location.pathname}${query}`
-    if (alvo !== `${window.location.pathname}${window.location.search}`) {
+    // Sem query, sempre: um link antigo com `?` perde a query na primeira
+    // escrita, e o estado passa a viver só no fragmento (§7.100).
+    const alvo = `${window.location.pathname}${fragmento}`
+    if (alvo !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
       window.history.replaceState(null, '', alvo)
     }
-    // 07-security §4.3: a query carrega salário e dados de contrato.
-    ajustarIndexacao(query !== '')
+    // 07-security §4.3: o estado carrega salário e dados de contrato.
+    ajustarIndexacao(fragmento !== '')
   }, [formulario, valores, dataReferencia, dataInicial, valoresIniciais])
 
   const camposVisiveis = useMemo(
@@ -266,7 +268,14 @@ export function Calculadora({ formulario }: { readonly formulario: FormularioCal
   return (
     <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* ---------------------------------------------------------------- */}
-      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+      {/* `action` explícito e limpo: sem ele, `form.action` devolve a URL da
+          página, e a medição de formulário do GA4 a enviava inteira em
+          `form_destination` (§7.100). */}
+      <form
+        action={`/calculadora/${formulario.slug}`}
+        className="space-y-4"
+        onSubmit={(e) => e.preventDefault()}
+      >
         {/* Calculadora sem parâmetro legal não tem período a escolher — é o
             caso de juros compostos, cuja taxa é digitada. */}
         {/* Um seletor com uma opção só não é escolha. Aparece quando há mais de

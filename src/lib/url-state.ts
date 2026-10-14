@@ -1,11 +1,26 @@
 /**
- * Estado do formulário na query string — `RF-006`, `06-api-spec` §2.3.
+ * Estado do formulário na URL — `RF-006`, `06-api-spec` §2.3.
  *
  * É o que entrega "salvar cálculo" **sem banco e sem conta**, e é o que torna
  * `ADR-002` sustentável: a URL carrega o cenário inteiro, é copiável,
  * compartilhável e salvável nos favoritos.
  *
- * A query contém salário e dados de contrato. Duas consequências, ambas
+ * ## No FRAGMENTO, e não na query — desde 14/10/2026
+ *
+ * Até essa data o estado ia na query (`?salarioBruto=…`). A auditoria de
+ * segurança mediu em produção que o GA4 recebia o salário digitado: a medição
+ * otimizada do painel registra `page_view` a cada `replaceState`, e lê
+ * `location` inteira — por cima do `gtag('set', {page_location})` de
+ * `Medicao.tsx`, que só valia para o primeiro hit. O formulário também
+ * entregava a URL com query no `form_destination` (`ESTADO-DO-PROJETO` §7.100).
+ *
+ * O fragmento (`#salarioBruto=…`) fecha isso **por construção**, e não por
+ * configuração de painel: o navegador nunca o envia ao servidor nem no
+ * `Referer`, e o GA4 o descarta de `dl` e `dr` — medido no contêiner real.
+ * Links antigos com query continuam abrindo: `estadoNaUrl` lê os dois, e
+ * `Medicao.tsx` converte a query em fragmento antes de o contêiner subir.
+ *
+ * O estado contém salário e dados de contrato. Duas consequências, ambas
  * tratadas em `07-security` §4.3:
  *
  *   - página com query recebe `noindex`, para não ser indexada com dados de
@@ -20,6 +35,18 @@ import {
   type Campo,
   type ValoresFormulario,
 } from './calculadoras/tipos'
+
+/**
+ * O texto de estado de uma URL: o fragmento, ou a query de um link antigo.
+ *
+ * O fragmento vence — é onde a página escreve desde 14/10/2026. A query só é
+ * lida quando não há fragmento, para que um link compartilhado antes disso
+ * continue abrindo o mesmo cálculo.
+ */
+export function estadoNaUrl(local: { readonly hash: string; readonly search: string }): string {
+  const fragmento = local.hash.replace(/^#/, '')
+  return fragmento !== '' ? fragmento : local.search
+}
 
 /** Nome do parâmetro de data de referência. */
 export const PARAM_REFERENCIA = 'ref'
@@ -89,7 +116,7 @@ export function lerDaUrl(
 }
 
 /**
- * Monta a query string do estado atual.
+ * Monta o fragmento do estado atual (`#campo=valor&…`).
  *
  * Campo em valor padrão é omitido: a URL de um formulário recém-aberto fica
  * limpa, e o link compartilhado carrega só o que a pessoa de fato informou.
@@ -133,7 +160,7 @@ export function escreverNaUrl(
   }
 
   const s = params.toString()
-  return s === '' ? '' : `?${s}`
+  return s === '' ? '' : `#${s}`
 }
 
 /**

@@ -163,6 +163,19 @@ export function Medicao() {
       */}
       <Script id="medicao-gtm" strategy="afterInteractive">
         {`
+          /*
+            LINK ANTIGO COM QUERY VIRA FRAGMENTO ANTES DE O CONTÊINER SUBIR.
+
+            Desde 14/10/2026 o estado do formulário vive no fragmento (ver
+            url-state.ts). Um link compartilhado antes disso ainda traz
+            "?salarioBruto=…"; convertido aqui, na primeira linha, o GA4 nunca
+            chega a ver a query — nem no primeiro hit, nem no referenciador do
+            seguinte. Só nas calculadoras: em outra rota query não é estado.
+          */
+          if (location.pathname.indexOf('/calculadora/') === 0 && location.search) {
+            history.replaceState(history.state, '', location.pathname + '#' + location.search.slice(1));
+          }
+
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
 

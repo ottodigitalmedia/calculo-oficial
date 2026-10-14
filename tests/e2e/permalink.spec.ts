@@ -17,6 +17,21 @@ test('TC-028 · o estado do formulário aparece na URL', async ({ page }) => {
   await expect(page).toHaveURL(/dependentes=2/)
   // Valores monetários em CENTAVOS, sem separador (06-api-spec §2.3).
   await expect(page).not.toHaveURL(/8\.500,00/)
+  // No fragmento, nunca na query: a query chegava ao GA4 (§7.100).
+  await expect(page).not.toHaveURL(/\?/)
+  await expect(page).toHaveURL(/#.*salarioBruto=850000/)
+})
+
+test('§7.100 · link com fragmento reproduz o resultado', async ({ page }) => {
+  await page.goto('/calculadora/salario-liquido#salarioBruto=850000&dependentes=2&ref=2026-06-15')
+  await expect(page.getByText('R$ 6.459,14').first()).toBeVisible()
+})
+
+test('§7.100 · link antigo com query continua abrindo, e a query vira fragmento', async ({ page }) => {
+  await page.goto('/calculadora/salario-liquido?salarioBruto=850000&dependentes=2&ref=2026-06-15')
+  await expect(page.getByText('R$ 6.459,14').first()).toBeVisible()
+  await expect(page).not.toHaveURL(/\?/)
+  await expect(page).toHaveURL(/#.*salarioBruto=850000/)
 })
 
 test('TC-029 · abrir a URL em contexto novo reproduz o mesmo resultado', async ({ page }) => {

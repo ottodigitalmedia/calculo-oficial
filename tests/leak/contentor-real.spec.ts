@@ -88,3 +88,49 @@ test('o contêiner publicado não exporta valor de formulário', async ({ page }
   // E a prova positiva: a rota foi reportada, sem a query.
   expect(coleta.join(' ')).toContain(encodeURIComponent('/calculadora/salario-liquido'))
 })
+
+/**
+ * O caminho que vazou — medido em produção em 14/10/2026 (§7.100).
+ *
+ * A sonda acima só abria um link e esperava, e passava. O vazamento estava no
+ * que ela não fazia: **digitar** (cada tecla dispara `replaceState`, e a medição
+ * otimizada do GA4 transforma isso em `page_view` com `dl` lido de `location`),
+ * **enviar o formulário** (`form_start` leva `form_destination`) e **navegar**
+ * (o `page_view` seguinte leva o endereço anterior em `dr`). Esta sonda faz as
+ * três coisas, de um link antigo com query e de uma página limpa.
+ */
+for (const inicio of ['limpa', 'link antigo com query'] as const) {
+  test(`digitar, enviar e navegar não exporta valor — página ${inicio}`, async ({ page }) => {
+    test.skip(!LIGADA, 'sonda sob demanda: defina GTM_REAL=1 para rodar')
+
+    const aoGoogle: string[] = []
+    page.on('request', (r) => {
+      if (!/google-analytics|analytics\.google|googletagmanager/.test(r.url())) return
+      aoGoogle.push(decodeURIComponent(r.url()))
+      const corpo = r.postData()
+      if (corpo) aoGoogle.push(decodeURIComponent(corpo))
+    })
+
+    await page.goto(
+      inicio === 'limpa'
+        ? '/calculadora/salario-liquido'
+        : `/calculadora/salario-liquido?pensao=${PENSAO}`,
+    )
+    await page.waitForTimeout(3_000)
+    await page.getByLabel('Salário bruto mensal').fill(SALARIO)
+    await page.getByLabel('Salário bruto mensal').press('Enter')
+    await expect(page.getByText('Salário líquido estimado')).toBeVisible()
+    await page.mouse.wheel(0, 4_000)
+    await page.waitForTimeout(3_000)
+    await page.getByRole('link', { name: /INSS mensal/ }).first().click()
+    await page.waitForTimeout(6_000)
+
+    expect(aoGoogle.some((s) => s.includes('/g/collect')), 'o GA4 não coletou nada').toBe(true)
+    for (const marcador of [SALARIO, PENSAO]) {
+      expect(
+        aoGoogle.filter((s) => s.includes(marcador)),
+        `O GA4 RECEBEU "${marcador}". Ver §7.100.`,
+      ).toEqual([])
+    }
+  })
+}
