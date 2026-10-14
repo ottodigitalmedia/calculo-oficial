@@ -20,7 +20,7 @@
     "test:golden": "vitest run tests/golden",
     "test:e2e": "playwright test --config=playwright.config.ts",
     "test:leak": "playwright test --config=playwright.leak.config.ts",
-    "audit:deps": "npm audit --audit-level=high",
+    "audit:deps": "tsx scripts/auditar-dependencias.ts",
     "check": "npm run validate:params && npm run typecheck && npm run lint && npm run test:coverage && npm run audit:deps && npm run build && npm run check:orcamento && npm run test:e2e && npm run test:leak",
     "test:coverage": "vitest run --coverage",
     "fetch:serie": "tsx scripts/coletar-series.ts"
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "next": "^15.5.4",
-    "nodemailer": "^9.0.5",
+    "nodemailer": "^10.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
@@ -46,14 +46,14 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "tailwindcss": "^4.1.13",
     "tsx": "^4.20.6",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.65.0",
-    "vitest": "^4.1.10",
+    "vitest": "^4.1.11",
     "zod": "^4.4.3"
   }
 }

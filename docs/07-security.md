@@ -151,7 +151,7 @@ O risco mais grave e o menos visível.
 | Controle | Prática |
 |---|---|
 | Fixação de versão | Arquivo de trava obrigatório e versionado |
-| Auditoria automatizada | Verificação de vulnerabilidade conhecida no CI; falha bloqueia deploy |
+| Auditoria automatizada | Verificação de vulnerabilidade conhecida no CI; falha bloqueia deploy. Desde 14/10/2026 em `scripts/auditar-dependencias.ts`: alta ou crítica **em dependência de produção reprova sempre**; em dependência de desenvolvimento reprova também, salvo alerta listado um a um, com motivo e data de validade — exceção vencida reprova. Nasceu de um alerta sem correção publicada (`braces`, só no lint) que travava todo deploy |
 | Atualização | Revisão manual do diff em dependência que executa no cliente |
 | Minimalismo | O motor de cálculo tem **zero dependência de runtime** — a parte que toca dado do usuário não tem cadeia a comprometer |
 | Verificação de saída | C-07 detecta exfiltração independentemente de qual dependência a introduziu |
