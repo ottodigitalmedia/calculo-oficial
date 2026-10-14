@@ -2,6 +2,13 @@ import { createTransport } from 'nodemailer'
 
 import { porSlug } from '@/lib/calculadoras'
 import {
+  camposDe,
+  chaveDeOrigem,
+  lerCorpoLimitado,
+  LimiteDeFrequencia,
+  origemAceita,
+} from '@/lib/contato/protecao'
+import {
   ROTULO_DO_MOTIVO,
   validarMensagem,
   type MensagemValida,
@@ -72,45 +79,12 @@ function correio(): Correio | null {
 }
 
 /**
- * Limite de frequência por endereço, em memória.
+ * Limite de frequência — ver `lib/contato/protecao.ts`.
  *
- * **Em memória de propósito**, e não em banco: `ADR-002` não abre exceção para
- * antispam. O contêiner é único, então um mapa no processo cobre o caso real.
- * Reiniciar zera o histórico — o que é aceitável, porque o custo de um envio a
- * mais é um e-mail, não um dano.
- *
- * O mapa é **limitado**: sem teto, uma enxurrada de endereços distintos viraria
- * consumo de memória sem fim, que é o próprio ataque que ele deveria conter.
+ * Três mensagens por endereço a cada dez minutos, trinta por hora no site
+ * inteiro, e até cinco mil endereços lembrados.
  */
-const JANELA_MS = 10 * 60 * 1_000
-const MAXIMO_NA_JANELA = 3
-const TETO_DE_ENDERECOS = 5_000
-const historico = new Map<string, number[]>()
-
-function excedeuFrequencia(chave: string, agora: number): boolean {
-  if (historico.size > TETO_DE_ENDERECOS) historico.clear()
-
-  const recentes = (historico.get(chave) ?? []).filter((t) => agora - t < JANELA_MS)
-  if (recentes.length >= MAXIMO_NA_JANELA) {
-    historico.set(chave, recentes)
-    return true
-  }
-  recentes.push(agora)
-  historico.set(chave, recentes)
-  return false
-}
-
-/**
- * O identificador de quem envia, para o limite de frequência.
- *
- * Atrás do proxy do painel, o endereço real vem em `x-forwarded-for`. Cai para
- * uma chave fixa quando não há cabeçalho: nesse caso o limite passa a valer para
- * o site inteiro, que é conservador na direção certa.
- */
-function chaveDeOrigem(request: Request): string {
-  const encaminhado = request.headers.get('x-forwarded-for') ?? ''
-  return encaminhado.split(',')[0]?.trim() || 'sem-endereco'
-}
+const limite = new LimiteDeFrequencia(10 * 60 * 1_000, 3, 60 * 60 * 1_000, 30, 5_000)
 
 function corpoDoEmail(m: MensagemValida): string {
   const linhas = [
@@ -131,23 +105,25 @@ function json(corpo: unknown, status: number): Response {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  // Só o formulário deste site, e nunca um corpo maior que o formulário
+  // consegue produzir (§7.100).
+  if (!origemAceita(request.headers)) {
+    return json({ ok: false, erros: ['Envie a mensagem pelo formulário do site.'] }, 403)
+  }
+  const texto = await lerCorpoLimitado(request)
+  if (texto === null) {
+    return json({ ok: false, erros: ['A mensagem é grande demais.'] }, 413)
+  }
+
   let bruta: unknown
   try {
-    bruta = await request.json()
+    bruta = JSON.parse(texto)
   } catch {
     return json({ ok: false, erros: ['Não foi possível ler o formulário.'] }, 400)
   }
 
-  const c = bruta as Record<string, unknown>
   const veredito = validarMensagem(
-    {
-      motivo: String(c['motivo'] ?? ''),
-      mensagem: String(c['mensagem'] ?? ''),
-      email: String(c['email'] ?? ''),
-      calculadora: String(c['calculadora'] ?? ''),
-      site: String(c['site'] ?? ''),
-      decorridoMs: Number(c['decorridoMs'] ?? 0),
-    },
+    camposDe(bruta),
     /**
      * O catálogo entra AQUI, e não em `lib/contato/mensagem.ts`.
      *
@@ -166,7 +142,7 @@ export async function POST(request: Request): Promise<Response> {
   if (veredito.tipo === 'descartar') return json({ ok: true }, 200)
   if (veredito.tipo === 'invalida') return json({ ok: false, erros: veredito.erros }, 422)
 
-  if (excedeuFrequencia(chaveDeOrigem(request), Date.now())) {
+  if (limite.excedeu(chaveDeOrigem(request.headers), Date.now())) {
     return json(
       {
         ok: false,

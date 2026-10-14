@@ -76,6 +76,8 @@ for (const rota of ROTAS) {
     for (const [nome, valor] of Object.entries(ESPERADOS)) {
       expect(cabecalhos[nome], `${rota} · ${nome}`).toBe(valor)
     }
+    // Não anunciar a pilha (§7.100).
+    expect(cabecalhos['x-powered-by'], `${rota} · x-powered-by`).toBeUndefined()
 
     // `Permissions-Policy` é lista, e a ordem dentro dela não é contrato.
     // Verificamos que cada permissão sensível está negada.

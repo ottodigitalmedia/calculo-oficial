@@ -22,10 +22,8 @@ blob-report
 .gitattributes
 .github
 
-# segredos — nunca no contexto
-.env
-.env.local
-.env.*.local
+# segredos — nunca no contexto (todo .env, inclusive .env.production)
+.env*
 
 # documentação: 300 KB que não mudam o binário e invalidam o cache a cada
 # correção de texto

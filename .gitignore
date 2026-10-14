@@ -19,9 +19,10 @@ blob-report/
 
 # ambiente — segredo nunca entra no repositório (07-security §6).
 # .env.example é versionado e contém apenas nomes e comentários.
-.env
-.env.local
-.env.*.local
+# Todo .env, inclusive .env.production — que o Next copia para a saída
+# standalone, e daí para a imagem (auditoria de 14/10/2026, §7.100).
+.env*
+!.env.example
 
 # sistema operacional e editor
 .DS_Store

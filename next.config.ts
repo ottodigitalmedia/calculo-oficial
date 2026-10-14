@@ -50,6 +50,9 @@ const nextConfig: NextConfig = {
   trailingSlash: false,
 
   reactStrictMode: true,
+  // Sem `X-Powered-By: Next.js`: anunciar a pilha só ajuda quem procura a
+  // versão vulnerável dela (auditoria de 14/10/2026, §7.100).
+  poweredByHeader: false,
 
   // Falhar o build em erro de tipo ou de lint é deliberado: o pipeline de
   // 13-deployment §4 interrompe antes do build, e o build não deve ser a
