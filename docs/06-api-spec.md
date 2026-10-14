@@ -72,14 +72,14 @@ Fora do sitemap e com `x-robots-tag: noindex`.
 **Rota:** `/calculadora/{slug}`
 **Slugs do v1:** `salario-liquido` · `rescisao-sem-justa-causa` · `pedido-de-demissao` · `ferias` · `decimo-terceiro` · `horas-extras` · `fgts` · `irrf` · `inss` · `juros-compostos`
 
-**Query string** — estado do formulário (`RF-006`):
+**Fragmento** — estado do formulário (`RF-006`). Até 14/10/2026 era a query string; ela continua sendo **lida**, para que links antigos abram, e é convertida em fragmento antes de a medição carregar (`ESTADO-DO-PROJETO` §7.100):
 
 | Parâmetro | Formato | Observação |
 |---|---|---|
 | `ref` | `AAAA-MM-DD` | Data de referência. Ausente = data atual |
 | Campos da calculadora | Nome do campo conforme `03-functional-spec` | Valores monetários em centavos, sem separador |
 
-Exemplo: `/calculadora/salario-liquido?salarioBruto=450000&dependentes=2&ref=2026-03-01`
+Exemplo: `/calculadora/salario-liquido#salarioBruto=450000&dependentes=2&ref=2026-03-01`
 
 **Comportamento na leitura da query string:**
 
@@ -88,9 +88,9 @@ Exemplo: `/calculadora/salario-liquido?salarioBruto=450000&dependentes=2&ref=202
 | Parâmetro desconhecido | Ignorado silenciosamente |
 | Valor fora do domínio válido | Campo recebe o padrão; o aviso de validação correspondente é exibido |
 | `ref` sem cobertura de vigência | Mensagem de `03-functional-spec` §1.4; cálculo bloqueado (`RN-003`) |
-| Query string presente | `noindex` na página; canônica aponta para a rota sem query |
+| Estado presente | `noindex` na página; canônica aponta para a rota sem estado |
 
-**Regra R-2.** A query string nunca é enviada a terceiros. O identificador de página reportado à ferramenta de análise é a rota sem query, porque a query contém salário e dados de contrato do usuário (`RN-030`, `RN-031`).
+**Regra R-2.** O estado nunca é enviado a terceiros. O identificador de página reportado à ferramenta de análise é a rota sem estado, porque o estado contém salário e dados de contrato do usuário (`RN-030`, `RN-031`). **O fragmento é o que garante isso por construção:** o navegador não o envia ao servidor nem no `Referer`, e o GA4 o descarta. A garantia anterior — sanitizar `page_location` no código — valia só para o primeiro registro da visita, e a medição otimizada do painel registrava a URL inteira a cada mudança; ver §7.100.
 
 ### 2.4 Formato de erro
 

@@ -50,7 +50,7 @@ Formulário de entrada, validação em tempo real, resultado, memória de cálcu
 
 ### RF-006 — Permalink de cálculo `S`
 
-O estado do formulário é refletido na query string, permitindo compartilhar ou salvar um cálculo por URL, sem servidor e sem conta.
+O estado do formulário é refletido na URL, permitindo compartilhar ou salvar um cálculo por URL, sem servidor e sem conta. **Desde 14/10/2026 no fragmento (`#campo=valor`), e não na query string:** na query, a medição de audiência recebia os valores digitados (`ESTADO-DO-PROJETO` §7.100). Links antigos com query continuam abrindo.
 
 **Critério de aceite:** abrir a URL compartilhada reproduz exatamente o mesmo resultado. A URL não é indexável (`noindex` quando há parâmetros).
 

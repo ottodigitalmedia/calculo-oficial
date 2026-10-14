@@ -70,12 +70,13 @@ Esta é a seção central do documento, porque é a promessa do produto.
 
 **C-07 é o controle mais importante do documento.** É o único que transforma a promessa em verificação executável e que detecta regressão introduzida por dependência atualizada ou por mudança de configuração de terceiro.
 
-### 4.3 Tratamento da query string
+### 4.3 Tratamento do estado na URL
 
-A query string contém dados sensíveis (`RF-006`). Controles:
+O estado do formulário contém dados sensíveis (`RF-006`). **Desde 14/10/2026 ele vive no fragmento (`#…`), e não na query** — porque a query chegou ao GA4 (incidente de §7.100 de `ESTADO-DO-PROJETO`). Controles:
 
-- Nunca enviada a terceiros (R-2).
-- Página com query string recebe `noindex`, para não ser indexada com dados de alguém.
+- Nunca enviado a terceiros (R-2) — garantido por construção: o fragmento não sai do navegador, nem no `Referer`. Link antigo com query é convertido em fragmento antes de o contêiner de medição subir.
+- O formulário tem `action` explícito, sem estado: a medição de formulário do GA4 lê `form.action`.
+- Página com estado recebe `noindex`, para não ser indexada com dados de alguém.
 - `Referrer-Policy: strict-origin-when-cross-origin`, de modo que a query não vaze no cabeçalho de referência ao clicar em anúncio ou link externo.
 - Aviso no compartilhamento: "O link contém os valores que você preencheu. Compartilhe apenas com quem você quer que veja esses dados."
 
@@ -100,7 +101,7 @@ O efeito real, encontrado por TC-040: ao digitar o salário, `replaceState` o co
 
 **`Content-Security-Policy` ativada em 08/08/2026, pela auditoria.** Ela era a única das seis que faltava, e a justificativa registrada — *"depende das origens exatas do provedor de anúncio"* — **tinha deixado de existir**: não há provedor de anúncio no código, e a adiação sobrevivia a uma dependência que ninguém chegou a criar.
 
-A diretiva que mais vale aqui é `connect-src`. `RF-006` põe salário, pensão e saldo de FGTS na query; a ameaça específica deste produto não é desfiguração de página, é **um script conseguir mandar isso para fora**, e `connect-src` fecha essa porta por completo. `form-action`, `base-uri`, `object-src 'none'` e `frame-ancestors 'none'` fecham as variantes.
+A diretiva que mais vale aqui é `connect-src`. `RF-006` põe salário, pensão e saldo de FGTS na URL; a ameaça específica deste produto não é desfiguração de página, é **um script conseguir mandar isso para fora**. `connect-src` fecha essa porta para origem desconhecida — **mas não para as que ele lista.** Revisto em 14/10/2026 (§7.100): o coletor do GA4 aceita hit de qualquer identificador de medição, e `gtm.js?id=` serve código arbitrário de qualquer contêiner; um script injetado poderia usar as duas origens permitidas. O vazamento real daquele dia passou pela lista permitida. O controle efetivo contra esse caminho é o teste de vazamento (C-07) e o estado no fragmento, não a CSP. `form-action`, `base-uri`, `object-src 'none'` e `frame-ancestors 'none'` fecham as variantes.
 
 > **O limite, declarado em vez de escondido:** `script-src` admite `'unsafe-inline'`. O Next injeta script embutido para hidratar, com conteúdo que muda a cada build — hash não serve —, e a alternativa é nonce, que exige `middleware` e **torna dinâmica toda página hoje estática**. Isso é revisão de `ADR-008`, e revisão de ADR é do mantenedor. O que `script-src` já proíbe é script vindo de origem não listada, que é o vetor de AM-02; e `connect-src` continua valendo mesmo para um script que consiga executar.
 
@@ -129,7 +130,7 @@ O que **não** foi satisfeito é a decisão, e ela continua de pé: `preload` s�
 | Credencial do banco do Umami | Variável do contêiner, na VPS | Repositório |
 | Acesso à VPS | Chave assimétrica, sem senha | — |
 
-**Regras:** nenhum segredo no repositório, mesmo em arquivo de exemplo; `.env.example` contém apenas nomes e comentários; identificador público da rede de anúncio não é segredo e pode ficar no código; verificação automatizada de segredo vazado roda no CI.
+**Regras:** nenhum segredo no repositório, mesmo em arquivo de exemplo; `.env.example` contém apenas nomes e comentários; identificador público da rede de anúncio não é segredo e pode ficar no código; verificação automatizada de segredo vazado está ativa **no repositório** (varredura de segredos e bloqueio de push do GitHub, conferidos em 14/10/2026), e não como passo do CI.
 
 ## 7. Validação de entrada
 
@@ -173,7 +174,7 @@ Adulterar um parâmetro produz cálculo errado em escala — o dano de maior alc
 
 ## 10. Proteção contra abuso e negação de serviço
 
-Não há limitação de taxa por usuário: não há operação cara no servidor a proteger. Conteúdo estático, com todo o custo no cliente.
+Conteúdo estático, com todo o custo no cliente. A exceção é `/api/contato`, a única rota que recebe texto e dispara e-mail: corpo limitado a 16 KB antes do parse, só JSON da mesma origem, limite por endereço (o último de `x-forwarded-for`, o que o proxy acrescenta) e teto global por hora — `lib/contato/protecao.ts`, desde 14/10/2026.
 
 Contra AM-06: proxy com limitação de conexões por origem; se a VPS se tornar alvo recorrente, colocar CDN à frente — mudança de infraestrutura, sem alteração de código.
 

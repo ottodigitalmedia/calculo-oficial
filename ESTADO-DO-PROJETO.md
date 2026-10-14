@@ -34,6 +34,14 @@
 > **Comece por §8.00**; §7.80 a §7.84 registram o que a conferência pegou em
 > cada lote antes de publicar.
 >
+> **Sessão de 14/10/2026 — auditoria geral, e um incidente de privacidade.**
+> Valores digitados chegavam ao Google Analytics desde 07/08/2026 (`RN-030`):
+> o estado do formulário foi para o fragmento da URL, e a sonda real agora
+> digita e navega. Formulário de contato endurecido, dependências corrigidas,
+> séries econômicas atualizadas (estavam paradas desde agosto), indexação em
+> 171 de 178. **§7.100 — e três ações no painel do GA4 que só o mantenedor
+> pode fazer, em §8.0000.**
+>
 > **Sessão de 24/09/2026, segunda parte — auditoria de cálculo.** As 123
 > calculadoras conferidas contra os casos-ouro **no site publicado**, e um teste
 > de robustez novo sobre o catálogo inteiro. Cinco defeitos corrigidos — o mais
@@ -4817,11 +4825,108 @@ três frentes, e cada uma achou coisa que as outras não achariam.
    e a aplicou só dali para a frente; a auditoria achou dezoito calculadoras
    que ela já cobria.
 
+### 7.100 Auditoria geral de 14/10/2026 — e um vazamento que a defesa não via
+
+O mantenedor pediu auditoria de funcionamento, atualização, indexação,
+tráfego, segurança e aprimoramentos. **O achado que domina a sessão é de
+privacidade**, e veio da revisão de segurança feita por agente independente.
+
+#### O vazamento — RN-030 quebrada desde 07/08/2026
+
+Medido em produção com valores-marcador: digitar um salário fazia o valor
+chegar ao GA4 em três campos — `dl` do `page_view`, `form_destination` do
+`form_start` e `dr` do `page_view` da página seguinte. A causa tinha duas
+metades:
+
+- **no painel:** a medição otimizada do fluxo do GA4 registra `page_view` a
+  cada `replaceState` e lê `location` inteira — por cima do
+  `gtag('set', {page_location})` de `Medicao.tsx`, que só valia para o primeiro
+  registro;
+- **no código:** `RF-006` escrevia o estado na query a cada tecla, e o
+  `<form>` sem `action` devolvia a URL da página em `form.action`.
+
+**Por que os testes não viam:** a suíte de vazamento roda com contêiner falso
+(`GTM-TESTE01`), e a sonda do contêiner real só abria um link e esperava —
+nunca digitava, enviava ou navegava. É §7.5 outra vez: o verificador passava
+porque não exercitava o caminho.
+
+**A correção é por construção, não por configuração:** o estado foi para o
+**fragmento** (`#salarioBruto=…`). Medido no contêiner real antes de
+implementar: o GA4 descarta o fragmento de `dl` e `dr`, e o navegador não o
+envia ao servidor nem no `Referer`. Links antigos com query continuam abrindo
+— `Medicao.tsx` os converte antes de o contêiner subir. A sonda real agora
+digita, envia e navega, a partir de página limpa e de link antigo, e passou.
+Comunicado no aviso legal, como manda `07-security` §12.
+
+**Ficam com o mantenedor** — o painel do GA4 não é acessível daqui:
+desligar "mudanças de página com base em eventos do histórico" e "interações
+com formulário" na medição otimizada; incluir os nomes dos campos em
+"ocultar dados → parâmetros de consulta" como segunda camada; e pedir ao Google
+a exclusão dos dados de `page_location`, `page_referrer` e `form_destination`
+do período.
+
+#### Segurança — o resto da revisão
+
+| Achado | Nível | Estado |
+|---|---|---|
+| Corpo de `/api/contato` sem limite (150 MB → 731 MB de memória) | Médio | **Corrigido** — 16 KB, leitura com teto |
+| Limite de frequência pela primeira entrada de `x-forwarded-for`, falsificável; envio a partir de outro site; mapa zerado ao encher | Médio | **Corrigido** — última entrada, só JSON da mesma origem, teto global, descarte dos mais antigos |
+| CSP não impede exfiltração pelas origens permitidas do Google | Médio | **Documentado** em `07-security` §5 — o controle real é o teste C-07 e o fragmento |
+| Lockfile com `next` (cache de SSG), `nodemailer` e `sharp` vulneráveis | Médio | **Corrigido** — produção sem alerta |
+| Página com query indexável sem JavaScript | Baixo | **Resolvido** pelo fragmento |
+| JSON fora do formato derrubava a rota com 500 | Baixo | **Corrigido** |
+| `.env.production` futuro iria para o repositório público e para a imagem | Baixo | **Corrigido** — `.env*` ignorado |
+| Ações do CI em tag mutável | Baixo | **Corrigido** — fixadas por hash; imagem base ainda por tag |
+| Varredura de segredo "no CI" | Baixo | Existe **no repositório** (GitHub, com bloqueio de push), sem alerta; documento corrigido |
+| `X-Powered-By` | Info | **Removido** |
+
+O audit do pipeline reprovava todo deploy desde que `braces` ≤ 3.0.3 ganhou um
+alerta alto **sem versão corrigida**. Virou `scripts/auditar-dependencias.ts`:
+produção sem exceção, desenvolvimento com exceção listada, motivo e validade
+(até 31/12/2026). O caminho de reprovação foi testado com a exceção vencida.
+
+#### Atualizações
+
+- `next` 15.5.27, `nodemailer` 10.1.1, `vitest` 4.1.11.
+- **Séries econômicas paradas desde 07/08/2026** — o pipeline não as coleta.
+  Atualizadas até setembro; nenhum valor histórico mudou além do ponto parcial
+  de agosto da Selic anual.
+
+#### Indexação e tráfego
+
+- **Indexação resolvida quase por inteiro:** de 130 indexadas e 46 fora
+  (§7.98) para **171 e 7** (relatório de 08/10). Das 7: um redirecionamento
+  `http` → `https` (correto) e 6 "detectadas, não indexadas" — duas já estavam
+  indexadas na inspeção, e a indexação das outras quatro foi solicitada
+  (`escala-12x36`, `juros-simples`, `abono-salarial-pis`, guia
+  `aposentadoria-regra-de-pontos`). Sitemap lido em 07/10, 177 URLs.
+- **Tráfego, 28 dias até 11/10 contra os 28 anteriores:** impressões 2.340
+  contra 5.140, cliques 5 contra 3, páginas com impressão 113 contra 89,
+  posição média 32,4 contra 25,9. A queda de impressões é a de agosto
+  (§7.98); **semana a semana o volume parou de cair e subiu levemente**
+  (519 → 663 → 606 nas três últimas). Os cliques continuam vindo de páginas de
+  utilidade em posição 8 a 10; as trabalhistas de maior valor seguem na
+  posição 85 a 95.
+
 ---
 
 ## 8. Sugestão de ordem para a próxima sessão
 
-### 8.0000 Retomada — a expansão fechou e o catálogo foi auditado (atualizado em 29/09/2026)
+### 8.0000 Retomada — a expansão fechou e o catálogo foi auditado (atualizado em 14/10/2026)
+
+> **Antes de tudo, do mantenedor, por causa do incidente de §7.100:** no GA4
+> (Administrador → Fluxos de dados → o fluxo do site → Medição otimizada),
+> desligar "Mudanças de página com base em eventos do histórico de navegação"
+> e "Interações com formulários"; em "Ocultar dados", incluir os nomes dos
+> campos das calculadoras como parâmetros de consulta; e abrir uma solicitação
+> de exclusão de dados para `page_location`, `page_referrer` e
+> `form_destination` de 07/08 a 14/10/2026. O código já não envia nada — isto
+> limpa o passado e fecha a porta também no painel.
+>
+> **Novas tarefas de manutenção:** coletar as séries econômicas todo mês
+> (`npm run fetch:serie` — o pipeline não coleta; automatizar é aprimoramento
+> proposto); reavaliar a exceção de `braces` em `scripts/auditar-dependencias.ts`
+> até 31/12/2026; ligar os alertas do Dependabot no GitHub (mantenedor).
 
 **Estado ao fim da sessão de 18 a 29/09/2026:** 123 calculadoras no ar, todas
 conferidas contra os casos-ouro **no site publicado** (§7.99), cinco defeitos

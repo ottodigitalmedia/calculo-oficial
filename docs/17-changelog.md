@@ -29,6 +29,60 @@ Este documento tem uma seção que a maioria dos changelogs não tem — **corre
 
 ---
 
+## Ciclo de 14/10/2026 — auditoria geral: privacidade, segurança, dependências e séries
+
+### Segurança · incidente de privacidade: valores digitados chegavam ao Google Analytics
+
+**O que estava errado.** O estado do formulário ia na query da URL
+(`?salarioBruto=…`). A medição otimizada do GA4 — configurada no painel —
+registrava `page_view` a cada `replaceState` da página, lendo a URL inteira por
+cima da sanitização de `Medicao.tsx`, que só valia para o primeiro registro da
+visita; o `form_start` levava a URL com query em `form_destination`; e o
+`page_view` seguinte levava o endereço anterior em `dr`. Medido em produção: o
+salário digitado chegou ao Google nos três campos. Viola `RN-030`.
+**Desde quando:** 07/08/2026, quando a medição entrou. **Calculadoras
+afetadas:** todas — o estado de qualquer formulário. **Dado exposto:** os
+números digitados, associados ao endereço da calculadora; nenhum dado de
+identificação é pedido pelo site. **Correção:** o estado passa a viver no
+fragmento (`#salarioBruto=…`), que o navegador não envia a ninguém e o GA4
+descarta; links antigos com query são convertidos antes de a medição carregar;
+o formulário ganha `action` limpo. **Teste adicionado:** a sonda do contêiner
+real (`tests/leak/contentor-real.spec.ts`) passa a digitar, enviar e navegar.
+**Pendente do mantenedor:** desligar a medição otimizada de "mudanças de página
+pelo histórico" e "interações com formulário" no GA4 e pedir ao Google a
+exclusão dos dados afetados (`07-security` §12). Comunicado no aviso legal.
+
+### Segurança · formulário de contato
+
+Corpo limitado a 16 KB antes do parse (150 MB levavam o processo a 731 MB);
+limite de frequência pelo último endereço de `x-forwarded-for` (o primeiro era
+falsificável), com teto global por hora e descarte dos endereços mais antigos;
+só JSON da mesma origem; JSON fora do formato deixa de derrubar a rota com 500.
+**Exposição:** desde a criação do formulário, em 07/08/2026; nenhum abuso
+observado.
+
+### Segurança · demais
+
+`X-Powered-By` removido; `.env*` ignorado no git e no contexto do Docker,
+inclusive `.env.production`; ações do GitHub fixadas pelo hash do commit.
+
+### Alterado · dependências
+
+next 15.5.25 → 15.5.27 (envenenamento de cache em SSG auto-hospedado),
+nodemailer 9 → 10.1.1 (cinco alertas altos), vitest 4.1.11, sharp corrigido. O
+audit passa a ser `scripts/auditar-dependencias.ts`: produção sem exceção;
+desenvolvimento com exceção datada — `braces` não tem versão corrigida e entra
+só pelo lint.
+
+### Alterado · séries econômicas
+
+Coletadas de novo: estavam paradas em 07/08/2026, e o pipeline não as atualiza.
+Agora até setembro de 2026 (Selic, IPCA, IGP-M, INPC; poupança e TR até
+09/10/2026). Nenhum valor histórico mudou, exceto o ponto de agosto da Selic
+anual, coletado com o mês em curso.
+
+---
+
 ## Ciclo de 24/09/2026 — auditoria de cálculo do catálogo inteiro
 
 ### Corrigido · IRRF: quem não teve desconto previdenciário não conseguia informar zero
